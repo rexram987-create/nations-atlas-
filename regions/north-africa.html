@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>דגלי צפון אפריקה (המגרב)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-gray-950 text-gray-200 p-4 md:p-8 font-sans antialiased">
+
+    <!-- תצוגת חלון צף (Modal) להגדלת התמונה -->
+    <div id="lightbox" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/85 backdrop-blur-sm p-4 transition-opacity duration-300" onclick="closeModal()">
+        <div class="relative max-w-full max-h-full flex flex-col items-center">
+            <button class="absolute -top-14 right-0 md:-right-14 text-gray-400 hover:text-white bg-gray-800/80 hover:bg-gray-700 rounded-full p-2 transition-colors z-50" onclick="closeModal()" aria-label="סגור חלון">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <img id="lightbox-img" src="" alt="דגל מוגדל" class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-gray-700" onclick="event.stopPropagation()">
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl md:text-5xl font-bold text-white mb-3">דגלי צפון אפריקה</h1>
+            <p class="text-gray-400 text-lg">מחקר וקסלולוגי, אטימולוגי והיסטורי</p>
+        </header>
+
+        <div class="space-y-12">
+            
+            <!-- אלג'יריה -->
+            <article class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl transition-all hover:border-gray-700">
+                <div class="flex flex-col md:flex-row gap-6 p-6 md:p-8 border-b border-gray-800">
+                    <div class="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center bg-gray-950 p-4 rounded-xl cursor-pointer group relative" onclick="openModal('https://i.postimg.cc/gJS8XGjF/algeria.webp')" title="לחץ להגדלת הדגל">
+                        <img src="https://i.postimg.cc/gJS8XGjF/algeria.webp" alt="דגל אלג'יריה" class="max-h-40 object-contain shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105">
+                        <div class="absolute opacity-0 group-hover:opacity-100 bg-black/60 text-white text-sm px-3 py-1 rounded transition-opacity duration-300 pointer-events-none mt-32">לחץ להגדלה</div>
+                    </div>
+                    <div class="flex-grow flex flex-col justify-center">
+                        <h2 class="text-3xl font-bold text-white mb-2">אלג'יריה</h2>
+                        <h3 class="text-xl text-gray-400 mb-4">הרפובליקה האלג'יראית הדמוקרטית העממית</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                <span><strong class="text-white">שנת ייסוד:</strong> 1962 (עצמאות מצרפת)</span>
+                            </div>
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                <div class="flex flex-col md:flex-row md:gap-2">
+                                    <span><strong class="text-white">מנהיג ראשון:</strong> אחמד בן בלה (הנשיא הראשון)</span>
+                                    <span class="text-gray-400 text-sm md:text-base md:before:content-['|'] md:before:ml-2 md:before:mr-1 md:before:text-gray-600">שנות חיים: <span dir="ltr">1916 – 2012</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8 space-y-8">
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                            <h3 class="text-2xl font-bold text-white">וקסלולוגיה</h3>
+                        </div>
+                        <p class="text-gray-300 leading-relaxed text-lg">דגל אלג'יריה אומץ רשמית עם קבלת העצמאות ב-1962. הוא מורכב משני חצאים אנכיים שווים בצבעים ירוק (בצד התורן) ולבן. במרכז הדגל מוטבעים סהר וכוכב בעל חמישה קודקודים בצבע אדום בוהק. הצבע הירוק מסמל את דת האסלאם, הלבן מסמל טוהר, שלום ואת תנועת ההתנגדות הלאומית בהנהגת האמיר עבד אל-קאדר, והצבע האדום (בסהר ובכוכב) מסמל את הדם הרב של השהידים (החללים) שנשפך במהלך מלחמת העצמאות העקובה מדם נגד השלטון הצרפתי. הסהר והכוכב עצמם הם סמלים מסורתיים של האסלאם.</p>
+                    </section>
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                            <h3 class="text-2xl font-bold text-white">אטימולוגיה</h3>
+                        </div>
+                        <div class="bg-gray-950/50 rounded-xl p-5 border border-gray-800">
+                            <ul class="space-y-4">
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• אל-גְ'זַאאִ'ר (Al-Jaza'ir):</span><span class="text-gray-300 leading-relaxed text-lg">שמה הערבי המקורי של המדינה ושל עיר הבירה (אלג'יר). פירוש המילה בערבית הוא "האיים".</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• ההקשר הגיאוגרפי:</span><span class="text-gray-300 leading-relaxed text-lg">השם "האיים" מתייחס לארבעה איים קטנים שהיו ממוקמים ממש מול חופי עיר הבירה העתיקה. בשנת 1525 שולבו איים אלו לחלק מהיבשת עצמה (על ידי בניית שובר גלים וחיבור אדמה), אך השם נשאר והורחב בהמשך על ידי הצרפתים (Algeria) לתיאור כל הטריטוריה הנרחבת של המדינה.</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• מקור קדום:</span><span class="text-gray-300 leading-relaxed text-lg">השם המלא שניתן לעיר על ידי מייסדה במאה העשירית (בולע'ין אבן זרי) היה "ג'זאא'ר בני מזע'אנה" (האיים של שבט בני מזע'אנה הברברי).</span></li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+            </article>
+
+            <!-- לוב -->
+            <article class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl transition-all hover:border-gray-700">
+                <div class="flex flex-col md:flex-row gap-6 p-6 md:p-8 border-b border-gray-800">
+                    <div class="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center bg-gray-950 p-4 rounded-xl cursor-pointer group relative" onclick="openModal('https://i.postimg.cc/n9YMc4RQ/lybia.webp')" title="לחץ להגדלת הדגל">
+                        <img src="https://i.postimg.cc/n9YMc4RQ/lybia.webp" alt="דגל לוב" class="max-h-40 object-contain shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105">
+                        <div class="absolute opacity-0 group-hover:opacity-100 bg-black/60 text-white text-sm px-3 py-1 rounded transition-opacity duration-300 pointer-events-none mt-32">לחץ להגדלה</div>
+                    </div>
+                    <div class="flex-grow flex flex-col justify-center">
+                        <h2 class="text-3xl font-bold text-white mb-2">לוב</h2>
+                        <h3 class="text-xl text-gray-400 mb-4">מדינת לוב</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                <span><strong class="text-white">שנת ייסוד:</strong> 1951 (עצמאות מהאיטלקים / הקמת הממלכה)</span>
+                            </div>
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                <div class="flex flex-col md:flex-row md:gap-2">
+                                    <span><strong class="text-white">מנהיג ראשון:</strong> המלך אידריס הראשון (מלך לוב)</span>
+                                    <span class="text-gray-400 text-sm md:text-base md:before:content-['|'] md:before:ml-2 md:before:mr-1 md:before:text-gray-600">שנות חיים: <span dir="ltr">1889 – 1983</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8 space-y-8">
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                            <h3 class="text-2xl font-bold text-white">וקסלולוגיה</h3>
+                        </div>
+                        <p class="text-gray-300 leading-relaxed text-lg">דגל לוב הנוכחי אומץ מחדש ב-2011 לאחר נפילת משטר קדאפי (שהשתמש בדגל ירוק חלק). זהו דגלה המקורי של ממלכת לוב מ-1951. הוא מורכב משלושה פסים אופקיים בצבעים אדום, שחור וירוק, כאשר הפס השחור האמצעי רחב פי שניים מהאחרים, ובמרכזו סהר וכוכב לבנים. שלושת הצבעים מייצגים את שלושת חבלי הארץ ההיסטוריים של לוב: האדום מסמל את חבל פזאן ואת דם ההרוגים במאבק בקולוניאליזם האיטלקי; השחור (עם הסהר והכוכב) הוא דגלה של מסדר הסנוסים ההיסטורי ומייצג את חבל קירנאיקה ואת דת האסלאם; והירוק מסמל את אזור טריפוליטניה ואת השגשוג והפוריות.</p>
+                    </section>
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                            <h3 class="text-2xl font-bold text-white">אטימולוגיה</h3>
+                        </div>
+                        <div class="bg-gray-950/50 rounded-xl p-5 border border-gray-800">
+                            <ul class="space-y-4">
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• לוב (Libya):</span><span class="text-gray-300 leading-relaxed text-lg">השם הוא עתיק יומין ומקורו בכתבים המצריים הקדמונים.</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• שבט ה"ליבו":</span><span class="text-gray-300 leading-relaxed text-lg">במצרית עתיקה הופיע השם "ליבו" (Libu או Ribu) שהתייחס לאחד השבטים הברבריים המרכזיים שחיו ממערב לנהר הנילוס.</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• ההרחבה היוונית:</span><span class="text-gray-300 leading-relaxed text-lg">היוונים אימצו את השם הזה והפכו אותו ל-"Libya", אך השתמשו בו בצורה רחבה כדי לתאר את כל יבשת אפריקה המוכרת להם (ממערב למצרים ולנהר הנילוס). רק בעת המודרנית (החל מ-1934 תחת השלטון האיטלקי) צומצם השם חזרה לטריטוריה המגדירה את מדינת לוב של ימינו.</span></li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+            </article>
+
+            <!-- מרוקו -->
+            <article class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl transition-all hover:border-gray-700">
+                <div class="flex flex-col md:flex-row gap-6 p-6 md:p-8 border-b border-gray-800">
+                    <div class="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center bg-gray-950 p-4 rounded-xl cursor-pointer group relative" onclick="openModal('https://i.postimg.cc/1Vc45GCF/morocoo.webp')" title="לחץ להגדלת הדגל">
+                        <img src="https://i.postimg.cc/1Vc45GCF/morocoo.webp" alt="דגל מרוקו" class="max-h-40 object-contain shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105">
+                        <div class="absolute opacity-0 group-hover:opacity-100 bg-black/60 text-white text-sm px-3 py-1 rounded transition-opacity duration-300 pointer-events-none mt-32">לחץ להגדלה</div>
+                    </div>
+                    <div class="flex-grow flex flex-col justify-center">
+                        <h2 class="text-3xl font-bold text-white mb-2">מרוקו</h2>
+                        <h3 class="text-xl text-gray-400 mb-4">ממלכת מרוקו</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                <span><strong class="text-white">שנת ייסוד:</strong> 1956 (עצמאות מצרפת וספרד)</span>
+                            </div>
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                <div class="flex flex-col md:flex-row md:gap-2">
+                                    <span><strong class="text-white">מנהיג ראשון:</strong> המלך מוחמד החמישי (מלך העצמאות)</span>
+                                    <span class="text-gray-400 text-sm md:text-base md:before:content-['|'] md:before:ml-2 md:before:mr-1 md:before:text-gray-600">שנות חיים: <span dir="ltr">1909 – 1961</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8 space-y-8">
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                            <h3 class="text-2xl font-bold text-white">וקסלולוגיה</h3>
+                        </div>
+                        <p class="text-gray-300 leading-relaxed text-lg">דגל מרוקו מורכב מרקע אדום חזק ואחיד, ובמרכזו פנטגרם (כוכב בעל חמישה קודקודים המורכב מקווים מצטלבים) בצבע ירוק. הצבע האדום עמוס במשמעות היסטורית: הוא מייצג את "השושלת העלאווית" השולטת במדינה (המייחסת את מוצאה לנביא מוחמד), וכן מסמל אומץ, כוח, וגבורה. הצבע הירוק של הכוכב הוא הצבע המסורתי של האסלאם. הפנטגרם עצמו מוכר בהיסטוריה האסלאמית כ"חותם שלמה" (המלך שלמה). חמשת קודקודי הכוכב מסמלים באופן רשמי את חמשת עמודי האסלאם, וכן מסמלים את הקשר בין אלוהים לאומה.</p>
+                    </section>
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                            <h3 class="text-2xl font-bold text-white">אטימולוגיה</h3>
+                        </div>
+                        <div class="bg-gray-950/50 rounded-xl p-5 border border-gray-800">
+                            <ul class="space-y-4">
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• אל-מַעְ'רִב (Al-Maghrib):</span><span class="text-gray-300 leading-relaxed text-lg">שמה הרשמי בערבית. פירושו "המערב" או "מקום שקיעת השמש". בעבר הרחוק נקראה "אל-מע'רב אל-אקצא" (המערב הקיצון), שכן היא הייתה הנקודה המערבית ביותר הידועה בעולם האסלאמי.</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• מרוקו (Morocco):</span><span class="text-gray-300 leading-relaxed text-lg">השם הלועזי של המדינה נוצר משיבוש (פורטוגזי/ספרדי) של שמה של עיר הבירה ההיסטורית – "מרקש" (Marrakesh).</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• משמעות "מרקש":</span><span class="text-gray-300 leading-relaxed text-lg">מקור השם "מרקש" נטוע בשפה הברברית העתיקה: "Amur n Akush" (אמור נ' אקוש), שמשמעותו הציורית היא "ארץ האל" או "אדמת אלוהים".</span></li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+            </article>
+
+            <!-- תוניסיה -->
+            <article class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl transition-all hover:border-gray-700">
+                <div class="flex flex-col md:flex-row gap-6 p-6 md:p-8 border-b border-gray-800">
+                    <div class="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center bg-gray-950 p-4 rounded-xl cursor-pointer group relative" onclick="openModal('https://i.postimg.cc/30CWJXSv/tunisia.webp')" title="לחץ להגדלת הדגל">
+                        <img src="https://i.postimg.cc/30CWJXSv/tunisia.webp" alt="דגל תוניסיה" class="max-h-40 object-contain shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105">
+                        <div class="absolute opacity-0 group-hover:opacity-100 bg-black/60 text-white text-sm px-3 py-1 rounded transition-opacity duration-300 pointer-events-none mt-32">לחץ להגדלה</div>
+                    </div>
+                    <div class="flex-grow flex flex-col justify-center">
+                        <h2 class="text-3xl font-bold text-white mb-2">תוניסיה</h2>
+                        <h3 class="text-xl text-gray-400 mb-4">הרפובליקה התוניסאית</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                <span><strong class="text-white">שנת ייסוד:</strong> 1956 (עצמאות מצרפת)</span>
+                            </div>
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                <div class="flex flex-col md:flex-row md:gap-2">
+                                    <span><strong class="text-white">מנהיג ראשון:</strong> חביב בורגיבה (הנשיא הראשון ואבי האומה)</span>
+                                    <span class="text-gray-400 text-sm md:text-base md:before:content-['|'] md:before:ml-2 md:before:mr-1 md:before:text-gray-600">שנות חיים: <span dir="ltr">1903 – 2000</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8 space-y-8">
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                            <h3 class="text-2xl font-bold text-white">וקסלולוגיה</h3>
+                        </div>
+                        <p class="text-gray-300 leading-relaxed text-lg">דגל תוניסיה מורכב ממשטח אדום שעליו מעגל לבן במרכז. בתוך המעגל ממוקמים סהר וכוכב מחומש (בעל חמישה קודקודים) בצבע אדום. הדגל דומה מאוד לדגל האימפריה העות'מאנית (שתוניסיה הייתה חלק ממנה במשך מאות שנים), וזהו אכן המקור לעיצובו, אך בניגוד לדגל הטורקי – הסהר התוניסאי מקיף את הכוכב. הצבע האדום הבוהק מסמל את דם הקדושים (השהידים) אשר נהרגו במאבקים ובמלחמות נגד השלטון הטורקי ואחר כך הצרפתי. המעגל הלבן מסמל שלום, והסהר והכוכב הם סמלים מסורתיים ומובהקים של דת האסלאם והזהות המוסלמית של המדינה.</p>
+                    </section>
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                            <h3 class="text-2xl font-bold text-white">אטימולוגיה</h3>
+                        </div>
+                        <div class="bg-gray-950/50 rounded-xl p-5 border border-gray-800">
+                            <ul class="space-y-4">
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• תוניסיה (Tunisia):</span><span class="text-gray-300 leading-relaxed text-lg">שם המדינה נגזר ישירות משמה של עיר הבירה שלה, תוניס (Tunis). השם הצרפתי שנוצר הוסיף את הסיומת המקובלת "יה" (-ia) כדי לציין "ארץ תוניס".</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• מקור ברברי:</span><span class="text-gray-300 leading-relaxed text-lg">חוקרים רבים קושרים את השם לשורש הברברי "ת-נ-ס" (Tns), שמשמעותו "לשכב", "לחנות" או "להקים מחנה". העיר תוניס שימשה היסטורית כנקודת חניה בטוחה או חניון לילה למטיילים ושיירות לפני הגיעם לקרתגו העתיקה.</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• הקשר פיניקי/פוני:</span><span class="text-gray-300 leading-relaxed text-lg">השערה אטימולוגית חלופית קושרת את השם לאלה הפונית הקדומה והמרכזית של קרתגו – תנית (Tanit), שהייתה אלת הירח, הפוריות והעיר עצמה.</span></li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+            </article>
+
+        </div>
+
+        <!-- מידע מחקרי וקרדיט (Footer) בהתאם להנחיות -->
+        <footer class="mt-12 mb-8 pt-8 border-t border-gray-800 text-center text-gray-500">
+            <div class="flex justify-center items-center gap-2 mb-4">
+                <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                <h4 class="font-bold text-gray-400 text-lg">פרטי המחקר והפרויקט</h4>
+            </div>
+            <div class="inline-block text-right bg-gray-900/50 p-6 rounded-xl border border-gray-800">
+                <p class="text-gray-300 leading-loose">
+                    <strong class="text-white ml-2">שם ההוגה:</strong> רם<br>
+                    <strong class="text-white ml-2">שם הבונה/היצרן:</strong> ג'מיני (Gemini 3.1 Pro)<br>
+                    <strong class="text-white ml-2">סיבת ההמצאה/הבנייה:</strong> יצירת יישום מחקר וקסלולוגי, אטימולוגי והיסטורי מקיף של מדינות צפון אפריקה (המגרב).<br>
+                    <strong class="text-white ml-2">שנת הבנייה/היצירה:</strong> 2026<br>
+                    <strong class="text-white ml-2">מקורות וקרדיט:</strong> חלק מתמונות הדגלים נלקחו באדיבות מהאתר <a href="https://flagpedia.net" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 underline transition-colors">Flagpedia.net</a>
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- סקריפט עבור פתיחה וסגירה של חלון הגדלת התמונה (Modal) -->
+    <script>
+        function openModal(imgSrc) {
+            const modal = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            img.src = imgSrc;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            // מניעת גלילה של הרקע כשנפתח החלון
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('lightbox');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            // החזרת גלילת הרקע
+            document.body.style.overflow = '';
+        }
+
+        // סגירת החלון בלחיצה על מקש ESC במקלדת
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

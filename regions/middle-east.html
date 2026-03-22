@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>דגלי מדינות המזרח התיכון</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-gray-950 text-gray-200 p-4 md:p-8 font-sans antialiased">
+
+    <!-- תצוגת חלון צף (Modal) להגדלת התמונה -->
+    <div id="lightbox" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/85 backdrop-blur-sm p-4 transition-opacity duration-300" onclick="closeModal()">
+        <div class="relative max-w-full max-h-full flex flex-col items-center">
+            <button class="absolute -top-14 right-0 md:-right-14 text-gray-400 hover:text-white bg-gray-800/80 hover:bg-gray-700 rounded-full p-2 transition-colors z-50" onclick="closeModal()" aria-label="סגור חלון">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <img id="lightbox-img" src="" alt="דגל מוגדל" class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-gray-700" onclick="event.stopPropagation()">
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl md:text-5xl font-bold text-white mb-3">דגלי המזרח התיכון</h1>
+            <p class="text-gray-400 text-lg">מחקר וקסלולוגי, אטימולוגי והיסטורי</p>
+        </header>
+
+        <div class="space-y-12">
+            
+            <!-- מצרים -->
+            <article class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl transition-all hover:border-gray-700">
+                <div class="flex flex-col md:flex-row gap-6 p-6 md:p-8 border-b border-gray-800">
+                    <div class="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center bg-gray-950 p-4 rounded-xl cursor-pointer group relative" onclick="openModal('https://i.postimg.cc/CRsnLNqJ/egypt.png')" title="לחץ להגדלת הדגל">
+                        <img src="https://i.postimg.cc/CRsnLNqJ/egypt.png" alt="דגל מצרים" class="max-h-40 object-contain shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105">
+                        <div class="absolute opacity-0 group-hover:opacity-100 bg-black/60 text-white text-sm px-3 py-1 rounded transition-opacity duration-300 pointer-events-none mt-32">לחץ להגדלה</div>
+                    </div>
+                    <div class="flex-grow flex flex-col justify-center">
+                        <h2 class="text-3xl font-bold text-white mb-2">מצרים</h2>
+                        <h3 class="text-xl text-gray-400 mb-4">רפובליקת מצרים הערבית</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                <span><strong class="text-white">שנת ייסוד:</strong> 1922 (עצמאות) / 1952 (הקמת הרפובליקה)</span>
+                            </div>
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                <div class="flex flex-col md:flex-row md:gap-2">
+                                    <span><strong class="text-white">מנהיג ראשון:</strong> מוחמד נגיב (הנשיא הראשון של הרפובליקה)</span>
+                                    <span class="text-gray-400 text-sm md:text-base md:before:content-['|'] md:before:ml-2 md:before:mr-1 md:before:text-gray-600">שנות חיים: <span dir="ltr">1901 – 1984</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8 space-y-8">
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                            <h3 class="text-2xl font-bold text-white">וקסלולוגיה</h3>
+                        </div>
+                        <p class="text-gray-300 leading-relaxed text-lg">דגל מצרים הנוכחי אומץ ב-1984. הוא מורכב משלושה פסים אופקיים בצבעי השחרור הערבי (אדום, לבן ושחור), במרכזם "עיט צלאח א-דין" בצבע זהב. הצבע האדום מסמל את מאבקה של מצרים לעצמאות ואת דם החללים שנשפך. הלבן מסמל את עתידה המזהיר של האומה והשאיפה לשלום, ואילו השחור מסמל את תקופת העבר החשוכה של הדיכוי והכיבוש הזר (הבריטי). במרכז הפס הלבן ניצב העיט, סמל לעוצמה, כוח וריבונות, אשר מחזיק במגילה עליה כתוב בערבית שם המדינה: "רפובליקת מצרים הערבית".</p>
+                    </section>
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                            <h3 class="text-2xl font-bold text-white">אטימולוגיה</h3>
+                        </div>
+                        <div class="bg-gray-950/50 rounded-xl p-5 border border-gray-800">
+                            <ul class="space-y-4">
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• מִצְרַיִם (מִצְר / Misr):</span><span class="text-gray-300 leading-relaxed text-lg">מקור השם השמי נגזר מהשורש מ-צ-ר. משמעותו המקורית היא "מצר", "גבול", או "מקום צר". השם מתייחס ככל הנראה לרצועת האדמה הצרה והפוריה שמשני צידי נהר הנילוס, או למיקומה כגבול בין יבשות.</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• אג'יפט (Egypt):</span><span class="text-gray-300 leading-relaxed text-lg">השם הלועזי נגזר מהמילה היוונית "Aigyptos", אשר מקורה בשם המצרי העתיק "Hwt-ka-Ptah" (משכן רוחו של האל פתח) – שמה של עיר הבירה העתיקה ממפיס.</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• קֶמֶט (Kemet):</span><span class="text-gray-300 leading-relaxed text-lg">השם המקורי שבו קראו המצרים הקדמונים לארצם. הפירוש הוא "האדמה השחורה", כהתייחסות לאדמת הסחף הכהה והפוריה שהותיר הנילוס לאחר הצפותיו, בניגוד ל"דשרט" (האדמה האדומה) שסימלה את המדבר העקר.</span></li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+            </article>
+
+            <!-- ירדן -->
+            <article class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl transition-all hover:border-gray-700">
+                <div class="flex flex-col md:flex-row gap-6 p-6 md:p-8 border-b border-gray-800">
+                    <div class="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center bg-gray-950 p-4 rounded-xl cursor-pointer group relative" onclick="openModal('https://i.postimg.cc/cvBt4mnX/jordqn.png')" title="לחץ להגדלת הדגל">
+                        <img src="https://i.postimg.cc/cvBt4mnX/jordqn.png" alt="דגל ירדן" class="max-h-40 object-contain shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105">
+                        <div class="absolute opacity-0 group-hover:opacity-100 bg-black/60 text-white text-sm px-3 py-1 rounded transition-opacity duration-300 pointer-events-none mt-32">לחץ להגדלה</div>
+                    </div>
+                    <div class="flex-grow flex flex-col justify-center">
+                        <h2 class="text-3xl font-bold text-white mb-2">ירדן</h2>
+                        <h3 class="text-xl text-gray-400 mb-4">הממלכה הירדנית ההאשמית</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                <span><strong class="text-white">שנת ייסוד:</strong> 1946 (עצמאות מבריטניה)</span>
+                            </div>
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                <div class="flex flex-col md:flex-row md:gap-2">
+                                    <span><strong class="text-white">מנהיג ראשון:</strong> המלך עבדאללה הראשון (מייסד הממלכה)</span>
+                                    <span class="text-gray-400 text-sm md:text-base md:before:content-['|'] md:before:ml-2 md:before:mr-1 md:before:text-gray-600">שנות חיים: <span dir="ltr">1882 – 1951</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8 space-y-8">
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                            <h3 class="text-2xl font-bold text-white">וקסלולוגיה</h3>
+                        </div>
+                        <p class="text-gray-300 leading-relaxed text-lg">דגל ירדן מבוסס על דגל "המרד הערבי הגדול" כנגד האימפריה העות'מאנית. הוא מורכב משלושה פסים אופקיים המייצגים את חליפויות האסלאם ההיסטוריות: הפס השחור מייצג את החליפות העבאסית, הלבן את החליפות האומיית, והירוק את החליפות הפאטמית. המשולש האדום בצד התורן מייצג את השושלת ההאשמית השלטת ואת המרד הערבי. במרכז המשולש האדום מופיע כוכב לבן בעל שבעה קודקודים. הכוכב מסמל את שבעת הפסוקים של סורת "אל-פאתחה" (הסורה הפותחת את הקוראן), וכן את האחדות של העמים הערביים.</p>
+                    </section>
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                            <h3 class="text-2xl font-bold text-white">אטימולוגיה</h3>
+                        </div>
+                        <div class="bg-gray-950/50 rounded-xl p-5 border border-gray-800">
+                            <ul class="space-y-4">
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• ירדן (Jordan):</span><span class="text-gray-300 leading-relaxed text-lg">המדינה קרויה על שמו של נהר הירדן (עבר הירדן המזרחי), המהווה את גבולה המערבי.</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• מקור השם השמי:</span><span class="text-gray-300 leading-relaxed text-lg">שם הנהר נגזר מהשורש השמי י-ר-ד. משמעותו היא "לרדת" או "לזרום מטה", מה שמשקף נאמנה את הטופוגרפיה של הנהר הצונח בחדות מהר החרמון ועד לנקודה הנמוכה בעולם בים המלח.</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• ההאשמית:</span><span class="text-gray-300 leading-relaxed text-lg">מתייחס למשפחת המלוכה השלטת, השושלת ההאשמית. המשפחה מייחסת את שושלת היוחסין שלה להאשם אבן עבד מנאף, שהיה סבא-רבא של הנביא מוחמד, מייסד האסלאם.</span></li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+            </article>
+
+            <!-- סוריה -->
+            <article class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl transition-all hover:border-gray-700">
+                <div class="flex flex-col md:flex-row gap-6 p-6 md:p-8 border-b border-gray-800">
+                    <div class="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center bg-gray-950 p-4 rounded-xl cursor-pointer group relative" onclick="openModal('https://i.postimg.cc/v4txHzVv/syria.webp')" title="לחץ להגדלת הדגל">
+                        <img src="https://i.postimg.cc/v4txHzVv/syria.webp" alt="דגל סוריה" class="max-h-40 object-contain shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105">
+                        <div class="absolute opacity-0 group-hover:opacity-100 bg-black/60 text-white text-sm px-3 py-1 rounded transition-opacity duration-300 pointer-events-none mt-32">לחץ להגדלה</div>
+                    </div>
+                    <div class="flex-grow flex flex-col justify-center">
+                        <h2 class="text-3xl font-bold text-white mb-2">סוריה</h2>
+                        <h3 class="text-xl text-gray-400 mb-4">הרפובליקה הערבית הסורית</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                <span><strong class="text-white">שנת ייסוד:</strong> 1946 (עצמאות מצרפת)</span>
+                            </div>
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                <div class="flex flex-col md:flex-row md:gap-2">
+                                    <span><strong class="text-white">מנהיג ראשון:</strong> שוכרי אל-קוותלי (נשיא סוריה העצמאית)</span>
+                                    <span class="text-gray-400 text-sm md:text-base md:before:content-['|'] md:before:ml-2 md:before:mr-1 md:before:text-gray-600">שנות חיים: <span dir="ltr">1891 – 1967</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8 space-y-8">
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                            <h3 class="text-2xl font-bold text-white">וקסלולוגיה</h3>
+                        </div>
+                        <p class="text-gray-300 leading-relaxed text-lg">דגל סוריה הנוכחי הונף לראשונה ב-1958 עם הקמת "הרפובליקה הערבית המאוחדת" (איחוד פוליטי קצר ימים עם מצרים). הדגל עושה שימוש בצבעי הלאומיות הכלל-ערבית (אדום, לבן ושחור). האדום מסמל את דם הקדושים המעונים ואת ההקרבה למען חירות האומה; הלבן מסמל את החליפות האומיית (שבירתה הייתה בדמשק) ואת עתידה הבהיר של המדינה; והשחור מסמל את החליפות העבאסית ואת ימי החושך של הדיכוי. שני הכוכבים הירוקים במרכז סימלו במקור את שתי המדינות החברות באיחוד (מצרים וסוריה), וכיום הם מייצגים את המחויבות הסורית לאחדות ערבית, כאשר הצבע הירוק מייצג את האסלאם והחליפות הפאטמית.</p>
+                    </section>
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                            <h3 class="text-2xl font-bold text-white">אטימולוגיה</h3>
+                        </div>
+                        <div class="bg-gray-950/50 rounded-xl p-5 border border-gray-800">
+                            <ul class="space-y-4">
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• סוּרְיָה (Syria):</span><span class="text-gray-300 leading-relaxed text-lg">השם נגזר מהשפה היוונית העתיקה שהגדירה את כל אזור הלבנט.</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• קשר היסטורי לאשור:</span><span class="text-gray-300 leading-relaxed text-lg">אטימולוגים וחוקרים מסכימים כיום כי "סוריה" היא למעשה שיבוש או קיצור של המילה "אשור" (Assyria), האימפריה העתיקה ששלטה באזור. היוונים השמיטו את ה-א' התחילית. חפירות ארכיאולוגיות בטורקיה אישרו כי בכתובות דו-לשוניות, המילה הלווית "סורה" תורגמה כ"אשור".</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• אַ-שָּׁאם (Al-Sham):</span><span class="text-gray-300 leading-relaxed text-lg">שמו הערבי המסורתי של האזור. משמעות השורש היא "שמאל" או "צפון". זאת משום שאדם העומד בחצי האי ערב (החיג'אז) כשפניו אל עבר זריחת השמש במזרח, ימצא את אזור סוריה בצד שמאל (צפון), בעוד שתימן תמצא מימינו.</span></li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+            </article>
+
+            <!-- לבנון -->
+            <article class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl transition-all hover:border-gray-700">
+                <div class="flex flex-col md:flex-row gap-6 p-6 md:p-8 border-b border-gray-800">
+                    <div class="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center bg-gray-950 p-4 rounded-xl cursor-pointer group relative" onclick="openModal('https://i.postimg.cc/XrkB78CL/lebanon.webp')" title="לחץ להגדלת הדגל">
+                        <img src="https://i.postimg.cc/XrkB78CL/lebanon.webp" alt="דגל לבנון" class="max-h-40 object-contain shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105">
+                        <div class="absolute opacity-0 group-hover:opacity-100 bg-black/60 text-white text-sm px-3 py-1 rounded transition-opacity duration-300 pointer-events-none mt-32">לחץ להגדלה</div>
+                    </div>
+                    <div class="flex-grow flex flex-col justify-center">
+                        <h2 class="text-3xl font-bold text-white mb-2">לבנון</h2>
+                        <h3 class="text-xl text-gray-400 mb-4">הרפובליקה הלבנונית</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                <span><strong class="text-white">שנת ייסוד:</strong> 1943 (עצמאות מצרפת)</span>
+                            </div>
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                <div class="flex flex-col md:flex-row md:gap-2">
+                                    <span><strong class="text-white">מנהיג ראשון:</strong> בשארה אל-ח'ורי (הנשיא הראשון)</span>
+                                    <span class="text-gray-400 text-sm md:text-base md:before:content-['|'] md:before:ml-2 md:before:mr-1 md:before:text-gray-600">שנות חיים: <span dir="ltr">1890 – 1964</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8 space-y-8">
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                            <h3 class="text-2xl font-bold text-white">וקסלולוגיה</h3>
+                        </div>
+                        <p class="text-gray-300 leading-relaxed text-lg">דגל לבנון אומץ עם קבלת העצמאות ב-1943. הוא מורכב משלושה פסים אופקיים (אדום, לבן, אדום), כאשר הפס הלבן המרכזי רחב פי שניים מכל פס אדום (יחס הידוע כ"פס ספרדי"). במרכז הפס הלבן מתנוסס ארז הלבנון בצבע ירוק, כאשר על פי החוק הוא חייב לגעת בשני הפסים האדומים. הפסים האדומים מסמלים את דם המרטירים שניגר בהגנה על האומה מפני פולשים זרים לאורך ההיסטוריה. הפס הלבן מסמל את השלג המכסה את פסגות הרי הלבנון, המייצג טוהר ושלום. הארז (Cedrus libani) הוא הסמל ההיסטורי והעתיק ביותר של האזור, המייצג קדושה, חוסן, נצחיות וכוח התמודדות מול סערות.</p>
+                    </section>
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                            <h3 class="text-2xl font-bold text-white">אטימולוגיה</h3>
+                        </div>
+                        <div class="bg-gray-950/50 rounded-xl p-5 border border-gray-800">
+                            <ul class="space-y-4">
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• לְבָנוֹן (Lebanon):</span><span class="text-gray-300 leading-relaxed text-lg">מקור השם טמון בשורש השמי העתיק ל-ב-ן (L-B-N), שמשמעותו היא הצבע "לבן".</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• משמעות גיאוגרפית:</span><span class="text-gray-300 leading-relaxed text-lg">השם מתייחס ישירות לפסגות הגבוהות של רכס "הר הלבנון", המושלגות ומכוסות לבן בחלקים נרחבים של השנה. מראה זה של הרים מושלגים היה נדיר ובולט מאוד בנוף של המזרח התיכון החם, ולכן העניק לאזור כולו את שמו.</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• היסטוריה קדומה:</span><span class="text-gray-300 leading-relaxed text-lg">שם זה הוא אחד משמות המדינות העתיקים ביותר בעולם שנותרו ללא שינוי לאורך אלפי שנים. הוא מופיע באפוס השומרי "עלילות גילגמש", בכתבים מצריים עתיקים, וכמובן פעמים רבות מאוד בתנ"ך היהודי (למשל: "כְּבוֹד הַלְּבָנוֹן נִתַּן לָהּ").</span></li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+            </article>
+
+            <!-- עיראק -->
+            <article class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl transition-all hover:border-gray-700">
+                <div class="flex flex-col md:flex-row gap-6 p-6 md:p-8 border-b border-gray-800">
+                    <div class="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center bg-gray-950 p-4 rounded-xl cursor-pointer group relative" onclick="openModal('https://i.postimg.cc/PCQvr4wQ/iraq.webp')" title="לחץ להגדלת הדגל">
+                        <img src="https://i.postimg.cc/PCQvr4wQ/iraq.webp" alt="דגל עיראק" class="max-h-40 object-contain shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105">
+                        <div class="absolute opacity-0 group-hover:opacity-100 bg-black/60 text-white text-sm px-3 py-1 rounded transition-opacity duration-300 pointer-events-none mt-32">לחץ להגדלה</div>
+                    </div>
+                    <div class="flex-grow flex flex-col justify-center">
+                        <h2 class="text-3xl font-bold text-white mb-2">עיראק</h2>
+                        <h3 class="text-xl text-gray-400 mb-4">רפובליקת עיראק</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                <span><strong class="text-white">שנת ייסוד:</strong> 1932 (עצמאות מבריטניה)</span>
+                            </div>
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                <div class="flex flex-col md:flex-row md:gap-2">
+                                    <span><strong class="text-white">מנהיג ראשון:</strong> המלך פייסל הראשון (מלך עיראק המודרנית)</span>
+                                    <span class="text-gray-400 text-sm md:text-base md:before:content-['|'] md:before:ml-2 md:before:mr-1 md:before:text-gray-600">שנות חיים: <span dir="ltr">1885 – 1933</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8 space-y-8">
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                            <h3 class="text-2xl font-bold text-white">וקסלולוגיה</h3>
+                        </div>
+                        <p class="text-gray-300 leading-relaxed text-lg">דגל עיראק עבר שינויים רבים לאורך ההיסטוריה המודרנית. הגרסה הנוכחית (שאומצה סופית ב-2008) מורכבת משלושת פסי הלאומיות הערבית (אדום, לבן, שחור). האדום מסמל אומץ לב ודם הלוחמים, הלבן מסמל נדיבות, טוהר ואצילות, והשחור מסמל את הניצחונות ההיסטוריים של האסלאם והחליפות העבאסית. במרכז הפס הלבן כתוב "התכביר" האסלאמי ("אללה אכבר" - האל הוא הגדול מכולם) בצבע ירוק (צבע האסלאם), בכתב כופי מסורתי ועתיק. בעבר היו בדגל שלושה כוכבים ירוקים (שסימלו אחדות, חירות וסוציאליזם בתקופת מפלגת הבעת'), אך הם הוסרו כדי להתנתק משלטונו של סדאם חוסיין.</p>
+                    </section>
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                            <h3 class="text-2xl font-bold text-white">אטימולוגיה</h3>
+                        </div>
+                        <div class="bg-gray-950/50 rounded-xl p-5 border border-gray-800">
+                            <ul class="space-y-4">
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• עיראק (Iraq):</span><span class="text-gray-300 leading-relaxed text-lg">שם ערבי הנמצא בשימוש רציף מאז המאה ה-6 לספירה לכל הפחות.</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• מקור ארמי/שומרי:</span><span class="text-gray-300 leading-relaxed text-lg">הדעה המחקרית הרווחת ביותר היא שהשם גלגול של העיר השומרית העתיקה והאגדית "ארך" (Uruk, המוזכרת גם במקרא), שהייתה מהערים הראשונות בהיסטוריה האנושית באזור מסופוטמיה.</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• פירוש מילולי ערבי:</span><span class="text-gray-300 leading-relaxed text-lg">בשפה הערבית, המילה "עיראק" יכולה להיות מתורגמת כ"חוף", "גדה", או "קצה". הפירוש מתייחס למיקומה הגיאוגרפי של הארץ על גדות הנהרות הגדולים, החידקל והפרת, או כקצה הגבול של המדבר הערבי הגדול בו נפגשת האדמה עם אזור פורה. פירוש נוסף בערבית מתייחס ל"שורשים עמוקים", כרמז לאדמתה הפוריה.</span></li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+            </article>
+
+            <!-- טורקיה -->
+            <article class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl transition-all hover:border-gray-700">
+                <div class="flex flex-col md:flex-row gap-6 p-6 md:p-8 border-b border-gray-800">
+                    <div class="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center bg-gray-950 p-4 rounded-xl cursor-pointer group relative" onclick="openModal('https://i.postimg.cc/pmJ5XZFf/turkey.webp')" title="לחץ להגדלת הדגל">
+                        <img src="https://i.postimg.cc/pmJ5XZFf/turkey.webp" alt="דגל טורקיה" class="max-h-40 object-contain shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105">
+                        <div class="absolute opacity-0 group-hover:opacity-100 bg-black/60 text-white text-sm px-3 py-1 rounded transition-opacity duration-300 pointer-events-none mt-32">לחץ להגדלה</div>
+                    </div>
+                    <div class="flex-grow flex flex-col justify-center">
+                        <h2 class="text-3xl font-bold text-white mb-2">טורקיה</h2>
+                        <h3 class="text-xl text-gray-400 mb-4">רפובליקת טורקיה (Türkiye)</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                <span><strong class="text-white">שנת ייסוד:</strong> 1923 (הקמת הרפובליקה על חורבות האימפריה)</span>
+                            </div>
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                <div class="flex flex-col md:flex-row md:gap-2">
+                                    <span><strong class="text-white">מנהיג ראשון:</strong> מוסטפא כמאל אטאטורק (אבי האומה ומייסד הרפובליקה)</span>
+                                    <span class="text-gray-400 text-sm md:text-base md:before:content-['|'] md:before:ml-2 md:before:mr-1 md:before:text-gray-600">שנות חיים: <span dir="ltr">1881 – 1938</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8 space-y-8">
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                            <h3 class="text-2xl font-bold text-white">וקסלולוגיה</h3>
+                        </div>
+                        <p class="text-gray-300 leading-relaxed text-lg">הדגל הטורקי, המכונה בשפה המקומית "אל באיראק" (Al Bayrak - הדגל האדום), מורכב מרקע אדום חזק שעליו מוטבעים סהר וכוכב בעל חמישה קודקודים בצבע לבן. הצבע האדום מסמל היסטורית את דמם של חיילי הצבא הטורקי שנפלו בקרבות, במיוחד במהלך מלחמת העצמאות הטורקית. הסהר והכוכב הם סמלים עתיקים של עמי הערבות הטורקיים שאומצו בהמשך כסמל מובהק של דת האסלאם והאימפריה העות'מאנית. על פי אגדה טורקית מפורסמת ומכוננת, עיצוב הדגל נולד כאשר השתקפות של חצי סהר וכוכב הופיעה בתוך שלולית דם עצומה של לוחמים טורקים לאחר "קרב קוסובו" ההיסטורי בשנת 1389.</p>
+                    </section>
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                            <h3 class="text-2xl font-bold text-white">אטימולוגיה</h3>
+                        </div>
+                        <div class="bg-gray-950/50 rounded-xl p-5 border border-gray-800">
+                            <ul class="space-y-4">
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• טורקיה (Türkiye):</span><span class="text-gray-300 leading-relaxed text-lg">שם המדינה מורכב מהכינוי האתני לעמים "הטורקים", בתוספת סיומת גיאוגרפית שיוכית.</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• משמעות "טורק":</span><span class="text-gray-300 leading-relaxed text-lg">בשפות הטורקיות הקדומות (Old Turkic), המילה "Türk" נושאת את המשמעות של "חזק", "עוצמתי", "אמיץ" או "זה שנוצר/נולד (ברוך כישרון)". במקור, זה היה שמה של קונפדרציית שבטים במרכז אסיה הידועה כ"גקטורקים" (הטורקים השמימיים/הכחולים) במאה ה-6.</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• הסיומת "-יה" (-iye):</span><span class="text-gray-300 leading-relaxed text-lg">הסיומת נלקחה מהשפה הערבית (והיוונית/לטינית הקדומה -ia), ומשמעותה "הארץ של". יחד המשמעות היא "ארצם של הטורקים (החזקים)". לאחרונה, המדינה דרשה שהעולם ישתמש בהגייה הטורקית המקורית (Türkiye) במקום באנגלוז (Turkey) כדי למנוע בלבול עם תרנגול ההודו.</span></li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+            </article>
+
+            <!-- איראן -->
+            <article class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl transition-all hover:border-gray-700">
+                <div class="flex flex-col md:flex-row gap-6 p-6 md:p-8 border-b border-gray-800">
+                    <div class="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center bg-gray-950 p-4 rounded-xl cursor-pointer group relative" onclick="openModal('https://i.postimg.cc/9DYwFp7t/iran.webp')" title="לחץ להגדלת הדגל">
+                        <img src="https://i.postimg.cc/9DYwFp7t/iran.webp" alt="דגל איראן" class="max-h-40 object-contain shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105">
+                        <div class="absolute opacity-0 group-hover:opacity-100 bg-black/60 text-white text-sm px-3 py-1 rounded transition-opacity duration-300 pointer-events-none mt-32">לחץ להגדלה</div>
+                    </div>
+                    <div class="flex-grow flex flex-col justify-center">
+                        <h2 class="text-3xl font-bold text-white mb-2">איראן</h2>
+                        <h3 class="text-xl text-gray-400 mb-4">הרפובליקה האסלאמית של איראן</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                <span><strong class="text-white">שנת ייסוד:</strong> 1979 (הקמת הרפובליקה האסלאמית)</span>
+                            </div>
+                            <div class="flex items-center text-gray-300 bg-gray-800/50 w-fit px-4 py-2 rounded-lg">
+                                <svg class="w-5 h-5 ml-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                <div class="flex flex-col md:flex-row md:gap-2">
+                                    <span><strong class="text-white">מנהיג ראשון:</strong> האייתוללה רוחאללה ח'ומייני (המנהיג העליון הראשון)</span>
+                                    <span class="text-gray-400 text-sm md:text-base md:before:content-['|'] md:before:ml-2 md:before:mr-1 md:before:text-gray-600">שנות חיים: <span dir="ltr">1902 – 1989</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8 space-y-8">
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                            <h3 class="text-2xl font-bold text-white">וקסלולוגיה</h3>
+                        </div>
+                        <p class="text-gray-300 leading-relaxed text-lg">דגל איראן הנוכחי אומץ ב-1980 לאחר המהפכה האסלאמית. הוא שומר על צבעי הדגל ההיסטורי (ירוק, לבן ואדום), אך מחליף את סמל ה"אריה והשמש" המלוכני בסמלים אסלאמיים. הירוק מסמל את דת האסלאם, צמיחה וטבע. הלבן מסמל שלום, כנות וטוהר. האדום מסמל אומץ לב והקרבה (מרטיריות). במרכז הפס הלבן מופיע סמל איראן (מעוצב כארבעה סהרים וחרב), היוצר ויזואלית פרח צבעוני (לזכר הנופלים) ומרכיב קליגרפית את המילה "אללה". בנוסף, לאורך קווי התפר בין הפס הלבן לפסים הצבעוניים, כתוב ה"תכביר" ("אללה אכבר") 22 פעמים בכתב כופי מסוגנן, המייצגים את ה-22 בחודש בַּהְמַן, הוא תאריך הניצחון בלוח השנה האיראני.</p>
+                    </section>
+                    <section>
+                        <div class="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg class="w-6 h-6 ml-2 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                            <h3 class="text-2xl font-bold text-white">אטימולוגיה</h3>
+                        </div>
+                        <div class="bg-gray-950/50 rounded-xl p-5 border border-gray-800">
+                            <ul class="space-y-4">
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• איראן (Iran):</span><span class="text-gray-300 leading-relaxed text-lg">השם נגזר ישירות מפרסית אמצעית "Ērān" ומפרסית עתיקה "Aryānām".</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• משמעות "אריאן":</span><span class="text-gray-300 leading-relaxed text-lg">התרגום המילולי והישיר של המילה הוא "ארצם של הארים" או "ארץ האצילים". המילה העתיקה "אריה" (Arya) בשפות ההודו-איראניות משמעותה "אציל", "מכובד" או "בן חורין".</span></li>
+                                <li class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4"><span class="font-bold text-purple-300 min-w-[140px] md:text-lg flex-shrink-0">• מפרס לאיראן:</span><span class="text-gray-300 leading-relaxed text-lg">בעוד המערב כינה את האזור "פרס" (Persia) - על שם מחוז פַארס (Pars) ממנו יצאו המלכים העתיקים כמו כורש הגדול - תושבי המקום תמיד קראו לארצם "איראן". בשנת 1935, רזא שאה פהלווי דרש רשמית מהקהילה הבינלאומית להפסיק להשתמש בשם היווני "פרס", ולאמץ את השם "איראן", המייצג את כלל הקבוצות האתניות המרכיבות את האומה ולא רק את הפרסים.</span></li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+            </article>
+
+        </div>
+
+        <!-- מידע מחקרי וקרדיט (Footer) בהתאם להנחיות -->
+        <footer class="mt-12 mb-8 pt-8 border-t border-gray-800 text-center text-gray-500">
+            <div class="flex justify-center items-center gap-2 mb-4">
+                <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                <h4 class="font-bold text-gray-400 text-lg">פרטי המחקר והפרויקט</h4>
+            </div>
+            <div class="inline-block text-right bg-gray-900/50 p-6 rounded-xl border border-gray-800">
+                <p class="text-gray-300 leading-loose">
+                    <strong class="text-white ml-2">שם ההוגה:</strong> רם<br>
+                    <strong class="text-white ml-2">שם הבונה/היצרן:</strong> ג'מיני (Gemini 3.1 Pro)<br>
+                    <strong class="text-white ml-2">סיבת ההמצאה/הבנייה:</strong> יצירת יישום מחקר וקסלולוגי, אטימולוגי והיסטורי מקיף הנגיש ישירות מכל דפדפן (הרחבת חקר המזרח התיכון).<br>
+                    <strong class="text-white ml-2">שנת הבנייה/היצירה:</strong> 2026<br>
+                    <strong class="text-white ml-2">מקורות וקרדיט:</strong> חלק מתמונות הדגלים נלקחו באדיבות מהאתר <a href="https://flagpedia.net" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 underline transition-colors">Flagpedia.net</a>
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- סקריפט עבור פתיחה וסגירה של חלון הגדלת התמונה (Modal) -->
+    <script>
+        function openModal(imgSrc) {
+            const modal = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            img.src = imgSrc;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            // מניעת גלילה של הרקע כשנפתח החלון
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('lightbox');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            // החזרת גלילת הרקע
+            document.body.style.overflow = '';
+        }
+
+        // סגירת החלון בלחיצה על מקש ESC במקלדת
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
