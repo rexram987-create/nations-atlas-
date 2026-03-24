@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Stan Project | מדינות הסטן</title>
+    
+    <!-- טעינת ספריות העיצוב -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- טעינת React ו-Babel -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="min-h-screen bg-gray-950 text-gray-200 p-4 md:p-8 font-sans antialiased selection:bg-amber-500/30">
+    
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // ==========================================
+        // רכיבי ה-SVG של הדגלים (בנייה וקטורית פנימית)
+        // ==========================================
+
+        const FlagAfghanistan = () => (
+          <svg viewBox="0 0 300 200" className="w-full h-full object-cover" preserveAspectRatio="none">
+            <rect width="100" height="200" fill="#000000" />
+            <rect x="100" width="100" height="200" fill="#D32011" />
+            <rect x="200" width="100" height="200" fill="#007A36" />
+            <g fill="#FFFFFF" transform="translate(150, 100)">
+              <circle cx="0" cy="0" r="25" fill="none" stroke="#FFFFFF" strokeWidth="2"/>
+              <path d="M-15,10 L15,10 L15,15 L-15,15 Z" />
+              <path d="M-10,-5 L10,-5 L10,10 L-10,10 Z" />
+              <circle cx="0" cy="-10" r="5" />
+              <path d="M-20,-10 C-30,-20 -20,20 -15,25" fill="none" stroke="#FFFFFF" strokeWidth="2"/>
+              <path d="M20,-10 C30,-20 20,20 15,25" fill="none" stroke="#FFFFFF" strokeWidth="2"/>
+            </g>
+          </svg>
+        );
+
+        const FlagKazakhstan = () => (
+          <svg viewBox="0 0 300 200" className="w-full h-full object-cover" preserveAspectRatio="none">
+            <rect width="300" height="200" fill="#00AFCA" />
+            <path d="M20,0 L30,10 L20,20 L30,30 L20,40 L30,50 L20,60 L30,70 L20,80 L30,90 L20,100 L30,110 L20,120 L30,130 L20,140 L30,150 L20,160 L30,170 L20,180 L30,190 L20,200 L10,200 L10,0 Z" fill="#FEC50C" />
+            <g transform="translate(160, 80)">
+              <circle cx="0" cy="0" r="25" fill="#FEC50C" />
+              {[...Array(16)].map((_, i) => (
+                <line key={i} x1="0" y1="-28" x2="0" y2="-38" stroke="#FEC50C" strokeWidth="3" transform={`rotate(${i * 22.5})`} />
+              ))}
+              <path d="M-40,40 C-20,20 20,20 40,40 C20,30 -20,30 -40,40 Z" fill="#FEC50C" />
+              <path d="M-10,35 C0,25 10,25 0,35 Z" fill="#FEC50C" />
+            </g>
+          </svg>
+        );
+
+        const FlagKyrgyzstan = () => (
+          <svg viewBox="0 0 300 200" className="w-full h-full object-cover" preserveAspectRatio="none">
+            <rect width="300" height="200" fill="#E2001A" />
+            <g transform="translate(150, 100)">
+              <path d="M0,-50 L5,-40 L15,-45 L15,-35 L25,-35 L20,-25 L35,-20 L25,-15 L40,-5 L30,0 L40,5 L25,15 L35,20 L20,25 L25,35 L15,35 L15,45 L5,40 L0,50 L-5,40 L-15,45 L-15,35 L-25,35 L-20,25 L-35,20 L-25,15 L-40,5 L-30,0 L-40,-5 L-25,-15 L-35,-20 L-20,-25 L-25,-35 L-15,-35 L-15,-45 L-5,-40 Z" fill="#FFD700" />
+              <circle cx="0" cy="0" r="30" fill="#E2001A" />
+              <circle cx="0" cy="0" r="28" fill="#FFD700" />
+              <circle cx="0" cy="0" r="23" fill="#E2001A" />
+              <path d="M-20,-10 C0,-15 20,-10 20,-10" stroke="#FFD700" strokeWidth="3" fill="none" />
+              <path d="M-22,0 C0,-5 22,0 22,0" stroke="#FFD700" strokeWidth="3" fill="none" />
+              <path d="M-20,10 C0,5 20,10 20,10" stroke="#FFD700" strokeWidth="3" fill="none" />
+              <path d="M-10,-20 C-15,0 -10,20 -10,20" stroke="#FFD700" strokeWidth="3" fill="none" />
+              <path d="M0,-22 C-5,0 0,22 0,22" stroke="#FFD700" strokeWidth="3" fill="none" />
+              <path d="M10,-20 C5,0 10,20 10,20" stroke="#FFD700" strokeWidth="3" fill="none" />
+            </g>
+          </svg>
+        );
+
+        const FlagPakistan = () => (
+          <svg viewBox="0 0 300 200" className="w-full h-full object-cover" preserveAspectRatio="none">
+            <rect width="300" height="200" fill="#01411C" />
+            <rect width="75" height="200" fill="#FFFFFF" />
+            <g transform="translate(180, 100) rotate(-45)">
+              <path d="M0,-40 A40,40 0 1,0 0,40 A35,35 0 1,1 0,-40 Z" fill="#FFFFFF" />
+              <g transform="translate(15, -15)">
+                <polygon points="0,-15 4,-4 15,-4 6,3 9,14 0,7 -9,14 -6,3 -15,-4 -4,-4" fill="#FFFFFF" />
+              </g>
+            </g>
+          </svg>
+        );
+
+        const FlagTajikistan = () => (
+          <svg viewBox="0 0 300 200" className="w-full h-full object-cover" preserveAspectRatio="none">
+            <rect width="300" height="57" fill="#CC0000" />
+            <rect y="57" width="300" height="86" fill="#FFFFFF" />
+            <rect y="143" width="300" height="57" fill="#006600" />
+            <g transform="translate(150, 100)">
+              <path d="M-30,20 L-40,0 L-20,10 L0,-15 L20,10 L40,0 L30,20 Z" fill="#F8C300" />
+              <path d="M-30,25 L30,25 L25,30 L-25,30 Z" fill="#F8C300" />
+              {[...Array(7)].map((_, i) => {
+                const angle = (Math.PI / 6) * i + Math.PI; 
+                const x = Math.cos(angle) * 45;
+                const y = Math.sin(angle) * 35 - 5;
+                return (
+                  <polygon key={i} points="0,-6 2,-1.5 6,-1.5 3,1 4,5 0,3 -4,5 -3,1 -6,-1.5 -2,-1.5" fill="#F8C300" transform={`translate(${x}, ${y})`} />
+                );
+              })}
+            </g>
+          </svg>
+        );
+
+        const FlagTurkmenistan = () => (
+          <svg viewBox="0 0 300 200" className="w-full h-full object-cover" preserveAspectRatio="none">
+            <rect width="300" height="200" fill="#008850" />
+            <rect x="20" width="40" height="200" fill="#D22630" />
+            {[20, 60, 100, 140, 180].map((y, i) => (
+              <g key={i} transform={`translate(40, ${y})`}>
+                <polygon points="0,-15 15,0 0,15 -15,0" fill="#F8C300" />
+                <polygon points="0,-10 10,0 0,10 -10,0" fill="#008850" />
+              </g>
+            ))}
+            <g transform="translate(100, 40)">
+              <path d="M0,-25 A25,25 0 1,0 0,25 A20,20 0 1,1 0,-25 Z" fill="#FFFFFF" />
+              <g transform="translate(15, -10)">
+                <polygon points="0,-4 1,-1 4,-1 2,1 3,4 0,2 -3,4 -2,1 -4,-1 -1,-1" fill="#FFFFFF" transform="translate(0,0)" />
+                <polygon points="0,-4 1,-1 4,-1 2,1 3,4 0,2 -3,4 -2,1 -4,-1 -1,-1" fill="#FFFFFF" transform="translate(12,0)" />
+                <polygon points="0,-4 1,-1 4,-1 2,1 3,4 0,2 -3,4 -2,1 -4,-1 -1,-1" fill="#FFFFFF" transform="translate(6,8)" />
+                <polygon points="0,-4 1,-1 4,-1 2,1 3,4 0,2 -3,4 -2,1 -4,-1 -1,-1" fill="#FFFFFF" transform="translate(18,8)" />
+                <polygon points="0,-4 1,-1 4,-1 2,1 3,4 0,2 -3,4 -2,1 -4,-1 -1,-1" fill="#FFFFFF" transform="translate(12,16)" />
+              </g>
+            </g>
+          </svg>
+        );
+
+        const FlagUzbekistan = () => (
+          <svg viewBox="0 0 300 200" className="w-full h-full object-cover" preserveAspectRatio="none">
+            <rect width="300" height="66.6" fill="#0099B5" />
+            <rect y="66.6" width="300" height="66.6" fill="#FFFFFF" />
+            <rect y="133.2" width="300" height="66.6" fill="#1EB53A" />
+            <rect y="64.6" width="300" height="2" fill="#CE1126" />
+            <rect y="133.2" width="300" height="2" fill="#CE1126" />
+            <g transform="translate(60, 33)">
+              <path d="M0,-20 A20,20 0 1,0 0,20 A16,16 0 1,1 0,-20 Z" fill="#FFFFFF" />
+              <g transform="translate(25, -15)">
+                {[...Array(3)].map((_, i) => <polygon key={`row1-${i}`} points="0,-3 1,-1 3,-1 1.5,1 2,3 0,1.5 -2,3 -1.5,1 -3,-1 -1,-1" fill="#FFFFFF" transform={`translate(${i * 12}, 0)`} />)}
+                {[...Array(4)].map((_, i) => <polygon key={`row2-${i}`} points="0,-3 1,-1 3,-1 1.5,1 2,3 0,1.5 -2,3 -1.5,1 -3,-1 -1,-1" fill="#FFFFFF" transform={`translate(${i * 12 - 6}, 10)`} />)}
+                {[...Array(5)].map((_, i) => <polygon key={`row3-${i}`} points="0,-3 1,-1 3,-1 1.5,1 2,3 0,1.5 -2,3 -1.5,1 -3,-1 -1,-1" fill="#FFFFFF" transform={`translate(${i * 12 - 12}, 20)`} />)}
+              </g>
+            </g>
+          </svg>
+        );
+
+        // ==========================================
+        // מאגר הנתונים המלא - מחקר מותאם לאתר
+        // ==========================================
+
+        const countriesData = [
+          {
+            id: 'afghanistan',
+            name: 'אפגניסטן',
+            englishName: 'Afghanistan',
+            officialName: 'האמירות האסלאמית של אפגניסטן',
+            FlagComponent: FlagAfghanistan,
+            areaNum: '~652,860 קמ"ר',
+            populationNum: '~40,000,000',
+            currency: 'אפגני (AFN)',
+            area: 'כ-652,860 קמ"ר (מקום 40 בעולם). מתאפיינת בטופוגרפיה הררית קשה ונופית, בפרט הרי הינדו-כוש.',
+            demographics: {
+              mainNationName: 'פשטונים',
+              mainNationPercent: 'כ-42%',
+              description: 'אפגניסטן היא אחת המדינות המפוצלות ביותר בעולם מבחינה אתנית ושבטית. אין בה קבוצה אחת המהווה רוב מוחלט. הפשטונים הם השליטים ההיסטוריים, אך הטג\'יקים (כ-27%) מהווים כוח פוליטי וצבאי מכריע בצפון. קבוצות נוספות כמו ההזארה השיעים (כ-9%) והאוזבקים (כ-9%) תורמות לפסיפס, שלרוב מעדיף נאמנות שבטית מקומית על פני זהות לאומית.'
+            },
+            modernHistory: 'לאחר עשרות שנים של ניסיונות השתלטות מצד האימפריה הבריטית ("המשחק הגדול"), אפגניסטן השיגה עצמאות מלאה ב-1919 תחת הנהגתו של האמיר אמאן אללה חאן.',
+            foundingYears: '1709 (הותכּ) | 1919',
+            flagSymbolism: 'השחור מסמל את העבר החשוך והקשה תחת אימפריות זרות, האדום מסמל את הדם שנשפך במאבקים לעצמאות, והירוק מסמל תקווה, שגשוג ואת דת האסלאם. הסמל במרכז מציג מסגד עם מיחראב הפונה למכה מוקף בחיטה.',
+            etymology: {
+              part1: { text: 'אפגן (Afghan)', color: 'text-indigo-400', bg: 'bg-indigo-400/10', border: 'border-indigo-500/30', desc: 'שם היסטורי עתיק יומין שניתן לעם הפשטוני על ידי שכניהם. המקור נובע מהמילה הסנסקריטית "Aśvaka" שפירושה "רוכבי סוסים". המונח תועד לראשונה במאה ה-3 לספירה על ידי האימפריה הסאסאנית כ-"Abgân", ושימש לתאר את השבטים ההרריים הלוחמניים שישבו באזור.' },
+              part2: { text: 'סטן (Stan)', color: 'text-pink-400', bg: 'bg-pink-400/10', border: 'border-pink-500/30', desc: 'מקור הודו-איראני קדום (בפרסית עתיקה: "stāna") שמשמעותו המילולית היא "מקום עמידה", "מחנה" או "מקום התיישבות".' },
+              synthesis: 'ארצם של הפשטונים, או בפירוש הקדום והפואטי: "ארצם של רוכבי הסוסים הנועזים".'
+            },
+            figure: {
+              name: 'אחמד שאה דוראני',
+              years: '1722 - 1772',
+              childhood: 'נולד בהראט כבנו של מנהיג שבט פשטוני. בנעוריו נלקח בשבי על ידי השליט הפרסי נאדר שאה, אך בזכות גאונותו הפך למפקד בכיר בצבא שוביו.',
+              ideology: 'לאומנות פשטונית ואחדות אסלאמית. הוא האמין כי על השבטים להתאחד למדינה ריבונית עצמאית וחסונה, שלא תהיה כפופה לאימפריה הפרסית או המוגולית.',
+              achievements: 'מייסד האימפריה הדוראנית ומדינת אפגניסטן המודרנית. מוכר בתואר "אחמד שאה באבא" (אבי האומה).'
+            },
+            map: {
+              url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/1700_De_Lisle_Map_of_Persia%2C_Tartary%2C_and_Afghanistan.jpg/800px-1700_De_Lisle_Map_of_Persia%2C_Tartary%2C_and_Afghanistan.jpg',
+              title: 'מפת פרס, טרטאריה ואפגניסטן - המאה ה-18',
+              desc: 'מציגה את האזור ההררי של הינדו-כוש כחלק מהמרחב הפרסי-טורקי בעת העתיקה.'
+            }
+          },
+          {
+            id: 'kazakhstan',
+            name: 'קזחסטן',
+            englishName: 'Kazakhstan',
+            officialName: 'רפובליקת קזחסטן',
+            FlagComponent: FlagKazakhstan,
+            areaNum: '~2,724,900 קמ"ר',
+            populationNum: '~19,500,000',
+            currency: 'טנגה קזחי (KZT)',
+            area: 'כ-2,724,900 קמ"ר (מקום 9 בעולם בגודלו, והמדינה הגדולה ביותר בעולם ללא מוצא לים פתוח).',
+            demographics: {
+              mainNationName: 'קזחים',
+              mainNationPercent: 'כ-70%',
+              description: 'לאורך רוב המאה ה-20, בעקבות מדיניות ההגליה וההרעבה של סטלין, הקזחים הפכו למיעוט במולדתם. רק לאחר העצמאות ב-1991 והגירה רוסית חזרה לרוסיה, חזרו הקזחים להוות רוב מוצק. כיום המיעוט הרוסי עומד על כ-15%.'
+            },
+            modernHistory: 'קזחסטן הייתה הרפובליקה הסובייטית האחרונה שהכריזה על עצמאותה ב-16 בדצמבר 1991. המעבר הונהג על ידי נורסולטן נזרבייב, ששלט במדינה ביד חזקה במשך עשורים תוך פיתוח מואץ וביסוס הבירה אסטנה.',
+            foundingYears: '1465 (חאנות) | 1991',
+            flagSymbolism: 'הרקע התכלת מסמל את השמיים ואמונת הטנגרי העתיקה. השמש (32 קרניים) מסמלת עושר ונשר הערבות מסמל כוח וחופש. בצד מופיע עיטור "קרן האיל" המסורתי.',
+            etymology: {
+              part1: { text: 'קזח (Kazakh)', color: 'text-cyan-400', bg: 'bg-cyan-400/10', border: 'border-cyan-500/30', desc: 'מונח טורקי עתיק המתאר אדם שעזב את השבט המקורי שלו כדי לחיות חיי נוודות חופשיים. במאה ה-15, קבוצת שבטים בהנהגת ג\'אניבק פרשו מחאנות האוזבקים ויצאו לערבות הפתוחות וכונו "קזחים" – הנוודים החופשיים.' },
+              part2: { text: 'סטן (Stan)', color: 'text-pink-400', bg: 'bg-pink-400/10', border: 'border-pink-500/30', desc: 'הסיומת הפרסית/איראנית המציינת אזור גיאוגרפי או מדינה ריבונית.' },
+              synthesis: 'ארצם של האנשים החופשיים, או מולדת הנוודים העצמאיים.'
+            },
+            figure: {
+              name: 'אבאי קוננבאיולי',
+              years: '1845 - 1904',
+              childhood: 'נולד בהרי צ\'ינגיז למשפחת אצולה אמידה. קיבל חינוך ששילב לימודי דת אסלאמית במדרסה עם חינוך חילוני רוסי.',
+              ideology: 'נאורות מתקדמת. הטיף לשימור התרבות הקזחית, אך טען בתוקף כי עליהם לאמץ השכלה מודרנית ופתיחות רוסית/אירופאית כדי לצאת מהפיגור החברתי.',
+              achievements: 'מייסד הספרות הקזחית המודרנית. ספרו הפילוסופי "ספר המילים" מהווה עמוד תווך בזהות הקזחית.'
+            },
+            map: {
+              url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/1626_Speed_Map_of_Tartary_or_the_Mongol_Empire.jpg/800px-1626_Speed_Map_of_Tartary_or_the_Mongol_Empire.jpg',
+              title: 'מפת טרטאריה העתיקה - המאה ה-17',
+              desc: 'מציגה את הערבות העצומות של מרכז אסיה, הידועות היסטורית כ"טרטאריה העצמאית", מולדת הקזחים.'
+            }
+          },
+          {
+            id: 'kyrgyzstan',
+            name: 'קירגיזסטן',
+            englishName: 'Kyrgyzstan',
+            officialName: 'הרפובליקה הקירגיזית',
+            FlagComponent: FlagKyrgyzstan,
+            areaNum: '~199,951 קמ"ר',
+            populationNum: '~7,000,000',
+            currency: 'סום קירגיזי (KGS)',
+            area: 'כ-199,951 קמ"ר. מכונה "שווייץ של מרכז אסיה" בשל שרשראות ההרים העצומות של טיאן שאן (Tian Shan).',
+            demographics: {
+              mainNationName: 'קירגיזים',
+              mainNationPercent: 'כ-73%',
+              description: 'שאר האוכלוסייה מורכבת בעיקר ממיעוטים אוזבקים (כ-15%) המרוכזים בדרום המדינה באזור עמק פרגאנה (דבר שהוביל היסטורית לעימותים אתניים), וכן מיעוט רוסי (כ-5%) באזור הבירה בישקק.'
+            },
+            modernHistory: 'הכריזה על עצמאותה ב-31 באוגוסט 1991. המדינה חוותה מאז מספר הפיכות ותהפוכות שלטוניות המכונות "מהפכות צבעונים" בחיפושיה אחר דמוקרטיה יציבה.',
+            foundingYears: 'המאה ה-9 | 1991',
+            flagSymbolism: 'הרקע האדום מסמל אומץ וגבורה (דגל הגיבור מאנאס). השמש (40 קרניים) מייצגת את 40 השבטים. במרכז מופיע ה"טונדוק" - חלקו העליון של אוהל היורטה, המסמל בית, שלום, וחיבור לשמיים.',
+            etymology: {
+              part1: { text: 'קירגיז (Kyrgyz)', color: 'text-red-400', bg: 'bg-red-400/10', border: 'border-red-500/30', desc: 'השם מורכב מהמילים הטורקיות הקדומות "kyrk" שמשמעותה 40, והסיומת "yz" או "uz" שמשמעותה שבטים. השם מסמל את 40 השבטים המקוריים שאוחדו על ידי הגיבור האגדי מאנאס במאבקם נגד האויגורים במאה ה-9 לספירה.' },
+              part2: { text: 'סטן (Stan)', color: 'text-pink-400', bg: 'bg-pink-400/10', border: 'border-pink-500/30', desc: 'המילה הפרסית למקום או התיישבות.' },
+              synthesis: 'ארץ ארבעים השבטים.'
+            },
+            figure: {
+              name: 'מאנאס המפואר',
+              years: 'המאה ה-9 לספירה',
+              childhood: 'גיבור מיתולוגי. נולד באורח פלא להורים קשישים, וכבר מילדות הפגין כוח פיזי על-אנושי וחוכמה.',
+              ideology: 'אחדות מוחלטת של השבטים המפוזרים, ונאמנות להגנה על המולדת ההררית מפני פולשים זרים במרכז אסיה.',
+              achievements: 'איחד את 40 השבטים לאומה אחת חזקה. "האפוס של מאנאס" הוא מהארוכים בעולם ומהווה את הליבה התרבותית הקירגיזית.'
+            },
+            map: {
+              url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/1570_Ortelius_Map_of_Tartary_or_Central_Asia_-_Geographicus_-_Tartaria-ortelius-1570.jpg/800px-1570_Ortelius_Map_of_Tartary_or_Central_Asia_-_Geographicus_-_Tartaria-ortelius-1570.jpg',
+              title: 'מפת טרטאריה ומרכז אסיה - 1570',
+              desc: 'אזור ההרים והעמקים של מרכז אסיה בהם נדדו ועברו 40 השבטים הקירגיזים ההיסטוריים.'
+            }
+          },
+          {
+            id: 'pakistan',
+            name: 'פקיסטן',
+            englishName: 'Pakistan',
+            officialName: 'הרפובליקה האסלאמית של פקיסטן',
+            FlagComponent: FlagPakistan,
+            areaNum: '~881,913 קמ"ר',
+            populationNum: '~240,000,000',
+            currency: 'רופי פקיסטני (PKR)',
+            area: 'כ-881,913 קמ"ר. נוף גיאוגרפי מגוון בצורה קיצונית: מפסגות ההימלאיה הקפואות בצפון ועד מדבריות והים הערבי בדרום.',
+            demographics: {
+              mainNationName: 'פנג\'אבים',
+              mainNationPercent: 'כ-45%',
+              description: 'המדינה בנויה על פסיפס ולא קיימת קבוצה אתנית הנקראת "פקיסטנים". הפנג\'אבים דומיננטיים, ולצידם פשטונים (15%), סינדהים (14%), בלוצ\'ים (3%) ומהגרים דוברי אורדו (מוהאג\'ירים). שפת האורדו הלאומית משמשת כשפת איחוד, אך היא שפת אם של מיעוט.'
+            },
+            modernHistory: 'הוקמה ב-14 באוגוסט 1947 כתוצאה מחלוקת תת-היבשת ההודית על ידי הבריטים. היא נועדה לשמש כמדינת לאום ובית בטוח עבור המוסלמים של הודו. החלוקה גררה שפיכות דמים איומה וחילופי אוכלוסין של מיליוני בני אדם.',
+            foundingYears: '1947 (חלוקת הודו)',
+            flagSymbolism: 'הירוק העמוק מסמל את האסלאם, הפס הלבן האנכי מייצג סובלנות למיעוטים. חצי הסהר הלבן מסמל קידמה, והכוכב המחומש מסמל ידע והשכלה.',
+            etymology: {
+              part1: { text: 'פקי (Paki / Pak)', color: 'text-emerald-400', bg: 'bg-emerald-400/10', border: 'border-emerald-500/30', desc: 'לשם זה שורשים כפולים. מבחינה לשונית פרסית/אורדו, "Pak" משמעותו "טהור" או "קדוש". במקביל, המונח הוטבע ב-1933 ע"י הפעיל צ\'אודרי רחמט עלי כראשי תיבות של המחוזות הצפוניים המוסלמים: P(unjab), A(fghania - פשטונים), K(ashmir), ו-(S)indh.' },
+              part2: { text: 'סטן (Stan)', color: 'text-pink-400', bg: 'bg-pink-400/10', border: 'border-pink-500/30', desc: 'בנוסף למשמעות המסורתית של "ארץ", באקרונים של רחמט עלי, האותיות STAN מסמלות ישירות את חבל הבלוצ\'יסטן (BaluchiSTAN).' },
+              synthesis: 'משמעות כפולה: "ארץ הטהורים", ושילוב הרמוני של ראשי התיבות המרכיבים את מחוזות המדינה.'
+            },
+            figure: {
+              name: 'מוחמד עלי ג\'ינה',
+              years: '1876 - 1948',
+              childhood: 'נולד בקראצ\'י למשפחת סוחרים מבוססת. בגיל 16 נשלח ללונדון ללמוד מנהל עסקים, אך במקום זאת פנה בחשאי ללימודי משפטים והפך לעורך דין מבריק.',
+              ideology: 'תחילה תמך באחדות הינדו-מוסלמית, אך בהמשך הגה וקידם בלהט את "תאוריית שתי האומות", בטענה שלמוסלמים יש זהות נפרדת לחלוטין ולכן הם זקוקים למדינה ריבונית.',
+              achievements: 'מייסד פקיסטן. "קאיד-י אעזם" (המנהיג הגדול). הוביל את המשא ומתן המורכב לחלוקת הודו והיה המושל הכללי הראשון.'
+            },
+            map: {
+              url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/1638_Jansson_Map_of_India_%28Mughal_Empire%29_-_Geographicus_-_India-jansson-1638.jpg/800px-1638_Jansson_Map_of_India_%28Mughal_Empire%29_-_Geographicus_-_India-jansson-1638.jpg',
+              title: 'מפת האימפריה המוגולית (הודו ופקיסטן) - 1638',
+              desc: 'מציגה את תת-היבשת תחת שלטון מוסלמי-מוגולי היסטורי, הרבה לפני חלוקת המדינות המודרנית ב-1947.'
+            }
+          },
+          {
+            id: 'tajikistan',
+            name: 'טג\'יקיסטן',
+            englishName: 'Tajikistan',
+            officialName: 'רפובליקת טג\'יקיסטן',
+            FlagComponent: FlagTajikistan,
+            areaNum: '~143,100 קמ"ר',
+            populationNum: '~10,000,000',
+            currency: 'סומוני טג\'יקי (TJS)',
+            area: 'כ-143,100 קמ"ר. המדינה הקטנה ביותר בשטחה במרכז אסיה, מעל 90% משטחה הררי במיוחד (רכס הפאמיר).',
+            demographics: {
+              mainNationName: 'טג\'יקים',
+              mainNationPercent: 'כ-84%',
+              description: 'בשונה משאר מדינות הסטן שמקורן בשבטים הטורקיים, הטג\'יקים הם ממוצא הודו-אירופי והם דוברים ניב של פרסית (טג\'יקית). ישנו מיעוט אוזבקי בולט (כ-14%) וקבוצת מבודדות בהרים הגבוהים, כמו בני הפאמיר.'
+            },
+            modernHistory: 'הכריזה עצמאות ב-1991. למרבה הטרגדיה, המדינה הצעירה הידרדרה כמעט מיד למלחמת אזרחים עקובה מדם (1992-1997). מאז תום המלחמה המדינה נשלטת תחת משטרו היציב אך הנוקשה של אמומאלי רחמון.',
+            foundingYears: '819 (סמאנים) | 1991',
+            flagSymbolism: 'אדום מסמל ניצחון ושמש, לבן מסמל את הכותנה ושלגי הרי הפאמיר, הירוק מסמל חקלאות ואסלאם. במרכז כתר המייצג את העם ("טאג\'" = כתר) מוקף ב-7 כוכבי שלמות.',
+            etymology: {
+              part1: { text: 'טג\'יק (Tajik)', color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-500/30', desc: 'זהות נגדית. מקור השם בפרסית אמצעית "Tazig" – ששימשה לתיאור ערבים. בהמשך, שבטים טורקיים כינו כך כל אדם קבוע-מקום ודובר פרסית. דוברי הפרסית אימצו את השם כזהות לאומית גאה כדי לבדל את עצמם מהנוודים הטורקיים סביבם.' },
+              part2: { text: 'סטן (Stan)', color: 'text-pink-400', bg: 'bg-pink-400/10', border: 'border-pink-500/30', desc: 'ארץ או טריטוריה. הצירוף הפרסי הקלאסי לתיאור ארץ מושב.' },
+              synthesis: 'ארצם של הטג\'יקים – ארצם של דוברי השפות הפרסיות בלב מרכז אסיה.'
+            },
+            figure: {
+              name: 'איסמעיל סמאני',
+              years: '849 - 907',
+              childhood: 'נולד באזור המהווה כיום את אפגניסטן למשפחת אצולה בעלת שורשים פרסיים עמוקים. זכה לחינוך מנהלי באקדמיות היוקרתיות.',
+              ideology: 'תחייה של התרבות והלשון הפרסית תחת כנפי האסלאם. הוא ביקש לטפח סחר, מדע, ולבסס שלטון המושתת על צדק ומנהל תקין.',
+              achievements: 'הביא את האימפריה הסמאנית לשיא תפארתה, הפך את בוכרה למרכז אינטלקטואלי נוצץ ונחשב לאבי האומה.'
+            },
+            map: {
+              url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/1855_Colton_Map_of_Persia%2C_Arabia%2C_Tartary_and_Afghanistan.jpg/800px-1855_Colton_Map_of_Persia%2C_Arabia%2C_Tartary_and_Afghanistan.jpg',
+              title: 'מפת פרס וטרטאריה - המאה ה-19',
+              desc: 'מציגה את האזור ההררי של בקטריה וסוגדיאנה ההיסטוריות, מולדתם של דוברי הפרסית והסמאנים במרכז אסיה.'
+            }
+          },
+          {
+            id: 'turkmenistan',
+            name: 'טורקמניסטן',
+            englishName: 'Turkmenistan',
+            officialName: 'טורקמניסטן',
+            FlagComponent: FlagTurkmenistan,
+            areaNum: '~491,210 קמ"ר',
+            populationNum: '~6,500,000',
+            currency: 'מאנאט טורקמני (TMT)',
+            area: 'כ-491,210 קמ"ר. רוב מוחלט של שטחה (מעל 70%) מכוסה על ידי מדבר החולות השחורים העצום, קאראקום.',
+            demographics: {
+              mainNationName: 'טורקמנים',
+              mainNationPercent: 'כ-85%',
+              description: 'הומוגניות אתנית גבוהה ביחס לשכנותיה. לצד הרוב הטורקמני, קיימים מיעוטים קטנים מאוד של אוזבקים (כ-5%) ורוסים (כ-4%), כאשר מרבית הרוסים היגרו לאחר התפרקות ברית המועצות.'
+            },
+            modernHistory: 'עצמאותה הוכרזה ב-1991. מנהיגה הראשון, ספרמורט ניאזוב, הפך ל"טורקמנבאשי" (אבי כל הטורקמנים). הוא כונן מדינת רווחה מבוססת גז, אך בד בבד הקים דיקטטורה מבודדת וסגורה המלווה בפולחן אישיות יוצא דופן.',
+            foundingYears: '1991 (עצמאות מברית המועצות)',
+            flagSymbolism: 'הירוק הוא הצבע האסלאמי. הפס האדום מציג 5 "גולים" (דוגמאות שטיחים) של 5 השבטים הגדולים. סהר ו-5 כוכבים מייצגים תקווה ואת מחוזות המדינה.',
+            etymology: {
+              part1: { text: 'טורקמן (Turkmen)', color: 'text-teal-400', bg: 'bg-teal-400/10', border: 'border-teal-500/30', desc: 'השם מורכב מ-"Turk" (טורקי), וסיומת חיזוק עתיקה: "-myn" או "-men". יש המתרגמים זאת כ"טהור", "דומה לטורק", או ככינוי גוף ("אני"). לפיכך, הפירוש המקובל הוא "הטורקים הטהורים" או בגוף ראשון – "אני הוא הטורקי".' },
+              part2: { text: 'סטן (Stan)', color: 'text-pink-400', bg: 'bg-pink-400/10', border: 'border-pink-500/30', desc: 'סיומת הודו-אירופית המתארת ארץ תחת שלטון אחד.' },
+              synthesis: 'ארצם של הטורקים הטהורים (או האנשים הלוחמים "הדומים לטורקים").'
+            },
+            figure: {
+              name: 'מכתומקולי פראגי',
+              years: '1724 - 1807',
+              childhood: 'נולד סמוך לנהר האטרק כבנו של משורר. למד במדרסות היוקרתיות בבוכרה והיה בקיא בפרסית וערבית.',
+              ideology: 'סופיות רוחנית עמוקה שלובה בפטריוטיות בוערת. קרא לאיחוד כל שבטי הטורקמנים כדי לעמוד נגד דיכוי זר ולשים קץ לשפיכות הדמים בסכסוכי הדם הפנימיים.',
+              achievements: 'הדמות הרוחנית והספרותית העליונה של הטורקמנים. שדרג את שפתם המדוברת והפך אותה ללשון ספרותית ופיוטית עשירה.'
+            },
+            map: {
+              url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/1753_Homann_Heirs_Map_of_the_Persian_Empire_and_the_Caspian_Sea_%28Iran%2C_Persia%2C_Arabia%29_-_Geographicus_-_PersianEmpire-homann-1753.jpg/800px-1753_Homann_Heirs_Map_of_the_Persian_Empire_and_the_Caspian_Sea_%28Iran%2C_Persia%2C_Arabia%29_-_Geographicus_-_PersianEmpire-homann-1753.jpg',
+              title: 'מפת הים הכספי - הומאן (1753)',
+              desc: 'אזור מדבר קאראקום וחופי הים הכספי, משכנם ההיסטורי והנוודי של שבטי הטורקמנים העתיקים.'
+            }
+          },
+          {
+            id: 'uzbekistan',
+            name: 'אוזבקיסטן',
+            englishName: 'Uzbekistan',
+            officialName: 'רפובליקת אוזבקיסטן',
+            FlagComponent: FlagUzbekistan,
+            areaNum: '~448,978 קמ"ר',
+            populationNum: '~36,000,000',
+            currency: 'סום אוזבקי (UZS)',
+            area: 'כ-448,978 קמ"ר. שוכנת בלב מרכז אסיה, מוקפת יבשה מכל עבריה במדינות שגם להן אין מוצא לים (מדינה "כפולה ללא מוצא לים").',
+            demographics: {
+              mainNationName: 'אוזבקים',
+              mainNationPercent: 'כ-84%',
+              description: 'המדינה המאוכלסת ביותר במרכז אסיה. קיים במדינה מיעוט טג\'יקי רשמי של כ-5%, אם כי בפועל בערים כסמרקנד ובוכרה השיעור גבוה בהרבה. ישנם גם מיעוטים קזחים ורוסים.'
+            },
+            modernHistory: 'הכריזה עצמאות ב-1991. מנהיגה הראשון, אסלאם קרימוב, שלט בה ביד ברזל עד מותו ב-2016. יורשו החל בתהליך איטי של פתיחת הכלכלה ושיפור יחסי החוץ של המדינה מול העולם.',
+            foundingYears: '1991 (מדינה מודרנית)',
+            flagSymbolism: 'הכחול מסמל שמיים ומים (וצבע האימפריה של טימור). הלבן שלום, והירוק פריון. פסים אדומים מסמלים כוח חיים. סהר מתאר לידה מחדש, ו-12 כוכבים מסמלים את חודשי השנה ושלמות.',
+            etymology: {
+              part1: { text: 'אוזבק (Uzbek)', color: 'text-blue-400', bg: 'bg-blue-400/10', border: 'border-blue-500/30', desc: 'מורכב מ-"Öz" (עצמי/אני) והתואר "Bek" (אדון/מנהיג). משמעותו "אדון לעצמי". במקביל, סברה מובילה היא שהשם נלקח ישירות משמו של "אוזבק חאן", אחד מגדולי השליטים של אורדת הזהב, שהנחיל את האסלאם באזור.' },
+              part2: { text: 'סטן (Stan)', color: 'text-pink-400', bg: 'bg-pink-400/10', border: 'border-pink-500/30', desc: 'המונח ההיסטורי והאזור הגיאוגרפי שבו יושבים בני האומה.' },
+              synthesis: 'ארץ האנשים שהם האדונים של עצמם (או: ארצם של הולכי דרכו של אוזבק חאן).'
+            },
+            figure: {
+              name: 'אמיר טימור - טימור לנג',
+              years: '1336 - 1405',
+              childhood: 'נולד סמוך לשחריסאבז למשפחה משבט ברלאס הטורקו-מונגולי. פציעה קשה בנעוריו העניקה לו את הכינוי "הצולע" (לנג).',
+              ideology: 'תחייה ושחזורה של האימפריה של ג\'ינגיס חאן, בשילוב תרבות אסלאמית פרסית גבוהה, משמעת אכזרית, וקידום מדע ואומנויות.',
+              achievements: 'מייסד האימפריה הטימורית. כבש שטחים מדהימים בעולם הישן. הפך את בירתו סמרקנד לפנינה אדריכלית, ונחשב לגיבור העל הלאומי של אוזבקיסטן המודרנית.'
+            },
+            map: {
+              url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/1700_De_Lisle_Map_of_Tartary_%28Central_Asia%2C_China%2C_Russia%29_-_Geographicus_-_Tartarie-delisle-1700.jpg/800px-1700_De_Lisle_Map_of_Tartary_%28Central_Asia%2C_China%2C_Russia%29_-_Geographicus_-_Tartarie-delisle-1700.jpg',
+              title: 'מפת טרטאריה ובוכרה - המאה ה-18',
+              desc: 'מוקד האימפריה של טימור לנג, בין הנהרות אמו דריה וסיר דריה (אזור טראנסאוקסיאנה ההיסטורי).'
+            }
+          }
+        ];
+
+        // ==========================================
+        // רכיבי התצוגה (UI) 
+        // ==========================================
+
+        const Navbar = () => {
+          const links = [
+            { id: 1, label: 'דף הבית', url: 'index.html', icon: 'fa-house', active: false },
+            { id: 2, label: 'המזרח התיכון', url: 'middle_east_research.html', icon: 'fa-earth-asia', active: false },
+            { id: 3, label: 'חצי האי ערב', url: 'arabian_peninsula.html', icon: 'fa-mosque', active: false },
+            { id: 4, label: 'צפון אפריקה', url: 'north_africa.html', icon: 'fa-om', active: false },
+            { id: 5, label: 'מדינות הסטן', url: 'stan_nations_adapted.html', icon: 'fa-map-location-dot', active: true },
+          ];
+
+          return (
+            <nav className="w-full z-40 mb-10 px-4 sm:px-0">
+              <div className="max-w-5xl mx-auto bg-slate-900/85 backdrop-blur-md border border-slate-700/60 rounded-2xl shadow-xl overflow-hidden">
+                <ul 
+                  className="flex items-center justify-start md:justify-center overflow-x-auto p-2 gap-2"
+                  style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}
+                >
+                  {links.map(link => (
+                    <li key={link.id} className="shrink-0">
+                      <a 
+                        href={link.url}
+                        className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 ${
+                          link.active 
+                            ? 'bg-gradient-to-r from-amber-500/20 to-amber-600/20 text-amber-400 border border-amber-500/30 shadow-inner' 
+                            : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                        }`}
+                      >
+                        <i className={`fa-solid ${link.icon}`}></i>
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </nav>
+          );
+        };
+
+        const CountryCard = ({ country, onModalOpen }) => {
+          const { 
+            FlagComponent, name, englishName, officialName, areaNum, populationNum, currency, area, demographics, 
+            modernHistory, foundingYears, etymology, flagSymbolism, figure, map 
+          } = country;
+
+          return (
+            <article className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl transition-all hover:border-gray-700">
+              
+              {/* כותרת, דגל ונתונים קצרים (מבנה זהה ל-HTML האתר) */}
+              <div className="flex flex-col md:flex-row gap-6 p-6 md:p-8 border-b border-gray-800">
+                <div 
+                  className="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center bg-gray-950 p-4 rounded-xl cursor-pointer group relative" 
+                  onClick={() => onModalOpen({type: 'flag', component: FlagComponent, title: `דגל ${name}`})}
+                  title="לחץ להגדלת הדגל"
+                >
+                  <div className="w-full max-h-40 shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105 overflow-hidden flex justify-center items-center">
+                    <div className="w-full h-32 md:h-40 relative">
+                       <FlagComponent />
+                    </div>
+                  </div>
+                  <div className="absolute opacity-0 group-hover:opacity-100 bg-black/60 text-white text-sm px-3 py-1 rounded transition-opacity duration-300 pointer-events-none mt-32">
+                    לחץ להגדלה
+                  </div>
+                </div>
+                
+                <div className="flex-grow flex flex-col justify-center">
+                  <h2 className="text-3xl font-bold text-white mb-2">{name} <span className="text-gray-500 text-lg ml-2 uppercase tracking-widest">{englishName}</span></h2>
+                  <h3 className="text-xl text-gray-400 mb-4">{officialName}</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 ml-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                      <span><strong className="text-white">שנת ייסוד:</strong> {foundingYears}</span>
+                    </div>
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 ml-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                      <span className="truncate" title={figure.name}><strong className="text-white">מנהיג ראשון:</strong> {figure.name.split('(')[0]}</span>
+                    </div>
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 ml-2 text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3h18v18H3zM12 8v8m-4-4h8"></path></svg>
+                      <span><strong className="text-white">שטח המדינה:</strong> {areaNum}</span>
+                    </div>
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 ml-2 text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                      <span><strong className="text-white">אוכלוסייה:</strong> {populationNum}</span>
+                    </div>
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg md:col-span-2">
+                      <svg className="w-5 h-5 ml-2 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+                      <span><strong className="text-white">שם מטבע:</strong> {currency}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* גוף המחקר */}
+              <div className="p-6 md:p-8 space-y-10">
+                
+                {/* רקע פיזי ואנושי והיסטוריה (איחוד נתונים למניעת מחיקה) */}
+                <section>
+                    <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                        <i className="fa-solid fa-map-location-dot w-6 h-6 ml-2 text-sky-400 text-xl"></i>
+                        <h3 className="text-2xl font-bold text-white">רקע פיזי ואנושי</h3>
+                    </div>
+                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 space-y-4">
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">שטח וטופוגרפיה:</strong> {area}</p>
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">דמוגרפיה ({demographics.mainNationName} - {demographics.mainNationPercent}):</strong> {demographics.description}</p>
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">היסטוריה מודרנית:</strong> {modernHistory}</p>
+                    </div>
+                </section>
+
+                <section>
+                    <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                        <svg className="w-6 h-6 ml-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                        <h3 className="text-2xl font-bold text-white">וקסלולוגיה</h3>
+                    </div>
+                    <p className="text-gray-300 leading-relaxed text-lg">{flagSymbolism}</p>
+                </section>
+                
+                <section>
+                    <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                        <svg className="w-6 h-6 ml-2 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                        <h3 className="text-2xl font-bold text-white">אטימולוגיה</h3>
+                    </div>
+                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800">
+                        <ul className="space-y-4">
+                            <li className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4">
+                                <span className={`font-bold min-w-[140px] md:text-lg flex-shrink-0 ${etymology.part1.color}`}>• {etymology.part1.text}:</span>
+                                <span className="text-gray-300 leading-relaxed text-lg">{etymology.part1.desc}</span>
+                            </li>
+                            <li className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4">
+                                <span className={`font-bold min-w-[140px] md:text-lg flex-shrink-0 ${etymology.part2.color}`}>• {etymology.part2.text}:</span>
+                                <span className="text-gray-300 leading-relaxed text-lg">{etymology.part2.desc}</span>
+                            </li>
+                            <li className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4 mt-2 pt-4 border-t border-gray-800/50">
+                                <span className="font-bold text-amber-400 min-w-[140px] md:text-lg flex-shrink-0"><i className="fa-solid fa-quote-right ml-1"></i> משמעות השם:</span>
+                                <span className="text-gray-200 font-bold leading-relaxed text-lg">{etymology.synthesis}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gray-800/20 p-6 rounded-xl border border-gray-800/50">
+                    {/* פרופיל מנהיג */}
+                    <div>
+                        <div className="flex items-center mb-4 border-b border-gray-700 pb-2">
+                            <svg className="w-6 h-6 ml-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                            <h3 className="text-2xl font-bold text-white">פרופיל מנהיג מכונן</h3>
+                        </div>
+                        <h4 className="text-xl text-rose-300 font-bold mb-3">{figure.name} <span className="text-base text-gray-400">({figure.years})</span></h4>
+                        <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
+                            <div><strong className="text-white block mb-1">ילדות ורקע:</strong> {figure.childhood}</div>
+                            <div><strong className="text-white block mb-1">אידאולוגיה:</strong> {figure.ideology}</div>
+                            <div><strong className="text-white block mb-1">הישגים מרכזיים:</strong> {figure.achievements}</div>
+                        </div>
+                    </div>
+
+                    {/* קרטוגרפיה היסטורית */}
+                    <div>
+                        <div className="flex items-center mb-4 border-b border-gray-700 pb-2">
+                            <svg className="w-6 h-6 ml-2 text-cyan-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"></path><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                            <h3 className="text-2xl font-bold text-white">קרטוגרפיה היסטורית</h3>
+                        </div>
+                        <div className="flex flex-col cursor-pointer group rounded-xl overflow-hidden border border-gray-700 bg-gray-800/30 hover:border-gray-500 transition-all duration-300 shadow-lg" onClick={() => onModalOpen({type: 'image', url: map.url, title: map.title})}>
+                            <div className="relative h-48 md:h-56 w-full overflow-hidden bg-black">
+                                <img src={map.url} alt={map.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300"></div>
+                            </div>
+                            <div className="p-4 text-center border-t border-gray-700/50">
+                                <strong className="text-cyan-300 block mb-2 text-base">{map.title}</strong>
+                                <span className="text-gray-300 text-sm leading-relaxed block">{map.desc}</span>
+                                <span className="inline-block mt-3 text-gray-400 text-xs font-medium bg-gray-900/80 px-3 py-1.5 rounded-full border border-gray-700 transition-colors group-hover:text-cyan-300 group-hover:border-cyan-800/50">(לחץ להגדלת המפה)</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+              </div>
+            </article>
+          );
+        };
+
+        const MediaModal = ({ content, onClose }) => {
+          if (!content) return null;
+          
+          return (
+            <div 
+              className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-sm p-4 transition-opacity duration-300"
+              onClick={onClose}
+            >
+              <div className="relative max-w-full max-h-full flex flex-col items-center">
+                <button 
+                  onClick={onClose}
+                  className="absolute -top-14 right-0 md:-right-14 text-gray-400 hover:text-white bg-gray-800/80 hover:bg-gray-700 rounded-full p-2 transition-colors z-50"
+                  aria-label="סגור חלון"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+                
+                {content.type === 'flag' ? (
+                  <div className="w-full max-w-4xl aspect-[3/2] bg-black shadow-2xl rounded-lg overflow-hidden border border-gray-700" onClick={e => e.stopPropagation()}>
+                    <content.component />
+                  </div>
+                ) : (
+                  <img src={content.url} alt={content.title} className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-gray-700" onClick={e => e.stopPropagation()} />
+                )}
+              </div>
+            </div>
+          );
+        };
+
+        function App() {
+          const [modalContent, setModalContent] = useState(null);
+
+          // סגירת החלון במקש אסקייפ
+          React.useEffect(() => {
+            const handleEsc = (e) => { if (e.key === 'Escape') setModalContent(null); };
+            window.addEventListener('keydown', handleEsc);
+            return () => window.removeEventListener('keydown', handleEsc);
+          }, []);
+
+          // מניעת גלילה כאשר המודל פתוח
+          React.useEffect(() => {
+            document.body.style.overflow = modalContent ? 'hidden' : '';
+          }, [modalContent]);
+
+          return (
+            <div className="max-w-5xl mx-auto pt-4 md:pt-8">
+              <Navbar />
+              <header className="mb-10 text-center">
+                  <h1 className="text-3xl md:text-5xl font-bold text-white mb-3">דגלי מדינות הסטן</h1>
+                  <p className="text-gray-400 text-lg">מחקר וקסלולוגי, אטימולוגי, היסטורי וקרטוגרפי</p>
+              </header>
+
+              <div className="space-y-12">
+                {countriesData.map(country => (
+                  <CountryCard 
+                    key={country.id} 
+                    country={country} 
+                    onModalOpen={setModalContent} 
+                  />
+                ))}
+              </div>
+
+              <footer className="mt-12 mb-8 pt-8 border-t border-gray-800 text-center text-gray-500 w-full max-w-6xl mx-auto px-4">
+                  <div className="flex justify-center items-center gap-2 mb-4">
+                      <svg className="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                      <h4 className="font-bold text-gray-400 text-lg">פרטי המחקר והפרויקט</h4>
+                  </div>
+                  <div className="inline-block text-right bg-gray-900/50 p-6 rounded-xl border border-gray-800 w-full max-w-2xl">
+                      <p className="text-gray-300 leading-loose">
+                          <strong className="text-white ml-2">שם ההוגה:</strong> רם<br />
+                          <strong className="text-white ml-2">שם הבונה/היצרן:</strong> ג'מיני (Gemini 3.1 Pro)<br />
+                          <strong className="text-white ml-2">סיבת ההמצאה/הבנייה:</strong> יצירת יישום מחקר וקסלולוגי, אטימולוגי והיסטורי מקיף של מדינות הסטן (מרכז אסיה וסביבתה).<br />
+                          <strong className="text-white ml-2">שנת הבנייה/היצירה:</strong> 2026<br />
+                          <strong className="text-white ml-2">מקורות וקרדיט:</strong> מידע אטימולוגי והיסטורי מהספרות המקצועית. דגלים וקטוריים פנימיים. מפות היסטוריות מ-Wikimedia Commons.
+                      </p>
+                  </div>
+              </footer>
+
+              <MediaModal content={modalContent} onClose={() => setModalContent(null)} />
+            </div>
+          );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
