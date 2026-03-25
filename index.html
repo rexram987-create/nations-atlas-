@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>אטלס האומות המלא</title>
+    <title>אטלס האומות המלא | דף הבית</title>
+    
+    <!-- טעינת ספריות העיצוב -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -18,26 +22,37 @@
         }
     </script>
 </head>
-<body class="min-h-screen bg-gray-950 text-gray-200 p-4 md:p-8 font-sans antialiased flex flex-col">
+<body class="min-h-screen bg-gray-950 text-gray-200 p-4 md:p-8 font-sans antialiased flex flex-col selection:bg-blue-500/30">
 
     <div class="max-w-6xl mx-auto w-full flex-grow">
         
-        <header class="mb-16 mt-8 text-center px-4">
-            <div class="inline-flex items-center justify-center p-3 bg-gray-900 border border-gray-800 rounded-full mb-6 shadow-lg">
+        <!-- אזור כותרת ראשית -->
+        <header class="mb-16 mt-8 text-center px-4 relative">
+            <div class="inline-flex items-center justify-center p-3 bg-gray-900 border border-gray-800 rounded-full mb-6 shadow-lg shadow-blue-900/20">
                 <svg class="w-8 h-8 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
             </div>
-            <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">אטלס האומות המלא</h1>
-            <p class="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+            <h1 class="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight drop-shadow-lg">אטלס האומות המלא</h1>
+            <p class="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed mb-8">
                 מאגר מידע מקיף המוקדש למחקר וקסלולוגי, אטימולוגי והיסטורי. חקר מעמיק של שורשי האומות, מנהיגיהן המייסדים, ומשמעות סמליהן.
             </p>
+            
+            <!-- כפתור אודות -->
+            <div class="flex justify-center">
+                <a href="about.html" class="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-8 py-3.5 rounded-full font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-blue-500/25 transform hover:-translate-y-1 ring-1 ring-white/10">
+                    <i class="fa-solid fa-circle-info"></i>
+                    אודות הפרויקט
+                </a>
+            </div>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 mb-16">
+        <!-- כרטיסיות הניווט לאזורי המחקר -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-8 px-4 mb-20">
             
-            <a href="regions/arabia.html" class="group block h-full">
+            <!-- חצי האי ערב -->
+            <a href="regions/arabian_peninsula.html" class="group block h-full">
                 <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 h-full shadow-xl transition-all duration-300 transform group-hover:-translate-y-2 group-hover:shadow-2xl group-hover:border-gray-600 flex flex-col items-center text-center">
                     <div class="bg-gray-950 p-5 rounded-full mb-6 border border-gray-800 group-hover:border-blue-500/50 transition-colors">
-                        <svg class="w-10 h-10 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        <i class="fa-solid fa-mosque text-3xl text-blue-400"></i>
                     </div>
                     <h2 class="text-2xl font-bold text-white mb-3">חצי האי ערב</h2>
                     <p class="text-gray-400 leading-relaxed mb-6 flex-grow">
@@ -45,15 +60,16 @@
                     </p>
                     <span class="inline-flex items-center text-blue-400 font-medium group-hover:text-blue-300">
                         כניסה למחקר
-                        <svg class="w-4 h-4 mr-2 rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        <i class="fa-solid fa-arrow-left ml-2"></i>
                     </span>
                 </div>
             </a>
 
-            <a href="regions/middle-east.html" class="group block h-full">
+            <!-- המזרח התיכון -->
+            <a href="regions/middle_east_research.html" class="group block h-full">
                 <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 h-full shadow-xl transition-all duration-300 transform group-hover:-translate-y-2 group-hover:shadow-2xl group-hover:border-gray-600 flex flex-col items-center text-center">
                     <div class="bg-gray-950 p-5 rounded-full mb-6 border border-gray-800 group-hover:border-green-500/50 transition-colors">
-                        <svg class="w-10 h-10 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        <i class="fa-solid fa-earth-asia text-3xl text-green-400"></i>
                     </div>
                     <h2 class="text-2xl font-bold text-white mb-3">המזרח התיכון</h2>
                     <p class="text-gray-400 leading-relaxed mb-6 flex-grow">
@@ -61,15 +77,16 @@
                     </p>
                     <span class="inline-flex items-center text-green-400 font-medium group-hover:text-green-300">
                         כניסה למחקר
-                        <svg class="w-4 h-4 mr-2 rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        <i class="fa-solid fa-arrow-left ml-2"></i>
                     </span>
                 </div>
             </a>
 
-            <a href="regions/north-africa.html" class="group block h-full">
+            <!-- צפון אפריקה -->
+            <a href="regions/north_africa.html" class="group block h-full">
                 <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 h-full shadow-xl transition-all duration-300 transform group-hover:-translate-y-2 group-hover:shadow-2xl group-hover:border-gray-600 flex flex-col items-center text-center">
                     <div class="bg-gray-950 p-5 rounded-full mb-6 border border-gray-800 group-hover:border-purple-500/50 transition-colors">
-                        <svg class="w-10 h-10 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        <i class="fa-solid fa-om text-3xl text-purple-400"></i>
                     </div>
                     <h2 class="text-2xl font-bold text-white mb-3">צפון אפריקה (המגרב)</h2>
                     <p class="text-gray-400 leading-relaxed mb-6 flex-grow">
@@ -77,16 +94,16 @@
                     </p>
                     <span class="inline-flex items-center text-purple-400 font-medium group-hover:text-purple-300">
                         כניסה למחקר
-                        <svg class="w-4 h-4 mr-2 rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        <i class="fa-solid fa-arrow-left ml-2"></i>
                     </span>
                 </div>
             </a>
 
-            <!-- מדינות הסטן (הכרטיסייה החדשה) -->
-            <a href="stan_nations_adapted.html" class="group block h-full">
+            <!-- מדינות הסטן -->
+            <a href="regions/stan_nations_adapted.html" class="group block h-full">
                 <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 h-full shadow-xl transition-all duration-300 transform group-hover:-translate-y-2 group-hover:shadow-2xl group-hover:border-gray-600 flex flex-col items-center text-center">
                     <div class="bg-gray-950 p-5 rounded-full mb-6 border border-gray-800 group-hover:border-amber-500/50 transition-colors">
-                        <svg class="w-10 h-10 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" y1="3" x2="9" y2="18"></line><line x1="15" y1="6" x2="15" y2="21"></line></svg>
+                        <i class="fa-solid fa-map-location-dot text-3xl text-amber-400"></i>
                     </div>
                     <h2 class="text-2xl font-bold text-white mb-3">מדינות הסטן</h2>
                     <p class="text-gray-400 leading-relaxed mb-6 flex-grow">
@@ -94,30 +111,135 @@
                     </p>
                     <span class="inline-flex items-center text-amber-400 font-medium group-hover:text-amber-300">
                         כניסה למחקר
-                        <svg class="w-4 h-4 mr-2 rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        <i class="fa-solid fa-arrow-left ml-2"></i>
                     </span>
                 </div>
             </a>
 
         </div>
 
+        <!-- מילון מונחים מקיף -->
+        <section class="mb-16 px-4">
+            <div class="flex items-center gap-4 mb-8 border-b border-gray-800 pb-4">
+                <div class="bg-gray-900 p-3 rounded-xl border border-gray-700 shadow-sm">
+                    <i class="fa-solid fa-book-atlas text-2xl text-gray-200"></i>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-black text-white">מילון מונחים מקיף</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- מונח 1 -->
+                <div class="bg-gray-900/50 p-6 rounded-2xl border border-gray-800 hover:border-gray-600 transition-colors">
+                    <h3 class="text-xl font-bold text-blue-400 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-flag text-sm"></i> וקסלולוגיה
+                    </h3>
+                    <p class="text-gray-300 leading-relaxed text-sm md:text-base">
+                        המחקר המדעי, ההיסטורי והסמלי של דגלים. התחום בוחן את בחירת הצבעים, הסמלים והעיצוב הגיאומטרי, וכיצד הם משקפים את ההיסטוריה, האידאולוגיה והזהות הלאומית של המדינה.
+                    </p>
+                </div>
+
+                <!-- מונח 2 -->
+                <div class="bg-gray-900/50 p-6 rounded-2xl border border-gray-800 hover:border-gray-600 transition-colors">
+                    <h3 class="text-xl font-bold text-purple-400 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-spell-check text-sm"></i> אטימולוגיה
+                    </h3>
+                    <p class="text-gray-300 leading-relaxed text-sm md:text-base">
+                        חקר מקורות המילים, התפתחותן הלשונית והשורשים ההיסטוריים שלהן. באטלס זה, אנו מנתחים כיצד שמות המדינות התפתחו משפות עתיקות (כמו ברברית, פרסית או סנסקריט) למשמעותן המודרנית.
+                    </p>
+                </div>
+
+                <!-- מונח 3 -->
+                <div class="bg-gray-900/50 p-6 rounded-2xl border border-gray-800 hover:border-gray-600 transition-colors">
+                    <h3 class="text-xl font-bold text-cyan-400 mb-3 flex items-center gap-2">
+                        <i class="fa-regular fa-map text-sm"></i> קרטוגרפיה היסטורית
+                    </h3>
+                    <p class="text-gray-300 leading-relaxed text-sm md:text-base">
+                        אומנות ומדע יצירת מפות. באטלס שלנו אנו מתמקדים במפות עתיקות מהמאות ה-16 וה-17 (כיצירותיהם של אורטליוס ובלאו), המציגות את תפיסת המרחב הגיאופוליטי בטרם התהוו גבולות הלאום המודרניים.
+                    </p>
+                </div>
+
+                <!-- מונח 4 -->
+                <div class="bg-gray-900/50 p-6 rounded-2xl border border-gray-800 hover:border-gray-600 transition-colors">
+                    <h3 class="text-xl font-bold text-green-400 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-handshake-angle text-sm"></i> פאן-ערביות
+                    </h3>
+                    <p class="text-gray-300 leading-relaxed text-sm md:text-base">
+                        אידאולוגיה פוליטית שפרחה במאה ה-20 הדוגלת באיחוד חברתי, מדיני וכלכלי של כל העמים והמדינות הערביות. משתקפת היטב בצבעי הדגלים: אדום, שחור, לבן וירוק (צבעי המרד הערבי).
+                    </p>
+                </div>
+
+                <!-- מונח 5 -->
+                <div class="bg-gray-900/50 p-6 rounded-2xl border border-gray-800 hover:border-gray-600 transition-colors">
+                    <h3 class="text-xl font-bold text-amber-500 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-landmark-dome text-sm"></i> חליפות / אמירות / סולטנות
+                    </h3>
+                    <p class="text-gray-300 leading-relaxed text-sm md:text-base">
+                        שיטות ממשל היסטוריות: <strong class="text-white">חליפות</strong> מציינת הנהגה עליונה רוחנית ופוליטית ליורשיו של הנביא מוחמד. <strong class="text-white">סולטנות</strong> מעידה על כוח ושלטון מדיני מוחלט, ו<strong class="text-white">אמירות</strong> היא טריטוריה הנשלטת על ידי נסיך או מפקד.
+                    </p>
+                </div>
+
+                <!-- מונח 6 -->
+                <div class="bg-gray-900/50 p-6 rounded-2xl border border-gray-800 hover:border-gray-600 transition-colors">
+                    <h3 class="text-xl font-bold text-pink-400 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-location-dot text-sm"></i> ה"סטן" (-stan)
+                    </h3>
+                    <p class="text-gray-300 leading-relaxed text-sm md:text-base">
+                        סיומת המגיעה מהשפה הפרסית העתיקה והשפות ההודו-איראניות. משמעותה המילולית היא "מקום עמידה", "מחנה" או "מקום התיישבות". במשמעות הלאומית היא מתורגמת כ"ארץ" או "מולדת" (כמו קזחסטן - ארץ הקזחים).
+                    </p>
+                </div>
+
+                <!-- מונח 7 -->
+                <div class="bg-gray-900/50 p-6 rounded-2xl border border-gray-800 hover:border-gray-600 transition-colors">
+                    <h3 class="text-xl font-bold text-indigo-400 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-mountain-sun text-sm"></i> אל-מגרב (المغرب)
+                    </h3>
+                    <p class="text-gray-300 leading-relaxed text-sm md:text-base">
+                        שם בערבית שמשמעותו "מקום שקיעת השמש" או "המערב". הוא מתייחס גיאוגרפית לאזור הצפון-מערבי של יבשת אפריקה, הכולל היסטורית ותרבותית את מרוקו, אלג'יריה, תוניסיה ולוב.
+                    </p>
+                </div>
+
+                <!-- מונח 8 -->
+                <div class="bg-gray-900/50 p-6 rounded-2xl border border-gray-800 hover:border-gray-600 transition-colors">
+                    <h3 class="text-xl font-bold text-emerald-400 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-moon text-sm"></i> סהר וכוכב
+                    </h3>
+                    <p class="text-gray-300 leading-relaxed text-sm md:text-base">
+                        סמלים עתיקים אשר שימשו במקור עמים טורקיים ונוודים במרכז אסיה ואת העיר ביזנטיון. הם אומצו במלואם על ידי האימפריה העות'מאנית ולאחר מכן הפכו לסמל המוכר והמובהק ביותר של דת האסלאם ברחבי העולם.
+                    </p>
+                </div>
+
+                <!-- מונח 9 -->
+                <div class="bg-gray-900/50 p-6 rounded-2xl border border-gray-800 hover:border-gray-600 transition-colors">
+                    <h3 class="text-xl font-bold text-rose-400 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-scroll text-sm"></i> טראנסאוקסיאנה וטרטאריה
+                    </h3>
+                    <p class="text-gray-300 leading-relaxed text-sm md:text-base">
+                        מושגים קרטוגרפיים עתיקים. <strong class="text-white">טראנסאוקסיאנה</strong> (מעבר לנהר האוקסוס) מתאר את לבה של מרכז אסיה ובוכרה. <strong class="text-white">טרטאריה</strong> היה מונח אירופאי כללי לתיאור הערבות העצומות של אסיה הצפונית והמרכזית.
+                    </p>
+                </div>
+            </div>
+        </section>
+
     </div>
 
+    <!-- פוטר (קרדיט מלא) -->
     <footer class="mt-auto mb-8 pt-8 border-t border-gray-800 text-center text-gray-500 w-full max-w-6xl mx-auto px-4">
         <div class="flex justify-center items-center gap-2 mb-4">
-            <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            <i class="fa-solid fa-shield-halved text-gray-400"></i>
             <h4 class="font-bold text-gray-400 text-lg">פרטי המחקר והפרויקט</h4>
         </div>
         <div class="inline-block text-right bg-gray-900/50 p-6 rounded-xl border border-gray-800 w-full max-w-2xl">
             <p class="text-gray-300 leading-loose">
                 <strong class="text-white ml-2">שם ההוגה:</strong> רם<br>
                 <strong class="text-white ml-2">שם הבונה/היצרן:</strong> ג'מיני (Gemini 3.1 Pro)<br>
-                <strong class="text-white ml-2">סיבת ההמצאה/הבנייה:</strong> יצירת דף בית ופורטל מרכזי לאטלס האומות המלא.<br>
+                <strong class="text-white ml-2">סיבת ההמצאה/הבנייה:</strong> יצירת דף בית ופורטל מרכזי לאטלס האומות המלא, הכולל מילון מונחים והפניות. מותאם במיוחד לתצוגה ב-Samsung S25 Ultra.<br>
                 <strong class="text-white ml-2">שנת הבנייה/היצירה:</strong> 2026<br>
-                <strong class="text-white ml-2">מקורות וקרדיט:</strong> מידע אטימולוגי והיסטורי מהספרות המקצועית. דגלים באדיבות <a href="https://flagpedia.net" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 underline transition-colors">Flagpedia.net</a>
+                <strong class="text-white ml-2">מקורות וקרדיט:</strong> מידע אטימולוגי והיסטורי מהספרות המקצועית. דגלים באדיבות Flagpedia וקוד וקטורי פנימי ב-React.
             </p>
         </div>
     </footer>
 
 </body>
 </html>
+
+
