@@ -123,7 +123,7 @@
             <rect y="66.66" width="300" height="66.67" fill="#FFFFFF" />
             <rect y="133.33" width="300" height="66.67" fill="#DA0000" />
             
-            {/* שורות התכביר המפושטות בשולי הפסים */}
+            {/* שורות התכביר المפושטות בשולי הפסים */}
             <g fill="#FFFFFF">
               {[...Array(11)].map((_, i) => (
                 <path key={`top-${i}`} d={`M${i * 27.2 + 4},56.6 h13 v10 h-2 v-6 h-2 v6 h-2 v-8 h-2 v8 h-2 v-6 h-3 Z`} />
@@ -133,7 +133,7 @@
               ))}
             </g>
 
-            {/* סמל איראן המרכזי והמדויק (אללה / צבעוני) */}
+            {/* סמל איראן המרכזי והמדויק */}
             <g transform="translate(150, 100) scale(1.4)" fill="#DA0000">
               <path d="M-1,16 L1,16 L1,-10 L0,-14 L-1,-10 Z" />
               <path d="M2.5,14 C8,14 10,-2 2,-10 C5,-1 5,10 1.5,13 Z" />
@@ -146,7 +146,7 @@
         );
 
         // ==========================================
-        // מאגר הנתונים המלא - המזרח התיכון
+        // מאגר הנתונים המלא - המזרח התיכון (עם הקישורים המעודכנים לגיטהאב)
         // ==========================================
 
         const countriesData = [
@@ -184,8 +184,8 @@
               achievements: 'הוביל את מהפכת 1952, הלאים את תעלת סואץ (מה שהוביל למלחמת סיני ב-1956), ובנה את סכר אסואן הגדול. הפך למנהיג הנערץ ביותר בעולם הערבי במאה ה-20.'
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_egypt.jpg',
-              title: 'מפת הלבנט והנילוס',
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_egypt_1570.jpg',
+              title: 'מפת הלבנט והנילוס - 1570',
               desc: 'מציגה את המרחב של מצרים, ים סוף, וארץ ישראל בתקופת האימפריה העות\'מאנית, טרם חפירת תעלת סואץ.'
             }
           },
@@ -223,9 +223,9 @@
               achievements: 'מייסד ירדן המודרנית. הקים את "הלגיון הערבי" (הצבא החזק באזור בזמנו). נרצח בירושלים ב-1951 על ידי מתנקש פלסטיני עקב מגעיו עם ישראל.'
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_jordan.jpg',
-              title: 'מפת הלבנט ועבר הירדן',
-              desc: 'מציגה את המרחב של עבר הירדן לפני חלוקת המנדטים של סייקס-פיקו.'
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_jordan_1658.jpg',
+              title: 'מפת הלבנט ועבר הירדן - 1658',
+              desc: 'מציגה את המרחב של עבר הירדן לפני חלוקת המנדטים של סייקס-פיקו במאה ה-20.'
             }
           },
           {
@@ -241,11 +241,11 @@
             demographics: {
               mainNationName: 'ערבים סורים',
               mainNationPercent: 'כ-90%',
-              description: 'החברה הסורית היא פסיפס עדתי מורכב: רוב סוני, לצד מיעוטים אלווים (המחזיקים בשלטון), כורדים (בצפון-מזרח), דרוזים ונוצרים. מלחמת האזרחים שפרצה ב-2011 שינתה דרסטית את המבנה הדמוגרפי וגרמה למיליוני פליטים.'
+              description: 'החברה הסורית היא פסיפס עדתי מורכב: רוב סוני, לצד מיעוטים אלווים, כורדים (בצפון-מזרח), דרוזים ונוצרים. מלחמת האזרחים שפרצה ב-2011 שינתה דרסטית את המבנה הדמוגרפי וגרמה למיליוני פליטים.'
             },
             modernHistory: 'לאחר מלחמת העולם הראשונה הושמה תחת מנדט צרפתי וקיבלה עצמאות ב-1946. ב-1970 תפס חאפז אל-אסד את השלטון. לאחר למעלה מעשור של מלחמת אזרחים אכזרית, בסוף שנת 2024 קרס משטר אסד, והמדינה יצאה לדרך חדשה תחת כוחות האופוזיציה תוך אימוץ מחדש של דגל העצמאות.',
-            foundingYears: '1946 (עצמאות מצרפת) | 2024 (סיום שלטון הבעת\')',
-            flagSymbolism: 'הדגל הנוכחי הוא דגל העצמאות ההיסטורי שאומץ מחדש לאחר סיום שלטון משפחת אסד ב-2024. הירוק מסמל את חליפות הראשידון, הלבן את האומיים, והשחור את העבאסים. שלושת הכוכבים האדומים סימלו במקור את 3 המחוזות של סוריה, וכיום מייצגים את החופש והמהפכה.',
+            foundingYears: '1946 (עצמאות) | 2024 (סיום שלטון הבעת\')',
+            flagSymbolism: 'הדגל הנוכחי הוא דגל העצמאות ההיסטורי (דגל המהפכה) שאומץ מחדש ב-2024. הירוק מסמל את חליפות הראשידון, הלבן את האומיים, והשחור את העבאסים. שלושת הכוכבים האדומים סימלו במקור את 3 המחוזות של סוריה, וכיום מייצגים את החופש.',
             etymology: {
               parts: [
                 { text: 'הקשר האשורי', color: 'text-purple-400', desc: 'הדעה הרווחת במחקר היא שהשם "סוריה" נגזר מהשם היווני העתיק "Syria", שהוא למעשה שיבוש או קיצור של המילה "Assyria" (האימפריה האשורית), ששלטה באזור בימי קדם.' },
@@ -261,9 +261,9 @@
               achievements: 'הנשיא הראשון של סוריה העצמאית לאחר המנדט. חתם על הסכם הקמת הרפובליקה הערבית המאוחדת (קע"ם) עם מצרים ב-1958, כשהוא מוותר מרצונו על הנשיאות לטובת נאצר. נודע בכינוי "האזרח הערבי הראשון".'
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_syria.jpg',
-              title: 'מפת סוריה הגדולה',
-              desc: 'אזור סוריה הגדולה (Bilad al-Sham) טרם חלוקת הגבולות המודרניים של סייקס-פיקו.'
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_levant_syria_lebanon.jpg',
+              title: 'מפת הלבנט וסוריה',
+              desc: 'אזור סוריה הגדולה (Bilad al-Sham) ורצועת החוף הלבנונית, המהווה את הלב ההיסטורי של הלבנט.'
             }
           },
           {
@@ -299,7 +299,7 @@
               achievements: 'הנשיא הראשון של לבנון העצמאית (1943). אחד האדריכלים המרכזיים של "האמנה הלאומית" (The National Pact) – ההסכם ההיסטורי המחלק את כוח השלטון בין העדות בלבנון וקיים עד היום.'
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_lebanon.jpg',
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_levant_syria_lebanon.jpg',
               title: 'מפת הלבנט והפיניקים',
               desc: 'רצועת החוף הלבנונית שבה שגשגה בימי קדם הציוויליזציה הפיניקית שהמציאה את האלף-בית והמסחר הימי.'
             }
@@ -337,7 +337,7 @@
               achievements: 'הוכתר תחילה למלך סוריה (וגורש על ידי הצרפתים). ב-1921 הוכתר על ידי הבריטים למלכה הראשון של עיראק. הוביל את המדינה לעצמאות רשמית והצטרפות לחבר הלאומים ב-1932.'
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_iraq.jpg',
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_iraq_mesopotamia.jpg',
               title: 'מפת מסופוטמיה (עיראק)',
               desc: 'מציגה את האגן הפורה של "ארם נהריים" ההיסטורית, ערש התרבות האנושית בין הפרת והחידקל.'
             }
@@ -362,7 +362,7 @@
             flagSymbolism: 'הדגל אומץ ישירות מהאימפריה העות\'מאנית. האגדה מספרת כי הסהר והכוכב השתקפו בבריכת דם של לוחמים טורקים לאחר קרב קוסובו ההיסטורי. הצבע האדום מסמל את ריבונות המדינה וגבורת צבאה.',
             etymology: {
               parts: [
-                { text: 'Türk (טורקי)', color: 'text-purple-400', desc: 'השם המקורי של העמים הנוודים המרכז-אסייתיים. פירוש המילה בשפות הטורקיות הקדומות הוא "חזק", "ר-עוצמה" או "נוצר/נולד".' },
+                { text: 'Türk (טורקי)', color: 'text-purple-400', desc: 'השם המקורי של העמים הנוודים המרכז-אסייתיים. פירוש המילה בשפות הטורקיות הקדומות הוא "חזק", "רב-עוצמה" או "נוצר/נולד".' },
                 { text: 'הסיומת iye / ia', color: 'text-blue-400', desc: 'סיומת המגיעה מהשפות הלטיניות והאירופאיות (כמו ב-Italia או Russia) שמשמעותה "הארץ של-". בעבר האירופאים קראו לה "Turchia".' }
               ],
               synthesis: 'ארצם של החזקים (או ארצם של בני העם הטורקי).'
@@ -375,7 +375,7 @@
               achievements: 'אבי האומה הטורקית המודרנית (הוענק לו השם "אטאטורק" - אבי הטורקים). הציל את טורקיה מפירוק מוחלט במלחמת העצמאות שלה, ביטל את החליפות האסלאמית, והקים רפובליקה מודרנית וחזקה מתוך ההריסות.'
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_turkey.jpg',
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_turkey_anatolia.jpg',
               title: 'מפת אסיה הקטנה ואנטוליה',
               desc: 'חצי האי אנטוליה, הלב הגיאוגרפי וההיסטורי שבו התהוותה האומה הטורקית המודרנית.'
             }
@@ -397,7 +397,7 @@
             },
             modernHistory: 'נודעה במערב כ"פרס" עד שנות ה-30. איראן המודרנית נשלטה על ידי שושלת פהלווי (השאה) תחת השפעה מערבית ניכרת, עד למהפכה האסלאמית של 1979 שהפכה אותה לתיאוקרטיה דתית נוקשה המובילה כיום את "ציר ההתנגדות" במזרח התיכון.',
             foundingYears: 'העת העתיקה (האימפריה הפרסית) | 1979 (הרפובליקה האסלאמית)',
-            flagSymbolism: 'הירוק מסמל צמיחה ואסלאם, הלבן מסמל שלום, והאדום דם ואומץ. הסמל במרכז (בצבע אדום) הוא עיצוב מודרני של המילה "אללה" המייצר צורה של צבעוני (פרח הצבעוני מסמל באיראן קדושים שנפלו). על שולי הפסים כתוב "אללה אכבר" 22 פעמים בכתב כופי המסמל את תאריך המהפכה האסלאמית.',
+            flagSymbolism: 'הירוק מסמל צמיחה ואסלאם, הלבן מסמל שלום, והאדום דם ואומץ. הסמל במרכז (בצבע אדום) מורכב מחרב, סהרים ותשדיד היוצרים יחד את המילה "אללה". על שולי הפסים הפנימיים מופיעה המילה "אללה אכבר" בכתב כופי 22 פעמים, לציון תאריך המהפכה (22 בבהמן).',
             etymology: {
               parts: [
                 { text: 'מקור ארי/פרסי', color: 'text-purple-400', desc: 'השם איראן נובע מהשפה הפרסית האמצעית (פרוטו-איראנית) – "Eran" (אֵירָאן).' },
@@ -413,7 +413,7 @@
               achievements: 'הפיל את משטר השאה (שנחשב בלתי מנוצח) במהפכת 1979 למרות ששהה בגלות. הקים את הרפובליקה האסלאמית של איראן, שינה את פני הגיאופוליטיקה במזרח התיכון, ושימש כמנהיגה העליון עד מותו.'
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_iran.jpg',
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_iran_persia.jpg',
               title: 'מפת האימפריה הפרסית',
               desc: 'מציגה את המרחב העצום של האימפריה הפרסית (איראן), השולטת על הרמה האיראנית והחיבור לאסיה התיכונה.'
             }
@@ -428,8 +428,8 @@
           const links = [
             { id: 1, label: 'דף הבית', url: '../index.html', icon: 'fa-house', active: false },
             { id: 2, label: 'המזרח התיכון', url: '#', icon: 'fa-earth-asia', active: true },
-            { id: 3, label: 'חצי האי ערב', url: 'arabia.html', icon: 'fa-mosque', active: false },
-            { id: 4, label: 'צפון אפריקה', url: 'north-africa.html', icon: 'fa-om', active: false },
+            { id: 3, label: 'חצי האי ערב', url: 'arabian_peninsula.html', icon: 'fa-mosque', active: false },
+            { id: 4, label: 'צפון אפריקה', url: 'north_africa.html', icon: 'fa-om', active: false },
             { id: 5, label: 'מדינות הסטן', url: 'stan_nations_adapted.html', icon: 'fa-map-location-dot', active: false },
           ];
 
@@ -578,7 +578,7 @@
                         </div>
                         <div className="flex flex-col cursor-pointer group rounded-xl overflow-hidden border border-gray-700 bg-gray-800/30 hover:border-gray-500 transition-all duration-300 shadow-lg" onClick={() => onModalOpen({type: 'image', url: map.url, title: map.title})}>
                             <div className="relative h-48 md:h-56 w-full overflow-hidden bg-black">
-                                {/* מנגנון הגנה משופר: אם המפה טרם עלתה, תוצג תמונה חלופית תקינה לחלוטין באנגלית (Historical Map) כדי לא לשבור את העיצוב */}
+                                {/* הגנה חכמה: במידה והתמונה חסרה/הקישור שבור, יופיע באנגלית "Historical Map" */}
                                 <img 
                                   src={map.url} 
                                   alt={map.title} 
@@ -687,7 +687,7 @@
                           <strong className="text-white ml-2">שם הבונה/היצרן:</strong> ג'מיני (Gemini 3.1 Pro)<br />
                           <strong className="text-white ml-2">סיבת ההמצאה/הבנייה:</strong> המרת מחקר המזרח התיכון לארכיטקטורת React מהירה, אינטראקטיבית ווקטורית.<br />
                           <strong className="text-white ml-2">שנת הבנייה/היצירה:</strong> 2026<br />
-                          <strong className="text-white ml-2">מקורות וקרדיט:</strong> אטימולוגיה וביוגרפיות מהספרות ההיסטורית. סמלי SVG וקטוריים פנימיים.
+                          <strong className="text-white ml-2">מקורות וקרדיט:</strong> אטימולוגיה וביוגרפיות מהספרות ההיסטורית. סמלי SVG וקטוריים פנימיים. מפות היסטוריות מ-Wikimedia/GitHub.
                       </p>
                   </div>
               </footer>
