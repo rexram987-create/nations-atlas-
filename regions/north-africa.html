@@ -34,54 +34,39 @@
         const { useState } = React;
 
         // ==========================================
-        // רכיבי ה-SVG של הדגלים (בנייה וקטורית פנימית)
+        // רכיבי התמונות של הדגלים (על בסיס הקישורים שסופקו)
         // ==========================================
 
         const FlagAlgeria = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover" preserveAspectRatio="none">
-            <rect width="150" height="200" fill="#006233" />
-            <rect x="150" width="150" height="200" fill="#FFFFFF" />
-            <g transform="translate(150, 100)">
-              <path d="M15,-40 A40,40 0 1,0 15,40 A32,32 0 1,1 15,-40 Z" fill="#D21034" />
-              <polygon points="10,-15 15,0 30,0 18,9 23,24 10,15 -3,24 2,9 -10,0 5,0" fill="#D21034" transform="translate(8, -5) rotate(-15)" />
-            </g>
-          </svg>
+          <img 
+            src="https://i.postimg.cc/XGT2frxd/algeria.png" 
+            alt="דגל אלג'יריה" 
+            className="w-full h-full object-cover rounded-md border border-gray-700/50" 
+          />
         );
 
         const FlagLibya = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover" preserveAspectRatio="none">
-            <rect width="300" height="50" fill="#E70013" />
-            <rect y="50" width="300" height="100" fill="#000000" />
-            <rect y="150" width="300" height="50" fill="#239E46" />
-            <g transform="translate(150, 100)">
-              <path d="M10,-30 A30,30 0 1,0 10,30 A24,24 0 1,1 10,-30 Z" fill="#FFFFFF" />
-              <polygon points="0,-10 3,-3 10,-3 4,2 6,10 0,6 -6,10 -4,2 -10,-3 -3,-3" fill="#FFFFFF" transform="translate(12, 0) rotate(15)" />
-            </g>
-          </svg>
+          <img 
+            src="https://i.postimg.cc/tZLr3sD6/libya.png" 
+            alt="דגל לוב" 
+            className="w-full h-full object-cover rounded-md border border-gray-700/50" 
+          />
         );
 
         const FlagMorocco = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover" preserveAspectRatio="none">
-            <rect width="300" height="200" fill="#C1272D" />
-            <polygon 
-              points="150,55 178,140 106,88 194,88 122,140" 
-              fill="none" 
-              stroke="#006233" 
-              strokeWidth="5" 
-              strokeLinejoin="round" 
-            />
-          </svg>
+          <img 
+            src="https://i.postimg.cc/k6kjQ2w8/morocco.png" 
+            alt="דגל מרוקו" 
+            className="w-full h-full object-cover rounded-md border border-gray-700/50" 
+          />
         );
 
         const FlagTunisia = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover" preserveAspectRatio="none">
-            <rect width="300" height="200" fill="#E70013" />
-            <circle cx="150" cy="100" r="50" fill="#FFFFFF" />
-            <g transform="translate(150, 100)">
-              <path d="M5,-35 A35,35 0 1,0 5,35 A28,28 0 1,1 5,-35 Z" fill="#E70013" />
-              <polygon points="0,-12 4,-4 12,-4 5,2 8,11 0,6 -8,11 -5,2 -12,-4 -4,-4" fill="#E70013" transform="translate(5, 0) rotate(-15)" />
-            </g>
-          </svg>
+          <img 
+            src="https://i.postimg.cc/9RvxdD1y/tunisia.png" 
+            alt="דגל תוניסיה" 
+            className="w-full h-full object-cover rounded-md border border-gray-700/50" 
+          />
         );
 
         // ==========================================
@@ -241,7 +226,7 @@
 
         const Navbar = () => {
           const links = [
-            { id: 1, label: 'דף הבית', url: 'index.html', icon: 'fa-house', active: false },
+            { id: 1, label: 'דף הבית', url: '../index.html', icon: 'fa-house', active: false },
             { id: 2, label: 'המזרח התיכון', url: 'middle_east_research.html', icon: 'fa-earth-asia', active: false },
             { id: 3, label: 'חצי האי ערב', url: 'arabian_peninsula.html', icon: 'fa-mosque', active: false },
             { id: 4, label: 'צפון אפריקה', url: 'north_africa.html', icon: 'fa-om', active: true },
@@ -399,7 +384,15 @@
                         </div>
                         <div className="flex flex-col cursor-pointer group rounded-xl overflow-hidden border border-gray-700 bg-gray-800/30 hover:border-gray-500 transition-all duration-300 shadow-lg" onClick={() => onModalOpen({type: 'image', url: map.url, title: map.title})}>
                             <div className="relative h-48 md:h-56 w-full overflow-hidden bg-black">
-                                <img src={map.url} alt={map.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                <img 
+                                  src={map.url} 
+                                  alt={map.title} 
+                                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                  onError={(e) => {
+                                    e.target.onerror = null; 
+                                    e.target.src = 'https://placehold.co/800x400/1e293b/a3a8b8?text=Historical+Map';
+                                  }}
+                                />
                                 <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300"></div>
                             </div>
                             <div className="p-4 text-center border-t border-gray-700/50">
@@ -441,7 +434,16 @@
                     <content.component />
                   </div>
                 ) : (
-                  <img src={content.url} alt={content.title} className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-gray-700" onClick={e => e.stopPropagation()} />
+                  <img 
+                    src={content.url} 
+                    alt={content.title} 
+                    className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-gray-700" 
+                    onClick={e => e.stopPropagation()}
+                    onError={(e) => {
+                      e.target.onerror = null; 
+                      e.target.src = 'https://placehold.co/800x400/1e293b/a3a8b8?text=Historical+Map';
+                    }}
+                  />
                 )}
               </div>
             </div>
@@ -490,9 +492,9 @@
                       <p className="text-gray-300 leading-loose">
                           <strong className="text-white ml-2">שם ההוגה:</strong> רם<br />
                           <strong className="text-white ml-2">שם הבונה/היצרן:</strong> ג'מיני (Gemini 3.1 Pro)<br />
-                          <strong className="text-white ml-2">סיבת ההמצאה/הבנייה:</strong> המרת מחקר צפון אפריקה (המגרב) למבנה React וקטורי מותאם אישית.<br />
+                          <strong className="text-white ml-2">סיבת ההמצאה/הבנייה:</strong> המרת מחקר צפון אפריקה (המגרב) למבנה React תוך שימוש בתמונות דגל רשמיות ומדויקות.<br />
                           <strong className="text-white ml-2">שנת הבנייה/היצירה:</strong> 2026<br />
-                          <strong className="text-white ml-2">מקורות וקרדיט:</strong> אטימולוגיה מהספרות. סמלי SVG וקטוריים פנימיים. מפות היסטוריות מ-GitHub.
+                          <strong className="text-white ml-2">מקורות וקרדיט:</strong> אטימולוגיה מהספרות. תמונות דגלים מ-Postimg בהתאמה אישית. מפות היסטוריות מ-GitHub אישי.
                       </p>
                   </div>
               </footer>
