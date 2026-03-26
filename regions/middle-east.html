@@ -123,7 +123,7 @@
             <rect y="66.66" width="300" height="66.67" fill="#FFFFFF" />
             <rect y="133.33" width="300" height="66.67" fill="#DA0000" />
             
-            {/* שורות התכביר المפושטות בשולי הפסים */}
+            {/* שורות התכביר המפושטות בשולי הפסים */}
             <g fill="#FFFFFF">
               {[...Array(11)].map((_, i) => (
                 <path key={`top-${i}`} d={`M${i * 27.2 + 4},56.6 h13 v10 h-2 v-6 h-2 v6 h-2 v-8 h-2 v8 h-2 v-6 h-3 Z`} />
@@ -146,7 +146,7 @@
         );
 
         // ==========================================
-        // מאגר הנתונים המלא - המזרח התיכון (עם הקישורים המעודכנים לגיטהאב)
+        // מאגר הנתונים המלא - המזרח התיכון
         // ==========================================
 
         const countriesData = [
@@ -425,11 +425,12 @@
         // ==========================================
 
         const Navbar = () => {
+          // חיוני: שמות הקבצים תואמים בדיוק למבנה התיקיות ב-GitHub Pages
           const links = [
             { id: 1, label: 'דף הבית', url: '../index.html', icon: 'fa-house', active: false },
-            { id: 2, label: 'המזרח התיכון', url: '#', icon: 'fa-earth-asia', active: true },
-            { id: 3, label: 'חצי האי ערב', url: 'arabian_peninsula.html', icon: 'fa-mosque', active: false },
-            { id: 4, label: 'צפון אפריקה', url: 'north_africa.html', icon: 'fa-om', active: false },
+            { id: 2, label: 'המזרח התיכון', url: 'middle-east.html', icon: 'fa-earth-asia', active: true },
+            { id: 3, label: 'חצי האי ערב', url: 'arabia.html', icon: 'fa-mosque', active: false },
+            { id: 4, label: 'צפון אפריקה', url: 'north-africa.html', icon: 'fa-om', active: false },
             { id: 5, label: 'מדינות הסטן', url: 'stan_nations_adapted.html', icon: 'fa-map-location-dot', active: false },
           ];
 
@@ -578,7 +579,7 @@
                         </div>
                         <div className="flex flex-col cursor-pointer group rounded-xl overflow-hidden border border-gray-700 bg-gray-800/30 hover:border-gray-500 transition-all duration-300 shadow-lg" onClick={() => onModalOpen({type: 'image', url: map.url, title: map.title})}>
                             <div className="relative h-48 md:h-56 w-full overflow-hidden bg-black">
-                                {/* הגנה חכמה: במידה והתמונה חסרה/הקישור שבור, יופיע באנגלית "Historical Map" */}
+                                {/* מנגנון הגנה משופר: אם המפה טרם עלתה, תוצג תמונה חלופית תקינה לחלוטין באנגלית (Historical Map) כדי לא לשבור את העיצוב */}
                                 <img 
                                   src={map.url} 
                                   alt={map.title} 
