@@ -1,4 +1,4 @@
-ץ.<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="he" dir="rtl" class="dark">
 <head>
     <meta charset="UTF-8">
@@ -432,43 +432,6 @@
         // רכיבי התצוגה (UI) 
         // ==========================================
 
-        const Navbar = () => {
-          const links = [
-            { id: 1, label: 'דף הבית', url: '../index.html', icon: 'fa-house', active: false },
-            { id: 2, label: 'המזרח התיכון', url: 'middle_east_research.html', icon: 'fa-earth-asia', active: false },
-            { id: 3, label: 'חצי האי ערב', url: 'arabian_peninsula.html', icon: 'fa-mosque', active: false },
-            { id: 4, label: 'צפון אפריקה', url: 'north_africa.html', icon: 'fa-om', active: false },
-            { id: 5, label: 'מדינות הסטן', url: 'stan_nations_adapted.html', icon: 'fa-map-location-dot', active: true },
-          ];
-
-          return (
-            <nav className="w-full z-40 mb-10 px-4 sm:px-0">
-              <div className="max-w-5xl mx-auto bg-slate-900/85 backdrop-blur-md border border-slate-700/60 rounded-2xl shadow-xl overflow-hidden">
-                <ul 
-                  className="flex items-center justify-start md:justify-center overflow-x-auto p-2 gap-2"
-                  style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}
-                >
-                  {links.map(link => (
-                    <li key={link.id} className="shrink-0">
-                      <a 
-                        href={link.url}
-                        className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 ${
-                          link.active 
-                            ? 'bg-gradient-to-r from-amber-500/20 to-amber-600/20 text-amber-400 border border-amber-500/30 shadow-inner' 
-                            : 'text-slate-400 hover:text-white hover:bg-slate-800'
-                        }`}
-                      >
-                        <i className={`fa-solid ${link.icon}`}></i>
-                        {link.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </nav>
-          );
-        };
-
         const CountryCard = ({ country, onModalOpen }) => {
           const { 
             FlagComponent, name, englishName, officialName, areaNum, populationNum, currency, area, demographics, 
@@ -669,7 +632,6 @@
 
           return (
             <div className="max-w-5xl mx-auto pt-4 md:pt-8">
-              <Navbar />
               <header className="mb-10 text-center">
                   <h1 className="text-3xl md:text-5xl font-bold text-white mb-3">דגלי מדינות הסטן</h1>
                   <p className="text-gray-400 text-lg">מחקר וקסלולוגי, אטימולוגי, היסטורי וקרטוגרפי</p>
@@ -711,4 +673,5 @@
     </script>
 </body>
 </html>
+
 
