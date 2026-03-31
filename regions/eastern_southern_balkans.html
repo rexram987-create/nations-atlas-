@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Balkan Project | הבלקן המזרחי והדרומי</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="min-h-screen bg-gray-950 text-gray-200 p-4 md:p-8 font-sans antialiased selection:bg-rose-500/30">
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState } = React;
+
+        // ==========================================
+        // רכיבי ה-SVG של הדגלים
+        // ==========================================
+
+        const FlagRomania = () => (
+          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
+            <rect width="100" height="200" fill="#002B7F" />
+            <rect x="100" width="100" height="200" fill="#FCD116" />
+            <rect x="200" width="100" height="200" fill="#CE1126" />
+          </svg>
+        );
+
+        const FlagBulgaria = () => (
+          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
+            <rect width="300" height="66.6" fill="#FFFFFF" />
+            <rect y="66.6" width="300" height="66.6" fill="#00966E" />
+            <rect y="133.2" width="300" height="66.6" fill="#D62612" />
+          </svg>
+        );
+
+        const FlagNorthMacedonia = () => (
+          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
+            <rect width="300" height="200" fill="#D20000" />
+            <g fill="#FFE600">
+              <polygon points="150,100 0,0 35,0 150,100" />
+              <polygon points="150,100 265,0 300,0 150,100" />
+              <polygon points="150,100 300,200 265,200 150,100" />
+              <polygon points="150,100 0,200 35,200 150,100" />
+              <polygon points="150,100 135,0 165,0 150,100" />
+              <polygon points="150,100 135,200 165,200 150,100" />
+              <polygon points="150,100 0,85 0,115 150,100" />
+              <polygon points="150,100 300,85 300,115 150,100" />
+              <circle cx="150" cy="100" r="32" fill="#D20000" />
+              <circle cx="150" cy="100" r="25" fill="#FFE600" />
+            </g>
+          </svg>
+        );
+
+        const FlagAlbania = () => (
+          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
+            <rect width="300" height="200" fill="#FF0000" />
+            <g transform="translate(150, 100) scale(1.4)" fill="#000000">
+              <path d="M-15,-20 C-10,-35 -5,-30 0,-25 C5,-30 10,-35 15,-20 C20,-5 25,10 10,15 C15,25 5,35 0,30 C-5,35 -15,25 -10,15 C-25,10 -20,-5 -15,-20 Z M-5,-20 C-5,-25 -10,-20 -5,-20 Z M5,-20 C5,-25 10,-20 5,-20 Z" />
+              <path d="M-2,-28 L2,-28 L0,-32 Z" />
+              <path d="M-25,5 C-35,0 -40,-15 -35,-25 C-30,-15 -25,-10 -20,-15 C-25,-5 -20,5 -25,5 Z" />
+              <path d="M25,5 C35,0 40,-15 35,-25 C30,-15 25,-10 20,-15 C25,-5 20,5 25,5 Z" />
+              <circle cx="-10" cy="-15" r="1.5" fill="#FF0000" />
+              <circle cx="10" cy="-15" r="1.5" fill="#FF0000" />
+            </g>
+          </svg>
+        );
+
+        const FlagGreece = () => {
+          const stripes = [];
+          for (let i = 0; i < 9; i++) {
+            stripes.push(
+              <rect key={i} y={i * (200 / 9)} width="300" height={200 / 9} fill={i % 2 === 0 ? "#0D5EAF" : "#FFFFFF"} />
+            );
+          }
+          return (
+            <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
+              {stripes}
+              <rect width={100} height={200 / 9 * 5} fill="#0D5EAF" />
+              <rect x={40} width={20} height={200 / 9 * 5} fill="#FFFFFF" />
+              <rect y={200 / 9 * 2} width={100} height={200 / 9} fill="#FFFFFF" />
+            </svg>
+          );
+        };
+
+        // ==========================================
+        // מאגר הנתונים המלא - הבלקן המזרחי והדרומי
+        // ==========================================
+
+        const countriesData = [
+          {
+            id: 'romania',
+            name: 'רומניה',
+            englishName: 'Romania',
+            officialName: 'רומניה',
+            FlagComponent: FlagRomania,
+            areaNum: '~238,397 קמ"ר',
+            populationNum: '~19,000,000',
+            currency: 'לאו רומני (RON)',
+            area: 'כ-238,397 קמ"ר. המדינה הגדולה ביותר בבלקן ובדרום-מזרח אירופה. הגיאוגרפיה נשלטת על ידי הרי הקרפטים היוצרים קשת גדולה במרכז המדינה, מקיפים את רמת טרנסילבניה, ויורדים אל מישורי הדנובה העצומים בדרום ובמזרח, עד לשפך הדנובה לים השחור.',
+            demographics: {
+              mainNationName: 'רומנים',
+              mainNationPercent: 'כ-89%',
+              description: 'אומה ייחודית באזור - אי איטלקי-רומאני בתוך ים של עמים סלאביים. למרות שפתם הלטינית (הדומה לאיטלקית), הרומנים הם ברובם המכריע נוצרים אורתודוקסים, מה שמייצר שילוב תרבותי מרתק של מערב ומזרח. קיים מיעוט הונגרי משמעותי (כ-6%) המרוכז בטרנסילבניה.'
+            },
+            modernHistory: 'לאחר מאות שנות פיצול לנסיכויות (ולאכיה, מולדביה וטרנסילבניה) תחת עול עות\'מאני ואוסטרו-הונגרי, התאחדה המדינה במאה ה-19. במלחמת העולם הראשונה הורחבה ל"רומניה הגדולה". לאחר מלחמת העולם השנייה נפלה תחת שלטון קומוניסטי אכזרי במיוחד בהנהגת ניקולאה צ\'אושסקו, שהופל במהפכה עקובה מדם ב-1989. כיום רפובליקה דמוקרטית וחברה באיחוד האירופי ובנאט"ו.',
+            foundingYears: '1859 (איחוד הנסיכויות) | 1877 (עצמאות מלאה)',
+            flagSymbolism: 'הטריקולור הופיע לראשונה במהפכות 1848 כסמל לאיחוד ולחירות. הצבעים מייצגים את הנסיכויות ההיסטוריות: כחול וצהוב עבור נסיכות ולאכיה (Muntenia), ואדום וצהוב עבור נסיכות מולדביה (Moldova). יחד הם מסמלים את הלאומיות, הדם שנשפך למען החירות והשמיים הטיהורים.',
+            etymology: {
+              parts: [
+                { text: 'מקור לטיני (Romanus)', color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-500/30', desc: 'השם גזור מהמילה הלטינית "Romanus", שפירושה "אזרח רומא" או "רומאי". במאה ה-2 לספירה, הקיסר הרומי טראיאנוס כבש את דאקיה (רומניה של ימינו) ויישב אותה בלגיונרים ואזרחים רומיים, מה שיצר נתק לשוני מאוחר יותר משאר הבלקן.' },
+                { text: 'התגבשות לאומית', color: 'text-blue-400', bg: 'bg-blue-400/10', border: 'border-blue-500/30', desc: 'במשך מאות שנים תושבי האזור קראו לעצמם בווריאציות של "רוּמָן", אך המדינה המאוחדת קיבלה את השם הרשמי "רומניה" רק באמצע המאה ה-19 כחלק מהתעוררות לאומית שרצתה להדגיש את המורשת הרומית המערבית שלהם.' }
+              ],
+              synthesis: 'מילולית: "ארצם של הרומאים" – עדות חיה ונושמת לכיבוש הרומי העתיק ולשפה הלטינית שהשתמרה לאורך ההיסטוריה.'
+            },
+            figure: {
+              name: 'מיכאי האמיץ (Michael the Brave / Mihai Viteazul)',
+              years: '1558 - 1601',
+              childhood: 'נולד כבנו הלא-חוקי של נסיך ולאכיה. את תחילת דרכו עשה כסוחר מצליח ולאחר מכן טיפס בסולם הדרגות הפוליטי של הנסיכות. הוא היה פוליטיקאי מבריק ולוחם עז, שהצליח לנווט במים הסוערים של פוליטיקת החצר העות\'מאנית.',
+              ideology: 'חירות נוצרית ואחדות טריטוריאלית. חזונו היה לשחרר את ארצו מתשלום המס והשעבוד לאימפריה העות\'מאנית, וליצור חזית נוצרית מאוחדת בבלקן נגד האסלאם הפולש.',
+              achievements: 'הוא הדמות ההיסטורית הלאומית החשובה ביותר משום שהיה הראשון בהיסטוריה שהצליח, גם אם לזמן קצר (בשנת 1600), לאחד תחת שלטונו את שלוש הנסיכויות: ולאכיה, טרנסילבניה ומולדביה. איחוד זה הפך לסמל הלאומי שעליו נבנתה "רומניה הגדולה" במאות שלאחר מכן.'
+            },
+            map: {
+              url: '/images/map_romania_wallachia.jpg',
+              title: 'שלוש הנסיכויות (המאה ה-16)',
+              desc: 'מפה קרטוגרפית עתיקה המציגה את ולאכיה, מולדביה וטרנסילבניה בשיא כוחו של מיכאי האמיץ. הרקע עשוי בגווני ספיה מחוספסים, המדגישים את הרי הקרפטים החוצים את הארץ ואת היערות העבותים.'
+            }
+          },
+          {
+            id: 'bulgaria',
+            name: 'בולגריה',
+            englishName: 'Bulgaria',
+            officialName: 'רפובליקת בולגריה',
+            FlagComponent: FlagBulgaria,
+            areaNum: '~110,994 קמ"ר',
+            populationNum: '~6,400,000',
+            currency: 'לב בולגרי (BGN)',
+            area: 'כ-110,994 קמ"ר. שוכנת במזרח חצי האי הבלקני. הגיאוגרפיה מגוונת להפליא וכוללת את רכס הרי הבלקן שחוצה את המדינה ממערב למזרח (וממנו נגזר שמו של חצי האי כולו), עמק ורדים מפורסם, וחוף זהוב ויפהפה במזרח הנושק לים השחור.',
+            demographics: {
+              mainNationName: 'בולגרים',
+              mainNationPercent: 'כ-84%',
+              description: 'עם סלאבי-דרומי בעל היסטוריה ייחודית. מקורם בשילוב של שבטים סלאביים מקומיים יחד עם ה"בולגרים" (Bulgars) - שבט לוחם ונומדי ממוצא פרוטו-טורקי שהגיע מהמזרח. הם נוצרים אורתודוקסים בעלי מסורת עתיקה. ישנו מיעוט טורקי-מוסלמי גדול (כ-8%).'
+            },
+            modernHistory: 'לאחר 500 שנות שלטון עות\'מאני ("העול"), בולגריה זכתה בעצמאותה בסוף המאה ה-19 בתמיכת רוסיה. ברוב מלחמות המאה ה-20 (מלחה"ע הראשונה והשנייה) היא מצאה את עצמה בצד המפסיד בניסיון להרחיב את גבולותיה מחדש. לאחר מלחה"ע השנייה הפכה לחלק מהגוש הקומוניסטי הסובייטי. מאז 1990 היא דמוקרטיה, וכיום חברה באיחוד האירופי ובנאט"ו.',
+            foundingYears: '681 (האימפריה הבולגרית הראשונה) | 1908 (עצמאות מלאה)',
+            flagSymbolism: 'הדגל מבוסס על צבעי הפאן-סלאביות עם שינוי אחד - הפס האמצעי הוחלף מכחול לירוק. הלבן מסמל שלום, אהבה וטוהר. הירוק מסמל את פוריות האדמה, החקלאות ואת החיים עצמם. האדום מסמל את אומץ הלב, המאבק לחירות ואת הדם שנשפך על ידי הגיבורים.',
+            etymology: {
+              parts: [
+                { text: 'הבולגרים המקוריים (Bulgars)', color: 'text-emerald-400', bg: 'bg-emerald-400/10', border: 'border-emerald-500/30', desc: 'השם נגזר משמו של השבט הנומדי הקדום (אולי ממוצא חורטי/טורקי) שהתיישב באזור במאה ה-7 ונטמע באוכלוסייה הסלאבית.' },
+                { text: 'משמעות טורקית קדומה', color: 'text-rose-400', bg: 'bg-rose-400/10', border: 'border-rose-500/30', desc: 'אטימולוגים רבים סבורים שהשורש *bulğar בשפות הטורקיות העתיקות משמעותו "לערבב", "למרוד" או "לגרום למהומה". לכן השם תיאר קונפדרציה של "שבטים מעורבים" שמרדו ועזבו את מולדתם הישנה בערבות אסיה.' }
+              ],
+              synthesis: 'מילולית: "ארצם של בני השבטים המעורבים" או "ארץ המורדים" – זכר לשבט הנומדי שיצר את הישות הפוליטית אך נטמע לחלוטין לשונית בסלאבים.'
+            },
+            figure: {
+              name: 'הצאר סימאון הראשון (Simeon the Great)',
+              years: '864 - 927',
+              childhood: 'בנו השלישי של הצאר בוריס הראשון (שהמיר את דת הבולגרים לנצרות). סימאון נשלח בצעירותו לקונסטנטינופול, בירת האימפריה הביזנטית, שם קיבל השכלה עילית בתיאולוגיה ופילוסופיה, במטרה להפוך אותו לראש הכנסייה הבולגרית. במקום זאת, הוא חזר לתפוס את השלטון.',
+              ideology: 'אימפריאליזם בולגרי והאדרה תרבותית. חזונו היה לא רק לנצח את האימפריה הביזנטית בשדה הקרב, אלא להחליף אותה לחלוטין כמרכז הכוח והתרבות של המזרח האורתודוקסי.',
+              achievements: 'תחת שלטונו, האימפריה הבולגרית הראשונה הגיעה לשיא התפשטותה (משתרעת משלושה ימים: הים השחור, הים האגאי והים האדריאטי). התקופה שלו ידועה כ"תור הזהב של התרבות הבולגרית" – הוא עודד יצירת ספרות בסלאבונית כנסייתית עתיקה (תוך שימוש באלפבית הקירילי שהתפתח בבולגריה) והפך את ארצו למעצמה אדירה.'
+            },
+            map: {
+              url: '/images/map_bulgaria_empire.jpg',
+              title: 'האימפריה הבולגרית הראשונה',
+              desc: 'מפת ימאים עתיקה מהמאה ה-10 המדגימה את התפשטותה העצומה של האימפריה הבולגרית תחת סימאון הגדול, מגיעה עד גבולות קונסטנטינופול, בעיצוב של דיו על קלף בלוי עם שושנת רוחות עתיקה.'
+            }
+          },
+          {
+            id: 'north_macedonia',
+            name: 'צפון מקדוניה',
+            englishName: 'North Macedonia',
+            officialName: 'רפובליקת צפון מקדוניה',
+            FlagComponent: FlagNorthMacedonia,
+            areaNum: '~25,713 קמ"ר',
+            populationNum: '~1,800,000',
+            currency: 'דינר מקדוני (MKD)',
+            area: 'כ-25,713 קמ"ר. מדינה ללא מוצא לים בליבו של אזור הבלקן הדרומי. מאופיינת בטופוגרפיה הררית מאוד עם עמקים צרים ונהר וארדאר החוצה אותה. מפורסמת באגם אוכריד (Ohrid) העתיק והצלול בגבולה הדרומי.',
+            demographics: {
+              mainNationName: 'מקדונים (ואלבנים)',
+              mainNationPercent: 'כ-58% מקדונים, כ-24% אלבנים',
+              description: 'אוכלוסייה מפולגת: הרוב הם מקדונים (עם סלאבי-דרומי, דוברי שפה קרובה מאוד לבולגרית, נוצרים אורתודוקסים). המיעוט הגדול הוא אלבני (מוסלמים ברובם, המרוכזים בצפון-מערב המדינה), שדורש וזכה לזכויות לאומיות נרחבות לאחר סכסוך מזוין ב-2001.'
+            },
+            modernHistory: 'הטריטוריה שלה עברה ידיים רבות (עות\'מאנים, סרבים, בולגרים). לאחר מלחה"ע השנייה הפכה לרפובליקה בתוך יוגוסלביה. זכתה לעצמאות שלווה ב-1991, אך נקלעה מיד לסכסוך דיפלומטי חריף ומתמשך עם יוון השכנה, שטענה שהשם "מקדוניה" שייך בלעדית למורשת ההלנית שלה ולא למדינה סלאבית. הסכסוך נפתר רק ב-2018 (הסכם פרספה) כשהמדינה שינתה את שמה ל"צפון מקדוניה", מה שאפשר את צירופה לנאט"ו.',
+            foundingYears: '1944 (כרפובליקה יוגוסלבית) | 1991 (עצמאות)',
+            flagSymbolism: 'הדגל עוצב ב-1995 בעקבות לחץ מיוון (שהתנגדה לדגל הקודם שהציג את "שמש ורגינה" של אלכסנדר הגדול). הדגל הנוכחי מציג שמש צהובה בעלת שמונה קרניים מתרחבות על רקע אדום עז. השמש מייצגת את "השמש החדשה של החירות" המוזכרת בהמנון הלאומי המקדוני.',
+            etymology: {
+              parts: [
+                { text: 'מקור יווני עתיק (Makedonía)', color: 'text-yellow-400', bg: 'bg-yellow-400/10', border: 'border-yellow-500/30', desc: 'השם מגיע ישירות מהממלכה היוונית העתיקה של מקדוניה. המילה היוונית *makednós* פירושה "גבוה" או "ארוך".' },
+                { text: 'אנשי ההרים', color: 'text-orange-400', bg: 'bg-orange-400/10', border: 'border-orange-500/30', desc: 'באופן היסטורי, ה"מקדונים" הקדומים כונו כך משום שחיו באזורים ההרריים (הרמות הגבוהות), ולכן הם היו "אנשי ההרים" או "האנשים הגבוהים", בניגוד לאלו שחיו בעמקים וליד החוף.' }
+              ],
+              synthesis: 'מילולית: רפובליקת "הצפון של ארץ האנשים הגבוהים (או אנשי ההרים)".'
+            },
+            figure: {
+              name: 'גוצה דלצ\'ב (Gotse Delchev)',
+              years: '1872 - 1903',
+              childhood: 'נולד באזור מקדוניה (אז תחת שלטון עות\'מאני). התחנך בבתי ספר בולגריים ונחשף מוקדם לרעיונות של מהפכה ושחרור לאומי מתוך קריאת ספרות צרפתית ורוסית. הוא סולק מהאקדמיה הצבאית בסופיה בגלל נטיותיו הפוליטיות הסוציאליסטיות.',
+              ideology: 'מהפכה ואוטונומיה למקדוניה. הוא עמד בראש תנועת ה-VMRO ההיסטורית. תפיסתו הייתה רב-לאומית: הוא קרא למאבק משותף של כל תושבי האזור (סלאבים, טורקים, יוונים, יהודים) כדי לשחרר את חבל מקדוניה מעול העות\'מאנים ולהקים רפובליקה אוטונומית.',
+              achievements: 'הפך לגיבור הלאומי המודרני המרכזי של צפון מקדוניה (וגם של בולגריה, מה שמהווה מוקד למחלוקת). הוא ארגן רשת מסועפת של תאי מחתרת חמושים והכין את התשתית ל"מרד אילִינְדֶן" המפורסם של 1903. הוא נהרג בקרב מול חיילים עות\'מאנים ממש לפני פרוץ המרד, והפך למרטיר הלאומי הבלתי מעורער.'
+            },
+            map: {
+              url: '/images/map_macedonia_ottoman.jpg',
+              title: 'חבל מקדוניה ההיסטורי',
+              desc: 'מפה עתיקה בגווני ספיה מחוספסים של אזור מקדוניה הרחב במהלך המאה ה-19 תחת האימפריה העות\'מאנית. המפה מתעדת את העמקים ורכסי ההרים במרכז הבלקן לפני חלוקתם למדינות הלאום המודרניות.'
+            }
+          },
+          {
+            id: 'albania',
+            name: 'אלבניה',
+            englishName: 'Albania',
+            officialName: 'רפובליקת אלבניה',
+            FlagComponent: FlagAlbania,
+            areaNum: '~28,748 קמ"ר',
+            populationNum: '~2,800,000',
+            currency: 'לק אלבני (ALL)',
+            area: 'כ-28,748 קמ"ר. שוכנת במערב הבלקן, לחופי הים האדריאטי והים היוני. כשלושה רבעים משטחה הם הרים קשוחים ולא נגישים, בפרט האלפים האלבניים בצפון, בעוד המישורים נמצאים בעיקר לאורך רצועת החוף.',
+            demographics: {
+              mainNationName: 'אלבנים',
+              mainNationPercent: 'כ-82%',
+              description: 'אחת האומות העתיקות והייחודיות באירופה. שפתם (האלבנית) מהווה ענף עצמאי לחלוטין במשפחת השפות ההודו-אירופיות. מבחינה דתית הם חברה פוסט-קומוניסטית חילונית מאוד, אך בעלת רקע של רוב מוסלמי (סוני ובקטאשי) לצד מיעוטים נוצריים (קתולים ואורתודוקסים) - הידועים בהרמוניה דתית מופתית.'
+            },
+            modernHistory: 'לאחר עצמאותה מהעות\'מאנים ב-1912, עברה תקופות מלוכה, פלישה איטלקית פשיסטית במלחה"ע ה-2, ולאחריה – תקופת הדיקטטורה הקומוניסטית המבודדת והפרנואידית ביותר באירופה תחת שלטונו של אנוור הוג\'ה (שבנה מאות אלפי בונקרים והכריז על אלבניה כמדינה האתאיסטית הראשונה). לאחר קריסת הקומוניזם ב-1991 חוותה משברים כלכליים וכאוס, אך כיום היא דמוקרטיה מתפתחת ומשתלבת במערב.',
+            foundingYears: '1190 (נסיכות ארבנון) | 1912 (עצמאות מהעות\'מאנים)',
+            flagSymbolism: 'אחד הדגלים העתיקים והמזוהים בעולם. הרקע האדום עז מסמל את שפיכות הדמים, אומץ הלב והגבורה במאבק למען העצמאות. העיט השחור הדו-ראשי במרכז הוא סמלו של הגיבור הלאומי סקנדרבג מהמאה ה-15, שמרד באימפריה העות\'מאנית. העיט הדו-ראשי עצמו הוא במקור סמל שאומץ מהאימפריה הביזנטית.',
+            etymology: {
+              parts: [
+                { text: 'השם המערבי (Albania)', color: 'text-rose-400', bg: 'bg-rose-400/10', border: 'border-rose-500/30', desc: 'השם בו העולם קורא להם מגיע מכתבי ההיסטוריון היווני תלמי מהמאה ה-2, שהזכיר שבט אילירי בשם "אלבנוי" שחי באזור. ייתכן גם קשר לשורש הפרוטו-הודו-אירופי *alb שמשמעותו "לבן" (בהתייחס להרים המושלגים).' },
+                { text: 'השם העצמי (Shqipëria)', color: 'text-zinc-400', bg: 'bg-zinc-400/10', border: 'border-zinc-500/30', desc: 'האלבנים קוראים לארצם "שְקִיפֶּרִיָה". בעבר חשבו שהשם נגזר מהמילה "Shqip" שמשמעותה פשוט "לדבר בצורה ברורה/מובנת". אולם במסורת העממית, השם נקשר למילה "Shqipe" שפירושה עיט/נשר.' }
+              ],
+              synthesis: 'מילולית: העולם קורא להם "ארץ שבט האלבנוי" (או ההרים הלבנים), אך עבורם זוהי "ארץ העיטים".'
+            },
+            figure: {
+              name: 'גיירג\' קסטריוטי סקנדרבג (Skanderbeg)',
+              years: '1405 - 1468',
+              childhood: 'נולד למשפחת אצולה אלבנית נוצרית. כנער, נלקח כבן ערובה על ידי הסולטאן העות\'מאני. הוא חונך באדירנה תחת דת האסלאם, התגייס לצבא העות\'מאני, והפך לאחד המצביאים המבריקים והמעוטרים ביותר של האימפריה (שם קיבל את התואר "איסקנדר-בג", כלומר הלורד אלכסנדר).',
+              ideology: 'שחרור מולדת אלבניה והגנה על הנצרות האירופית. למרות מעמדו העות\'מאני, הוא נטש אותם במהלך קרב ב-1443, חזר לאלבניה, המיר בחזרה את דתו לנצרות, והכריז מרד כולל נגד הסולטאן תחת הסיסמה: "את החירות לא הבאתי אליכם, מצאתי אותה כאן בקרבכם".',
+              achievements: 'הגיבור הלאומי המוחלט. הוא איחד את הנסיכויות האלבניות ("ליגת לז\'ה") ובמשך 25 שנים ארוכות הדף בהצלחה מוחלטת עשרות פלישות עות\'מאניות עצומות אל תוך אלבניה, כולל מצור אישי של הסולטאן. האפיפיור כינה אותו "מגן האמונה הנוצרית", והוא עיכב את הפלישה העות\'מאנית לאיטליה ואירופה המערבית למשך דור שלם.'
+            },
+            map: {
+              url: '/images/map_albania_lezhe.jpg',
+              title: 'ליגת לז\'ה תחת סקנדרבג',
+              desc: 'מפת קלף במראה ימי-ביניימי מחוספס, המשקפת את התאגדות השבטים האלבניים בליגת לז\'ה במאה ה-15. רכסי ההרים המשוננים מצוירים בעט כהה, ממחישים את היתרון הטקטי של סקנדרבג על הפולשים.'
+            }
+          },
+          {
+            id: 'greece',
+            name: 'יוון',
+            englishName: 'Greece',
+            officialName: 'הרפובליקה ההלנית',
+            FlagComponent: FlagGreece,
+            areaNum: '~131,957 קמ"ר',
+            populationNum: '~10,400,000',
+            currency: 'אירו (EUR)',
+            area: 'כ-131,957 קמ"ר. ארץ ים-תיכונית קלאסית. מורכבת מחצי אי הררי מאוד הנמתח דרומה אל תוך הים התיכון, ומלמעלה מ-2,000 איים יפהפיים הפזורים בים האגאי והיוני.',
+            demographics: {
+              mainNationName: 'יוונים (הלנים)',
+              mainNationPercent: 'כ-93%',
+              description: 'אומה עתיקה המזהה את עצמה כהמשך ישיר ליוון העתיקה ולאימפריה הביזנטית. השפה היוונית היא השפה ההודו-אירופית המתועדת העתיקה ביותר שעודנה חיה. הדת השלטת כמעט לחלוטין היא הנצרות האורתודוקסית היוונית, אשר משחקת תפקיד מרכזי מאוד בזהות הלאומית.'
+            },
+            modernHistory: 'ערש התרבות המערבית והדמוקרטיה. לאחר נפילת האימפריה הביזנטית (1453), נשלטה כ-400 שנה על ידי העות\'מאנים. מלחמת העצמאות היוונית (1821) הובילה להקמת המדינה המודרנית. המאה ה-20 הייתה רצופה טלטלות: מלחמות בלקן, פלישה נאצית, מלחמת אזרחים אכזרית, ודיקטטורה צבאית (שלטון הקולונלים) עד 1974. כיום חברה ותיקה באיחוד האירופי אך חוותה משבר כלכלי חסר תקדים בעשור הקודם.',
+            foundingYears: 'המאה ה-8 לפנה"ס (יוון העתיקה) | 1821 (עצמאות מודרנית)',
+            flagSymbolism: 'הדגל ידוע כ"כחול-לבן" (Galanolefki). תשעת הפסים האופקיים מסמלים (לפי המסורת) את תשע ההברות במוטו הלאומי "חירות או מוות" (Ελευθερία ή Θάνατος). הצבע הכחול הבהיר מייצג את צבעם המרהיב של הים האגאי והשמיים חסרי העננים של יוון. הצלב הלבן בפינה השמאלית העליונה מסמל את הכנסייה האורתודוקסית של יוון ואת הדת הנוצרית.',
+            etymology: {
+              parts: [
+                { text: 'יוון/יאואן (Ionian)', color: 'text-blue-400', bg: 'bg-blue-400/10', border: 'border-blue-500/30', desc: 'בעברית ובשפות שמיות ומזרחיות אחרות (כמו ערבית - "יונאן"), השם נגזר מ"יאואן" המקראי, המתייחס לשבטים האיוניים (Ionians) שהתיישבו במזרח יוון ובאסיה הקטנה והיו הראשונים שבאו במגע עם עמי המזרח.' },
+                { text: 'הלס (Hellas)', color: 'text-sky-400', bg: 'bg-sky-400/10', border: 'border-sky-500/30', desc: 'היוונים עצמם קוראים לארצם "הֶלַס" (Ελλάς) ולעצמם "הלנים". על פי המיתולוגיה, השם מגיע מ"הלן" (Hellen), הפטריארך המיתולוגי של כלל השבטים היווניים.' },
+                { text: 'גריציה (Greece/Graecia)', color: 'text-indigo-400', bg: 'bg-indigo-400/10', border: 'border-indigo-500/30', desc: 'השם המערבי (Greece) מקורו בלטינית. הרומאים קראו לאזור "Graecia" על שם אחד השבטים היווניים הראשונים (הגרייקים) שהתיישבו בדרום איטליה, והשם הוכלל על ידי הרומאים לכלל תושבי האזור.' }
+              ],
+              synthesis: 'מילולית: או "ארצם של בני יאואן/הלן" (המקור המזרחי והמקומי) או "ארצם של הגרייקים" (המקור המערבי-רומי).'
+            },
+            figure: {
+              name: 'אלפתריוס וניזלוס (Eleftherios Venizelos)',
+              years: '1864 - 1936',
+              childhood: 'נולד באי כרתים כשהיה עדיין תחת שלטון עות\'מאני. אביו היה סוחר ומהפכן. וניזלוס גדל בצל מרידות תכופות נגד הטורקים, למד משפטים באתונה וחזר לכרתים כדי לשמש כעורך דין, תוך שהוא הופך למנהיג המרד לשחרור כרתים וסיפוחו ליוון.',
+              ideology: 'מודרניזציה רדיקלית ו"רעיון המגאלי" (Megali Idea). חזונו היה להפוך את יוון ממדינה בלקנית נחשלת למדינה אירופית מודרנית וחזקה. במקביל, הוא האמין בשאיפה הטריטוריאלית לאחד את כל השטחים ההיסטוריים בהם ישבו יוונים (כולל חופי אסיה הקטנה וקונסטנטינופול) לתוך מדינת יוון אחת גדולה.',
+              achievements: 'אחד הפוליטיקאים החשובים בהיסטוריה היוונית המודרנית (כיהן שבע פעמים כראש ממשלה). הוא הנהיג את המדינה במהלך מלחמות הבלקן ומלחמת העולם הראשונה, ובזכות כישוריו הדיפלומטיים והאסטרטגיים כמעט הכפיל את שטחה וגבולותיה של יוון לממדיהם המוכרים כיום.'
+            },
+            map: {
+              url: '/images/map_greece_megali.jpg',
+              title: 'החזון: רעיון המגאלי',
+              desc: 'מפה היסטורית המציגה את חזון "רעיון המגאלי" לשחרור כל האוכלוסיות ההלניות, כולל קונסטנטינופול וחופי אסיה הקטנה. המפה מעוצבת בסגנון עתיק, עם כיתובים ביוונית קלאסית ודיו עתיק.'
+            }
+          }
+        ];
+
+        // ==========================================
+        // רכיבי התצוגה (UI) 
+        // ==========================================
+
+        const CountryCard = ({ country, onModalOpen }) => {
+          const { 
+            FlagComponent, name, englishName, officialName, areaNum, populationNum, currency, area, demographics, 
+            modernHistory, foundingYears, etymology, flagSymbolism, figure, map 
+          } = country;
+
+          return (
+            <article className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl transition-all hover:border-gray-700">
+              
+              <div className="flex flex-col md:flex-row gap-6 p-6 md:p-8 border-b border-gray-800">
+                <div 
+                  className="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center bg-gray-950 p-4 rounded-xl cursor-pointer group relative" 
+                  onClick={() => onModalOpen({type: 'flag', component: FlagComponent, title: `דגל ${name}`})}
+                  title="לחץ להגדלת הדגל"
+                >
+                  <div className="w-full max-h-40 shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105 overflow-hidden flex justify-center items-center">
+                    <div className="w-full h-32 md:h-40 relative">
+                       <FlagComponent />
+                    </div>
+                  </div>
+                  <div className="absolute opacity-0 group-hover:opacity-100 bg-black/60 text-white text-sm px-3 py-1 rounded transition-opacity duration-300 pointer-events-none mt-32">
+                    לחץ להגדלה
+                  </div>
+                </div>
+                
+                <div className="flex-grow flex flex-col justify-center">
+                  <h2 className="text-3xl font-bold text-white mb-2">{name} <span className="text-gray-500 text-lg ml-2 uppercase tracking-widest">{englishName}</span></h2>
+                  <h3 className="text-xl text-gray-400 mb-4">{officialName}</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 ml-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                      <span><strong className="text-white">שנת ייסוד:</strong> {foundingYears}</span>
+                    </div>
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 ml-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                      <span className="truncate" title={figure.name}><strong className="text-white">מנהיג:</strong> {figure.name.split('(')[0]}</span>
+                    </div>
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 ml-2 text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3h18v18H3zM12 8v8m-4-4h8"></path></svg>
+                      <span><strong className="text-white">שטח:</strong> {areaNum}</span>
+                    </div>
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 ml-2 text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                      <span><strong className="text-white">אוכלוסייה:</strong> {populationNum}</span>
+                    </div>
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg md:col-span-2">
+                      <svg className="w-5 h-5 ml-2 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+                      <span><strong className="text-white">שם מטבע:</strong> {currency}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 md:p-8 space-y-10">
+                
+                <section>
+                    <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                        <i className="fa-solid fa-map-location-dot w-6 h-6 ml-2 text-sky-400 text-xl"></i>
+                        <h3 className="text-2xl font-bold text-white">רקע פיזי ואנושי</h3>
+                    </div>
+                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 space-y-4">
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">שטח וטופוגרפיה:</strong> {area}</p>
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">דמוגרפיה ({demographics.mainNationName} - {demographics.mainNationPercent}):</strong> {demographics.description}</p>
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">היסטוריה מודרנית:</strong> {modernHistory}</p>
+                    </div>
+                </section>
+
+                <section>
+                    <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                        <svg className="w-6 h-6 ml-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                        <h3 className="text-2xl font-bold text-white">וקסלולוגיה</h3>
+                    </div>
+                    <p className="text-gray-300 leading-relaxed text-lg">{flagSymbolism}</p>
+                </section>
+                
+                <section>
+                    <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                        <svg className="w-6 h-6 ml-2 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                        <h3 className="text-2xl font-bold text-white">אטימולוגיה</h3>
+                    </div>
+                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800">
+                        <ul className="space-y-4">
+                            {etymology.parts.map((part, index) => (
+                                <li key={index} className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4">
+                                    <span className={`font-bold min-w-[150px] md:text-lg flex-shrink-0 ${part.color} ${part.bg} border ${part.border} px-2 py-1 rounded-md`}>• {part.text}:</span>
+                                    <span className="text-gray-300 leading-relaxed text-lg">{part.desc}</span>
+                                </li>
+                            ))}
+                            <li className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4 mt-2 pt-4 border-t border-gray-800/50">
+                                <span className="font-bold text-amber-400 min-w-[150px] md:text-lg flex-shrink-0"><i className="fa-solid fa-quote-right ml-1"></i> משמעות השם:</span>
+                                <span className="text-gray-200 font-bold leading-relaxed text-lg">{etymology.synthesis}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gray-800/20 p-6 rounded-xl border border-gray-800/50">
+                    <div>
+                        <div className="flex items-center mb-4 border-b border-gray-700 pb-2">
+                            <svg className="w-6 h-6 ml-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                            <h3 className="text-2xl font-bold text-white">פרופיל מנהיג מכונן</h3>
+                        </div>
+                        <h4 className="text-xl text-rose-300 font-bold mb-3">{figure.name} <span className="text-base text-gray-400">({figure.years})</span></h4>
+                        <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
+                            <div><strong className="text-white block mb-1">ילדות ורקע:</strong> {figure.childhood}</div>
+                            <div><strong className="text-white block mb-1">אידאולוגיה:</strong> {figure.ideology}</div>
+                            <div><strong className="text-white block mb-1">הישגים מרכזיים:</strong> {figure.achievements}</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div className="flex items-center mb-4 border-b border-gray-700 pb-2">
+                            <svg className="w-6 h-6 ml-2 text-cyan-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"></path><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                            <h3 className="text-2xl font-bold text-white">קרטוגרפיה היסטורית</h3>
+                        </div>
+                        <div className="flex flex-col cursor-pointer group rounded-xl overflow-hidden border border-gray-700 bg-gray-800/30 hover:border-gray-500 transition-all duration-300 shadow-lg" onClick={() => onModalOpen({type: 'image', url: map.url, title: map.title})}>
+                            <div className="relative h-48 md:h-56 w-full overflow-hidden bg-black">
+                                <img 
+                                  src={map.url} 
+                                  alt={map.title} 
+                                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                  onError={(e) => {
+                                    e.target.onerror = null; 
+                                    e.target.src = 'https://placehold.co/800x400/1e293b/a3a8b8?text=Historical+Map';
+                                  }}
+                                />
+                                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300"></div>
+                            </div>
+                            <div className="p-4 text-center border-t border-gray-700/50">
+                                <strong className="text-cyan-300 block mb-2 text-base">{map.title}</strong>
+                                <span className="text-gray-300 text-sm leading-relaxed block">{map.desc}</span>
+                                <span className="inline-block mt-3 text-gray-400 text-xs font-medium bg-gray-900/80 px-3 py-1.5 rounded-full border border-gray-700 transition-colors group-hover:text-cyan-300 group-hover:border-cyan-800/50">(לחץ להגדלת המפה)</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+              </div>
+            </article>
+          );
+        };
+
+        const MediaModal = ({ content, onClose }) => {
+          if (!content) return null;
+          
+          return (
+            <div 
+              className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-sm p-4 transition-opacity duration-300"
+              onClick={onClose}
+            >
+              <div className="relative max-w-full max-h-full flex flex-col items-center">
+                <button 
+                  onClick={onClose}
+                  className="absolute -top-14 right-0 md:-right-14 text-gray-400 hover:text-white bg-gray-800/80 hover:bg-gray-700 rounded-full p-2 transition-colors z-50"
+                  aria-label="סגור חלון"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+                
+                {content.type === 'flag' ? (
+                  <div className="w-full max-w-4xl aspect-[3/2] bg-black shadow-2xl rounded-lg overflow-hidden border border-gray-700" onClick={e => e.stopPropagation()}>
+                    <content.component />
+                  </div>
+                ) : (
+                  <img 
+                    src={content.url} 
+                    alt={content.title} 
+                    className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-gray-700" 
+                    onClick={e => e.stopPropagation()}
+                    onError={(e) => {
+                      e.target.onerror = null; 
+                      e.target.src = 'https://placehold.co/800x400/1e293b/a3a8b8?text=Historical+Map';
+                    }}
+                  />
+                )}
+              </div>
+            </div>
+          );
+        };
+
+        function App() {
+          const [modalContent, setModalContent] = useState(null);
+
+          // סגירת החלון במקש אסקייפ
+          React.useEffect(() => {
+            const handleEsc = (e) => { if (e.key === 'Escape') setModalContent(null); };
+            window.addEventListener('keydown', handleEsc);
+            return () => window.removeEventListener('keydown', handleEsc);
+          }, []);
+
+          // מניעת גלילה כאשר המודל פתוח
+          React.useEffect(() => {
+            document.body.style.overflow = modalContent ? 'hidden' : '';
+          }, [modalContent]);
+
+          return (
+            <div className="max-w-5xl mx-auto pt-4 md:pt-8">
+              <header className="mb-10 text-center">
+                  <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tight drop-shadow-lg">הבלקן המזרחי והדרומי</h1>
+                  <p className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+                     מחקר וקסלולוגי, אטימולוגי וקרטוגרפי של מדינות חצי האי הבלקני
+                  </p>
+              </header>
+
+              <div className="space-y-12">
+                {countriesData.map(country => (
+                  <CountryCard 
+                    key={country.id} 
+                    country={country} 
+                    onModalOpen={setModalContent} 
+                  />
+                ))}
+              </div>
+
+              <footer className="mt-12 mb-8 pt-8 border-t border-gray-800 text-center text-gray-500 w-full max-w-6xl mx-auto px-4">
+                  <div className="flex justify-center items-center gap-2 mb-4">
+                      <svg className="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                      <h4 className="font-bold text-gray-400 text-lg">פרטי המחקר והפרויקט</h4>
+                  </div>
+                  <div className="inline-block text-right bg-gray-900/50 p-6 rounded-xl border border-gray-800 w-full max-w-2xl">
+                      <p className="text-gray-300 leading-loose">
+                          <strong className="text-white ml-2">שם ההוגה:</strong> רם<br />
+                          <strong className="text-white ml-2">שם הבונה/היצרן:</strong> ג'מיני (Gemini 3.1 Pro)<br />
+                          <strong className="text-white ml-2">סיבת ההמצאה/הבנייה:</strong> המשך פרויקט "אטלס האומות המלא" – הבלקן המזרחי והדרומי.<br />
+                          <strong className="text-white ml-2">שנת הבנייה/היצירה:</strong> 2026<br />
+                          <strong className="text-white ml-2">מקורות וקרדיט:</strong> אטימולוגיה מהספרות. סמלי SVG פנימיים בהתאמה וקטורית. מפות קרטוגרפיות וינטג' ייחודיות (AI).
+                      </p>
+                  </div>
+              </footer>
+
+              <MediaModal content={modalContent} onClose={() => setModalContent(null)} />
+            </div>
+          );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
+
