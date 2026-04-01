@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>אטלס האומות המלא | דף הבית</title>
+    <title>אטלס האומות | פרויקט המחקר של רם שלו</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -15,208 +13,110 @@
                 extend: {
                     fontFamily: {
                         sans: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+                    },
+                    colors: {
+                        gray: {
+                            900: '#111827',
+                            950: '#030712',
+                        }
                     }
                 }
             }
         }
     </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="min-h-screen bg-gray-950 text-gray-200 p-4 md:p-8 font-sans antialiased flex flex-col selection:bg-blue-500/30">
+<body class="min-h-screen bg-gray-950 text-gray-200 font-sans antialiased selection:bg-rose-500/30 flex flex-col">
 
-    <div class="max-w-6xl mx-auto w-full flex-grow">
-        
-        <header class="mb-16 mt-8 text-center px-4 relative">
-            <div class="inline-flex items-center justify-center p-3 bg-gray-900 border border-gray-800 rounded-full mb-6 shadow-lg shadow-blue-900/20">
-                <svg class="w-8 h-8 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-            </div>
-            <h1 class="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight drop-shadow-lg">אטלס האומות המלא</h1>
-            <p class="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed mb-8">
-                מאגר מידע מקיף המוקדש למחקר וקסלולוגי, אטימולוגי והיסטורי. חקר מעמיק של שורשי האומות, מנהיגיהן המייסדים, ומשמעות סמליהן.
+    <header class="bg-gray-900 border-b border-gray-800 shadow-xl py-12 md:py-20 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900 via-gray-950 to-gray-950"></div>
+        <div class="max-w-6xl mx-auto px-6 relative z-10 text-center">
+            <h1 class="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 mb-6 drop-shadow-sm">
+                אטלס האומות המקיף
+            </h1>
+            <p class="text-xl md:text-3xl text-gray-400 max-w-4xl mx-auto leading-relaxed font-light">
+                האנציקלופדיה הדיגיטלית להיסטוריה, גיאוגרפיה, וקסילולוגיה ואטימולוגיה
             </p>
-            
-            <div class="flex justify-center">
-                <a href="about.html" class="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-8 py-3.5 rounded-full font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-blue-500/25 transform hover:-translate-y-1 ring-1 ring-white/10">
-                    <i class="fa-solid fa-circle-info"></i>
-                    אודות הפרויקט
-                </a>
+            <div class="mt-8 flex justify-center items-center gap-3 text-sm text-gray-500 font-medium">
+                <span class="bg-gray-800/80 px-4 py-2 rounded-full border border-gray-700/50 shadow-inner">
+                    <i class="fa-solid fa-feather-pointed text-amber-500 ml-2"></i>מחקר ועריכה: רם שלו
+                </span>
             </div>
-        </header>
+        </div>
+    </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-8 px-4 mb-20">
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
+        <div class="flex items-center mb-10 border-b border-gray-800 pb-4">
+            <i class="fa-solid fa-earth-europe text-3xl text-emerald-400 ml-4"></i>
+            <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight">אזורים ומדינות</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             
-            <a href="regions/arabia.html" class="group block h-full">
-                <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 h-full shadow-xl transition-all duration-300 transform group-hover:-translate-y-2 group-hover:shadow-2xl group-hover:border-gray-600 flex flex-col items-center text-center">
-                    <div class="bg-gray-950 p-5 rounded-full mb-6 border border-gray-800 group-hover:border-blue-500/50 transition-colors">
-                        <i class="fa-solid fa-mosque text-3xl text-blue-400"></i>
+            <a href="baltic_states.html" class="group flex flex-col bg-gray-900 rounded-3xl overflow-hidden border border-gray-800 hover:border-cyan-500/50 transition-all duration-300 shadow-lg hover:shadow-cyan-900/20 transform hover:-translate-y-1 relative">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+                <div class="p-8 flex-grow flex flex-col justify-between relative z-10">
+                    <div>
+                        <div class="w-14 h-14 bg-gray-800 rounded-2xl flex items-center justify-center mb-6 border border-gray-700 group-hover:bg-cyan-900/30 transition-colors">
+                            <i class="fa-solid fa-water text-2xl text-cyan-400"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-cyan-300 transition-colors">המדינות הבלטיות</h3>
+                        <p class="text-gray-400 leading-relaxed text-lg">
+                            מסע אל חופי הים הבלטי: אסטוניה, לטביה וליטא. תרבויות ייחודיות, היסטוריה של מאבק לעצמאות ויערות עד.
+                        </p>
                     </div>
-                    <h2 class="text-2xl font-bold text-white mb-3">חצי האי ערב</h2>
-                    <p class="text-gray-400 leading-relaxed mb-6 flex-grow">
-                        מחקר על 7 מדינות חצי האי: סעודיה, תימן, עומאן, איחוד האמירויות, כווית, בחריין וקטר.
-                    </p>
-                    <span class="inline-flex items-center text-blue-400 font-medium group-hover:text-blue-300">
-                        כניסה למחקר
-                        <i class="fa-solid fa-arrow-left ml-2"></i>
-                    </span>
+                    <div class="mt-8 flex items-center text-cyan-400 font-medium text-lg">
+                        <span>כניסה למחקר</span>
+                        <i class="fa-solid fa-arrow-left mr-2 group-hover:-translate-x-2 transition-transform"></i>
+                    </div>
                 </div>
             </a>
 
-            <a href="regions/middle-east.html" class="group block h-full">
-                <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 h-full shadow-xl transition-all duration-300 transform group-hover:-translate-y-2 group-hover:shadow-2xl group-hover:border-gray-600 flex flex-col items-center text-center">
-                    <div class="bg-gray-950 p-5 rounded-full mb-6 border border-gray-800 group-hover:border-green-500/50 transition-colors">
-                        <i class="fa-solid fa-earth-asia text-3xl text-green-400"></i>
+            <a href="western_northern_balkans.html" class="group flex flex-col bg-gray-900 rounded-3xl overflow-hidden border border-gray-800 hover:border-emerald-500/50 transition-all duration-300 shadow-lg hover:shadow-emerald-900/20 transform hover:-translate-y-1 relative">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+                <div class="p-8 flex-grow flex flex-col justify-between relative z-10">
+                    <div>
+                        <div class="w-14 h-14 bg-gray-800 rounded-2xl flex items-center justify-center mb-6 border border-gray-700 group-hover:bg-emerald-900/30 transition-colors">
+                            <i class="fa-solid fa-mountain text-2xl text-emerald-400"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-emerald-300 transition-colors">הבלקן המערבי והצפוני</h3>
+                        <p class="text-gray-400 leading-relaxed text-lg">
+                            חקר מדינות יוגוסלביה לשעבר וסביבתן: סרביה, קרואטיה, בוסניה והרצגובינה, סלובניה ועוד.
+                        </p>
                     </div>
-                    <h2 class="text-2xl font-bold text-white mb-3">המזרח התיכון</h2>
-                    <p class="text-gray-400 leading-relaxed mb-6 flex-grow">
-                        מחקר על 7 מדינות הלבנט וסביבתן: מצרים, ירדן, סוריה, לבנון, עיראק, טורקיה ואיראן.
-                    </p>
-                    <span class="inline-flex items-center text-green-400 font-medium group-hover:text-green-300">
-                        כניסה למחקר
-                        <i class="fa-solid fa-arrow-left ml-2"></i>
-                    </span>
+                    <div class="mt-8 flex items-center text-emerald-400 font-medium text-lg">
+                        <span>כניסה למחקר</span>
+                        <i class="fa-solid fa-arrow-left mr-2 group-hover:-translate-x-2 transition-transform"></i>
+                    </div>
                 </div>
             </a>
 
-            <a href="regions/north-africa.html" class="group block h-full">
-                <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 h-full shadow-xl transition-all duration-300 transform group-hover:-translate-y-2 group-hover:shadow-2xl group-hover:border-gray-600 flex flex-col items-center text-center">
-                    <div class="bg-gray-950 p-5 rounded-full mb-6 border border-gray-800 group-hover:border-purple-500/50 transition-colors">
-                        <i class="fa-solid fa-om text-3xl text-purple-400"></i>
+            <a href="eastern_southern_balkans.html" class="group flex flex-col bg-gray-900 rounded-3xl overflow-hidden border border-gray-800 hover:border-amber-500/50 transition-all duration-300 shadow-lg hover:shadow-amber-900/20 transform hover:-translate-y-1 relative">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+                <div class="p-8 flex-grow flex flex-col justify-between relative z-10">
+                    <div>
+                        <div class="w-14 h-14 bg-gray-800 rounded-2xl flex items-center justify-center mb-6 border border-gray-700 group-hover:bg-amber-900/30 transition-colors">
+                            <i class="fa-brands fa-fort-awesome text-2xl text-amber-400"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-amber-300 transition-colors">הבלקן המזרחי והדרומי</h3>
+                        <p class="text-gray-400 leading-relaxed text-lg">
+                            היסטוריה עשירה של אימפריות, הוגים ומצביאים: רומניה, בולגריה, יוון, אלבניה וצפון מקדוניה.
+                        </p>
                     </div>
-                    <h2 class="text-2xl font-bold text-white mb-3">צפון אפריקה (המגרב)</h2>
-                    <p class="text-gray-400 leading-relaxed mb-6 flex-grow">
-                        מחקר על 4 מדינות המגרב: אלג'יריה, לוב, מרוקו ותוניסיה.
-                    </p>
-                    <span class="inline-flex items-center text-purple-400 font-medium group-hover:text-purple-300">
-                        כניסה למחקר
-                        <i class="fa-solid fa-arrow-left ml-2"></i>
-                    </span>
-                </div>
-            </a>
-
-            <a href="regions/stan_nations_adapted.html" class="group block h-full">
-                <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 h-full shadow-xl transition-all duration-300 transform group-hover:-translate-y-2 group-hover:shadow-2xl group-hover:border-gray-600 flex flex-col items-center text-center">
-                    <div class="bg-gray-950 p-5 rounded-full mb-6 border border-gray-800 group-hover:border-amber-500/50 transition-colors">
-                        <i class="fa-solid fa-map-location-dot text-3xl text-amber-400"></i>
+                    <div class="mt-8 flex items-center text-amber-400 font-medium text-lg">
+                        <span>כניסה למחקר</span>
+                        <i class="fa-solid fa-arrow-left mr-2 group-hover:-translate-x-2 transition-transform"></i>
                     </div>
-                    <h2 class="text-2xl font-bold text-white mb-3">מדינות הסטן</h2>
-                    <p class="text-gray-400 leading-relaxed mb-6 flex-grow">
-                        מחקר על 7 מדינות מרכז אסיה וסביבתה: אפגניסטן, קזחסטן, קירגיזסטן, פקיסטן, טג'יקיסטן, טורקמניסטן ואוזבקיסטן.
-                    </p>
-                    <span class="inline-flex items-center text-amber-400 font-medium group-hover:text-amber-300">
-                        כניסה למחקר
-                        <i class="fa-solid fa-arrow-left ml-2"></i>
-                    </span>
                 </div>
             </a>
 
         </div>
+    </main>
 
-        <section class="mb-16 px-4">
-            <div class="flex items-center gap-4 mb-8 border-b border-gray-800 pb-4">
-                <div class="bg-gray-900 p-3 rounded-xl border border-gray-700 shadow-sm">
-                    <i class="fa-solid fa-book-atlas text-2xl text-gray-200"></i>
-                </div>
-                <h2 class="text-3xl md:text-4xl font-black text-white">מילון מונחים מקיף</h2>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="bg-gray-900/50 p-6 rounded-2xl border border-gray-800 hover:border-gray-600 transition-colors">
-                    <h3 class="text-xl font-bold text-blue-400 mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-flag text-sm"></i> וקסלולוגיה
-                    </h3>
-                    <p class="text-gray-300 leading-relaxed text-sm md:text-base">
-                        המחקר המדעי, ההיסטורי והסמלי של דגלים. התחום בוחן את בחירת הצבעים, הסמלים והעיצוב הגיאומטרי, וכיצד הם משקפים את ההיסטוריה, האידאולוגיה והזהות הלאומית של המדינה.
-                    </p>
-                </div>
-
-                <div class="bg-gray-900/50 p-6 rounded-2xl border border-gray-800 hover:border-gray-600 transition-colors">
-                    <h3 class="text-xl font-bold text-purple-400 mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-spell-check text-sm"></i> אטימולוגיה
-                    </h3>
-                    <p class="text-gray-300 leading-relaxed text-sm md:text-base">
-                        חקר מקורות המילים, התפתחותן הלשונית והשורשים ההיסטוריים שלהן. באטלס זה, אנו מנתחים כיצד שמות המדינות התפתחו משפות עתיקות (כמו ברברית, פרסית או סנסקריט) למשמעותן המודרנית.
-                    </p>
-                </div>
-
-                <div class="bg-gray-900/50 p-6 rounded-2xl border border-gray-800 hover:border-gray-600 transition-colors">
-                    <h3 class="text-xl font-bold text-cyan-400 mb-3 flex items-center gap-2">
-                        <i class="fa-regular fa-map text-sm"></i> קרטוגרפיה היסטורית
-                    </h3>
-                    <p class="text-gray-300 leading-relaxed text-sm md:text-base">
-                        אומנות ומדע יצירת מפות. באטלס שלנו אנו מתמקדים במפות עתיקות מהמאות ה-16 וה-17 (כיצירותיהם של אורטליוס ובלאו), המציגות את תפיסת המרחב הגיאופוליטי בטרם התהוו גבולות הלאום המודרניים.
-                    </p>
-                </div>
-
-                <div class="bg-gray-900/50 p-6 rounded-2xl border border-gray-800 hover:border-gray-600 transition-colors">
-                    <h3 class="text-xl font-bold text-green-400 mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-handshake-angle text-sm"></i> פאן-ערביות
-                    </h3>
-                    <p class="text-gray-300 leading-relaxed text-sm md:text-base">
-                        אידאולוגיה פוליטית שפרחה במאה ה-20 הדוגלת באיחוד חברתי, מדיני וכלכלי של כל העמים והמדינות הערביות. משתקפת היטב בצבעי הדגלים: אדום, שחור, לבן וירוק (צבעי המרד הערבי).
-                    </p>
-                </div>
-
-                <div class="bg-gray-900/50 p-6 rounded-2xl border border-gray-800 hover:border-gray-600 transition-colors">
-                    <h3 class="text-xl font-bold text-amber-500 mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-landmark-dome text-sm"></i> חליפות / אמירות / סולטנות
-                    </h3>
-                    <p class="text-gray-300 leading-relaxed text-sm md:text-base">
-                        שיטות ממשל היסטוריות: <strong class="text-white">חליפות</strong> מציינת הנהגה עליונה רוחנית ופוליטית ליורשיו של הנביא מוחמד. <strong class="text-white">סולטנות</strong> מעידה על כוח ושלטון מדיני מוחלט, ו<strong class="text-white">אמירות</strong> היא טריטוריה הנשלטת על ידי נסיך או מפקד.
-                    </p>
-                </div>
-
-                <div class="bg-gray-900/50 p-6 rounded-2xl border border-gray-800 hover:border-gray-600 transition-colors">
-                    <h3 class="text-xl font-bold text-pink-400 mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-location-dot text-sm"></i> ה"סטן" (-stan)
-                    </h3>
-                    <p class="text-gray-300 leading-relaxed text-sm md:text-base">
-                        סיומת המגיעה מהשפה הפרסית העתיקה והשפות ההודו-איראניות. משמעותה המילולית היא "מקום עמידה", "מחנה" או "מקום התיישבות". במשמעות הלאומית היא מתורגמת כ"ארץ" או "מולדת" (כמו קזחסטן - ארץ הקזחים).
-                    </p>
-                </div>
-
-                <div class="bg-gray-900/50 p-6 rounded-2xl border border-gray-800 hover:border-gray-600 transition-colors">
-                    <h3 class="text-xl font-bold text-indigo-400 mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-mountain-sun text-sm"></i> אל-מגרב (المغرب)
-                    </h3>
-                    <p class="text-gray-300 leading-relaxed text-sm md:text-base">
-                        שם בערבית שמשמעותו "מקום שקיעת השמש" או "המערב". הוא מתייחס גיאוגרפית לאזור הצפון-מערבי של יבשת אפריקה, הכולל היסטורית ותרבותית את מרוקו, אלג'יריה, תוניסיה ולוב.
-                    </p>
-                </div>
-
-                <div class="bg-gray-900/50 p-6 rounded-2xl border border-gray-800 hover:border-gray-600 transition-colors">
-                    <h3 class="text-xl font-bold text-emerald-400 mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-moon text-sm"></i> סהר וכוכב
-                    </h3>
-                    <p class="text-gray-300 leading-relaxed text-sm md:text-base">
-                        סמלים עתיקים אשר שימשו במקור עמים טורקיים ונוודים במרכז אסיה ואת העיר ביזנטיון. הם אומצו במלואם על ידי האימפריה העות'מאנית ולאחר מכן הפכו לסמל המוכר והמובהק ביותר של דת האסלאם ברחבי העולם.
-                    </p>
-                </div>
-
-                <div class="bg-gray-900/50 p-6 rounded-2xl border border-gray-800 hover:border-gray-600 transition-colors">
-                    <h3 class="text-xl font-bold text-rose-400 mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-scroll text-sm"></i> טראנסאוקסיאנה וטרטאריה
-                    </h3>
-                    <p class="text-gray-300 leading-relaxed text-sm md:text-base">
-                        מושגים קרטוגרפיים עתיקים. <strong class="text-white">טראנסאוקסיאנה</strong> (מעבר לנהר האוקסוס) מתאר את לבה של מרכז אסיה ובוכרה. <strong class="text-white">טרטאריה</strong> היה מונח אירופאי כללי לתיאור הערבות העצומות של אסיה הצפונית והמרכזית.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-    </div>
-
-    <footer class="mt-auto mb-8 pt-8 border-t border-gray-800 text-center text-gray-500 w-full max-w-6xl mx-auto px-4">
-        <div class="flex justify-center items-center gap-2 mb-4">
-            <i class="fa-solid fa-shield-halved text-gray-400"></i>
-            <h4 class="font-bold text-gray-400 text-lg">פרטי המחקר והפרויקט</h4>
-        </div>
-        <div class="inline-block text-right bg-gray-900/50 p-6 rounded-xl border border-gray-800 w-full max-w-2xl">
-            <p class="text-gray-300 leading-loose">
-                <strong class="text-white ml-2">שם ההוגה:</strong> רם<br>
-                <strong class="text-white ml-2">שם הבונה/היצרן:</strong> ג'מיני (Gemini 3.1 Pro)<br>
-                <strong class="text-white ml-2">סיבת ההמצאה/הבנייה:</strong> יצירת דף בית ופורטל מרכזי לאטלס האומות המלא, הכולל מילון מונחים והפניות. מותאם במיוחד לתצוגה ב-Samsung S25 Ultra.<br>
-                <strong class="text-white ml-2">שנת הבנייה/היצירה:</strong> 2026<br>
-                <strong class="text-white ml-2">מקורות וקרדיט:</strong> מידע אטימולוגי והיסטורי מהספרות המקצועית. דגלים באדיבות Flagpedia וקוד וקטורי פנימי ב-React.
-            </p>
+    <footer class="bg-gray-900 border-t border-gray-800 py-10 mt-auto">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-gray-500 mb-2">נבנה ופותח בסביבת AI متقدمת.</p>
+            <p class="text-gray-600 text-sm">© 2026 רם שלו | כל הזכויות שמורות לפרויקט המחקר.</p>
         </div>
     </footer>
 
