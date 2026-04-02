@@ -30,6 +30,11 @@
         const { useState } = React;
 
         // ==========================================
+        // תמונת גיבוי חכמה פנימית (לא תלויה ברשת)
+        // ==========================================
+        const fallbackImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400' viewBox='0 0 800 400'%3E%3Crect width='800' height='400' fill='%231e293b'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='26' fill='%2394a3b8'%3Eתמונה חסרה - יש לעדכן את שם הקובץ%3C/text%3E%3C/svg%3E";
+
+        // ==========================================
         // רכיבי ה-SVG של הדגלים
         // ==========================================
 
@@ -127,7 +132,7 @@
               achievements: 'השליט ההיסטורי הראשון (בשנת 1600) שהצליח לאחד תחת שלטונו האישי את כל שלוש הנסיכויות הרומניות – ולאכיה, מולדביה וטרנסילבניה. למרות שהאיחוד שרד רק זמן קצר עד להירצחו, הוא הפך למיתוס המכונן ואידיאל של הלאומיות הרומנית המודרנית.'
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_romania_wallachia.jpg',
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_romania_wallachia.jpg?v=2',
               title: 'הנסיכויות הרומניות ההיסטוריות',
               desc: 'מפה קרטוגרפית מהמאה ה-18 המציגה את ולאכיה ומולדביה, תוך פירוט תוואי נהר הדנובה והרי הקרפטים, שעיצבו את גבולותיהן הטבעיים של נסיכויות רומניה.'
             }
@@ -165,7 +170,7 @@
               achievements: 'הביא את האימפריה הבולגרית הראשונה לשיא התפשטותה הטריטוריאלית. תקופתו מכונה "תור הזהב של התרבות הבולגרית" – תחת חסותו פותח הכתב הקירילי (שמשמש כיום את רוסיה ורוב העולם הסלאבי), והספרות והאדריכלות הבולגרית פרחו.'
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_bulgaria_empire.jpg',
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_bulgaria_empire.jpg?v=2',
               title: 'האימפריה הבולגרית הראשונה',
               desc: 'מפת וינטג\' המציגה את שיא התפשטות האימפריה הבולגרית בימי הביניים, החולשת על רוב חצי האי הבלקני ומתחרה על ההגמוניה מול האימפריה הביזנטית.'
             }
@@ -203,7 +208,7 @@
               achievements: 'המדינאי החשוב ביותר ביוון המודרנית. כיהן כראש ממשלה מספר פעמים, הכפיל את שטחה ואוכלוסייתה של יוון דרך מלחמות הבלקן והדיפלומטיה של מלחמת העולם הראשונה, ויזם רפורמות עומק בחוקה ובחברה היוונית.'
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_greece_megali.jpg',
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_greece_megali.jpg?v=2',
               title: 'מפת חזון "יוון הגדולה"',
               desc: 'מפה היסטורית מהמאה ה-19 המתארת את חצי האי הבלקני ואגן הים האגאי. משקפת את האוריינטציה הימית העתיקה של יוון והשפעתה התרבותית סביב האגן הים-תיכוני.'
             }
@@ -241,7 +246,7 @@
               achievements: 'הגיבור הלאומי המיתולוגי. הצליח לאחד את הנסיכויות האלבניות המסוכסכות "בליגת לז\'ה" (1444). במשך 25 שנים הנהיג מלחמת גרילה גאונית שהדפה פעם אחר פעם את צבאות האימפריה העות\'מאנית העצומים שניסו לכבוש את הבלקן, וזכה להערצת האפיפיור ומלכי אירופה כ"מגן הנצרות".'
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_albania_lezhe.jpg',
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_albania_lezhe.jpg?v=2',
               title: 'הנסיכויות האלבניות (ליגת לז\'ה)',
               desc: 'מפה עתיקה המציגה את חופי הים האדריאטי והאזור ההררי הקשה של אלבניה, בו הצליח הגיבור סקנדרבג לאחד את השבטים ב"ליגת לז\'ה" ולהדוף את צבאות האימפריה העות\'מאנית.'
             }
@@ -279,7 +284,7 @@
               achievements: 'הנשיא הראשון של מקדוניה העצמאית. הוא המנהיג היחיד ביוגוסלביה שהצליח להוביל את מדינתו לעצמאות מלאה באמצעות דיפלומטיה בלבד וללא ירייה אחת, תוך שהוא חותם על הסכם נסיגה מסודר של הצבא היוגוסלבי משטח ארצו.'
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_macedonia_ottoman.jpg',
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_macedonia_ottoman.jpg?v=2',
               title: 'מקדוניה ומרחב הבלקן האמצעי',
               desc: 'מפה היסטורית מהמאה ה-19 המראה את אזור מקדוניה הגיאוגרפית (לפני חלוקתו המודרנית בין המדינות), אזור הררי שהיווה צומת דרכים חשוב באימפריה העות\'מאנית.'
             }
@@ -413,7 +418,7 @@
                                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                   onError={(e) => {
                                     e.target.onerror = null; 
-                                    e.target.src = 'https://placehold.co/800x400/1e293b/a3a8b8?text=Historical+Map';
+                                    e.target.src = fallbackImg;
                                   }}
                                 />
                                 <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300"></div>
@@ -464,7 +469,7 @@
                     onClick={e => e.stopPropagation()}
                     onError={(e) => {
                       e.target.onerror = null; 
-                      e.target.src = 'https://placehold.co/800x400/1e293b/a3a8b8?text=Historical+Map';
+                      e.target.src = fallbackImg;
                     }}
                   />
                 )}
