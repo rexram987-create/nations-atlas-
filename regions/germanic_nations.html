@@ -1,0 +1,490 @@
+```html
+<!DOCTYPE html>
+<html lang="he" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אטלס האומות | המדינות הגרמאניות</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="min-h-screen bg-gray-950 text-gray-200 p-4 md:p-8 font-sans antialiased selection:bg-amber-500/30">
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState } = React;
+
+        // ==========================================
+        // תמונת גיבוי חכמה פנימית
+        // ==========================================
+        const fallbackImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400' viewBox='0 0 800 400'%3E%3Crect width='800' height='400' fill='%231e293b'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='26' fill='%2394a3b8'%3Eתמונה חסרה - יש לעדכן את שם הקובץ%3C/text%3E%3C/svg%3E";
+
+        // ==========================================
+        // רכיבי ה-SVG של הדגלים
+        // ==========================================
+
+        const FlagGermany = () => (
+          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
+            <rect width="300" height="66.6" fill="#000000"/>
+            <rect y="66.6" width="300" height="66.6" fill="#FF0000"/>
+            <rect y="133.2" width="300" height="66.6" fill="#FFCC00"/>
+          </svg>
+        );
+
+        const FlagAustria = () => (
+          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
+            <rect width="300" height="66.6" fill="#ED2939"/>
+            <rect y="66.6" width="300" height="66.6" fill="#FFFFFF"/>
+            <rect y="133.2" width="300" height="66.6" fill="#ED2939"/>
+          </svg>
+        );
+
+        const FlagSwitzerland = () => (
+          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
+            <rect width="300" height="200" fill="#FF0000"/>
+            <g fill="#FFFFFF" transform="translate(150, 100)">
+              <rect x="-15" y="-50" width="30" height="100"/>
+              <rect x="-50" y="-15" width="100" height="30"/>
+            </g>
+          </svg>
+        );
+
+        const FlagLiechtenstein = () => (
+          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
+            <rect width="300" height="100" fill="#002B7F"/>
+            <rect y="100" width="300" height="100" fill="#CE1126"/>
+            <g transform="translate(45, 25) scale(0.4)" fill="#FFD700">
+              <path d="M0,80 L100,80 L100,60 L0,60 Z" />
+              <path d="M10,60 L20,20 L30,60 L50,10 L70,60 L80,20 L90,60 Z" />
+              <circle cx="20" cy="10" r="5" />
+              <circle cx="50" cy="0" r="6" />
+              <circle cx="80" cy="10" r="5" />
+            </g>
+          </svg>
+        );
+
+        // ==========================================
+        // מאגר הנתונים המלא - המדינות הגרמאניות
+        // ==========================================
+
+        const countriesData = [
+          {
+            id: 'germany',
+            name: 'גרמניה',
+            englishName: 'Germany',
+            officialName: 'הרפובליקה הפדרלית של גרמניה',
+            FlagComponent: FlagGermany,
+            areaNum: '~357,022 קמ"ר',
+            populationNum: '~84,000,000',
+            currency: 'אירו (EUR)',
+            area: 'כ-357,022 קמ"ר. שוכנת בלב אירופה ומהווה את הכלכלה הגדולה ביבשת. גיאוגרפיה מגוונת להפליא: ממישורי החוף של הים הבלטי והים הצפוני, דרך יערות עבותים (כמו היער השחור) ונהרות ענק (הריין והאלבה), ועד להרי האלפים הבוואריים בדרום.',
+            demographics: {
+              mainNationName: 'גרמנים',
+              mainNationPercent: 'כ-80%',
+              description: 'אומה גרמאנית-מרכזית. מבחינה דתית, גרמניה מפוצלת היסטורית: הצפון והמזרח נוטים להיות פרוטסטנטים (מורשת מרטין לותר) וחילונים (מורשת מזרח גרמניה הקומוניסטית), בעוד הדרום והמערב נותרו קתולים אדוקים יותר. קיים מיעוט טורקי וזר משמעותי מאוד, תוצר של הגירת "פועלים אורחים" לאחר המלחמה.'
+            },
+            modernHistory: 'לאחר מאות שנים של פיצול כ"אימפריה הרומית הקדושה", אוחדה המדינה ב-1871 על ידי ביסמרק. במאה ה-20 הובילה את העולם לשתי מלחמות עולם הרסניות, וביצעה את שואת יהודי אירופה. לאחר תבוסתה, חולקה לגרמניה המזרחית והמערבית על ידי מסך הברזל. איחודה מחדש ב-1990 סימל את תום המלחמה הקרה. כיום זו דמוקרטיה פדרלית איתנה והעוגן של האיחוד האירופי.',
+            foundingYears: '1871 (איחוד האימפריה) | 1990 (איחוד מחדש)',
+            flagSymbolism: 'הטריקולור השחור-אדום-זהוב. צבעים אלו הופיעו לראשונה בתחילת המאה ה-19 בקרב "הפרייקורפס של ליצו" (מתנדבים גרמנים שלחמו בנפוליאון) שלבשו מדים שחורים עם עיטורים אדומים וכפתורי פליז זהובים. הצבעים מסמלים את יציאתה של גרמניה מהחשכה (שחור), דרך דם הקרבות (אדום), אל עבר אור החירות והזהב.',
+            etymology: {
+              parts: [
+                { text: 'גרמאניה (Germania)', color: 'text-stone-400', bg: 'bg-stone-400/10', border: 'border-stone-500/30', desc: 'השם הבינלאומי (Germany) מגיע מהמונח הלטיני "Germania", בו השתמשו הרומאים (כמו יוליוס קיסר) כדי לתאר את כלל השבטים הפראיים שחיו מעבר לנהר הריין. מקור המילה בקרב השבטים הגאלים אינו ברור, אך ייתכן ומשמעותו "שכנים" או "אנשי היער".' },
+                { text: 'דויטשלנד (Deutschland)', color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-500/30', desc: 'זהו השם המקומי. נגזר מהמילה הגרמאנית העתיקה "Diutisc" שמשמעותה "של העם" (בניגוד לשפה הלטינית של האליטה הדתית). "Deutschland" משמעותו פשוט "ארצם של האנשים הפשוטים (הדוברים את שפת העם)".' }
+              ],
+              synthesis: 'מילולית: על פי המקור הלטיני - "ארץ השבטים הגרמאניים". על פי הגרמנית - "הארץ של שפת העם".'
+            },
+            figure: {
+              name: 'אוטו פון ביסמרק (Otto von Bismarck)',
+              years: '1815 - 1898',
+              childhood: 'נולד באחוזת אצולה בפרוסיה למשפחת אצילים ("יונקרים"). היה סטודנט פרוע ודו-קרבני באוניברסיטה, ובילה את שנותיו הראשונות בניהול האחוזה המשפחתית, לפני שגילה את כישרונו הדיפלומטי האדיר כנציג פרוסיה.',
+              ideology: 'ריאל-פוליטיק (Realpolitik) – פוליטיקה פרגמטית מבוססת על כוח, מציאות ואינטרסים קרים ולא על רגשות או אידאולוגיה. הוא התנגד לליברליזם והאמין שאת אחדות גרמניה אי אפשר להשיג בנאומים ובהחלטות רוב, אלא רק ב"דם וברזל" (Blut und Eisen).',
+              achievements: '"קנצלר הברזל". הגאון הדיפלומטי שאיחד את עשרות הנסיכויות הגרמניות המפוזרות לאימפריה גרמנית אחת וחזקה (הידועה כרייך השני) ב-1871. הוא בנה את מדינת הרווחה המודרנית הראשונה בעולם (כדי לבלום את הסוציאליסטים) ושמר על שלום יחסי באירופה באמצעות רשת בריתות מתוחכמת עד פיטוריו.'
+            },
+            map: {
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_germany_hre.jpg?v=2',
+              title: 'האימפריה הרומית הקדושה',
+              desc: 'מפת וינטג\' היסטורית המציגה את מרחב המדינות הגרמניות העתיקות בימי הביניים ובעת החדשה המוקדמת, מנוקדת בערי מדינה, יערות אפלים ומסלולו של נהר הריין.'
+            }
+          },
+          {
+            id: 'austria',
+            name: 'אוסטריה',
+            englishName: 'Austria',
+            officialName: 'רפובליקת אוסטריה',
+            FlagComponent: FlagAustria,
+            areaNum: '~83,871 קמ"ר',
+            populationNum: '~9,100,000',
+            currency: 'אירו (EUR)',
+            area: 'כ-83,871 קמ"ר. מדינה הררית ברובה המוחלט, ללא מוצא לים, הנשלטת על ידי הרי האלפים (המהווים למעלה מ-60% משטחה). העיר וינה יושבת באגן מישורי יותר על גדות נהר הדנובה.',
+            demographics: {
+              mainNationName: 'אוסטרים',
+              mainNationPercent: 'כ-80%',
+              description: 'אומה דוברת גרמנית, אך בניגוד לגרמנים של הצפון, האוסטרים מזוהים באופן היסטורי ומובהק עם הנצרות הקתולית ועם המורשת האימפריאלית ההבסבורגית. ישנם מיעוטים מזרח-אירופאיים משמעותיים, עקב היותה של אוסטריה מרכז אימפריאלי לשעבר.'
+            },
+            modernHistory: 'הייתה מרכז הכוח של בית הבסבורג ששלט בחצי מאירופה במשך מאות שנים. לאחר מלחמת העולם הראשונה, התרסקה האימפריה האוסטרו-הונגרית ואוסטריה הפכה לרפובליקה קטנה. ב-1938 סופחה לגרמניה הנאצית (ה"אנשלוס"). לאחר המלחמה חולקה על ידי בעלות הברית, וב-1955 קיבלה עצמאות מחודשת בתמורה להתחייבות חוקתית לניטרליות מוחלטת (בדומה לשווייץ).',
+            foundingYears: '976 (מרקיזות) | 1955 (אמנת המדינה)',
+            flagSymbolism: 'אחד הדגלים הלאומיים העתיקים בעולם. האגדה מספרת שלאחר המצור על עכו (1191) במסע הצלב השלישי, הטוניקה הלבנה של הדוכס ליאופולד החמישי הייתה ספוגה כולה בדם אויביו. כשהסיר את חגורתו, נותר פס לבן וטהור במרכז החולצה האדומה – מראה שהפך לסמל שושלתו ולדגלה של אוסטריה.',
+            etymology: {
+              parts: [
+                { text: 'אוסטאריחי (Ostarrihhi)', color: 'text-rose-400', bg: 'bg-rose-400/10', border: 'border-rose-500/30', desc: 'המסמך העתיק ביותר שמזכיר את השם (משנת 996) מכנה את האזור בגרמנית עליונה עתיקה "Ostarrîchi". המילה מורכבת מ-"Ostar" (מזרח) ו-"Rîchi" (ממלכה או תחום שליטה).' },
+                { text: 'תרגום לטיני (Austria)', color: 'text-stone-400', bg: 'bg-stone-400/10', border: 'border-stone-500/30', desc: 'כשהשם תורגם ללטינית בימי הביניים, הוא הפך ל"אוסטריה". באופן אירוני, למרות שבלטינית "Auster" פירושו דרום, השם השתרש כתרגום לממלכה המזרחית, שכן היא היוותה את ספר-הגבול המזרחי של האימפריה הפרנקית.' }
+              ],
+              synthesis: 'מילולית: המקור הגרמני המקומי (Österreich) משמעותו "ממלכת המזרח".'
+            },
+            figure: {
+              name: 'מריה תרזה (Maria Theresa)',
+              years: '1717 - 1780',
+              childhood: 'הבת הבכורה של הקיסר קרל השישי. למרות שיועדה רק להיות רעיית-קיסר, אביה שינה את החוק כדי שתוכל לרשת את כס המלכות. עם מותו, כשהיא בת 23 בלבד והרתה, מצאה את עצמה מותקפת מכל עבר על ידי מנהיגי אירופה שניסו לקרוע נתחים מהאימפריה.',
+              ideology: 'אבסולוטיזם נאור, אדיקות קתולית, וריכוזיות. מריה תרזה לא הייתה פמיניסטית או ליברלית, אך היא הבינה שכדי שהאימפריה תשרוד, עליה להיות יעילה. היא קידמה רפורמות אדירות בבריאות, בחינוך (חינוך חובה) ובצבא, ומרכזה את השלטון בווינה.',
+              achievements: 'השליטה היחידה בתולדות שושלת הבסבורג. למרות שירשה צבא חלש ואוצר מרוקן, היא חילצה את האימפריה מקריסה, הובילה אותה לשיא תפארתה, הרחיבה את החינוך הציבורי, וזכתה לכינוי "אם האימפריה" (בין היתר בזכות 16 הילדים שילדה, ביניהם מארי אנטואנט אשת מלך צרפת).'
+            },
+            map: {
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_austria_habsburg.jpg?v=2',
+              title: 'מפת ממלכת ההבסבורגים',
+              desc: 'מפה עתיקה המציגה את מרחב השליטה העצום של האימפריה האוסטרית בלב אירופה, עם התמקדות בווינה כבירת התרבות והאלפים האוסטריים המשוננים.'
+            }
+          },
+          {
+            id: 'switzerland',
+            name: 'שווייץ',
+            englishName: 'Switzerland',
+            officialName: 'הקונפדרציה השווייצרית',
+            FlagComponent: FlagSwitzerland,
+            areaNum: '~41,285 קמ"ר',
+            populationNum: '~8,800,000',
+            currency: 'פרנק שווייצרי (CHF)',
+            area: 'כ-41,285 קמ"ר. ממוקמת בלב הגיאוגרפי וההררי של אירופה. כ-60% משטחה מכוסה על ידי הרי האלפים האדירים, ובנוסף הרי היורה בצפון-מערב. בין הרכסים שוכנת "רמת שווייץ" ובה אגמים צלולים רבים (כמו אגם ז\'נבה).' ,
+            demographics: {
+              mainNationName: 'שווייצרים',
+              mainNationPercent: 'אין "רוב אתני" אחיד',
+              description: 'אומה מיוחדת במינה באירופה. אינה מבוססת על שפה אחידה או דת אחידה (האזרחים נחלקים שווה בשווה בין קתולים לפרוטסטנטים), אלא על רצון פוליטי משותף. ישנן 4 שפות רשמיות: גרמנית-שווייצרית (כ-62%), צרפתית (22%), איטלקית (8%) ורומאנש (פחות מ-1%). כ-25% מאוכלוסיית המדינה הם תושבים זרים.'
+            },
+            modernHistory: 'שווייץ החלה כברית של שלושה קנטונים קטנים (1291) שהתאגדו כדי להגן על עצמם בהרים. מאז תבוסתה ב-1515, היא מנהיגה מדיניות ברזל של ניטרליות צבאית מוחלטת. היא לא לקחה חלק באף אחת ממלחמות העולם, מה שאיפשר לה להפוך למעצמה כלכלית, בנקאית והומניטרית, ולמקום מושבם של מוסדות בינלאומיים (הצלב האדום).',
+            foundingYears: '1291 (הקונפדרציה הישנה) | 1848 (חוקה)',
+            flagSymbolism: 'אחד משני הדגלים הריבועיים היחידים בעולם (יחד עם הוותיקן). הצלב הלבן על רקע אדום אומץ על ידי חיילי הקונפדרציה בימי הביניים כדי לזהות איש את רעהו בשדה הקרב. הצלב מסמל את הנצרות, ואת החופש, השלום, והכבוד הניטרלי שאפיינו את השווייצרים לאורך ההיסטוריה. (היפוך צבעיו יצר את סמל "הצלב האדום").',
+            etymology: {
+              parts: [
+                { text: 'שווִיץ (Schwyz)', color: 'text-red-400', bg: 'bg-red-400/10', border: 'border-red-500/30', desc: 'המדינה קרויה על שם אחד משלושת הקנטונים (המחוזות) המייסדים של ברית הקונפדרציה הראשונה ב-1291 – קנטון שוויץ.' },
+                { text: 'שורש הצתה (Suedan)', color: 'text-stone-300', bg: 'bg-stone-300/10', border: 'border-stone-500/30', desc: 'שמו של קנטון "שוויץ" נגזר מהפועל הגרמאני העתיק "Suedan", שפירושו "לשרוף" או "לברא יער". תושבי האלפים הראשונים נאלצו לשרוף חורשות עבותות כדי לפנות מקום להתיישבות ולחקלאות בעמקי ההרים.' },
+                { text: 'קונפדרציו הלווטיקה (CH)', color: 'text-emerald-400', bg: 'bg-emerald-400/10', border: 'border-emerald-500/30', desc: 'השם הרשמי בלטינית (Confoederatio Helvetica - מכאן הסיומת .ch באינטרנט) נועד לא להעדיף אף אחת מהשפות הרשמיות. הוא נקרא על שם ה"הלווטים", שבט קלטי קדום שחי באזור לפני הכיבוש הרומי.' }
+              ],
+              synthesis: 'מילולית: "הארץ של קנטון שוויץ (ארץ יערות-הברא)".'
+            },
+            figure: {
+              name: 'הגנרל אנרי גיזאן (Henri Guisan)',
+              years: '1874 - 1960',
+              childhood: 'נולד בקנטון ווֹ (Vaud) דובר הצרפתית במערב שווייץ. למד חקלאות, אך התאהב באמנות הצבאית והתגייס לצבא המיליציה השווייצרי, שם התקדם בדרגות בזכות כריזמה כובשת ומקצועיות.',
+              ideology: 'ניטרליות חמושה עד שיניים ("הקיפוד השווייצרי"). גיזאן האמין שניטרליות אינה כניעה. כשכל המדינות סביב שווייץ נפלו לידי הנאצים, הוא הכריז ששווייץ תילחם עד הכדור האחרון ולעולם לא תיכנע, גם אם תכותר לחלוטין.',
+              achievements: 'המפקד העליון של צבא שווייץ במלחמת העולם השנייה. הוא הגה את "האסטרטגיה של הרדואיט" (המבצר האלפיני): תכנית לפיה במקרה של פלישה גרמנית, הצבא ייסוג מיד להרי האלפים, יפוצץ את המנהרות והגשרים (שהם קריטיים לסחר הנאצי עם איטליה), וינהל מלחמת גרילה שבה לטנקים הגרמנים לא יהיה יתרון. בזכות תכנית אמיצה זו (שנתמכה ברוח לחימה שהחדיר בעם בנאומו המפורסם באחו הרִיטְלִי), היטלר נרתע מלפלוש לשווייץ.'
+            },
+            map: {
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_switzerland_cantons.jpg?v=2',
+              title: 'מפת הקונפדרציה האלפינית',
+              desc: 'מפת קרטוגרפיה של שווייץ העתיקה, המציגה את החלוקה ההיסטורית לקנטונים מוקפים בטופוגרפיה מושלגת תלולה ובלתי עבירה של הרי האלפים.'
+            }
+          },
+          {
+            id: 'liechtenstein',
+            name: 'ליכטנשטיין',
+            englishName: 'Liechtenstein',
+            officialName: 'נסיכות ליכטנשטיין',
+            FlagComponent: FlagLiechtenstein,
+            areaNum: '~160 קמ"ר',
+            populationNum: '~39,000',
+            currency: 'פרנק שווייצרי (CHF)',
+            area: 'כ-160 קמ"ר. מדינה זעירה ביותר (השישית בקוטנה בעולם) הכלואה בין שווייץ לאוסטריה. היא "כפולה ללא מוצא לים" (כלומר, כל המדינות המקיפות אותה חסרות מוצא לים בעצמן). חלקה המערבי יושב בעמק נהר הריין, וחלקה המזרחי מטפס גבוה אל תוך הרי האלפים.',
+            demographics: {
+              mainNationName: 'ליכטנשטיינים',
+              mainNationPercent: 'כ-66%',
+              description: 'האוכלוסייה קטנה ומורכבת ברובה המכריע מנוצרים קתולים הדוברים ניב אלמני של השפה הגרמנית. למעלה משליש מתושבי המדינה הם זרים (בעיקר אוסטרים, שווייצרים וגרמנים) העובדים במגזר הפיננסי העשיר שלה.'
+            },
+            modernHistory: 'הוקמה כנסיכות באימפריה הרומית הקדושה. באופן מדהים, שרדה את מלחמות נפוליאון, פירוק האימפריה הגרמנית, ואת שתי מלחמות העולם מבלי להיבלע על ידי שכנותיה הענקיות (בזכות ניטרליות וקשרים חכמים עם שווייץ ואוסטריה). כיום היא מונרכיה חוקתית עם כלכלה פורחת בזכות מיסים נמוכים ומגזר בנקאי חזק.',
+            foundingYears: '1719 (הקמת הנסיכות)',
+            flagSymbolism: 'הדגל מורכב משני פסים אופקיים של כחול ואדום. הכחול מסמל את השמיים הבהירים; האדום מסמל את האש הבוערת באח הבית (משפחתיות וחמימות). הכתר הזהוב בצד השמאלי העליון התווסף רק ב-1937, לאחר שבאולימפיאדה של 1936 הליכטנשטיינים גילו לתדהמתם שהדגל שלהם זהה לחלוטין לזה של האיטי.',
+            etymology: {
+              parts: [
+                { text: 'שושלת ליכטנשטיין', color: 'text-yellow-400', bg: 'bg-yellow-400/10', border: 'border-yellow-500/30', desc: 'המדינה הקטנה לא קרויה על שם תושביה או ההיסטוריה הגיאוגרפית שלה, אלא על שם השושלת המלוכתית שרכשה אותה – משפחת ליכטנשטיין האוסטרית.' },
+                { text: 'ליכט (Licht)', color: 'text-slate-300', bg: 'bg-slate-300/10', border: 'border-slate-500/30', desc: 'פירושה בגרמנית "אור" או "בהיר".' },
+                { text: 'שטיין (Stein)', color: 'text-stone-500', bg: 'bg-stone-400/10', border: 'border-stone-600/30', desc: 'פירושה בגרמנית "אבן" או "סלע". השם ליכטנשטיין מתייחס במקור לטירה המקורית של המשפחה (טירת ליכטנשטיין) ליד וינה, שנבנתה על סלע בהיר.' }
+              ],
+              synthesis: 'מילולית: "הנסיכות של סלע האור".'
+            },
+            figure: {
+              name: 'הנסיך פרנץ יוזף השני (Franz Joseph II)',
+              years: '1906 - 1989',
+              childhood: 'נולד באוסטריה כיורש של שושלת ליכטנשטיין. גדל בטירות מפוארות וקיבל חינוך של אצולה בוינה, כולל לימודי ייעור וחקלאות, מבלי לחשוב שייאלץ להתמודד עם קריסתה של אירופה הישנה.',
+              ideology: 'הישרדות דיפלומטית וניטרליות. הוא היה הנסיך הראשון שקבע את מושבו הקבוע בתוך הנסיכות הקטנה עצמה. הוא הבין שעל מנת שהמדינה הזעירה תשרוד את הטירוף הנאצי והסובייטי סביבה, עליה לשמור על פרופיל נמוך, ניטרליות קשוחה (בדומה לשווייץ) ומעבר לכלכלה מודרנית.',
+              achievements: 'הציל את ליכטנשטיין ממלחמת העולם השנייה כאשר שמר על ניטרליות מוחלטת (בכך נמנעה פלישה נאצית). תחת שלטונו, המדינה הזעירה והחקלאית הפכה לאחת המדינות העשירות בעולם עם תמ"ג לנפש דמיוני, במידה רבה בזכות הפיכתה למרכז בנקאות ופיננסים מהמובילים באירופה.'
+            },
+            map: {
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_liechtenstein_alpine.jpg?v=2',
+              title: 'הנסיכות בלב הרי האלפים',
+              desc: 'מפת איור עדינה המציגה את מיקומה הזעיר של ליכטנשטיין בעמק הריין העליון, כלואה כפנינה קטנה בין ענקיות ההרים של שווייץ ואוסטריה.'
+            }
+          }
+        ];
+
+        // ==========================================
+        // רכיבי התצוגה (UI) 
+        // ==========================================
+
+        const CountryCard = ({ country, onModalOpen }) => {
+          const { 
+            FlagComponent, name, englishName, officialName, areaNum, populationNum, currency, area, demographics, 
+            modernHistory, foundingYears, etymology, flagSymbolism, figure, map 
+          } = country;
+
+          return (
+            <article className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl transition-all hover:border-gray-700">
+              
+              <div className="flex flex-col md:flex-row gap-6 p-6 md:p-8 border-b border-gray-800">
+                <div 
+                  className="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center bg-gray-950 p-4 rounded-xl cursor-pointer group relative" 
+                  onClick={() => onModalOpen({type: 'flag', component: FlagComponent, title: `דגל ${name}`})}
+                  title="לחץ להגדלת הדגל"
+                >
+                  <div className="w-full max-h-40 shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105 overflow-hidden flex justify-center items-center">
+                    <div className="w-full h-32 md:h-40 relative">
+                       <FlagComponent />
+                    </div>
+                  </div>
+                  <div className="absolute opacity-0 group-hover:opacity-100 bg-black/60 text-white text-sm px-3 py-1 rounded transition-opacity duration-300 pointer-events-none mt-32">
+                    לחץ להגדלה
+                  </div>
+                </div>
+                
+                <div className="flex-grow flex flex-col justify-center">
+                  <h2 className="text-3xl font-bold text-white mb-2">{name} <span className="text-gray-500 text-lg ml-2 uppercase tracking-widest">{englishName}</span></h2>
+                  <h3 className="text-xl text-gray-400 mb-4">{officialName}</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 ml-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                      <span><strong className="text-white">שנות ייסוד:</strong> {foundingYears}</span>
+                    </div>
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 ml-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                      <span className="truncate" title={figure.name}><strong className="text-white">מנהיג:</strong> {figure.name.split('(')[0]}</span>
+                    </div>
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 ml-2 text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3h18v18H3zM12 8v8m-4-4h8"></path></svg>
+                      <span><strong className="text-white">שטח:</strong> {areaNum}</span>
+                    </div>
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 ml-2 text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                      <span><strong className="text-white">אוכלוסייה:</strong> {populationNum}</span>
+                    </div>
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg md:col-span-2">
+                      <svg className="w-5 h-5 ml-2 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+                      <span><strong className="text-white">שם מטבע:</strong> {currency}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 md:p-8 space-y-10">
+                
+                <section>
+                    <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                        <i className="fa-solid fa-map-location-dot w-6 h-6 ml-2 text-sky-400 text-xl"></i>
+                        <h3 className="text-2xl font-bold text-white">רקע פיזי ואנושי</h3>
+                    </div>
+                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 space-y-4">
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">שטח וטופוגרפיה:</strong> {area}</p>
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">דמוגרפיה ({demographics.mainNationName} - {demographics.mainNationPercent}):</strong> {demographics.description}</p>
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">היסטוריה מודרנית:</strong> {modernHistory}</p>
+                    </div>
+                </section>
+
+                <section>
+                    <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                        <svg className="w-6 h-6 ml-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                        <h3 className="text-2xl font-bold text-white">וקסלולוגיה</h3>
+                    </div>
+                    <p className="text-gray-300 leading-relaxed text-lg">{flagSymbolism}</p>
+                </section>
+                
+                <section>
+                    <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                        <svg className="w-6 h-6 ml-2 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                        <h3 className="text-2xl font-bold text-white">אטימולוגיה</h3>
+                    </div>
+                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800">
+                        <ul className="space-y-4">
+                            {etymology.parts.map((part, index) => (
+                                <li key={index} className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4">
+                                    <span className={`font-bold min-w-[150px] md:text-lg flex-shrink-0 ${part.color} ${part.bg} border ${part.border} px-2 py-1 rounded-md`}>• {part.text}:</span>
+                                    <span className="text-gray-300 leading-relaxed text-lg">{part.desc}</span>
+                                </li>
+                            ))}
+                            <li className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4 mt-2 pt-4 border-t border-gray-800/50">
+                                <span className="font-bold text-amber-400 min-w-[150px] md:text-lg flex-shrink-0"><i className="fa-solid fa-quote-right ml-1"></i> משמעות השם:</span>
+                                <span className="text-gray-200 font-bold leading-relaxed text-lg">{etymology.synthesis}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gray-800/20 p-6 rounded-xl border border-gray-800/50">
+                    <div>
+                        <div className="flex items-center mb-4 border-b border-gray-700 pb-2">
+                            <svg className="w-6 h-6 ml-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                            <h3 className="text-2xl font-bold text-white">פרופיל מנהיג מכונן</h3>
+                        </div>
+                        <h4 className="text-xl text-rose-300 font-bold mb-3">{figure.name} <span className="text-base text-gray-400">({figure.years})</span></h4>
+                        <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
+                            <div><strong className="text-white block mb-1">ילדות ורקע:</strong> {figure.childhood}</div>
+                            <div><strong className="text-white block mb-1">אידאולוגיה:</strong> {figure.ideology}</div>
+                            <div><strong className="text-white block mb-1">הישגים מרכזיים:</strong> {figure.achievements}</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div className="flex items-center mb-4 border-b border-gray-700 pb-2">
+                            <svg className="w-6 h-6 ml-2 text-cyan-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"></path><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                            <h3 className="text-2xl font-bold text-white">קרטוגרפיה היסטורית</h3>
+                        </div>
+                        <div className="flex flex-col cursor-pointer group rounded-xl overflow-hidden border border-gray-700 bg-gray-800/30 hover:border-gray-500 transition-all duration-300 shadow-lg" onClick={() => onModalOpen({type: 'image', url: map.url, title: map.title})}>
+                            <div className="relative h-48 md:h-56 w-full overflow-hidden bg-black">
+                                <img 
+                                  src={map.url} 
+                                  alt={map.title} 
+                                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                  onError={(e) => {
+                                    e.target.onerror = null; 
+                                    e.target.src = fallbackImg;
+                                  }}
+                                />
+                                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300"></div>
+                            </div>
+                            <div className="p-4 text-center border-t border-gray-700/50">
+                                <strong className="text-cyan-300 block mb-2 text-base">{map.title}</strong>
+                                <span className="text-gray-300 text-sm leading-relaxed block">{map.desc}</span>
+                                <span className="inline-block mt-3 text-gray-400 text-xs font-medium bg-gray-900/80 px-3 py-1.5 rounded-full border border-gray-700 transition-colors group-hover:text-cyan-300 group-hover:border-cyan-800/50">(לחץ להגדלת המפה)</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+              </div>
+            </article>
+          );
+        };
+
+        const MediaModal = ({ content, onClose }) => {
+          if (!content) return null;
+          
+          return (
+            <div 
+              className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-sm p-4 transition-opacity duration-300"
+              onClick={onClose}
+            >
+              <div className="relative max-w-full max-h-full flex flex-col items-center">
+                <button 
+                  onClick={onClose}
+                  className="absolute -top-14 right-0 md:-right-14 text-gray-400 hover:text-white bg-gray-800/80 hover:bg-gray-700 rounded-full p-2 transition-colors z-50"
+                  aria-label="סגור חלון"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+                
+                {content.type === 'flag' ? (
+                  <div className="w-full max-w-4xl aspect-[3/2] bg-black shadow-2xl rounded-lg overflow-hidden border border-gray-700" onClick={e => e.stopPropagation()}>
+                    <content.component />
+                  </div>
+                ) : (
+                  <img 
+                    src={content.url} 
+                    alt={content.title} 
+                    className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-gray-700" 
+                    onClick={e => e.stopPropagation()}
+                    onError={(e) => {
+                      e.target.onerror = null; 
+                      e.target.src = fallbackImg;
+                    }}
+                  />
+                )}
+              </div>
+            </div>
+          );
+        };
+
+        function App() {
+          const [modalContent, setModalContent] = useState(null);
+
+          // סגירת החלון במקש אסקייפ
+          React.useEffect(() => {
+            const handleEsc = (e) => { if (e.key === 'Escape') setModalContent(null); };
+            window.addEventListener('keydown', handleEsc);
+            return () => window.removeEventListener('keydown', handleEsc);
+          }, []);
+
+          // מניעת גלילה כאשר המודל פתוח
+          React.useEffect(() => {
+            document.body.style.overflow = modalContent ? 'hidden' : '';
+          }, [modalContent]);
+
+          return (
+            <div className="max-w-5xl mx-auto pt-4 md:pt-8">
+              <header className="mb-10 text-center">
+                  <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tight drop-shadow-lg">המדינות הגרמאניות</h1>
+                  <p className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+                     מרכז אירופה: מחקר וקסלולוגי, אטימולוגי, היסטורי וקרטוגרפי
+                  </p>
+              </header>
+
+              <div className="space-y-12">
+                {countriesData.map(country => (
+                  <CountryCard 
+                    key={country.id} 
+                    country={country} 
+                    onModalOpen={setModalContent} 
+                  />
+                ))}
+              </div>
+
+              <footer className="mt-12 mb-8 pt-8 border-t border-gray-800 text-center text-gray-500 w-full max-w-6xl mx-auto px-4">
+                  <div className="flex justify-center items-center gap-2 mb-4">
+                      <svg className="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                      <h4 className="font-bold text-gray-400 text-lg">פרטי המחקר והפרויקט</h4>
+                  </div>
+                  <div className="inline-block text-right bg-gray-900/50 p-6 rounded-xl border border-gray-800 w-full max-w-2xl">
+                      <p className="text-gray-300 leading-loose">
+                          <strong className="text-white ml-2">שם ההוגה:</strong> רם<br />
+                          <strong className="text-white ml-2">שם הבונה/היצרן:</strong> ג'מיני (Gemini 3.1 Pro)<br />
+                          <strong className="text-white ml-2">סיבת ההמצאה/הבנייה:</strong> חקר המדינות הגרמאניות (הדוברות גרמנית) במרכז אירופה כחלק מ"אטלס האומות המלא".<br />
+                          <strong className="text-white ml-2">שנת הבנייה/היצירה:</strong> 2026<br />
+                          <strong className="text-white ml-2">מקורות וקרדיט:</strong> אטימולוגיה מקצועית. דגלי SVG וקטוריים פנימיים. מפות גיאוגרפיות קלאסיות מחשבון ה-GitHub של הפרויקט.
+                      </p>
+                  </div>
+              </footer>
+
+              <MediaModal content={modalContent} onClose={() => setModalContent(null)} />
+            </div>
+          );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
+
+```
