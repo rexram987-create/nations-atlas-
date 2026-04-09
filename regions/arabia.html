@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Stan Project | חצי האי ערב</title>
+    <title>The Arabian Peninsula Project | חצי האי ערב</title>
     
     <!-- טעינת ספריות העיצוב -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -31,346 +31,676 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useEffect } = React;
 
         // ==========================================
-        // רכיבי ה-SVG של הדגלים (בנייה וקטורית פנימית)
+        // מילון ממשק משתמש (UI Dictionary)
         // ==========================================
-
-        const FlagSaudiArabia = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="200" fill="#006C35" />
-            <g fill="#FFFFFF">
-              <text x="150" y="90" fontSize="38" fontFamily="sans-serif" textAnchor="middle" fontWeight="bold">لا إله إلا الله محمد رسول الله</text>
-              <path d="M220,135 L260,130 L255,125 L40,130 Z" />
-              <path d="M255,125 L260,130 C265,135 250,145 240,140 Z" />
-            </g>
-          </svg>
-        );
-
-        const FlagYemen = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="66.6" fill="#CE1126" />
-            <rect y="66.6" width="300" height="66.6" fill="#FFFFFF" />
-            <rect y="133.2" width="300" height="66.6" fill="#000000" />
-          </svg>
-        );
-
-        const FlagOman = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="66.6" fill="#FFFFFF" />
-            <rect y="66.6" width="300" height="66.6" fill="#C8102E" />
-            <rect y="133.2" width="300" height="66.6" fill="#006A44" />
-            <rect width="80" height="200" fill="#C8102E" />
-            <g fill="#FFFFFF" transform="translate(40, 33) scale(0.6)">
-              <path d="M-10,-20 L10,-20 L2,0 L15,15 L-15,15 L-2,0 Z" />
-              <path d="M-15,18 L15,18 L5,35 C0,40 -15,35 -5,25 Z" />
-            </g>
-          </svg>
-        );
-
-        const FlagUAE = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="66.6" fill="#00732F" />
-            <rect y="66.6" width="300" height="66.6" fill="#FFFFFF" />
-            <rect y="133.2" width="300" height="66.6" fill="#000000" />
-            <rect width="80" height="200" fill="#FF0000" />
-          </svg>
-        );
-
-        const FlagKuwait = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="66.6" fill="#007A3D" />
-            <rect y="66.6" width="300" height="66.6" fill="#FFFFFF" />
-            <rect y="133.2" width="300" height="66.6" fill="#CE1126" />
-            <polygon points="0,0 80,66.6 80,133.2 0,200" fill="#000000" />
-          </svg>
-        );
-
-        const FlagBahrain = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="200" fill="#CE1126" />
-            <polygon points="0,0 100,0 120,20 100,40 120,60 100,80 120,100 100,120 120,140 100,160 120,180 100,200 0,200" fill="#FFFFFF" />
-          </svg>
-        );
-
-        const FlagQatar = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="200" fill="#8A1538" />
-            <polygon points="0,0 80,0 100,11.1 80,22.2 100,33.3 80,44.4 100,55.5 80,66.6 100,77.7 80,88.8 100,99.9 80,111 100,122.1 80,133.2 100,144.3 80,155.4 100,166.5 80,177.6 100,188.7 80,200 0,200" fill="#FFFFFF" />
-          </svg>
-        );
+        const ui = {
+          he: {
+            mainTitle: "דגלי חצי האי ערב",
+            subTitle: "מחקר וקסלולוגי, אטימולוגי, היסטורי וקרטוגרפי",
+            langBtn: "English",
+            capital: "עיר בירה:",
+            currency: "מטבע לאומי:",
+            founding: "שנת ייסוד:",
+            population: "אוכלוסייה:",
+            area: "שטח:",
+            leader: "מנהיג:",
+            sectionPhysical: "רקע פיזי ואנושי",
+            lAreaTopo: "שטח וטופוגרפיה:",
+            lDemographics: "דמוגרפיה",
+            lModernHistory: "היסטוריה מודרנית:",
+            sectionEtymology: "אטימולוגיה ושמות",
+            lNameMeaning: "משמעות השם:",
+            lCapitalName: "עיר הבירה:",
+            lCapitalEty: "אטימולוגיה:",
+            lCapitalFounding: "שנת ייסוד הבירה:",
+            lCapitalReason: "הסיבה לבחירתה:",
+            sectionSymbols: "סמלים וזהות לאומית",
+            lFlagMeaning: "משמעות צבעי הדגל:",
+            lNationalAnimal: "החיה הלאומית:",
+            sectionLeader: "פרופיל מנהיג מכונן",
+            lChildhood: "ילדות ורקע:",
+            lIdeology: "אידאולוגיה:",
+            lAchievements: "הישגים מרכזיים:",
+            sectionCartography: "קרטוגרפיה היסטורית",
+            lClickEnlargeMap: "(לחץ להגדלת המפה)",
+            lClickEnlargeFlag: "לחץ להגדלה",
+            footerTitle: "פרטי המחקר והפרויקט",
+            fConcept: "שם ההוגה:",
+            fBuilder: "שם הבונה/היצרן:",
+            fReason: "סיבת ההמצאה/הבנייה:",
+            fYear: "שנת הבנייה/היצירה:",
+            fCredits: "מקורות וקרדיט:",
+            fConceptVal: "רם",
+            fBuilderVal: "ג'מיני (Gemini 3.1 Pro)",
+            fReasonVal: "המרת מחקר חצי האי ערב למבנה React וקטורי מדויק בשילוב מפות היסטוריות ייעודיות ותרגום דו-לשוני מלא (עברית/אנגלית).",
+            fYearVal: "2026",
+            fCreditsVal: "אטימולוגיה מהספרות ההיסטורית. מפות קרטוגרפיות מ-GitHub. קובצי דגלים באדיבות Flagpedia.net."
+          },
+          en: {
+            mainTitle: "Flags of the Arabian Peninsula",
+            subTitle: "Vexillological, Etymological, Historical, and Cartographic Research",
+            langBtn: "עברית",
+            capital: "Capital City:",
+            currency: "Currency:",
+            founding: "Founded:",
+            population: "Population:",
+            area: "Area:",
+            leader: "Leader:",
+            sectionPhysical: "Physical and Human Background",
+            lAreaTopo: "Area & Topography:",
+            lDemographics: "Demographics",
+            lModernHistory: "Modern History:",
+            sectionEtymology: "Etymology and Names",
+            lNameMeaning: "Name Meaning:",
+            lCapitalName: "Capital City:",
+            lCapitalEty: "Etymology:",
+            lCapitalFounding: "Founding Year:",
+            lCapitalReason: "Reason for Selection:",
+            sectionSymbols: "Symbols & National Identity",
+            lFlagMeaning: "Flag Symbolism:",
+            lNationalAnimal: "National Animal:",
+            sectionLeader: "Founding Leader Profile",
+            lChildhood: "Childhood & Background:",
+            lIdeology: "Ideology:",
+            lAchievements: "Major Achievements:",
+            sectionCartography: "Historical Cartography",
+            lClickEnlargeMap: "(Click to enlarge map)",
+            lClickEnlargeFlag: "Click to enlarge",
+            footerTitle: "Research and Project Details",
+            fConcept: "Concept by:",
+            fBuilder: "Builder/Generator:",
+            fReason: "Reason for Creation:",
+            fYear: "Year of Creation:",
+            fCredits: "Sources & Credits:",
+            fConceptVal: "Ram",
+            fBuilderVal: "Gemini (Gemini 3.1 Pro)",
+            fReasonVal: "Conversion of the Arabian Peninsula research into a precise React structure with historical maps and full bilingual translation (Heb/Eng).",
+            fYearVal: "2026",
+            fCreditsVal: "Etymology from historical literature. Cartographic maps from GitHub. Flag files courtesy of Flagpedia.net."
+          }
+        };
 
         // ==========================================
-        // מאגר הנתונים המלא - חצי האי ערב
+        // מאגר הנתונים המלא והמורחב (דו-לשוני) - חצי האי ערב
         // ==========================================
 
         const countriesData = [
           {
             id: "saudi_arabia",
-            name: "ערב הסעודית",
+            name: { he: "ערב הסעודית", en: "Saudi Arabia" },
             englishName: "Saudi Arabia",
-            officialName: "הממלכה הערבית הסעודית",
-            FlagComponent: FlagSaudiArabia,
-            areaNum: "~2,149,690 קמ\"ר",
-            populationNum: "~36,000,000",
-            currency: "ריאל סעודי (SAR)",
-            area: "כ-2,149,690 קמ\"ר. שולטת על מרבית חצי האי ערב, מתאפיינת במדבריות עצומים (כגון אל-רוב אל-חאלי) ובחופי ים סוף והמפרץ הפרסי.",
-            demographics: {
-              mainNationName: "ערבים סעודים",
-              mainNationPercent: "כ-60% (השאר מהגרי עבודה)",
-              description: "אוכלוסיית ערב הסעודית מורכבת בעיקרה ממוסלמים סונים (רובם בזרם הוהאבי/סלפי), עם מיעוט שיעי משמעותי במחוז המזרחי. כמחצית מכוח העבודה במדינה מורכב ממהגרים."
+            officialName: { he: "הממלכה הערבית הסעודית", en: "Kingdom of Saudi Arabia" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/saudi_arabia.webp",
+            capital: {
+              name: { he: "ריאד", en: "Riyadh" },
+              englishName: "Riyadh",
+              etymology: { 
+                he: "השם מגיע מהמילה הערבית 'רוצ'ה' (Rawdha), שמשמעותה גנים, אחו או נווה מדבר ירוק. השם החל להופיע בכתובים במהלך המאה ה-18 וניתן לעיר בשל פוריותה היחסית וריבוי מי התהום באזור שקע ואדי חניפה. פוריות זו היוותה ניגוד מוחלט לנוף הצחיח והקשה של אזור נג'ד (מרכז חצי האי ערב), מה שהפך אותה לפנינה של ממש בעיני השבטים הנודדים.",
+                en: "The name is derived from the Arabic word 'Rawdha', meaning gardens, meadows, or a green oasis. The name appeared in writings during the 18th century, given to the city due to its relative fertility and abundant groundwater in the Wadi Hanifa depression. This fertility was a stark contrast to the harsh, arid landscape of the Najd region, making it a true jewel for nomadic tribes."
+              },
+              foundingYear: { he: "המאה ה-18 (הפכה לבירת המדינה הסעודית השנייה ב-1824)", en: "18th Century (Became the capital of the Second Saudi State in 1824)" },
+              reason: { 
+                he: "ריאד נבחרה בשל מיקומה המרכזי והמוגן בלב אזור נג'ד. לאחר שהאימפריה העות'מאנית-מצרית החריבה עד היסוד את הבירה הסעודית הקודמת והעתיקה, א-דרעיה, בשנת 1818, נזקק בית סעוד לעורף אסטרטגי חדש. ריאד סיפקה חומות איתנות, שפע יחסי של מים, והגנה טבעית של המדבר, שאפשרו לשושלת סעוד להשתקם, להתבצר, ולבסס את שלטונם מחדש הרחק מהישג ידם של הציים הזרים ששלטו בחופי הים האדום והמפרץ הפרסי.",
+                en: "Riyadh was chosen for its central and protected location in the heart of Najd. After the Ottoman-Egyptian empire utterly destroyed the previous ancient Saudi capital, Diriyah, in 1818, the House of Saud needed a new strategic hinterland. Riyadh provided sturdy walls, relative water abundance, and the natural defense of the desert, allowing the Saudi dynasty to recover, fortify, and re-establish their rule far from the reach of foreign fleets dominating the Red Sea and Persian Gulf coasts."
+              }
             },
-            modernHistory: "הממלכה אוחדה רשמית ב-1932 על ידי עבד אל-עזיז אבן סעוד, שכבש את ריאד ולאחר מכן את חיג'אז. גילוי הנפט ב-1938 שינה לחלוטין את הכלכלה והמעמד הגיאופוליטי של המדינה בעולם.",
-            foundingYears: "1932 (איחוד הממלכה)",
-            flagSymbolism: "הדגל מורכב מרקע ירוק עמוק, המסמל את דת האסלאם. במרכז מופיעה \"השהאדה\" (ההצהרה על ייחוד האל) בקליגרפיה ערבית. מתחתיה חרב המצביעה שמאלה, שנוספה לסמל חומרה בהחלת הצדק, עוצמה צבאית ואת הניצחונות של בית סעוד.",
+            areaNum: { he: "~2,149,690 קמ\"ר", en: "~2,149,690 sq km" },
+            populationNum: "~36,000,000",
+            currency: { he: "ריאל סעודי (SAR)", en: "Saudi Riyal (SAR)" },
+            area: { 
+              he: "כ-2,149,690 קמ\"ר. המדינה הענקית שולטת על כ-80% משטחו של חצי האי ערב. הטופוגרפיה שלה מגוונת ממה שנהוג לחשוב: היא כוללת את 'אל-רוב אל-חאלי' (אזור הריק) - מדבר החולות הרציף הגדול בעולם, רכסי הרי עסיר הירוקים והגבוהים בדרום-מערב, מישורי חוף ארוכים לאורך הים האדום במערב, והמפרץ הפרסי במזרח העשיר בבארות נפט.",
+              en: "Approx. 2,149,690 sq km. This massive country controls about 80% of the Arabian Peninsula's landmass. Its topography is more diverse than commonly thought: it includes the 'Rub' al Khali' (Empty Quarter)—the largest contiguous sand desert in the world, the high and green Asir mountain ranges in the southwest, long coastal plains along the Red Sea in the west, and the oil-rich Persian Gulf in the east."
+            },
+            demographics: {
+              mainNationName: { he: "ערבים סעודים", en: "Saudi Arabians" },
+              mainNationPercent: { he: "כ-60% (השאר מהגרי עבודה)", en: "~60% (Remainder are migrant workers)" },
+              description: { 
+                he: "החברה הסעודית מורכבת בעיקרה ממוסלמים סונים אדוקים (ההולכים ברובם לאור הזרם הוהאבי/סלפי המחמיר). עם זאת, במחוז א-שרקייה (המחוז המזרחי העשיר בנפט) קיים מיעוט שיעי משמעותי המהווה כ-10% עד 15% מכלל האוכלוסייה. מעל לשליש מאוכלוסיית המדינה, וכמחצית מכוח העבודה שלה, מורכב ממהגרי עבודה (ממדינות כמו הודו, פקיסטן, בנגלדש והפיליפינים) המחזיקים את התשתיות והכלכלה המקומית.",
+                en: "Saudi society is predominantly composed of devout Sunni Muslims (mostly following the strict Wahhabi/Salafi movement). However, in the Eastern Province (Ash-Sharqiyyah, rich in oil), there is a significant Shia minority comprising 10% to 15% of the population. Over a third of the country's population, and about half its workforce, consists of migrant workers (from countries like India, Pakistan, Bangladesh, and the Philippines) who sustain the local infrastructure and economy."
+              }
+            },
+            modernHistory: { 
+              he: "ההיסטוריה המודרנית של סעודיה היא סיפור של כיבוש ואיחוד. הממלכה במתכונתה הנוכחית (המדינה הסעודית השלישית) אוחדה רשמית ב-1932 על ידי עבד אל-עזיז אבן סעוד, שכבש תחילה את ריאד (1902), לאחר מכן את אזור נג'ד, ולבסוף את חבל חיג'אז הקדוש (הכולל את מכה ומדינה). גילוי הנפט המסחרי העצום ב-1938 על ידי חברת 'קסוק' (שהפכה בהמשך לענקית 'עראמקו') שינה לחלוטין את גורלה של המדינה, והפך אותה ממדינה שבטית ענייה למעצמת אנרגיה גלובלית ולמנהיגת העולם הערבי-סוני. כיום, תחת חזון 2030, המדינה עוברת תהליכי מודרניזציה חברתיים וכלכליים חסרי תקדים בניסיון להיגמל מהתלות בנפט.",
+              en: "The modern history of Saudi Arabia is a tale of conquest and unification. The Kingdom in its current form (the Third Saudi State) was officially unified in 1932 by Abdulaziz Ibn Saud, who first conquered Riyadh (1902), then the Najd region, and finally the holy Hejaz region (including Mecca and Medina). The massive commercial discovery of oil in 1938 by CASOC (later the giant Aramco) completely altered the nation's destiny, transforming it from a poor tribal state into a global energy superpower and the leader of the Sunni Arab world. Today, under Vision 2030, the country is undergoing unprecedented social and economic modernization attempts to break its dependency on oil."
+            },
+            foundingYears: { he: "1932 (איחוד הממלכה המודרנית)", en: "1932 (Unification of the modern Kingdom)" },
+            flagSymbolism: { 
+              he: "הדגל המוכר בעולם מורכב מרקע ירוק עמוק, המסמל את הצבע האהוב על הנביא מוחמד ואת דת האסלאם. במרכז מופיעה 'השהאדה' (ההצהרה על ייחוד האל: 'אין אלוה מבלעדי אללה, ומוחמד הוא שליח אללה') הכתובה בקליגרפיה ערבית מסורתית מסוג 'ת'ולות''. מתחת לטקסט ממוקמת חרב ישרה המצביעה שמאלה (כיוון הקריאה בערבית), שנוספה ב-1906 כדי לסמל חומרה בהחלת הצדק, עוצמה צבאית בלתי מתפשרת, ואת שורת הניצחונות ההיסטוריים שהובילו לאיחוד הממלכה על ידי בית סעוד.",
+              en: "The globally recognized flag consists of a deep green background, symbolizing Prophet Muhammad's favorite color and the religion of Islam. In the center is the 'Shahada' (the Islamic declaration of faith: 'There is no deity but Allah, and Muhammad is the messenger of Allah') written in traditional Thuluth Arabic calligraphy. Below the text is a straight sword pointing to the left (the direction of Arabic reading), added in 1906 to symbolize strictness in applying justice, uncompromising military might, and the series of historic victories that led to the Kingdom's unification by the House of Saud."
+            },
+            nationalAnimal: {
+              name: { he: "גמל חד-דבשתי (Dromedary Camel)", en: "Dromedary Camel" },
+              reason: { 
+                he: "ספינת המדבר העוצמתית מסמלת יותר מכל את כושר ההישרדות הפלאי של השבטים הבדואים באקלים האכזרי ביותר של חצי האי ערב. הגמל שימש במשך אלפי שנים ככלי התחבורה הבלעדי, מקור המסחר, הכלכלה, והמזון המרכזי של תושבי האזור. מעבר לתפקידו הפיזי, הגמל שזור עמוק בשירה, בספרות, ובגאווה הלאומית הסעודית. גם כיום, בעידן רכבי היוקרה, הסעודים מקיימים תחרויות יופי ומירוצי גמלים יוקרתיים המשמרים את מורשת אבותיהם.",
+                en: "This powerful 'Ship of the Desert' symbolizes above all the miraculous survival skills of the Bedouin tribes in the harshest climate of the Arabian Peninsula. For thousands of years, the camel served as the exclusive mode of transport, source of trade, economy, and primary food for the region's inhabitants. Beyond its physical role, the camel is deeply woven into Saudi poetry, literature, and national pride. Even today, in the era of luxury vehicles, Saudis hold prestigious camel beauty pageants and races to preserve their ancestral heritage."
+              }
+            },
             etymology: {
               parts: [
-                { text: "אל-ממלכה", color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: "\"הממלכה\" - מעיד על שיטת הממשל המונרכית האבסולוטית במדינה." },
-                { text: "אל-ערביה", color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: "\"הערבית\" - מציין את השיוך הגיאוגרפי והאתני של תושבי המדינה לחצי האי ערב." },
-                { text: "א-סעודיה", color: "text-indigo-400", bg: "bg-indigo-400/10", border: "border-indigo-500/30", desc: "\"הסעודית\" - על שם \"בית סעוד\", משפחת המלוכה השולטת. משמעות השם \"סעוד\" בערבית היא \"מזל טוב\" או \"אושר\"." }
+                { text: { he: "אל-ממלכה", en: "Al-Mamlakah" }, color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: { he: "'הממלכה' - מעיד על שיטת הממשל הריבונית; מונרכיה אבסולוטית שבה המלך הוא גם ראש המדינה וגם מנהיג הדת (שומר שני המסגדים הקדושים).", en: "'The Kingdom' - indicates the sovereign system of government; an absolute monarchy where the King is both the head of state and the religious leader (Custodian of the Two Holy Mosques)." } },
+                { text: { he: "אל-ערביה", en: "Al-Arabiyya" }, color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: { he: "'הערבית' - מציין את השיוך הגיאוגרפי והאתני המובהק של תושבי המדינה ללב הערבי של חצי האי.", en: "'The Arab' - denotes the distinct geographic and ethnic affiliation of the country's inhabitants to the Arab heartland of the peninsula." } },
+                { text: { he: "א-סעודיה", en: "As-Saudiyya" }, color: "text-indigo-400", bg: "bg-indigo-400/10", border: "border-indigo-500/30", desc: { he: "'הסעודית' - המדינה נקראת ישירות על שם 'בית סעוד', משפחת המלוכה השולטת בה מאז המאה ה-18. משמעות השם 'סעוד' בערבית קלאסית היא 'מזל טוב' או 'אושר'.", en: "'The Saudi' - The country is named directly after the 'House of Saud', the royal family ruling it since the 18th century. The meaning of the name 'Saud' in classical Arabic is 'good fortune' or 'happiness'." } }
               ],
-              synthesis: "הממלכה הערבית של בית סעוד (המביא מזל טוב ואושר)."
+              synthesis: { he: "הממלכה הערבית של בית סעוד (המביא מזל טוב ואושר).", en: "The Arab Kingdom of the House of Saud (Bringer of Good Fortune and Happiness)." }
             },
             figure: {
-              name: "המלך עבד אל-עזיז אבן סעוד",
+              name: { he: "המלך עבד אל-עזיז אבן סעוד", en: "King Abdulaziz Ibn Saud" },
               years: "1875 - 1953",
-              childhood: "נולד בריאד. משפחתו, ששלטה באזור נג'ד, איבדה את שלטונה ליריביהם וגלתה לכווית כשהיה ילד. חונך על ברכי הפוליטיקה השבטית והלוחמה המדברית.",
-              ideology: "והאביזם (אסלאם סוני-שמרני אדוק), החזרת עטרת השלטון לבית סעוד, ואיחוד מוחלט של שבטי חצי האי תחת כתר אחד ויחיד.",
-              achievements: "כבש מחדש את ריאד ב-1902 במבצע נועז. במהלך 30 השנים הבאות איחד את נג'ד וחג'אז (כולל מכה ומדינה), וב-1932 הכריז על הקמת הממלכה. בתקופתו התגלה הנפט ששינה את פני המדינה."
+              childhood: { 
+                he: "נולד בריאד כבנו של עבד א-רחמן, מנהיג שושלת בית סעוד. ב-1890, בהיותו נער, משפחתו איבדה את שלטונה באזור נג'ד ליריביהם המרים משושלת א-רשיד, ונאלצה לברוח ולגלות בכווית. בגלות זו הוא חונך על ברכי הפוליטיקה השבטית, למד אסטרטגיה צבאית מראשי השבטים, וספג את הלוחמה המדברית הקשה.",
+                en: "Born in Riyadh as the son of Abdul Rahman, leader of the House of Saud. In 1890, as a teenager, his family lost their rule in the Najd region to their bitter rivals, the Al Rashid dynasty, and was forced to flee and live in exile in Kuwait. During this exile, he was educated in tribal politics, learned military strategy from tribal chiefs, and absorbed the harsh realities of desert warfare."
+              },
+              ideology: { 
+                he: "האידאולוגיה שלו הושתתה על ברית בלתי ניתנת להפרדה עם הזרם הוהאבי (אסלאם סוני-שמרני אדוק), במטרה לטהר את האסלאם מאמונות תפלות. לצד זאת, הוא פעל מתוך תפיסה פאן-שבטית במטרה להחזיר את עטרת השלטון לבית סעוד, לאחד את שבטי חצי האי המסוכסכים בכוח החרב ובאמצעות בריתות נישואין, תחת כתר אחד ויחיד.",
+                en: "His ideology was founded on an inseparable alliance with the Wahhabi movement (strict, conservative Sunni Islam), aiming to purify Islam from superstitions. Alongside this, he operated with a pan-tribal vision to restore the House of Saud to power, uniting the fractured tribes of the peninsula through the sword and marital alliances, under one single crown."
+              },
+              achievements: { 
+                he: "הישגו הראשון והמיתולוגי היה ב-1902, כאשר יצא מכווית עם קומץ לוחמים (כ-40 איש בלבד) וביצע פשיטת קומנדו לילית ונועזת על מצודת מסמכ, דרכה כבש מחדש את ריאד. במהלך 30 השנים הבאות, הוא ניהל מערכות צבאיות מבריקות שבהן איחד את חבל נג'ד העצום ואת חבל חג'אז (כולל מכה ומדינה). ב-1932 הכריז על הקמת הממלכה ואיחודה המלא. בתקופת שלטונו אושר זיכיון חיפושי הנפט לאמריקאים, צעד היסטורי שהוביל לגילוי הנפט ב-1938 ושינה את פני המזרח התיכון לנצח.",
+                en: "His first and legendary achievement was in 1902, when he left Kuwait with a handful of warriors (about 40 men) and executed a daring nocturnal commando raid on the Masmak Fortress, recapturing Riyadh. Over the next 30 years, he waged brilliant military campaigns, unifying the vast Najd and the Hejaz region (including Mecca and Medina). In 1932, he declared the establishment and full unification of the Kingdom. During his reign, the oil exploration concession was granted to the Americans, a historic step leading to the discovery of oil in 1938, changing the face of the Middle East forever."
+              }
             },
             map: {
               url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_saudi_arabia_1662.jpg",
-              title: "מפת חצי האי ערב העתיקה - ג'ואן בלאו (1662)",
-              desc: "מציגה את המרחב המדברי העצום בטרם חולק למדינות לאום מודרניות, אזור שהפך לערב הסעודית ברובו."
+              title: { he: "מפת חצי האי ערב העתיקה - ג'ואן בלאו (1662)", en: "Ancient Map of the Arabian Peninsula - Joan Blaeu (1662)" },
+              desc: { 
+                he: "יצירת מופת קרטוגרפית המציגה את המרחב המדברי העצום בטרם חולק למדינות לאום מודרניות מבוססות גבולות נוקשים. המפה מציגה את נתיבי הסחר והשיירות, אזור שהפך לערב הסעודית ברובו, בימים שבהם השליטה התבססה על נאות מדבר.",
+                en: "A cartographic masterpiece depicting the vast desert expanse before it was divided into modern nation-states based on rigid borders. The map displays trade and caravan routes in the area that largely became Saudi Arabia, back when control was based on oases."
+              }
             }
           },
           {
             id: "yemen",
-            name: "תימן",
+            name: { he: "תימן", en: "Yemen" },
             englishName: "Yemen",
-            officialName: "הרפובליקה של תימן",
-            FlagComponent: FlagYemen,
-            areaNum: "~527,968 קמ\"ר",
-            populationNum: "~34,000,000",
-            currency: "ריאל תימני (YER)",
-            area: "כ-527,968 קמ\"ר. ממוקמת בקצה הדרום-מערבי של חצי האי, עם טופוגרפיה הררית גבוהה המאפשרת חקלאות נרחבת בניגוד לשכנותיה הצחיחות.",
-            demographics: {
-              mainNationName: "ערבים תימנים",
-              mainNationPercent: "כ-95%",
-              description: "אוכלוסייה שבטית מאוד, המחולקת דתית בין רוב סוני-שאפעתי לבין מיעוט גדול ומשמעותי (כ-35%) של שיעים-זיידים (החות'ים) בצפון המדינה."
+            officialName: { he: "הרפובליקה של תימן", en: "Republic of Yemen" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/yemen.webp",
+            capital: {
+              name: { he: "צנעא", en: "Sana'a" },
+              englishName: "Sana'a",
+              etymology: { 
+                he: "מקור השם נטוע עמוק בשפה השבאית (הדרום-ערבית העתיקה), ומשמעותו היא 'מבוצרת היטב', 'חסונה' או 'אמנות בנייה'. העיר העתיקה, השוכנת בגובה רב של מעל 2,200 מטרים ומוקפת רכסי הרים מאיימים, שימשה כמבצר טבעי. על פי המסורת המקומית והאגדה, העיר הוקמה על ידי שם בן נח מיד לאחר המבול, ולכן מכונה גם 'עירו של שם'.",
+                en: "The name's origin is deeply rooted in the Sabaean language (ancient South Arabian), meaning 'well-fortified', 'sturdy', or 'art of building'. The ancient city, situated at a high altitude of over 2,200 meters and surrounded by imposing mountain ranges, served as a natural fortress. According to local tradition and legend, the city was founded by Shem, the son of Noah, right after the Great Flood, hence it is also known as the 'City of Shem'."
+              },
+              foundingYear: { he: "העת העתיקה (המאה ה-6 לפנה\"ס לכל המאוחר)", en: "Antiquity (6th Century BC at the latest)" },
+              reason: { 
+                he: "צנעא נבחרה והתפתחה למרכז שלטוני משום שהיא ממוקמת באגן פורה ורחב ידיים בגובה רב. גובה זה העניק לה אקלים הררי נוח ונעים משמעותית יחסית לחום המדברי והכבשני של שאר חצי האי ערב. בנוסף, מיקומה סיפק הגנה טבעית חזקה והיא ישבה בדיוק על צומת הדרכים האסטרטגי של נתיבי הסחר העתיקים (דרך הקטורת והמור) שעברו בין דרום ערב לחופי הים התיכון, מה שהפך אותה לבירת אימפריות קדומות כמו סבא וחימיאר.",
+                en: "Sana'a was chosen and developed into an administrative center because it is located in a fertile, expansive basin at a high altitude. This elevation provided it with a comfortable and pleasant mountainous climate, significantly cooler than the scorching desert heat of the rest of the Arabian Peninsula. Additionally, its location offered strong natural defense, and it sat exactly at the strategic crossroads of ancient trade routes (the Frankincense and Myrrh trail) passing between South Arabia and the Mediterranean coasts, making it the capital of ancient empires like Saba and Himyar."
+              }
             },
-            modernHistory: "תימן המודרנית נוצרה ב-1990 עם איחוד צפון תימן (רפובליקה שמרנית) ודרום תימן (מדינה קומוניסטית לשעבר). מאז 2014, המדינה שסועה במלחמת אזרחים הרסנית.",
-            foundingYears: "1990 (איחוד צפון ודרום)",
-            flagSymbolism: "אומץ ב-1990. מורכב משלושה פסים אופקיים בצבעי הלאומיות הכלל-ערבית. האדום מסמל את דם המרטירים; הלבן מסמל עתיד מזהיר ושלום; והשחור מסמל את העבר החשוך ותקופת הפיצול.",
+            areaNum: { he: "~527,968 קמ\"ר", en: "~527,968 sq km" },
+            populationNum: "~34,000,000",
+            currency: { he: "ריאל תימני (YER)", en: "Yemeni Rial (YER)" },
+            area: { 
+              he: "כ-527,968 קמ\"ר. תימן ממוקמת בקצה הדרום-מערבי והאסטרטגי של חצי האי, חולשת על מיצר באב אל-מנדב המחבר את ים סוף לאוקיינוס ההודי. הגיאוגרפיה שלה קיצונית וייחודית: היא כוללת את מישור החוף הצחיח (תיהאמה), רכסי ההרים הגבוהים והמבותרים של הרי עסיר וסרוואת במרכז (המאפשרים חקלאות טרסות נרחבת), ואת שולי מדבר 'אל-רוב אל-חאלי' במזרח. למדינה שייך גם האי הייחודי והמבודד סוקוטרה.",
+              en: "Approx. 527,968 sq km. Yemen is located at the strategic southwestern tip of the peninsula, commanding the Bab-el-Mandeb strait that connects the Red Sea to the Indian Ocean. Its geography is extreme and unique: it includes the arid coastal plain (Tihamah), the high, rugged mountain ranges of Asir and Sarawat in the center (allowing extensive terrace farming), and the fringes of the 'Rub' al Khali' desert in the east. The country also includes the unique and isolated island of Socotra."
+            },
+            demographics: {
+              mainNationName: { he: "ערבים תימנים", en: "Yemeni Arabs" },
+              mainNationPercent: { he: "כ-95%", en: "~95%" },
+              description: { 
+                he: "תימן מחזיקה בחברה ערבית אוטנטית ושבטית מאוד, הנשענת על קונפדרציות שבטיות עתיקות (כגון חאשד ובכיל). דמוגרפית-דתית, האוכלוסייה מחולקת בצורה חדה: כ-65% הם סונים מהאסכולה השאפעית (המתרכזים בעיקר בדרום, במרכז ולאורך החוף), וכ-35% הם שיעים מהזרם הזיידי (המתרכזים בהרים הצפוניים סביב צנעא, ומהם צמחה תנועת החות'ים). זהו פסיפס חברתי מורכב ורגיש.",
+                en: "Yemen possesses a highly authentic and tribal Arab society, relying on ancient tribal confederations (such as Hashid and Bakil). Demographically and religiously, the population is sharply divided: about 65% are Shafi'i Sunnis (concentrated mainly in the south, center, and along the coast), and about 35% are Zaydi Shias (concentrated in the northern mountains around Sana'a, from which the Houthi movement emerged). It is a complex and sensitive social mosaic."
+              }
+            },
+            modernHistory: { 
+              he: "ההיסטוריה התימנית המודרנית רצופת סכסוכים. לאורך המאה ה-20 המדינה הייתה מחולקת: צפון תימן נשלטה על ידי האימאמות הזיידית (והפכה לרפובליקה נתמכת-מצרים ב-1962), בעוד דרום תימן הייתה תחת שלטון קולוניאלי בריטי (עד 1967) ולאחריו הפכה למדינה המרקסיסטית-קומוניסטית היחידה בעולם הערבי. תימן המודרנית נוצרה בשנת 1990 עם האיחוד ההיסטורי של הצפון והדרום. אולם, האיחוד היה שברירי, ומאז 2014, המדינה שסועה במלחמת אזרחים הרסנית ועקובה מדם, שבה כבשו המורדים החות'ים את הבירה צנעא, והפכו את תימן לזירת מאבק גיאופוליטי בין ערב הסעודית לאיראן.",
+              en: "Yemen's modern history is fraught with conflict. Throughout the 20th century, the country was divided: North Yemen was ruled by the Zaydi Imamate (becoming an Egyptian-backed republic in 1962), while South Yemen was under British colonial rule (until 1967) and subsequently became the only Marxist-Communist state in the Arab world. Modern Yemen was formed in 1990 with the historic unification of North and South. However, the union was fragile, and since 2014, the country has been torn apart by a devastating, bloody civil war in which Houthi rebels captured the capital, Sana'a, turning Yemen into a geopolitical proxy battleground between Saudi Arabia and Iran."
+            },
+            foundingYears: { he: "1990 (איחוד צפון ודרום תימן)", en: "1990 (Unification of North and South Yemen)" },
+            flagSymbolism: { 
+              he: "הדגל אומץ ביום האיחוד (22 במאי 1990). הוא מורכב משלושה פסים אופקיים בצבעי הלאומיות הכלל-ערבית המסורתית. הפס האדום העליון מסמל את דם המרטירים ואת המאבקים לשחרור (הן מבריטניה בדרום והן מהאימאמות בצפון); הפס הלבן המרכזי מסמל טוהר, שלום ואת תקוות העתיד לחברה משגשגת; והפס השחור התחתון מסמל את העבר החשוך של דיכוי, הקולוניאליזם, ואת התקופה הקשה של פיצול המולדת.",
+              en: "The flag was adopted on Unification Day (May 22, 1990). It consists of three horizontal stripes in the traditional Pan-Arab colors. The top red stripe symbolizes the blood of martyrs and the struggles for liberation (both from Britain in the south and the Imamate in the north); the middle white stripe symbolizes purity, peace, and the hope for a prosperous future; and the bottom black stripe represents the dark past of oppression, colonialism, and the difficult era of the divided homeland."
+            },
+            nationalAnimal: {
+              name: { he: "נמר ערבי (Arabian Leopard)", en: "Arabian Leopard" },
+              reason: { 
+                he: "חתול בר נדיר, חמקמק ומלכותי זה, שהוא אנדמי להרי תימן ולחצי האי ערב ונמצא כיום בסכנת הכחדה חמורה, נבחר לחיה הלאומית. הנמר מסמל את הפראיות, הגאווה, העוצמה והעצמאות של השבטים ההרריים העתיקים. היותו טורף מתבודד השורד בסביבה סלעית וקשה, תוך הסוואה מושלמת בנוף הצחיח, משקפת באופן סמלי את אופייה הבלתי מתפשר והמחוספס של הארץ עצמה ואת רוחם הלוחמנית של תושביה.",
+                en: "This rare, elusive, and majestic wildcat, endemic to the mountains of Yemen and the Arabian Peninsula and currently critically endangered, was chosen as the national animal. The leopard symbolizes the ferocity, pride, strength, and independence of the ancient mountain tribes. Being a solitary predator surviving in a harsh, rocky environment, perfectly camouflaged in the arid landscape, symbolically reflects the uncompromising and rugged nature of the land itself and the martial spirit of its people."
+              }
+            },
             etymology: {
               parts: [
-                { text: "אל-ימן", color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: "מקור השם שנוי במחלוקת אך מבוסס על השורש הערבי י-מ-ן (Y-M-N)." },
-                { text: "ימין או ברכה", color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: "המשמעות הנפוצה ביותר היא \"ימין\" (דרום ביחס לאדם הפונה מזרחה בחצי האי). פירוש נוסף הוא מהמילה \"יומן\" שמשמעותה שגשוג וברכה (\"ערב המאושרת\" כפי שקראו לה הרומאים)." }
+                { text: { he: "אל-ימן", en: "Al-Yaman" }, color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: { he: "מקור השם שנוי במחלוקת בקרב היסטוריונים, אך מוסכם כי הוא מבוסס על השורש הערבי י-מ-ן (Y-M-N).", en: "The origin of the name is debated among historians, but it is agreed that it is based on the Arabic root Y-M-N." } },
+                { text: { he: "ימין או ברכה", en: "Right or Blessing" }, color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: { he: "המשמעות הנפוצה ביותר במקורות האסלאמיים היא 'ימין' - כאשר אדם עומד בחג'אז ופניו מזרחה (או לכיוון הכעבה), סוריה (א-שאם) נמצאת משמאלו, ותימן נמצאת מימינו. פירוש נוסף ורומנטי יותר נגזר מהמילה הערבית 'יומן', שמשמעותה שגשוג, אושר וברכה. זאת בזכות הקרקע הפורייה והגשמים, שהקנו לה בפי הרומאים את התואר המפורסם 'ערב המאושרת' (Arabia Felix).", en: "The most common meaning in Islamic sources is 'right' - when a person stands in the Hejaz facing east (or towards the Kaaba), Syria (Ash-Sham) is on his left, and Yemen is on his right. Another, more romantic interpretation is derived from the Arabic word 'Yumn', meaning prosperity, happiness, and blessing. This is due to its fertile soil and rainfall, which earned it the famous Roman title 'Arabia Felix' (Happy Arabia)." } }
               ],
-              synthesis: "הארץ שמימין (דרום) או הארץ המבורכת והמשגשגת."
+              synthesis: { he: "הארץ שמימין (דרום) או הארץ המבורכת והמשגשגת.", en: "The land on the right (South) or the blessed and prosperous land." }
             },
             figure: {
-              name: "עלי עבדאללה צאלח",
+              name: { he: "עלי עבדאללה צאלח", en: "Ali Abdullah Saleh" },
               years: "1947 - 2017",
-              childhood: "נולד בכפר סנחאן למשפחה ענייה. בילדותו היה רועה צאן, לא זכה להשכלה רשמית עמוקה, והצטרף לצבא בגיל צעיר כדרך למוביליות חברתית.",
-              ideology: "לאומיות פאן-ערבית, פרגמטיות פוליטית קיצונית. כינה את סגנון שלטונו במדינה השבטית המפוצלת כ\"ריקוד על ראשי נחשים\".",
-              achievements: "הפך לנשיא צפון תימן ב-1978, וב-1990 הוביל את האיחוד ההיסטורי עם דרום תימן. שלט ביד רמה במשך 33 שנים עד שהודח במהלך האביב הערבי."
+              childhood: { 
+                he: "נולד בכפר סנחאן למשפחה ענייה מזרם הזיידים. בילדותו חווה חיים קשים כרועה צאן, לא זכה להשכלה רשמית עמוקה, והתייתם מאביו מוקדם. הוא הצטרף לצבא בגיל צעיר כדרך היחידה למוביליות חברתית והישרדות.",
+                en: "Born in the village of Sanhan to a poor family from the Zaydi sect. In his childhood, he experienced a hard life as a shepherd, did not receive deep formal education, and was orphaned of his father early. He joined the army at a young age as his only path for social mobility and survival."
+              },
+              ideology: { 
+                he: "האידאולוגיה שלו התאפיינה בלאומיות פאן-ערבית רשמית, אך בפועל נשענה על פרגמטיות פוליטית קיצונית, גמישות חסרת מעצורים וחלוקת משאבים וטובות הנאה ראשי השבטים. הוא עצמו כינה את סגנון שלטונו במדינה השבטית המפוצלת כ'ריקוד על ראשי נחשים', תיאור מדויק ליכולתו לשסות את יריביו זה בזה ולשרוד.",
+                en: "His ideology was characterized by official Pan-Arab nationalism, but in practice relied on extreme political pragmatism, unbridled flexibility, and the distribution of resources and favors to tribal leaders. He himself described his style of ruling in the fractured tribal state as 'dancing on the heads of snakes', an accurate description of his ability to pit his rivals against each other to survive."
+              },
+              achievements: { 
+                he: "טיפס בסולם הדרגות הצבאי עד שהפך לנשיא צפון תימן ב-1978 לאחר סדרת התנקשויות בקודמיו. הישגו ההיסטורי הגדול ביותר היה הובלת האיחוד ההיסטורי עם דרום תימן בשנת 1990 וניצחון במלחמת האזרחים של 1994 שביססה את האיחוד. הוא שלט בתימן ביד רמה במשך 33 שנים תמימות, עד שהודח סופית בעקבות מחאות האביב הערבי. סופו היה טרגי כאשר נרצח על ידי בני בריתו לשעבר, המורדים החות'ים, ב-2017.",
+                en: "He climbed the military ranks until becoming President of North Yemen in 1978 after a series of assassinations of his predecessors. His greatest historic achievement was leading the historic unification with South Yemen in 1990 and winning the 1994 civil war that cemented the union. He ruled Yemen with an iron fist for 33 full years, until finally ousted following the Arab Spring protests. His end was tragic when he was assassinated by his former allies, the Houthi rebels, in 2017."
+              }
             },
             map: {
               url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_yemen_arabia_felix.jpg",
-              title: "מפת ערב המאושרת (Arabia Felix) - 1570",
-              desc: "מציגה את חצי האי ומדגישה את חלקה הדרומי הפורה המוכר היסטורית כ\"ערב פליקס\" (תימן של ימינו)."
+              title: { he: "מפת ערב המאושרת (Arabia Felix) - 1570", en: "Map of Arabia Felix - 1570" },
+              desc: { 
+                he: "מפה נדירה מימי הרנסנס המציגה את חצי האי ומדגישה במיוחד את חלקה הדרומי. האזור, שנודע בעולם העתיק בשל שגשוגו וסחר התבלינים והלבונה שבו, מכונה במפה 'ערב פליקס' (ערב המאושרת), בניגוד לשאר אזורי המדבר הקשים.",
+                en: "A rare Renaissance-era map showing the peninsula and specifically highlighting its southern part. The region, known in the ancient world for its prosperity and trade in spices and frankincense, is labeled on the map as 'Arabia Felix' (Happy Arabia), in contrast to the other harsh desert regions."
+              }
             }
           },
           {
             id: "oman",
-            name: "עומאן",
+            name: { he: "עומאן", en: "Oman" },
             englishName: "Oman",
-            officialName: "סולטנות עומאן",
-            FlagComponent: FlagOman,
-            areaNum: "~309,500 קמ\"ר",
-            populationNum: "~4,600,000",
-            currency: "ריאל עומאני (OMR)",
-            area: "כ-309,500 קמ\"ר. שוכנת בקצה הדרום-מזרחי של חצי האי, שולטת על פתח המפרץ הפרסי (מיצר הורמוז) עם רכסי הרים וחופי אוקיינוס נרחבים.",
-            demographics: {
-              mainNationName: "ערבים עומאנים",
-              mainNationPercent: "כ-55% (השאר מהגרים)",
-              description: "המדינה היחידה בעולם שבה הזרם הדתי המרכזי הוא האסלאם האיבאדי (זרם מתון וסובלני המהווה את רוב האוכלוסייה), לצד מיעוטים סונים ושיעים."
+            officialName: { he: "סולטנות עומאן", en: "Sultanate of Oman" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/oman.webp",
+            capital: {
+              name: { he: "מוסקט", en: "Muscat" },
+              englishName: "Muscat",
+              etymology: { 
+                he: "מקור השם בפועל הערבי 'סקט' שמשמעותו ליפול או לצנוח. הפירוש הגיאוגרפי וההיסטורי המקובל ביותר הוא 'מקום בו נופל העוגן' – מעגן או נמל טבעי מוגן היטב המאפשר לספינות לעגון בבטחה. פירוש נוסף גורס כי משמעותו 'מקום בו ההרים נופלים (יורדים תלולות) אל הים', בהתאמה מושלמת למצוקים הסלעיים הגבוהים הנושקים למים ומקיפים את העיר העתיקה.",
+                en: "The origin of the name comes from the Arabic verb 'Saqat', meaning to fall or drop. The most accepted geographical and historical interpretation is 'the place where the anchor falls' - a well-protected natural anchorage or port allowing ships to dock safely. Another interpretation suggests it means 'the place where the mountains fall (descend steeply) to the sea', perfectly matching the high rocky cliffs touching the water and surrounding the ancient city."
+              },
+              foundingYear: { he: "המאה ה-1 לספירה (הפכה לבירה רשמית של הסולטנות ב-1793)", en: "1st Century AD (Became the official capital of the Sultanate in 1793)" },
+              reason: { 
+                he: "מוסקט נבחרה להיות בירת הסולטנות בזכות הנמל הטבעי והעמוק שלה, המוקף במצוקים סלעיים גבוהים המספקים הגנה מושלמת מפני תקיפות ימיות ויבשתיות (הסולטאנים אף בנו על הצוקים מצודות ענק כמו 'מיראני' ו'ג'לאלי'). מיקומה האסטרטגי על פתח מפרץ עומאן, צעדים ספורים מהאוקיינוס ההודי, אפשר לאימפריה העומאנית לשלוט ולנהל את כל נתיבי הסחר הימיים (סחר בתבלינים, עבדים ונחושת) שעברו בין המזרח התיכון להודו ולמזרח אפריקה (זנזיבר).",
+                en: "Muscat was chosen as the capital of the Sultanate due to its natural, deep-water port, surrounded by high rocky cliffs providing perfect defense against naval and land attacks (the Sultans even built giant forts on the cliffs like 'Mirani' and 'Jalali'). Its strategic location at the mouth of the Gulf of Oman, steps away from the Indian Ocean, allowed the Omani Empire to control and manage all maritime trade routes (trade in spices, slaves, and copper) passing between the Middle East, India, and East Africa (Zanzibar)."
+              }
             },
-            modernHistory: "עומאן היא המדינה העצמאית הוותיקה ביותר בעולם הערבי. העידן המודרני שלה החל ב-1970 כאשר הסולטאן קאבוס הדיח את אביו והחל במודרניזציה אדירה ופתיחת המדינה לעולם.",
-            foundingYears: "1650 (גירוש הפורטוגלים) | 1970",
-            flagSymbolism: "הלבן מסמל שלום והאימאמות; האדום מסמל את קרבות ההגנה וסולטנות מוסקט; הירוק מסמל את \"ההר הירוק\" (ג'בל אח'דר) והפוריות. בקנטון מופיע סמל המדינה: פגיון חנג'ר מסורתי.",
+            areaNum: { he: "~309,500 קמ\"ר", en: "~309,500 sq km" },
+            populationNum: "~4,600,000",
+            currency: { he: "ריאל עומאני (OMR)", en: "Omani Rial (OMR)" },
+            area: { 
+              he: "כ-309,500 קמ\"ר. עומאן שוכנת בקצה הדרום-מזרחי של חצי האי ערב, ובזכות מיקומה היא שולטת על פתח המפרץ הפרסי (מיצר הורמוז הקריטי) דרך מובלעת מוסנדם. הגיאוגרפיה שלה כוללת מישורי חול עצומים במרכז, רכסי הרים אדירים (הרי אל-חג'ר) בצפון, ואת חבל דופאר בדרום, שזוכה לתופעת מונסון עונתית ('ח'ריף') ההופכת את המדבר לירוק ופורח בקיץ.",
+              en: "Approx. 309,500 sq km. Oman lies at the southeastern tip of the Arabian Peninsula, and due to its location, it controls the mouth of the Persian Gulf (the critical Strait of Hormuz) via the Musandam exclave. Its geography includes vast sand plains in the center, mighty mountain ranges (Al Hajar Mountains) in the north, and the Dhofar region in the south, which experiences a seasonal monsoon phenomenon ('Khareef') turning the desert green and blooming in the summer."
+            },
+            demographics: {
+              mainNationName: { he: "ערבים עומאנים", en: "Omani Arabs" },
+              mainNationPercent: { he: "כ-55% (השאר מהגרים)", en: "~55% (Remainder are migrants)" },
+              description: { 
+                he: "עומאן היא ייחודית בעולם המוסלמי: זוהי המדינה היחידה בעולם שבה הזרם הדתי המרכזי של אזרחיה הוא האסלאם ה'איבאדי', זרם עתיק, מתון וסובלני המקדם פיוס ודוחה קיצוניות (המהווה את רוב האוכלוסייה). לצידם חיים בשלום מיעוטים סונים ושיעים. בשל עברה כאימפריה ימית אדירה ששלטה עד זנזיבר, התרבות העומאנית היא כור היתוך של השפעות ערביות, בלוצ'יות, סוואהיליות ודרום-אסיאתיות. המהגרים הזרים מהווים כ-45% מהאוכלוסייה.",
+                en: "Oman is unique in the Muslim world: it is the only country where the main religious sect of its citizens is 'Ibadi' Islam, an ancient, moderate, and tolerant branch that promotes reconciliation and rejects extremism (comprising the majority). Alongside them live Sunni and Shia minorities in peace. Due to its past as a mighty maritime empire that ruled as far as Zanzibar, Omani culture is a melting pot of Arab, Baloch, Swahili, and South Asian influences. Foreign migrants make up about 45% of the population."
+              }
+            },
+            modernHistory: { 
+              he: "עומאן היא המדינה העצמאית הוותיקה ביותר בעולם הערבי, עם היסטוריה מפוארת כמעצמה ימית שגירשה את הפורטוגלים. עם זאת, עד אמצע המאה ה-20 היא הייתה מדינה נחשלת, מסוגרת ומבודדת מהעולם תחת שלטון שמרני נוקשה. העידן המודרני שלה החל רק בשנת 1970, כאשר הסולטאן קאבוס הדיח את אביו בהפיכה ללא שפיכות דמים. קאבוס דיכא מרד קומוניסטי בדרום (מרד דופאר), והחל ב'רנסנס העומאני' – תוכנית מודרניזציה אדירה שהשתמשה בכספי הנפט כדי לפתוח את המדינה לעולם, לסלול כבישים ולהקים בתי חולים, תוך שמירה מוקפדת על המסורת האדריכלית והתרבותית.",
+              en: "Oman is the oldest independent state in the Arab world, with a glorious history as a maritime power that expelled the Portuguese. However, until the mid-20th century, it was an underdeveloped country, closed and isolated from the world under a strict conservative rule. Its modern era began only in 1970, when Sultan Qaboos deposed his father in a bloodless coup. Qaboos suppressed a communist rebellion in the south (Dhofar Rebellion), and initiated the 'Omani Renaissance' - a massive modernization program using oil revenues to open the country to the world, pave roads, and build hospitals, while carefully preserving architectural and cultural traditions."
+            },
+            foundingYears: { he: "1650 (גירוש הפורטוגלים וביסוס האימפריה) | 1970 (עידן הרנסנס)", en: "1650 (Expulsion of Portuguese & Empire base) | 1970 (Renaissance Era)" },
+            flagSymbolism: { 
+              he: "הדגל העומאני משלב היסטוריה וגיאוגרפיה: הצבע הלבן במסגרת ובפס העליון מסמל את השלום ואת מוסד האימאמות ההיסטורי הדתי של פנים המדינה; האדום, שהוא הצבע המסורתי של מדינות המפרץ, מסמל את סולטנות מוסקט ההיסטורית ואת קרבות ההגנה מפני פולשים זרים; הירוק בפס התחתון מסמל את 'ההר הירוק' (ג'בל אח'דר) בצפון, את חבל דופאר הפורה בדרום, ואת החקלאות והפוריות במדינה הצחיחה. בקנטון השמאלי מופיע סמל המדינה: שני חרבות מוצלבות שעליהן מונח פגיון 'חנג'ר' מסורתי בחגורתו המהודרת.",
+              en: "The Omani flag combines history and geography: The white color in the hoist and top stripe symbolizes peace and the historical religious Imamate institution of the interior; red, the traditional color of Gulf states, symbolizes the historical Sultanate of Muscat and defensive battles against foreign invaders; the green bottom stripe symbolizes the 'Green Mountain' (Jebel Akhdar) in the north, the fertile Dhofar region in the south, and agriculture and fertility in the arid land. The top-left canton features the national emblem: two crossed swords overlaid by a traditional 'Khanjar' dagger in its ornate belt."
+            },
+            nationalAnimal: {
+              name: { he: "ראם ערבי (Arabian Oryx)", en: "Arabian Oryx" },
+              reason: { 
+                he: "אנטילופה לבנה ויפהפייה זו, בעלת הקרניים הארוכות, המחודדות והישרות (שיש המאמינים שהן המקור לאגדת חד-הקרן בקרב יורדי ים עתיקים), מסמלת טוהר, אצילות וסיבולת פראית בסביבה אכזרית ללא מים. עומאן מזוהה באופן הדוק עם הראם משום שהתפרסמה בעולם כולו כמי שהובילה את 'מבצע ראם' – מיזם השימור וההשבה לטבע המוצלח של הראמים הערביים לשמורת הטבע בעומאן, לאחר שהחיה הוכרזה כנכחדת לחלוטין בטבע בשנת 1972 בשל ציד אכזרי.",
+                en: "This beautiful white antelope, with its long, pointed, and straight horns (believed by some to be the origin of the unicorn legend among ancient mariners), symbolizes purity, nobility, and wild endurance in a harsh, waterless environment. Oman is closely identified with the oryx because it became globally famous for leading 'Operation Oryx' - the successful conservation and reintroduction project of Arabian oryxes to nature reserves in Oman, after the animal was declared completely extinct in the wild in 1972 due to brutal hunting."
+              }
+            },
             etymology: {
               parts: [
-                { text: "מקור היסטורי", color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: "ייחוס לדמות היסטורית בשם עומאן בן איברהים אל-ח'ליל, או לשבט \"אזד\" שהיגר מתימן." },
-                { text: "מקור בלשני", color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: "נגזר מהפועל הערבי שמשמעותו \"להתיישב\" או להישאר במקום מנוחה. הוזכר בכתבי פליניוס הזקן במאה ה-1 כ-\"Omana\"." }
+                { text: { he: "מקור היסטורי", en: "Historical Origin" }, color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: { he: "מסורות מקומיות מייחסות את השם לדמות היסטורית-מיתולוגית בשם עומאן בן איברהים אל-ח'ליל, נכדו של הנביא איברהים (אברהם), או לחלופין לשבט 'אזד' הערבי הקדום שהיגר מואדי עומאן שבתימן לאזור זה.", en: "Local traditions attribute the name to a historical-mythological figure named Oman bin Ibrahim al-Khalil, grandson of Prophet Ibrahim (Abraham), or alternatively to the ancient Arab 'Azd' tribe that migrated from Wadi Oman in Yemen to this region." } },
+                { text: { he: "מקור בלשני קדום", en: "Ancient Linguistic Origin" }, color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: { he: "מבחינה אטימולוגית, השם נגזר מהפועל הערבי שמשמעותו 'להתיישב' (עמון), 'לשהות במקום', או 'להגיע למקום מנוחה'. השם הוזכר כבר בכתבי ההיסטוריון הרומי פליניוס הזקן (המאה ה-1 לספירה) והגיאוגרף תלמי כ-'Omana', כעיר מסחר חשובה על חוף הים.", en: "Etymologically, the name is derived from the Arabic verb meaning 'to settle' (Amuun), 'to stay in a place', or 'to reach a place of rest'. The name was already mentioned in the writings of the Roman historian Pliny the Elder (1st century AD) and the geographer Ptolemy as 'Omana', as an important trading city on the coast." } }
               ],
-              synthesis: "ארץ ההתיישבות והמנוחה, או על שם המייסדים הקדומים."
+              synthesis: { he: "ארץ ההתיישבות והמנוחה למלחים, או על שמם של האבות המייסדים הקדומים מהתימן.", en: "The land of settlement and rest for sailors, or named after the ancient founding fathers from Yemen." }
             },
             figure: {
-              name: "הסולטאן קאבוס בן סעיד",
+              name: { he: "הסולטאן קאבוס בן סעיד", en: "Sultan Qaboos bin Said" },
               years: "1940 - 2020",
-              childhood: "נולד בסלאלה שבדרום. חונך בהודו ובאקדמיה הצבאית סנדהרסט בבריטניה. כששב, אביו השמרן הציב אותו במעצר בית ממושך מחשש להשפעות מערביות.",
-              ideology: "מודרניזציה אינטנסיבית, סובלנות דתית (הזרם האיבאדי), וניטרליות דיפלומטית מוחלטת (\"שווייץ של המזרח התיכון\").",
-              achievements: "הדיח את אביו ב-1970 בסיוע בריטי ללא שפיכות דמים. הפך מדינה ימי-ביניימית מבודדת לאומה משגשגת ומתקדמת עם תשתית מודרנית."
+              childhood: { 
+                he: "נולד בעיר סלאלה שבדרום המדינה לחולות הרי דופאר. בנעוריו נשלח להתחנך בהודו, ולאחר מכן באקדמיה הצבאית היוקרתית סנדהרסט בבריטניה. כששב לעומאן בתום שירות בצבא הבריטי, אביו השמרן, שחשש מהשפעות מערביות ומרעיונות ליברליים, הציב אותו במעצר בית ממושך וניתק אותו מענייני המדינה.",
+                en: "Born in the city of Salalah in the south of the country by the sands of the Dhofar mountains. In his youth, he was sent to be educated in India, and later at the prestigious Sandhurst Military Academy in Britain. Upon his return to Oman after serving in the British Army, his conservative father, fearing Western influences and liberal ideas, placed him under prolonged house arrest and isolated him from state affairs."
+              },
+              ideology: { 
+                he: "האידאולוגיה שלו התבססה על 'מודרניזציה מסורתית': פיתוח וקידמה אינטנסיבית (בניית בתי ספר, תשתיות מים וחשמל, זכויות לנשים) לצד חובה לשמר בקנאות את התרבות והאדריכלות המקומית (איסור על גורדי שחקים מפלצתיים). בזירה הדיפלומטית, הוא דגל ב'ניטרליות מוחלטת', פתרון סכסוכים בדרכי נועם, וסובלנות דתית יוצאת דופן שזיכתה את עומאן בכינוי 'שווייץ של המזרח התיכון'.",
+                en: "His ideology was based on 'traditional modernization': intensive development and progress (building schools, water and electricity infrastructure, women's rights) alongside a duty to zealously preserve local culture and architecture (banning monstrous skyscrapers). In the diplomatic arena, he advocated for 'absolute neutrality', peaceful conflict resolution, and exceptional religious tolerance, earning Oman the nickname 'Switzerland of the Middle East'."
+              },
+              achievements: { 
+                he: "הישגו הראשון היה הדחת אביו ב-1970 בסיוע הצבא הבריטי, הפיכה שקטה שהחלה את 'עידן הרנסנס'. הוא סיים את המלחמה הקשה מול המורדים בדופאר תוך שילובם בחברה, והפך מדינה ימי-ביניימית מבודדת שבה היו רק עשרה קילומטרים של כביש סלול ובית חולים אחד – לאומה משגשגת, מתקדמת ובטוחה. הוא שימש במשך עשורים כמתווך הסודי והאמין ביותר במזרח התיכון (כולל בשיחות הסכם הגרעין מול איראן) ונערץ על ידי עמו כדמות אב.",
+                en: "His first achievement was deposing his father in 1970 with the help of the British Army, a quiet coup that began the 'Renaissance Era'. He ended the grueling war against rebels in Dhofar while integrating them into society, and transformed an isolated medieval country with only ten kilometers of paved roads and one hospital into a prosperous, advanced, and secure nation. He served for decades as the most secret and trusted mediator in the Middle East (including in the Iran nuclear deal talks) and was revered by his people as a father figure."
+              }
             },
             map: {
               url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_oman_gulf.jpg",
-              title: "מפת המפרץ הפרסי ועומאן - 1720",
-              desc: "מציגה את המרחב הימי האסטרטגי שבו שלטה האימפריה העומאנית בימיה הגדולים."
+              title: { he: "מפת המפרץ הפרסי ועומאן - 1720", en: "Map of the Persian Gulf and Oman - 1720" },
+              desc: { 
+                he: "מפה היסטורית נדירה המציגה את המרחב הימי האסטרטגי שבו שלטה האימפריה העומאנית בימיה הגדולים, לאחר שחרור מוסקט מידי הפורטוגלים. המפה ממחישה את נתיבי הסחר בין חצי האי ערב לחוף הסוואהילי במזרח אפריקה ולהודו.",
+                en: "A rare historical map showing the strategic maritime space ruled by the Omani Empire during its greatest days, after the liberation of Muscat from the Portuguese. The map illustrates the trade routes between the Arabian Peninsula, the Swahili coast in East Africa, and India."
+              }
             }
           },
           {
             id: "uae",
-            name: "איחוד האמירויות",
+            name: { he: "איחוד האמירויות", en: "United Arab Emirates" },
             englishName: "UAE",
-            officialName: "איחוד האמירויות הערביות",
-            FlagComponent: FlagUAE,
-            areaNum: "~83,600 קמ\"ר",
-            populationNum: "~9,400,000",
-            currency: "דירהם (AED)",
-            area: "כ-83,600 קמ\"ר. פדרציה של 7 אמירויות בחצי האי ערב. השטח מורכב בעיקר ממדבר מישורי וחופי המפרץ הפרסי, עם הרים במזרח.",
-            demographics: {
-              mainNationName: "אמירתים מוסלמים",
-              mainNationPercent: "כ-11% (השאר מהגרים)",
-              description: "תופעה דמוגרפית ייחודית: קרוב ל-90% מאוכלוסיית המדינה הם תושבים זרים ומהגרי עבודה. האזרחים המקוריים נהנים ממערכת רווחה חסרת תקדים."
+            officialName: { he: "איחוד האמירויות הערביות", en: "United Arab Emirates" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/uae.webp",
+            capital: {
+              name: { he: "אבו דאבי", en: "Abu Dhabi" },
+              englishName: "Abu Dhabi",
+              etymology: { 
+                he: "הפירוש המילולי בערבית הוא 'אבי הצבי' (אבו = אב של, דאבי = סוג של צבי המדבר). האגדה המקומית וההסבר האטימולוגי קושרים את השם לשפע צבאי הפרא שהסתובבו באזור, ולסיפור עממי על ציד בדואי צמא שחיפש מים במדבר הקופח. הציד עקב אחר צבי עד שהגיע למעיין מתוק ונקי על אי קטן מול החוף. לאות הוקרה, הוחלט לבסס סביב המעיין את יישוב הקבע של השבט, שהפך לימים לכרך האדיר 'אבו דאבי'.",
+                en: "The literal meaning in Arabic is 'Father of the Gazelle' (Abu = Father of, Dhabi = a type of desert gazelle). Local legend and etymological explanation link the name to the abundance of wild gazelles roaming the area, and to a folk tale about a thirsty Bedouin hunter searching for water in the scorching desert. The hunter followed a gazelle until he reached a sweet, clean spring on a small island off the coast. In tribute, it was decided to establish the tribe's permanent settlement around the spring, which later became the massive metropolis 'Abu Dhabi'."
+              },
+              foundingYear: { he: "1761 (התיישבות שבט בני יאס) | 1971 (כבירת הפדרציה המודרנית)", en: "1761 (Settlement of Bani Yas tribe) | 1971 (As capital of the modern Federation)" },
+              reason: { 
+                he: "עם הקמת איחוד האמירויות לאחר עזיבת הבריטים, אבו דאבי נבחרה בטבעיות לבירה הלאומית. הסיבות לכך היו כפולות: ראשית, היא האמירות הגדולה ביותר בשטחה הגיאוגרפי (תופסת למעלה מ-80% משטח האיחוד כולו) והעשירה ביותר לאין שיעור בזכות עתודות הנפט העצומות שלה שמקיימות את כלכלת הפדרציה. שנית, מנהיגה הכריזמטי, השייח' זאיד בן סולטאן אל נהיאן, היה האדריכל המרכזי והכוח המניע מאחורי מלאכת השכנוע שאיחדה את שבע האמירויות המסוכסכות לישות מדינית אחת.",
+                en: "With the establishment of the UAE following the British departure, Abu Dhabi was naturally chosen as the national capital. The reasons were twofold: First, it is the largest emirate in geographic area (occupying over 80% of the entire union's territory) and by far the richest due to its massive oil reserves that sustain the federation's economy. Second, its charismatic leader, Sheikh Zayed bin Sultan Al Nahyan, was the central architect and driving force behind the persuasion efforts that united the seven conflicting emirates into a single political entity."
+              }
             },
-            modernHistory: "לאחר עזיבת הבריטים את \"חוף שביתת הנשק\", שש אמירויות התאחדו ב-1971 לפדרציה (וראס אל-חיימה הצטרפה ב-1972). ניהול חכם של עושר הנפט הפך אותה למרכז גלובלי.",
-            foundingYears: "1971 (הקמת האיחוד)",
-            flagSymbolism: "צבעי הלאומיות הכלל-ערבית. האדום מסמל אומץ; הירוק מסמל תקווה ופריחה; הלבן טוהר ושלום; והשחור תבוסת אויבים.",
+            areaNum: { he: "~83,600 קמ\"ר", en: "~83,600 sq km" },
+            populationNum: "~9,400,000",
+            currency: { he: "דירהם (AED)", en: "Dirham (AED)" },
+            area: { 
+              he: "כ-83,600 קמ\"ר. המדינה היא פדרציה המורכבת מ-7 אמירויות נפרדות (אבו דאבי, דובאי, שארג'ה, עג'מאן, אום אל-קיווין, ראס אל-חיימה ופוג'יירה) לאורך החוף המזרחי של חצי האי ערב. השטח מורכב בעיקר ממדבר מישורי וצחיח של 'אל-רוב אל-חאלי' במערב, חופי המפרץ הפרסי הרדודים המאופיינים באיים ואטולים, ורכסי הרי חג'ר הסלעיים במזרח ליד הגבול עם עומאן.",
+              en: "Approx. 83,600 sq km. The country is a federation consisting of 7 separate emirates (Abu Dhabi, Dubai, Sharjah, Ajman, Umm Al Quwain, Ras Al Khaimah, and Fujairah) along the eastern coast of the Arabian Peninsula. The terrain consists mainly of the flat, arid desert of the 'Rub' al Khali' in the west, the shallow Persian Gulf coasts characterized by islands and atolls, and the rocky Al Hajar mountain ranges in the east near the border with Oman."
+            },
+            demographics: {
+              mainNationName: { he: "אמירתים מוסלמים", en: "Emirati Muslims" },
+              mainNationPercent: { he: "כ-11% (השאר מהגרים וגולים)", en: "~11% (Remainder are migrants and expats)" },
+              description: { 
+                he: "איחוד האמירויות מציגה את אחת התופעות הדמוגרפיות המרתקות והייחודיות בעולם: קרוב ל-90% מאוכלוסיית המדינה אינם אזרחים, אלא מהגרי עבודה, אנשי עסקים וגולים (בעיקר מהודו, פקיסטן, בנגלדש, הפיליפינים ומדינות המערב). האזרחים המקוריים (האמירתים), המהווים מיעוט בארצם שלהם, נהנים ממערכת רווחה חסרת תקדים (דיור, חינוך ובריאות בחינם) ושומרים בקנאות על תרבותם השבטית-ערבית אל מול הגלובליזציה, בין היתר באמצעות חוקי אזרחות נוקשים ביותר.",
+                en: "The UAE presents one of the most fascinating and unique demographic phenomena in the world: nearly 90% of the country's population are not citizens, but migrant workers, businessmen, and expatriates (mainly from India, Pakistan, Bangladesh, the Philippines, and Western countries). The original citizens (Emiratis), who are a minority in their own country, enjoy an unprecedented welfare system (free housing, education, and healthcare) and zealously preserve their tribal-Arab culture against globalization, partly through extremely strict citizenship laws."
+              }
+            },
+            modernHistory: { 
+              he: "עד אמצע המאה ה-20, האזור נשען על כלכלת דיג ושליית פנינים, והיה ידוע בפי הבריטים כ'חוף שביתת הנשק' (Trucial States) לאחר חתימה על חוזי חסות במאה ה-19. עם גילוי הנפט ובעקבות החלטת בריטניה לסגת מהמפרץ, התאחדו בשנת 1971 שש מתוך האמירויות לפדרציה עצמאית (ראס אל-חיימה, האמירות השביעית, הצטרפה מספר חודשים מאוחר יותר ב-1972). תחת הנהגתם של השייח' זאיד מאבו דאבי והשייח' ראשד מדובאי, הושקעו כספי הנפט האדירים בפיתוח תשתיות מואץ. דובאי מותגה כמרכז סחר ותיירות עולמי, ואבו דאבי כבירת האנרגיה והפוליטיקה, מה שהפך את המדינה למעצמה כלכלית וטכנולוגית עולמית מובילה.",
+              en: "Until the mid-20th century, the region relied on a fishing and pearl diving economy, and was known to the British as the 'Trucial States' after signing protection treaties in the 19th century. With the discovery of oil and following Britain's decision to withdraw from the Gulf, six of the emirates united into an independent federation in 1971 (Ras Al Khaimah, the seventh emirate, joined a few months later in 1972). Under the leadership of Sheikh Zayed of Abu Dhabi and Sheikh Rashid of Dubai, massive oil revenues were invested in accelerated infrastructure development. Dubai branded itself as a global trade and tourism hub, and Abu Dhabi as the capital of energy and politics, turning the country into a leading global economic and technological power."
+            },
+            foundingYears: { he: "1971 (הקמת פדרציית האיחוד)", en: "1971 (Establishment of the Federation)" },
+            flagSymbolism: { 
+              he: "הדגל עוצב על ידי נער אמירתי בן 19 לאחר תחרות ארצית ב-1971, ומציג בגאון את צבעי הלאומיות הכלל-ערבית. הפס האדום האנכי מסמל אומץ לב, גבורה, ואת הדם שנשפך בהגנה על המולדת לאורך ההיסטוריה; הפס הירוק האופקי מסמל תקווה, אופטימיות, פריחה וחקלאות; הפס הלבן המרכזי מסמל טוהר, כוונות טובות, ושלום; והפס השחור התחתון מסמל את תבוסת האויבים ואת כוח הנפש במאבק נגד עוולות.",
+              en: "The flag was designed by a 19-year-old Emirati boy after a national competition in 1971, proudly displaying the Pan-Arab colors. The vertical red stripe symbolizes courage, bravery, and the blood shed in defense of the homeland throughout history; the horizontal green stripe symbolizes hope, optimism, blooming, and agriculture; the middle white stripe symbolizes purity, good intentions, and peace; and the bottom black stripe symbolizes the defeat of enemies and mental strength in the struggle against injustice."
+            },
+            nationalAnimal: {
+              name: { he: "בז (Falcon)", en: "Falcon" },
+              reason: { 
+                he: "אף על פי שהראם הערבי מוכר בספרות כסמל הלאומי הפורמלי, ציפור הבז היא החיה האייקונית, היוקרתית והחשובה ביותר בתרבות האמירתית (ואף מתנוססת במרכז סמל המדינה הרשמי). אילוף הבזים למסעות ציד (אמנות הבזיירות) הוא נדבך קדום ומרכזי במורשת הבדואית של המדבר, ומוכר על ידי אונסק\"ו כמורשת תרבותית בלתי מוחשית. הבז מסמל אצילות, חדות אבחנה, מעמד גבוה, מהירות ואומץ לב אל מול איתני הטבע, והוא נחשב לסמל הסטטוס הגבוה ביותר בקרב משפחות המלוכה והשייח'ים.",
+                en: "Although the Arabian Oryx is recognized in literature as the formal national symbol, the Falcon is the most iconic, prestigious, and important animal in Emirati culture (and even features in the center of the official state emblem). Falconry training for hunting expeditions is an ancient and central pillar of the desert Bedouin heritage, recognized by UNESCO as an intangible cultural heritage. The falcon symbolizes nobility, sharpness of vision, high status, speed, and courage against the forces of nature, and is considered the highest status symbol among royal families and sheikhs."
+              }
+            },
             etymology: {
               parts: [
-                { text: "איחוד", color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: "\"המדינה המאוחדת\" - מציין את הפדרציה וההסכם הפוליטי שאיחד את האמירויות לישות אחת." },
-                { text: "האמירויות", color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: "אמירות (Imarah) היא טריטוריה הנשלטת על ידי \"אמיר\". נגזר מהשורש א-מ-ר שמשמעותו לפקד או להנהיג." }
+                { text: { he: "איחוד", en: "United" }, color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: { he: "'המדינה המאוחדת' - מילה המציינת את מבנה הממשל הייחודי של פדרציה ואת ההסכם הפוליטי פורץ הדרך שאיחד את הישויות השבטיות הנפרדות למדינה ריבונית אחת, צעד חריג במזרח התיכון המפוצל.", en: "'The United State' - a word indicating the unique federal government structure and the groundbreaking political agreement that united the separate tribal entities into one sovereign state, an unusual step in the fractured Middle East." } },
+                { text: { he: "האמירויות", en: "Emirates" }, color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: { he: "אמירות (במקור הערבי Imarah) היא טריטוריה או נסיכות הנשלטת על ידי מנהיג הנושא את התואר 'אמיר' (נסיך או מפקד). המילה נגזרת מהשורש הערבי א-מ-ר, שמשמעותו לתת פקודה, לפקד או להנהיג.", en: "An Emirate (originally Arabic 'Imarah') is a territory or principality ruled by a leader bearing the title 'Emir' (prince or commander). The word is derived from the Arabic root A-M-R, meaning to give an order, to command, or to lead." } }
               ],
-              synthesis: "ברית (פדרציה) של הנסיכויות הערביות."
+              synthesis: { he: "ברית מלוכדת (פדרציה) של הנסיכויות הערביות המונהגות על ידי אמיריהן.", en: "A cohesive alliance (federation) of Arab principalities led by their Emirs." }
             },
             figure: {
-              name: "זאיד בן סולטאן אל נהיאן",
+              name: { he: "השייח' זאיד בן סולטאן אל נהיאן", en: "Sheikh Zayed bin Sultan Al Nahyan" },
               years: "1918 - 2004",
-              childhood: "נולד באבו דאבי. קיבל חינוך מסורתי בעקרונות האסלאם, וספג את תרבות הבדואים כולל כישורי הישרדות ורכיבה על גמלים.",
-              ideology: "שוויון ומסורת בדואית, פילנתרופיה אדירה, אחדות לאומית, פיתוח בר-קיימא וסובלנות רבה כלפי זרים ודתות אחרות.",
-              achievements: "הכוח המניע העיקרי מאחורי הקמת האיחוד ב-1971. הפך את אבו דאבי והאמירויות למדינה מודרנית ומשפיעה בזירה הבינלאומית."
+              childhood: { 
+                he: "נולד בארמון באבו דאבי החרבה והענייה של תחילת המאה ה-20. הוא לא זכה לחינוך מודרני מוסדר, אלא קיבל חינוך מסורתי בעקרונות האסלאם, ההיסטוריה והשירה הערבית. הוא ספג את תרבות הבדואים ישירות מהשטח, חי במאהלים, ולמד מקרוב את חוכמת המדבר, כישורי הישרדות, אילוף בזים ורכיבה על גמלים.",
+                en: "Born in a palace in the ruined and impoverished Abu Dhabi of the early 20th century. He did not receive a formal modern education, but rather a traditional education in the principles of Islam, history, and Arabic poetry. He absorbed Bedouin culture directly from the field, lived in camps, and learned up close the wisdom of the desert, survival skills, falconry, and camel riding."
+              },
+              ideology: { 
+                he: "האידאולוגיה שלו הייתה שילוב נדיר של שוויון ומסורת בדואית ('מועצת המג'לס' הפתוחה לכל אזרח), פילנתרופיה אדירה וחלוקת עושר. הוא היה פטריוט שהאמין באחדות לאומית וסלד מסכסוכים שבטיים. בנוסף, הוא הוביל אג'נדה של פיתוח בר-קיימא וירוק במדבר, ודגל בסובלנות רבה ומוצהרת כלפי זרים ודתות אחרות כמפתח לשגשוג בינלאומי.",
+                en: "His ideology was a rare blend of equality and Bedouin tradition (the 'Majlis' council open to every citizen), massive philanthropy, and wealth distribution. He was a patriot who believed in national unity and detested tribal conflicts. Additionally, he led an agenda of sustainable and green development in the desert, and advocated for declared and profound tolerance towards foreigners and other religions as the key to international prosperity."
+              },
+              achievements: { 
+                he: "הוא מוכר כ'אבי האומה' והכוח המניע העיקרי מאחורי הקמת האיחוד ב-1971. בעזרת יכולות השכנוע שלו, הצליח לחבר בין שליטים יריבים. הוא הפך את אבו דאבי ממושבת דיג חסרת כל למדינה מודרנית ומשפיעה, השקיע מיליארדים בפיתוח חינוך ובריאות, ויזם נטיעה של מיליוני עצים במדבר כחלק מאג'נדה אקולוגית חלוצית לזמנו.",
+                en: "He is recognized as the 'Father of the Nation' and the main driving force behind the establishment of the Union in 1971. With his powers of persuasion, he managed to connect rival rulers. He transformed Abu Dhabi from a destitute fishing colony into a modern and influential state, invested billions in developing education and healthcare, and initiated the planting of millions of trees in the desert as part of an ecological agenda that was pioneering for its time."
+              }
             },
             map: {
               url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_uae_coast.jpg",
-              title: "מפת חוף הפיראטים (המפרץ) - 1753",
-              desc: "מציגה את המפרץ והחוף המזרחי של חצי האי הערבי, שלימים נודע כ\"חוף שביתת הנשק\"."
+              title: { he: "מפת חוף הפיראטים (המפרץ) - 1753", en: "Map of the Pirate Coast (The Gulf) - 1753" },
+              desc: { 
+                he: "מפה עתיקה של ציי הים וקרטוגרפים אירופאים המציגה את המפרץ ואת החוף המזרחי של חצי האי הערבי. האזור סומן כאזור סכנה ונודע כ'חוף הפיראטים' בשל התקפות של הציים המקומיים (שבטי אל-קאסמי) על ספינות האימפריה הבריטית, מה שהוביל לבסוף לחוזי 'חוף שביתת הנשק'.",
+                en: "An ancient map by European navies and cartographers showing the Gulf and the eastern coast of the Arabian Peninsula. The area was marked as a danger zone and known as the 'Pirate Coast' due to attacks by local fleets (Al Qasimi tribes) on British Empire ships, which eventually led to the 'Trucial Coast' treaties."
+              }
             }
           },
           {
             id: "kuwait",
-            name: "כווית",
+            name: { he: "כווית", en: "Kuwait" },
             englishName: "Kuwait",
-            officialName: "מדינת כווית",
-            FlagComponent: FlagKuwait,
-            areaNum: "~17,818 קמ\"ר",
-            populationNum: "~4,300,000",
-            currency: "דינר כוויתי (KWD)",
-            area: "כ-17,818 קמ\"ר. מדינה קטנה ועשירה בנפט בקצה הצפוני של המפרץ הפרסי, עם אקלים מדברי קיצוני ושטח מישורי.",
-            demographics: {
-              mainNationName: "אזרחים כוויתים",
-              mainNationPercent: "כ-30%",
-              description: "רוב מוחלט של האוכלוסייה (כ-70%) מורכב ממהגרי עבודה זרים. האזרחים הכוויתים נהנים ממערכת דמוקרטית פרלמנטרית פעילה יחסית לאזור."
+            officialName: { he: "מדינת כווית", en: "State of Kuwait" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/kuwait.webp",
+            capital: {
+              name: { he: "כווית סיטי", en: "Kuwait City" },
+              englishName: "Kuwait City",
+              etymology: { 
+                he: "שם העיר הוא כשמה של המדינה כולה, ונגזר מצורת ההקטנה של המילה הערבית 'כות' (Kut), שמשמעותה מצודה, מעוז או בית מבוצר. העיר ההיסטורית צמחה וגדלה באופן אורגני מסביב לאותה מצודה ראשונית שהוקמה במאה ה-17 על החוף, אשר נועדה להגן על נמל הסחר הקטן ועל מקור המים החיוני מפני פשיטות של שבטי המדבר.",
+                en: "The city's name is the same as the country's, derived from the diminutive form of the Arabic word 'Kut', meaning fortress, stronghold, or fortified house. The historical city grew and expanded organically around that initial fortress built in the 17th century on the coast, which was intended to protect the small trading port and the vital water source from raids by desert tribes."
+              },
+              foundingYear: { he: "1613 (הקמת המצודה המקורית) | 1716 (ביסוס העיר על ידי שבט בני עותבה)", en: "1613 (Establishment of the original fort) | 1716 (City founded by Bani Utbah tribe)" },
+              reason: { 
+                he: "העיר התפתחה באופן אורגני מסביב לנמל מים עמוקים מעולה, הנחשב לטוב ביותר בצפון המפרץ הפרסי. מיקום אסטרטגי זה הפך את כווית סיטי למרכז משגשג ובלעדי של בניית ספינות, סחר ימי, שליית פנינים, וצומת יבוא-יצוא המקשרת את הודו למסופוטמיה (עיראק של ימינו). כתוצאה מהשגשוג הכלכלי, היא הפכה באופן טבעי ללב הפועם, למרכז הכובד הדמוגרפי, ולמושב הקבע של השלטון (משפחת א-סבאח).",
+                en: "The city developed organically around an excellent deep-water port, considered the best in the northern Persian Gulf. This strategic location made Kuwait City a prosperous and exclusive center for shipbuilding, maritime trade, pearl diving, and an import-export crossroads connecting India to Mesopotamia (modern-day Iraq). As a result of economic prosperity, it naturally became the beating heart, the demographic center of gravity, and the permanent seat of government (the Al-Sabah family)."
+              }
             },
-            modernHistory: "כווית קיבלה עצמאות מבריטניה ב-1961. ב-1990 פלשה אליה עיראק (סדאם חוסיין), מה שהוביל למלחמת המפרץ הראשונה ולשחרורה על ידי קואליציה בינלאומית.",
-            foundingYears: "1961 (עצמאות מבריטניה)",
-            flagSymbolism: "מבוסס על פואמה של המשורר ספי א-דין אל-חילי (המאה ה-14): \"לבנים הם מעשינו, שחורים הם שדות הקרב שלנו, ירוקים הם שטחי המרעה שלנו, ואדומות הן חרבותינו\".",
+            areaNum: { he: "~17,818 קמ\"ר", en: "~17,818 sq km" },
+            populationNum: "~4,300,000",
+            currency: { he: "דינר כוויתי (KWD)", en: "Kuwaiti Dinar (KWD)" },
+            area: { 
+              he: "כ-17,818 קמ\"ר. כווית היא מדינה קטנה אך סופר-אסטרטגית השוכנת בקצה הצפוני והצר של המפרץ הפרסי, כלואה גיאוגרפית בין סעודיה מדרום לעיראק מצפון. השטח כולל תשעה איים (כשהגדול בהם הוא בוביאן), ומאופיין במשטחי מדבר שטוחים וצחיחים במיוחד עם אקלים קיצוני, טמפרטורות בוערות בקיץ, אך עם אדמה הרוויה בכ-6% מעתודות הנפט העולמיות.",
+              en: "Approx. 17,818 sq km. Kuwait is a small but super-strategic country situated at the narrow northern tip of the Persian Gulf, geographically sandwiched between Saudi Arabia to the south and Iraq to the north. The territory includes nine islands (the largest being Bubiyan), and is characterized by extremely flat and arid desert plains with an extreme climate, scorching summer temperatures, but with land saturated with about 6% of global oil reserves."
+            },
+            demographics: {
+              mainNationName: { he: "אזרחים כוויתים", en: "Kuwaiti Citizens" },
+              mainNationPercent: { he: "כ-30%", en: "~30%" },
+              description: { 
+                he: "הדמוגרפיה הכוויתית מחולקת למעמדות ברורים: רוב מוחלט של האוכלוסייה (כ-70%) מורכב ממהגרי עבודה זרים חסרי אזרחות וקבוצת ה'בידון' (תושבים חסרי מעמד וחסרי מדינה). לעומתם, האזרחים הכוויתים המקוריים נהנים מעושר אדיר ומתרבות פוליטית ייחודית של 'דיוואנייה' (מפגשי שיח ואירוח סלון). בשונה משכנותיה במפרץ, בכווית קיימת מערכת דמוקרטית פרלמנטרית פעילה וחזקה מאוד ('האסיפה הלאומית'), שלעיתים תכופות מתעמתת עם הממשלה ומשפחת המלוכה.",
+                en: "Kuwaiti demographics are divided into clear classes: an absolute majority of the population (about 70%) consists of stateless foreign migrant workers and the 'Bidoon' group (stateless residents without status). In contrast, original Kuwaiti citizens enjoy immense wealth and a unique political culture of 'Diwaniya' (salon gatherings and discussions). Unlike its Gulf neighbors, Kuwait has a very active and strong parliamentary democratic system (the 'National Assembly'), which frequently clashes with the government and the royal family."
+              }
+            },
+            modernHistory: { 
+              he: "כווית התבססה לאורך המאות כמוקד סחר ימי, וחתמה על חוזה חסות עם בריטניה ב-1899 כדי להתגונן מהאימפריה העות'מאנית. היא קיבלה עצמאות מלאה ב-1961 והפכה בשנות ה-70 וה-80 לאחת המדינות המתקדמות והעשירות במזרח התיכון ('תור הזהב'). עם זאת, נקודת השבר הטראומטית ביותר בתולדותיה אירעה באוגוסט 1990, כאשר עיראק בראשות סדאם חוסיין פלשה אליה, כבשה את שטחה, והבעירה את בארות הנפט שלה. כווית שוחררה ב-1991 על ידי קואליציה בינלאומית בהובלת ארה\"ב (מלחמת המפרץ הראשונה), ונאלצה לשקם את עצמה מההריסות במיליארדי דולרים.",
+              en: "Kuwait established itself over centuries as a maritime trade hub, signing a protection treaty with Britain in 1899 to defend against the Ottoman Empire. It gained full independence in 1961 and became one of the most advanced and wealthy countries in the Middle East in the 70s and 80s ('The Golden Age'). However, the most traumatic breaking point in its history occurred in August 1990, when Iraq, led by Saddam Hussein, invaded it, occupied its territory, and set its oil wells ablaze. Kuwait was liberated in 1991 by a US-led international coalition (the First Gulf War), and was forced to rebuild itself from the ruins at the cost of billions of dollars."
+            },
+            foundingYears: { he: "1961 (עצמאות מלאה מהאימפריה הבריטית)", en: "1961 (Full independence from the British Empire)" },
+            flagSymbolism: { 
+              he: "צבעי הדגל אינם מקריים והם מבוססים במדויק על פואמה הירואית מפורסמת של המשורר הערבי ספי א-דין אל-חילי מהמאה ה-14, שתיאר את מורשת הקרב הערבית: 'לבנים הם מעשינו (פעולות החסד והטוהר), שחורים הם שדות הקרב שלנו (תבוסת אויבינו), ירוקים הם שטחי המרעה ואדמותינו, ואדומות מדם הן חרבותינו (במאבק על החירות)'. צורת הטרפז השחור המקוצץ בצד התורן נועדה לייחד את הדגל לעומת שאר דגלי הפאן-ערביות באזור.",
+              en: "The flag colors are not random; they are precisely based on a famous heroic poem by the 14th-century Arab poet Safi Al-Din Al-Hilli, describing the Arab martial heritage: 'White are our deeds (acts of grace and purity), black are our battlefields (defeat of our enemies), green are our pastures and lands, and red with blood are our swords (in the struggle for freedom)'. The truncated black trapezoid shape on the hoist side was intended to distinguish the flag from other Pan-Arab flags in the region."
+            },
+            nationalAnimal: {
+              name: { he: "גמל ערבי (Arabian Camel)", en: "Arabian Camel" },
+              reason: { 
+                he: "הגמל משמש כסמל לאומי חשוב ומקור לגאווה. טרם גילוי שדות הנפט הגדולים וההפיכה למעצמת אנרגיה מודרנית (עד שנות ה-30 של המאה ה-20), כווית נסמכה באופן מוחלט על סחר ימי בעיר הבירה ועל החיים הבדואיים הקשים במדבר. הגמל מסמל את ההישענות ההיסטורית של העם על הטבע, את הסיבולת חסרת הפשרות, ואת שמירת המסורת של תושביה לפני פרוץ העידן האורבני והעושר המודרני המהיר.",
+                en: "The camel serves as an important national symbol and source of pride. Before the discovery of massive oil fields and becoming a modern energy superpower (until the 1930s), Kuwait relied entirely on maritime trade in the capital and the harsh Bedouin life in the desert. The camel symbolizes the people's historical reliance on nature, uncompromising endurance, and the preservation of its inhabitants' traditions before the outbreak of the urban era and rapid modern wealth."
+              }
+            },
             etymology: {
               parts: [
-                { text: "אל-כווית", color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: "השם הוא צורת הקטנה של המילה הערבית \"כות\" (Kut)." },
-                { text: "מבצר / מצודה", color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: "המילה \"כות\" מתייחסת למבצר קטן או בית מבוצר שנבנה ליד מקור מים. השם מתייחס למצודה קטנה שנבנתה באזור במאה ה-17." }
+                { text: { he: "אל-כווית", en: "Al-Kuwait" }, color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: { he: "השם הוא צורת הקטנה (Diminutive) בדיאלקט הערבי המקומי של המילה 'כות' (Kut).", en: "The name is a diminutive form in the local Arabic dialect of the word 'Kut'." } },
+                { text: { he: "מבצר / מצודה", en: "Fortress / Citadel" }, color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: { he: "המילה 'כות' מתייחסת ספציפית למבצר קטן או בית מבוצר שנבנה ליד מקור מים מתוקים או על קו החוף. השם מתייחס למצודה קטנה בודדת שנבנתה באזור במאה ה-17 על ידי בני שבט בני ח'אלד להגנה מסיירת.", en: "The word 'Kut' specifically refers to a small fort or fortified house built near a freshwater source or on the coastline. The name refers to a single small fortress built in the area in the 17th century by the Bani Khalid tribe for patrol defense." } }
               ],
-              synthesis: "המבצר הקטן (השומר על המים והחוף)."
+              synthesis: { he: "המבצר הקטן (השומר על המים והחוף מפני פולשים).", en: "The Little Fortress (guarding the water and coast from invaders)." }
             },
             figure: {
-              name: "עבדאללה א-סאלם א-סבאח",
+              name: { he: "האמיר עבדאללה א-סאלם א-סבאח", en: "Emir Abdullah Al-Salim Al-Sabah" },
               years: "1895 - 1965",
-              childhood: "התחנך על ידי מורים פרטיים בכווית. נודע מילדותו כמשכיל, אוהב שירה, ספרות והיסטוריה, שסלד מאורח חיים ראוותני.",
-              ideology: "סולידריות ערבית, חוקתיות דמוקרטית מתונה, ומדינת רווחה הדואגת לחינוך ובריאות בחינם לאזרחיה.",
-              achievements: "נחשב ל\"אבי כווית המודרנית\". ביטל את הסכם החסות הבריטי ב-1961 וחוקק את החוקה הראשונה במפרץ."
+              childhood: { 
+                he: "נולד בכווית סיטי. בניגוד לנסיכים רבים, הוא התחנך על ידי מורים פרטיים והוגי דעות מקומיים בכווית. הוא נודע מילדותו כאדם צנוע, משכיל ועמוק, אוהב שירה, ספרות קלאסית והיסטוריה ערבית, שסלד מאורח חיים ראוותני של עשירים למרות ייחוסו.",
+                en: "Born in Kuwait City. Unlike many princes, he was educated by private tutors and local thinkers in Kuwait. From childhood, he was known as a modest, educated, and deep individual, a lover of poetry, classical literature, and Arab history, who loathed the ostentatious lifestyle of the wealthy despite his lineage."
+              },
+              ideology: { 
+                he: "האידאולוגיה שלו התמקדה בסולידריות ערבית ובחוקתיות דמוקרטית מתונה – תפיסה נדירה למנהיג במפרץ. הוא האמין כי עושר הנפט שייך לאזרחים ולא רק למשפחת המלוכה, ופעל לכונן מדינת רווחה מודרנית הדואגת לחינוך חובה ובריאות בחינם. הוא עודד חופש עיתונות כערך עליון בחברה חופשית.",
+                en: "His ideology focused on Arab solidarity and moderate democratic constitutionalism – a rare stance for a Gulf leader. He believed that oil wealth belonged to the citizens and not just the royal family, acting to establish a modern welfare state providing free compulsory education and healthcare. He encouraged press freedom as a supreme value in a free society."
+              },
+              achievements: { 
+                he: "הוא נחשב ל'אבי כווית המודרנית והחוקתית'. הישגו העצום היה ביטול הסכם החסות הבריטי ב-1961 והכרזה על עצמאות מלאה. מיד לאחר מכן, ב-1962, הוא יזם וחתם על החוקה הראשונה באזור המפרץ שיצרה את הפרלמנט הכוויתי, וייסד את קרן העושר הריבונית הראשונה בעולם שנועדה להבטיח את עתיד הדורות הבאים לאחר עידן הנפט.",
+                en: "He is considered the 'Father of Modern and Constitutional Kuwait'. His monumental achievement was canceling the British protection treaty in 1961 and declaring full independence. Immediately after, in 1962, he initiated and signed the first constitution in the Gulf region, creating the Kuwaiti Parliament, and founded the world's first sovereign wealth fund designed to secure the future of coming generations post-oil era."
+              }
             },
             map: {
               url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_kuwait_gulf.jpg",
-              title: "מפת המזרח התיכון - 1680",
-              desc: "מציגה את הקצה הצפוני של המפרץ הפרסי, האזור האסטרטגי שבו נבנתה מצודת \"כות\"."
+              title: { he: "מפת המזרח התיכון והמפרץ - 1680", en: "Map of the Middle East and Gulf - 1680" },
+              desc: { 
+                he: "מפה היסטורית המציגה את הקצה הצפוני של המפרץ הפרסי. המפה ממחישה את האזור האסטרטגי (סמוך לשפך שט אל-ערב של נהרות הפרת והחידקל) שבו נבנתה מצודת 'כות' המקורית שממנה צמחה המדינה.",
+                en: "A historical map showing the northern tip of the Persian Gulf. The map illustrates the strategic area (near the Shatt al-Arab confluence of the Euphrates and Tigris rivers) where the original 'Kut' fortress was built, from which the country grew."
+              }
             }
           },
           {
             id: "bahrain",
-            name: "בחריין",
+            name: { he: "בחריין", en: "Bahrain" },
             englishName: "Bahrain",
-            officialName: "ממלכת בחריין",
-            FlagComponent: FlagBahrain,
-            areaNum: "~780 קמ\"ר",
-            populationNum: "~1,500,000",
-            currency: "דינר בחרייני (BHD)",
-            area: "כ-780 קמ\"ר. מדינת איים זעירה במפרץ הפרסי. המדינה הקטנה ביותר במזרח התיכון, המחוברת לערב הסעודית באמצעות גשר.",
-            demographics: {
-              mainNationName: "אזרחים בחריינים",
-              mainNationPercent: "כ-46%",
-              description: "בחריין מתאפיינת בשסע עדתי: רוב של האזרחים הם שיעים, בעוד שמשפחת המלוכה השולטת (אל ח'ליפה) היא סונית."
+            officialName: { he: "ממלכת בחריין", en: "Kingdom of Bahrain" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/bahrain.webp",
+            capital: {
+              name: { he: "מנאמה", en: "Manama" },
+              englishName: "Manama",
+              etymology: { 
+                he: "מקור השם נגזר מהמילה הערבית 'אל-מנאמה' (Al-Manama), שפירושה הוא 'מקום מנוחה', 'מקום של חלומות' או 'מקום שינה'. במקור, תושבי העיר היו עוזבים אותה בשיא הקיץ, בשל הלחות הכבדה והחום המעיק שבחוף, למקומות ממוזגים וגבוהים יותר בתוך האיים (חקלאות התמרים), וחוזרים אליה בסתיו ובחורף כ'מקום המנוחה' הקבוע והנעים שלהם.",
+                en: "The origin of the name is derived from the Arabic word 'Al-Manama', which means 'place of rest', 'place of dreams', or 'place of sleep'. Originally, the city's residents would leave it at the peak of summer, due to the heavy humidity and oppressive coastal heat, for more temperate and elevated places within the islands (date farming), returning to it in autumn and winter as their permanent, pleasant 'place of rest'."
+              },
+              foundingYear: { he: "הוזכרה לראשונה היסטורית ב-1345 (הוכרזה כבירה לאומית ב-1971)", en: "First mentioned historically in 1345 (Declared national capital in 1971)" },
+              reason: { 
+                he: "מנאמה מוקמה מבחינה אסטרטגית בצפון האי המרכזי של הארכיפלג הבחרייני. לאורך מאות שנים, מיקום זה העניק לה גישה מעולה ונוחה לנתיבי השיט המרכזיים של המפרץ הפרסי, מה שהפך אותה לתחנת מעבר סואנת ולמרכז הבנקאות העולמי של סחר הפנינים. עם הקמת המדינה המודרנית והעצמאית ב-1971, היה זה המשך טבעי להכיר במרכז הכלכלי, המנהלי והימי ההיסטורי והמפותח הזה כעיר הבירה.",
+                en: "Manama was strategically located in the north of the main island of the Bahraini archipelago. Over centuries, this location granted it excellent and easy access to the main shipping routes of the Persian Gulf, making it a bustling transit station and the global banking center of the pearl trade. With the establishment of the modern independent state in 1971, it was a natural continuation to recognize this historically developed economic, administrative, and maritime center as the capital city."
+              }
             },
-            modernHistory: "הכריזה על עצמאותה מבריטניה ב-1971. הפכה למרכז פיננסי ובנקאי חשוב במזרח התיכון בעקבות דלדול עתודות הנפט שלה יחסית לשכנותיה.",
-            foundingYears: "1971 (עצמאות מבריטניה)",
-            flagSymbolism: "האדום הוא צבען המסורתי של מדינות המפרץ. הפס הלבן הוסף כסמל להסכמי השלום. קו הזיגזג כולל 5 משולשים לבנים המייצגים את חמשת עמודי האסלאם.",
+            areaNum: { he: "~780 קמ\"ר", en: "~780 sq km" },
+            populationNum: "~1,500,000",
+            currency: { he: "דינר בחרייני (BHD)", en: "Bahraini Dinar (BHD)" },
+            area: { 
+              he: "כ-780 קמ\"ר. בחריין היא מדינת איים זעירה במפרץ הפרסי, המדינה הקטנה ביותר במזרח התיכון כולו. היא מורכבת מארכיפלג של כ-33 איים טבעיים (שמספרם גדל משמעותית עקב פרויקטים עצומים של ייבוש קרקע מהים). היא מחוברת פיזית ויבשתית למעצמה השכנה, ערב הסעודית, באמצעות 'גשר המלך פהד' שאורכו כ-25 קילומטרים.",
+              en: "Approx. 780 sq km. Bahrain is a tiny island nation in the Persian Gulf, the smallest country in the entire Middle East. It consists of an archipelago of about 33 natural islands (a number that has grown significantly due to massive land reclamation projects from the sea). It is physically and continentally connected to its neighboring superpower, Saudi Arabia, via the 'King Fahd Causeway', which is about 25 kilometers long."
+            },
+            demographics: {
+              mainNationName: { he: "אזרחים בחריינים", en: "Bahraini Citizens" },
+              mainNationPercent: { he: "כ-46% (השאר מהגרים זרים)", en: "~46% (Remainder are foreign migrants)" },
+              description: { 
+                he: "אוכלוסיית בחריין מתאפיינת באחת התופעות הפוליטיות-דתיות הרגישות ביותר במזרח התיכון: שסע עדתי עמוק. רוב ברור של האזרחים המקומיים במדינה (מעל 60%) הם מוסלמים מהזרם השיעי (ונושאים מסורות הקשורות לתרבות הפרסית-ערבית הקדומה), בעוד שמשפחת המלוכה השולטת והאליטה השלטונית-צבאית (משפחת אל ח'ליפה) משתייכת לזרם הסוני, דבר שמוביל לא פעם למתיחויות ולמחאות אזרחיות, ששיאן היה ב-2011.",
+                en: "Bahrain's population is characterized by one of the most sensitive political-religious phenomena in the Middle East: a deep sectarian divide. A clear majority of the local citizens in the country (over 60%) are Shia Muslims (carrying traditions related to ancient Persian-Arab culture), while the ruling royal family and the ruling-military elite (the Al Khalifa family) belong to the Sunni branch, a fact that often leads to tensions and civil protests, culminating in 2011."
+              }
+            },
+            modernHistory: { 
+              he: "בחריין הייתה המוקד העתיק של תרבות 'דילמון' ושליית פנינים. בעת המודרנית היא נשלטה על ידי הפורטוגלים ולאחר מכן בידי משפחת אל ח'ליפה. בחריין הייתה המדינה הראשונה במפרץ שבה התגלה נפט (ב-1932), אך היא גם הראשונה שעתודותיה החלו להתדלדל. היא הכריזה על עצמאותה מבריטניה ב-1971 ודחתה משאל עם איראני שדרש לספחה. בשל הדלדול המהיר בנפט, בחריין נאלצה להמציא את עצמה מחדש מוקדם משכנותיה, והפכה בהצלחה רבה למרכז פיננסי, תיירותי ובנקאי (במיוחד בנקאות אסלאמית) מרכזי במזרח התיכון המשרת את השוק הסעודי.",
+              en: "Bahrain was the ancient hub of the 'Dilmun' culture and pearl diving. In modern times, it was ruled by the Portuguese and later by the Al Khalifa family. Bahrain was the first Gulf country where oil was discovered (1932), but it is also the first whose reserves began to deplete. It declared independence from Britain in 1971 and rejected an Iranian referendum demanding its annexation. Due to the rapid depletion of oil, Bahrain was forced to reinvent itself earlier than its neighbors, successfully becoming a major financial, tourism, and banking center (especially Islamic banking) in the Middle East serving the Saudi market."
+            },
+            foundingYears: { he: "1971 (עצמאות מבריטניה וייסוד המדינה המודרנית)", en: "1971 (Independence from Britain and founding of the modern state)" },
+            flagSymbolism: { 
+              he: "הצבע האדום הבוהק הוא צבען המסורתי של כל מדינות המפרץ (המזוהה היסטורית עם החוארג' והאמירות השונות). הפס הלבן האנכי בצד התורן הוסף במאה ה-19 כסמל להסכמי שביתת הנשק והשלום הימיים מול האימפריה הבריטית (שנועדו להפסיק את הפיראטיות). קו הזיגזג המפריד בין הצבעים מורכב בדיוק מ-5 משולשים (חודים) מרווחים לבנים, אשר מייצגים באופן סמלי את חמשת עמודי האסלאם (השהאדה, התפילה, הצדקה, הצום והעלייה לרגל).",
+              en: "The bright red color is the traditional color of all Gulf states (historically associated with the Kharijites and various emirates). The vertical white stripe on the hoist side was added in the 19th century as a symbol of the maritime truce and peace agreements with the British Empire (intended to end piracy). The zigzag line separating the colors consists of exactly 5 spaced white triangles (points), symbolically representing the Five Pillars of Islam (Shahada, Prayer, Charity, Fasting, and Pilgrimage)."
+            },
+            nationalAnimal: {
+              name: { he: "ראם ערבי (Arabian Oryx)", en: "Arabian Oryx" },
+              reason: { 
+                he: "אף על פי שבחריין היא מדינת איים זעירה המוקפת במים מתוקים ומלוחים, האקלים בתוך האיים עצמם הוא מדברי וצחיח לחלוטין. הראם הערבי, אנטילופה יפהפייה המסוגלת לשרוד בסביבה חרבה כזו ללא מים זורמים במשך חודשים, נבחר לחיה הלאומית. הראם מסמל את השורשים היבשתיים, המסורות התרבותיות (שירת המדבר), והקשרים הגיאוגרפיים ההדוקים שקושרים את הממלכה הזעירה אל חצי האי ערב העצום הסמוך לה. הראמים משגשגים כיום בפארק חיות הבר הלאומי 'אל-ערין' שבאי.",
+                en: "Even though Bahrain is a tiny island nation surrounded by fresh and saltwater, the climate within the islands themselves is completely desert and arid. The Arabian Oryx, a beautiful antelope capable of surviving in such a parched environment without running water for months, was chosen as the national animal. The oryx symbolizes the continental roots, cultural traditions (desert poetry), and the close geographical ties that bind the tiny kingdom to the vast Arabian Peninsula nearby. Oryxes thrive today in the Al Areen National Wildlife Park on the island."
+              }
+            },
             etymology: {
               parts: [
-                { text: "אל-בחריין", color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: "צורת הזוגי של המילה הערבית \"בחר\" שמשמעותה ים. כלומר: \"שני הימים\"." },
-                { text: "שני הימים", color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: "מתייחס לנביעות מים מתוקים הנובועות מקרקעית הים אל תוך מי הים המלוחים של המפרץ." }
+                { text: { he: "אל-בחריין", en: "Al-Bahrain" }, color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: { he: "שם המדינה הוא צורת הזוגי (Dual form) של המילה הערבית 'בחר' שמשמעותה ים. לפיכך, הפירוש המילולי והמדויק הוא 'שני הימים'.", en: "The country's name is the dual form of the Arabic word 'Bahr', meaning sea. Therefore, the literal and exact meaning is 'The Two Seas'." } },
+                { text: { he: "שני הימים", en: "The Two Seas" }, color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: { he: "אזכור זה (המופיע גם בקוראן) מתייחס לתופעת טבע גיאולוגית ייחודית ומרהיבה באזור: נביעות ומעיינות ארטזיים של מים מתוקים וצלולים, הנובעים מקרקעית הים בלחץ עצום, ומתערבבים אל תוך מי הים המלוחים של המפרץ הפרסי (ים מלוח וים מתוק החיים זה לצד זה).", en: "This reference (also appearing in the Quran) relates to a unique and spectacular geological natural phenomenon in the area: artesian springs and seeps of clear, fresh water gushing from the seabed under immense pressure, mingling with the salty seawater of the Persian Gulf (a salty sea and a sweet sea living side by side)." } }
               ],
-              synthesis: "ארץ שני הימים (המתוקים והמלוחים)."
+              synthesis: { he: "ארץ שני הימים (המפגש בין המים המתוקים והמלוחים).", en: "Land of the Two Seas (the meeting point of sweet and salty waters)." }
             },
             figure: {
-              name: "עיסא בן סלמאן אל ח'ליפה",
+              name: { he: "האמיר עיסא בן סלמאן אל ח'ליפה", en: "Emir Isa bin Salman Al Khalifa" },
               years: "1933 - 1999",
-              childhood: "נולד בכפר אל-ג'סרה שבבחריין. חונך באופן מקומי על ידי מורים דתיים וחילוניים, וטופח מגיל צעיר לרשת את ההנהגה.",
-              ideology: "מסורת מתונה, שיתוף פעולה הדוק עם המערב, וגיוון כלכלי מעבר לתלות בנפט כמקור יחיד.",
-              achievements: "הכריזה על עצמאות ב-1971 ודחה ניסיונות סיפוח מצד איראן. הפך את בחריין למרכז פיננסי אזורי מוביל."
+              childhood: { 
+                he: "נולד בכפר הציורי אל-ג'סרה שבבחריין. בניגוד לשליטים אחרים שלמדו באירופה, הוא חונך באופן מקומי על ידי מורים דתיים מסורתיים וחילוניים כאחד, בסביבה ששילבה אסלאם מתון עם פתיחות עסקית, וטופח בזהירות מגיל צעיר על ידי משפחתו לרשת את ההנהגה.",
+                en: "Born in the picturesque village of Al Jasra in Bahrain. Unlike other rulers who studied in Europe, he was educated locally by both traditional religious and secular teachers, in an environment that combined moderate Islam with business openness, and was carefully groomed from a young age by his family to inherit the leadership."
+              },
+              ideology: { 
+                he: "האידאולוגיה שלו התאפיינה במסורת מתונה וסובלנית, והכרה פרגמטית במגבלות הכוח. הוא דגל בשיתוף פעולה ביטחוני וכלכלי הדוק עם המערב (איפשר הקמת בסיס ימי אמריקאי גדול), והבין שעתיד המדינה, לאור מיעוט משאבי הנפט, תלוי בגיוון כלכלי חכם, השכלה מודרנית לאזרחים, וכלכלת סחר חופשי.",
+                en: "His ideology was characterized by moderate and tolerant tradition, and a pragmatic recognition of the limits of power. He advocated for close security and economic cooperation with the West (allowing the establishment of a large US naval base), and understood that the country's future, given the scarcity of oil resources, depended on smart economic diversification, modern education for citizens, and a free-trade economy."
+              },
+              achievements: { 
+                he: "הוא האמיר שהוביל את בחריין להכרזה על עצמאות מלאה מבריטניה ב-1971. בצעד מדיני מבריק, הוא דחה וסיכל את ניסיונות הסיפוח החוזרים ונשנים מצד איראן על ידי פנייה לאו\"ם ולמשאל עם. הוא הפך את בחריין במו ידיו למרכז פיננסי אזורי מוביל, הקים מוסדות מודרניים, וחתם על ההסכם לבניית גשר המלך פהד, שחיבר את האי כלכלית לערב הסעודית והבטיח את עתידה.",
+                en: "He is the Emir who led Bahrain to declare full independence from Britain in 1971. In a brilliant diplomatic move, he rejected and thwarted repeated annexation attempts by Iran by turning to the UN and a referendum. He single-handedly turned Bahrain into a leading regional financial center, established modern institutions, and signed the agreement to build the King Fahd Causeway, which economically connected the island to Saudi Arabia and secured its future."
+              }
             },
             map: {
               url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_qatar_bahrain.jpg",
-              title: "מפת המפרץ הפרסי - 1720",
-              desc: "מציגה את המרחב הימי וריכוז האיים המהווים כיום את ממלכת בחריין."
+              title: { he: "מפת המפרץ הפרסי והאיים - 1720", en: "Map of the Persian Gulf and Islands - 1720" },
+              desc: { 
+                he: "מפה קרטוגרפית אירופאית המציגה את המרחב הימי וריכוז האיים המהווים כיום את ממלכת בחריין. המפה מדגישה את חשיבותם של האיים כנקודת מעבר אסטרטגית ותחנת עגינה בטוחה בין חצי האי ערב לפרס.",
+                en: "A European cartographic map showing the maritime space and the concentration of islands that today constitute the Kingdom of Bahrain. The map highlights the importance of the islands as a strategic transit point and safe anchorage between the Arabian Peninsula and Persia."
+              }
             }
           },
           {
             id: "qatar",
-            name: "קטר",
+            name: { he: "קטר", en: "Qatar" },
             englishName: "Qatar",
-            officialName: "מדינת קטר",
-            FlagComponent: FlagQatar,
-            areaNum: "~11,586 קמ\"ר",
-            populationNum: "~2,700,000",
-            currency: "ריאל קטרי (QAR)",
-            area: "כ-11,586 קמ\"ר. חצי אי קטן הבולט מתוך ערב הסעודית אל תוך המפרץ הפרסי, עם שדות גז טבעי מהגדולים בעולם.",
-            demographics: {
-              mainNationName: "אזרחים קטרים",
-              mainNationPercent: "כ-12%",
-              description: "קטר מציגה את יחס האזרחים-מהגרים הקיצוני בעולם. כמעט 90% מתושבי המדינה הם מהגרים נטולי אזרחות."
+            officialName: { he: "מדינת קטר", en: "State of Qatar" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/qatar.webp",
+            capital: {
+              name: { he: "דוחה", en: "Doha" },
+              englishName: "Doha",
+              etymology: { 
+                he: "מקור השם טמון בסביבה הגיאוגרפית המקומית. הוא נגזר מהמילה הערבית 'א-דווחה' (Ad-Dawha) שמשמעותה 'העץ הגדול' (העץ רחב העלווה המספק צל חיוני לנוודים במדבר החם). עם זאת, הפירוש הגיאוגרפי והרווח יותר קשור לאותו שורש בערבית המתאר צורה מעוגלת, וזאת כהתייחסות ישירה לקו החוף המעוגל דמוי המפרץ הקטן והסגור שעליו הוקמו יישובי הדיג הראשונים של העיר.",
+                en: "The origin of the name lies in the local geographical environment. It is derived from the Arabic word 'Ad-Dawha', meaning 'the big tree' (the broad-leaved tree providing vital shade for nomads in the hot desert). However, the more common geographical interpretation relates to the same Arabic root describing a rounded shape, in direct reference to the rounded coastline resembling the small, enclosed bay upon which the city's first fishing settlements were built."
+              },
+              foundingYear: { he: "שנות ה-20 של המאה ה-19 (הוכרזה רשמית כבירת המדינה ב-1971)", en: "1820s (Officially declared state capital in 1971)" },
+              reason: { 
+                he: "דוחה החלה את דרכה ככפר עני וקטן של דייגים ושולי פנינים בשם 'אל-בידע'. היא הפכה לבירה משום שמשפחת המלוכה, בית אל ת'אני, נטשה את העיר הצפונית זובארה, ביססה בדוחה את מרכז שלטונה הצבאי והמסחרי במהלך המאה ה-19, ומשם איחדה סביבה את שאר שבטי חצי האי. ההכרה הרשמית של האימפריה הבריטית והאימפריה העות'מאנית בשייח'ים של דוחה כשליטיה הלגיטימיים של קטר כולה, קיבעה סופית את מעמדה של העיר כמרכז הפוליטי המוחלט.",
+                en: "Doha began as a poor, small village of fishermen and pearl divers named 'Al-Bida'. It became the capital because the royal family, the House of Al Thani, abandoned the northern city of Zubarah, established their military and commercial center of power in Doha during the 19th century, and from there united the rest of the peninsula's tribes around them. The official recognition by the British and Ottoman Empires of the Sheikhs of Doha as the legitimate rulers of all of Qatar finally cemented the city's status as the absolute political center."
+              }
             },
-            modernHistory: "קיבלה עצמאות ב-1971. בעזרת עתודות הגז העצומות שלה ותחנת הטלוויזיה \"אל-ג'זירה\", הפכה לשחקן גיאופוליטי משמעותי.",
-            foundingYears: "1971 (עצמאות מבריטניה)",
-            flagSymbolism: "הדגל הלאומי היחיד שרוחבו גדול מפי שניים מגובהו. 9 החודים בקו המשונן מסמלים את קטר כ\"האמירות התשיעית\" בהסכם מול בריטניה. צבע הערמון נוצר מדיהוי אדום בשמש.",
+            areaNum: { he: "~11,586 קמ\"ר", en: "~11,586 sq km" },
+            populationNum: "~2,700,000",
+            currency: { he: "ריאל קטרי (QAR)", en: "Qatari Riyal (QAR)" },
+            area: { 
+              he: "כ-11,586 קמ\"ר. קטר היא חצי אי קטן, שטוח וצחיח של אבן גיר, הבולט מתוך ערב הסעודית צפונה אל תוך מימי המפרץ הפרסי הצרים. אין בה כמעט גבהים טופוגרפיים או מקורות מים מתוקים טבעיים, אך מדרום למדינה משתרע פלא טבע בדמות הים הפנימי 'חור אל-עודייד'. עוצמתה האמיתית טמונה בים: לקטר בעלות משותפת עם איראן על שדה 'הכיפה הצפונית' (South Pars) - שדה הגז הטבעי הגדול ביותר על כדור הארץ, המהווה את בסיס כוחה ועושרה הבלתי נתפס.",
+              en: "Approx. 11,586 sq km. Qatar is a small, flat, and arid limestone peninsula jutting north from Saudi Arabia into the narrow waters of the Persian Gulf. It has almost no topographical elevation or natural freshwater sources, but to the south of the country lies a natural wonder in the form of the inland sea 'Khor Al Adaid'. Its true power lies in the sea: Qatar shares ownership with Iran of the 'North Dome' field (South Pars) - the largest natural gas field on Earth, which forms the basis of its inconceivable power and wealth."
+            },
+            demographics: {
+              mainNationName: { he: "אזרחים קטרים", en: "Qatari Citizens" },
+              mainNationPercent: { he: "כ-12% (השאר מהגרי עבודה)", en: "~12% (Remainder are migrant workers)" },
+              description: { 
+                he: "קטר מציגה את יחס האזרחים-מהגרים הקיצוני והחריף ביותר בעולם המודרני. כמעט 90% מתושבי המדינה הם מהגרי עבודה זרים נטולי אזרחות או זכויות פוליטיות (אשר הובאו לבניית תשתיות מפלצתיות, כולל ההכנות למונדיאל 2022). 12% האזרחים המקוריים נהנים מאחת ההכנסות לנפש (תמ\"ג) הגבוהות בעולם, והחברה הקטרית עצמה נטועה עמוק בפרקטיקות דתיות נוקשות של הזרם הסלפי-והאבי (בדומה לסעודיה), אך בפועל מקיימת אורח חיים מערבי, צרכני ומודרני פתוח.",
+                en: "Qatar presents the most extreme and severe citizen-to-migrant ratio in the modern world. Nearly 90% of the country's residents are stateless foreign migrant workers lacking political rights (brought in to build monstrous infrastructure, including preparations for the 2022 World Cup). The 12% original citizens enjoy one of the highest per capita incomes (GDP) in the world, and Qatari society itself is deeply rooted in strict religious practices of the Salafi-Wahhabi stream (similar to Saudi Arabia), but in practice maintains an open, western, consumerist, and modern lifestyle."
+              }
+            },
+            modernHistory: { 
+              he: "עד לאמצע המאה ה-20, קטר הייתה קהילת דייגים ושולי פנינים ענייה תחת חסות עות'מאנית ולאחר מכן בריטית. קטר סירבה להצטרף לאיחוד האמירויות וקיבלה עצמאות מלאה כמדינה בודדת ב-1971. ההפיכה השקטה של השייח' חמד בן ח'ליפה ב-1995 פתחה עידן חדש: בעזרת הפקת עתודות הגז העצומות שלה ותכנון אסטרטגי, קטר השקיעה מיליארדים בהקמת תחנת הטלוויזיה הפאן-ערבית 'אל-ג'זירה', בקניית מועדוני כדורגל (PSG), ובאירוח מונדיאל 2022. מהלכים אלו, לצד מדיניות חוץ מתריסה התומכת בתנועות אסלאמיות וקיום יחסים עם איראן וארה\"ב במקביל, הפכו אותה לשחקן גיאופוליטי משמעותי ושנוי במחלוקת בעולם.",
+              en: "Until the mid-20th century, Qatar was a poor fishing and pearl-diving community under Ottoman and then British protection. Qatar refused to join the UAE and gained full independence as a single state in 1971. The quiet coup by Sheikh Hamad bin Khalifa in 1995 ushered in a new era: leveraging its massive gas reserves and strategic planning, Qatar invested billions in establishing the Pan-Arab television network 'Al Jazeera', buying football clubs (PSG), and hosting the 2022 World Cup. These moves, alongside a defiant foreign policy supporting Islamic movements and maintaining relations with both Iran and the US simultaneously, turned it into a significant and controversial geopolitical player globally."
+            },
+            foundingYears: { he: "1971 (עצמאות מבריטניה)", en: "1971 (Independence from Britain)" },
+            flagSymbolism: { 
+              he: "הדגל הקטרי הוא ייחודי ויוצא דופן: הוא הדגל הלאומי היחיד בעולם שרוחבו גדול מפי שניים מגובהו. קו הזיגזג המפריד בין הצבעים מורכב בדיוק מ-9 חודים, המסמלים את מעמדה של קטר כ'האמירות התשיעית' (אחרי 7 אמירויות ה-UAE ובחריין) שחתמה על הסכמי הפיוס המחודשים מול בריטניה ב-1916. הצבע הייחודי – ערמון עמוק (המכונה 'אל-ענאבי') – נוצר במקור בטעות: תושבי המקום השתמשו בצבע אדום מסורתי שהופק מחילזון ים מקומי מהאי עין ע'נאם, אך השמש הקופחת של המדבר דהתה והשחימה את האדום לגוון הערמון, שהתקבל באהבה ונקבע כצבע הרשמי.",
+              en: "The Qatari flag is unique and extraordinary: it is the only national flag in the world whose width is more than twice its height. The zigzag line separating the colors consists of exactly 9 points, symbolizing Qatar's status as the 'Ninth Emirate' (after the 7 UAE emirates and Bahrain) to sign the renewed reconciliation treaties with Britain in 1916. The unique color – a deep maroon (known as 'Al-Adaam') – was originally created by mistake: locals used a traditional red dye extracted from a local sea snail from Bin Ghannam Island, but the scorching desert sun faded and browned the red into a maroon shade, which was embraced and established as the official color."
+            },
+            nationalAnimal: {
+              name: { he: "ראם ערבי (Arabian Oryx)", en: "Arabian Oryx" },
+              reason: { 
+                he: "הראם, המכונה בערבית 'אל-מהא' (Al Maha), הוא סמלה הלאומי של קטר. הראם, שניצל מהכחדה ומטופח כיום בקפידה ובתקציבי עתק בשמורות מיוחדות במדינה, מסמל אלגנטיות, סיבולת אדירה לשתות כמויות זעירות של מים ולשרוד את להט המדבר, וחיבור למסורת הבדואית הקדומה. דמותו של הראם מהווה סמל מסחרי מוכר של המדינה ואמצעי למיתוג גלובלי, ואף מתנוססת בגאווה כלוגו הראשי של חברת התעופה הלאומית והיוקרתית 'קטר איירווייז'.",
+                en: "The Oryx, known in Arabic as 'Al Maha', is the national symbol of Qatar. The oryx, saved from extinction and now carefully bred with massive budgets in special reserves in the country, symbolizes elegance, tremendous endurance to drink minute amounts of water and survive the desert heat, and connection to ancient Bedouin tradition. The figure of the oryx serves as a recognized trademark of the state and a means for global branding, and even proudly waves as the main logo of the prestigious national airline, 'Qatar Airways'."
+              }
+            },
             etymology: {
               parts: [
-                { text: "רקע קלאסי", color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: "השם מופיע במפות של תלמי (המאה ה-2) כ\"קטרה\" (Catara). משערים שהכוונה הייתה לעיר ההיסטורית זובארה." },
-                { text: "מקור לשוני", color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: "בערבית, קשור לשורש ק-ט-ר שמשמעותו טפטוף או נזילה של מים, ייתכן ועקב בארות מים קדומות." }
+                { text: { he: "רקע קלאסי והיסטורי", en: "Classical & Historical Background" }, color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: { he: "השם מופיע כבר במפות מהעת העתיקה. הגיאוגרף והמלומד הרומי תלמי (המאה ה-2 לספירה) יצר מפה שבה מופיעה התיישבות בשם 'קטרה' (Catara) או 'קטארי'. חוקרים משערים שהכוונה הייתה לעיר ההיסטורית החשובה זובארה שבצפון חצי האי, או לנמל מרכזי אחר.", en: "The name already appears in maps from antiquity. The Roman geographer and scholar Ptolemy (2nd century AD) created a map showing a settlement named 'Catara' or 'Catari'. Scholars speculate that this referred to the important historical city of Zubarah in the north of the peninsula, or another major port." } },
+                { text: { he: "מקור לשוני ערבי", en: "Arabic Linguistic Origin" }, color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: { he: "מבחינה לשונית טהורה בשפה הערבית, השם קשור לשורש ק-ט-ר, שמשמעותו קשורה בנזילה, טפטוף של מים או שרף. ייתכן והמקום נקרא כך עקב בארות מים קדומות שייצרו פלגים קטנים באזור הצחיח, או על שום שרף הקטורת שהיה עובר שם בנתיבי הסחר.", en: "From a purely linguistic perspective in Arabic, the name is related to the root Q-T-R, which means dripping or seeping of water or resin. The place may have been named so due to ancient water wells that created small streams in the arid region, or due to the frankincense resin that passed through there on trade routes." } }
               ],
-              synthesis: "ארץ הנביעות (או ארץ הקטורת הקדומה)."
+              synthesis: { he: "ארץ הנביעות/הטפטופים (או ארץ הקטורת הקדומה).", en: "Land of Seeps/Drips (or the ancient land of Incense)." }
             },
             figure: {
-              name: "אחמד בן עלי אל ת'אני",
+              name: { he: "האמיר אחמד בן עלי אל ת'אני", en: "Emir Ahmad bin Ali Al Thani" },
               years: "1922 - 1977",
-              childhood: "נולד בדוחה, טופח כיורש על ידי אביו. צבר כוח וניסיון רב בניהול ענייני המדינה היומיומיים עוד לפני שהפך רשמית לאמיר.",
-              ideology: "שמרנות פוליטית, צמיחה כלכלית מהירה מבוססת נפט וגז, וחיזוק מעמדה העצמאי של קטר.",
-              achievements: "תחת שלטונו קטר הכריזה עצמאות ב-1971. ניהל את צמיחתה הכלכלית המאסיבית הראשונה."
+              childhood: { 
+                he: "נולד בדוחה, בירת קטר. כבנו של שליט האמירות, הוא טופח ויועד להיות יורש מילדותו. בניגוד למנהיגים אחרים שצמחו מהצבא, הוא צבר את כוחו וניסיונו הרב בניהול ענייני המדינה היומיומיים ובשיפוט שבטי עוד לפני שהפך רשמית לאמיר, תחת עינו הפקוחה של אביו.",
+                en: "Born in Doha, the capital of Qatar. As the son of the Emirate's ruler, he was groomed and destined to be the heir from childhood. Unlike other leaders who rose from the military, he amassed his power and vast experience in managing daily state affairs and tribal adjudication even before officially becoming Emir, under the watchful eye of his father."
+              },
+              ideology: { 
+                he: "אחמד דגל בשמרנות פוליטית אך בקידמה כלכלית אגרסיבית. הוא חלם על צמיחה כלכלית מהירה המבוססת על רווחי עתודות הנפט והגז שזה עתה החלו לזרום, וראה את ייעודו בחיזוק מעמדה העצמאי והריבוני של קטר בזירה הבינלאומית, תוך הימנעות מכניסה לפדרציה של איחוד האמירויות השכנה.",
+                en: "Ahmad advocated political conservatism but aggressive economic progress. He dreamed of rapid economic growth based on the profits of the newly flowing oil and gas reserves, and saw his destiny in strengthening Qatar's independent and sovereign status in the international arena, while avoiding joining the neighboring United Arab Emirates federation."
+              },
+              achievements: { 
+                he: "הוא המנהיג שתחת שלטונו קטר הכריזה והשיגה את עצמאותה הרשמית מבריטניה ב-3 בספטמבר 1971. הוא זה שהטביע את המטבע הקטרי הלאומי הראשון, ניהל את צמיחתה הכלכלית המאסיבית הראשונה של המדינה (הפיכת כפר הדייגים לערים סלולות וחשמל מודרני), והקים את תחנות הרדיו והטלוויזיה הלאומיות הראשונות שסימנו את ראשית דרכה של קטר כמעצמת תקשורת בהתהוות.",
+                en: "He is the leader under whose rule Qatar declared and achieved its official independence from Britain on September 3, 1971. He minted the first national Qatari currency, managed the country's first massive economic growth (transforming the fishing village into paved cities with modern electricity), and established the first national radio and television stations, marking the beginning of Qatar's path as an emerging media powerhouse."
+              }
             },
             map: {
               url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_qatar_bahrain.jpg",
-              title: "מפת המפרץ הפרסי - 1720",
-              desc: "מציגה את קו החוף הקטארי וההתיישבויות העתיקות של \"קטרה\"."
+              title: { he: "מפת המפרץ הפרסי וחצי האי הקטרי - 1720", en: "Map of the Persian Gulf and Qatari Peninsula - 1720" },
+              desc: { 
+                he: "מפה היסטורית המציגה את המפרץ הפרסי ואת קו החוף הייחודי והבולט של חצי האי הקטרי. המפה מציגה את ההתיישבויות העתיקות של 'קטרה', טרם העידן שבו שורטטו גבולות מדויקים במדבר, ומדגישה את הקרבה האסטרטגית לחופי פרס ובחריין.",
+                en: "A historical map showing the Persian Gulf and the unique, prominent coastline of the Qatari peninsula. The map shows the ancient settlements of 'Catara', before the era when precise borders were drawn in the desert, highlighting the strategic proximity to the coasts of Persia and Bahrain."
+              }
             }
           }
         ];
@@ -379,10 +709,10 @@
         // רכיבי התצוגה (UI) 
         // ==========================================
 
-        const CountryCard = ({ country, onModalOpen }) => {
+        const CountryCard = ({ country, onModalOpen, lang, uiStr }) => {
           const { 
-            FlagComponent, name, englishName, officialName, areaNum, populationNum, currency, area, demographics, 
-            modernHistory, foundingYears, etymology, flagSymbolism, figure, map 
+            flagUrl, name, englishName, officialName, capital, areaNum, populationNum, currency, area, demographics, 
+            modernHistory, foundingYears, etymology, flagSymbolism, nationalAnimal, figure, map 
           } = country;
 
           return (
@@ -391,42 +721,59 @@
               <div className="flex flex-col md:flex-row gap-6 p-6 md:p-8 border-b border-gray-800">
                 <div 
                   className="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center bg-gray-950 p-4 rounded-xl cursor-pointer group relative" 
-                  onClick={() => onModalOpen({type: 'flag', component: FlagComponent, title: `דגל ${name}`})}
-                  title="לחץ להגדלת הדגל"
+                  onClick={() => onModalOpen({url: flagUrl, title: `${name[lang]}`})}
+                  title={uiStr.lClickEnlargeFlag}
                 >
-                  <div className="w-full max-h-40 shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105 overflow-hidden flex justify-center items-center">
-                    <div className="w-full h-32 md:h-40 relative">
-                       <FlagComponent />
-                    </div>
+                  <div className="w-full max-h-40 shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105 overflow-hidden flex justify-center items-center bg-black">
+                    <img 
+                      src={flagUrl} 
+                      alt={name[lang]}
+                      className="w-full h-32 md:h-40 object-cover opacity-95 group-hover:opacity-100 transition-opacity"
+                      onError={(e) => {
+                        e.target.onerror = null; 
+                        e.target.src = 'https://placehold.co/300x200/1e293b/a3a8b8?text=Flag+Loading...';
+                      }}
+                    />
                   </div>
                   <div className="absolute opacity-0 group-hover:opacity-100 bg-black/60 text-white text-sm px-3 py-1 rounded transition-opacity duration-300 pointer-events-none mt-32">
-                    לחץ להגדלה
+                    {uiStr.lClickEnlargeFlag}
                   </div>
                 </div>
                 
                 <div className="flex-grow flex flex-col justify-center">
-                  <h2 className="text-3xl font-bold text-white mb-2">{name} <span className="text-gray-500 text-lg ml-2 uppercase tracking-widest">{englishName}</span></h2>
-                  <h3 className="text-xl text-gray-400 mb-4">{officialName}</h3>
+                  <h2 className="text-3xl font-bold text-white mb-2">{name[lang]} <span className="text-gray-500 text-lg ms-2 uppercase tracking-widest">{englishName}</span></h2>
+                  <h3 className="text-xl text-gray-400 mb-4">{officialName[lang]}</h3>
+                  
+                  {/* לוח נתונים עליון - 6 פריטים סימטריים */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                      <span><strong className="text-white">שנת ייסוד:</strong> {foundingYears}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                      <span><strong className="text-white me-1">{uiStr.capital}</strong> {capital.name[lang]}</span>
                     </div>
+
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                      <span className="truncate" title={figure.name}><strong className="text-white">מנהיג:</strong> {figure.name.split('(')[0]}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+                      <span><strong className="text-white me-1">{uiStr.currency}</strong> {currency[lang]}</span>
                     </div>
+
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3h18v18H3zM12 8v8m-4-4h8"></path></svg>
-                      <span><strong className="text-white">שטח:</strong> {areaNum}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                      <span><strong className="text-white me-1">{uiStr.founding}</strong> {foundingYears[lang]}</span>
                     </div>
+
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                      <span><strong className="text-white">אוכלוסייה:</strong> {populationNum}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                      <span><strong className="text-white me-1">{uiStr.population}</strong> {populationNum}</span>
                     </div>
-                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg md:col-span-2">
-                      <svg className="w-5 h-5 ml-2 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
-                      <span><strong className="text-white">שם מטבע:</strong> {currency}</span>
+
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3h18v18H3zM12 8v8m-4-4h8"></path></svg>
+                      <span><strong className="text-white me-1">{uiStr.area}</strong> {areaNum[lang]}</span>
+                    </div>
+
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                      <span className="truncate" title={figure.name[lang]}><strong className="text-white me-1">{uiStr.leader}</strong> {figure.name[lang].split('(')[0]}</span>
                     </div>
                   </div>
                 </div>
@@ -436,82 +783,106 @@
                 
                 <section>
                     <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                        <i className="fa-solid fa-map-location-dot w-6 h-6 ml-2 text-sky-400 text-xl"></i>
-                        <h3 className="text-2xl font-bold text-white">רקע פיזי ואנושי</h3>
+                        <i className="fa-solid fa-map-location-dot w-6 h-6 me-2 text-sky-400 text-xl"></i>
+                        <h3 className="text-2xl font-bold text-white">{uiStr.sectionPhysical}</h3>
                     </div>
-                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 space-y-4">
-                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">שטח וטופוגרפיה:</strong> {area}</p>
-                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">דמוגרפיה ({demographics.mainNationName} - {demographics.mainNationPercent}):</strong> {demographics.description}</p>
-                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">היסטוריה מודרנית:</strong> {modernHistory}</p>
+                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 space-y-4 text-start">
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white me-1">{uiStr.lAreaTopo}</strong> {area[lang]}</p>
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white me-1">{uiStr.lDemographics} ({demographics.mainNationName[lang]} - {demographics.mainNationPercent[lang]}):</strong> {demographics.description[lang]}</p>
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white me-1">{uiStr.lModernHistory}</strong> {modernHistory[lang]}</p>
                     </div>
                 </section>
 
                 <section>
                     <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                        <svg className="w-6 h-6 ml-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
-                        <h3 className="text-2xl font-bold text-white">וקסלולוגיה</h3>
+                        <svg className="w-6 h-6 me-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                        <h3 className="text-2xl font-bold text-white">{uiStr.sectionEtymology}</h3>
                     </div>
-                    <p className="text-gray-300 leading-relaxed text-lg">{flagSymbolism}</p>
-                </section>
-                
-                <section>
-                    <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                        <svg className="w-6 h-6 ml-2 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                        <h3 className="text-2xl font-bold text-white">אטימולוגיה</h3>
-                    </div>
-                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800">
+                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 text-start">
                         <ul className="space-y-4">
                             {etymology.parts.map((part, index) => (
                                 <li key={index} className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4">
-                                    <span className={`font-bold min-w-[140px] md:text-lg flex-shrink-0 ${part.color} ${part.bg} border ${part.border} px-2 py-1 rounded-md`}>• {part.text}:</span>
-                                    <span className="text-gray-300 leading-relaxed text-lg">{part.desc}</span>
+                                    <span className={`font-bold min-w-[140px] md:text-lg flex-shrink-0 ${part.color} ${part.bg} border ${part.border} px-2 py-1 rounded-md`}>• {part.text[lang]}:</span>
+                                    <span className="text-gray-300 leading-relaxed text-lg">{part.desc[lang]}</span>
                                 </li>
                             ))}
                             <li className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4 mt-2 pt-4 border-t border-gray-800/50">
-                                <span className="font-bold text-amber-400 min-w-[140px] md:text-lg flex-shrink-0"><i className="fa-solid fa-quote-right ml-1"></i> משמעות השם:</span>
-                                <span className="text-gray-200 font-bold leading-relaxed text-lg">{etymology.synthesis}</span>
+                                <span className="font-bold text-amber-400 min-w-[140px] md:text-lg flex-shrink-0">
+                                  <i className="fa-solid fa-quote-right me-1"></i> {uiStr.lNameMeaning}
+                                </span>
+                                <span className="text-gray-200 font-bold leading-relaxed text-lg">{etymology.synthesis[lang]}</span>
+                            </li>
+                            
+                            <li className="flex flex-col md:flex-row md:items-start gap-2 md:gap-4 mt-6 pt-5 border-t border-gray-700/80">
+                                <span className="font-bold text-purple-400 min-w-[140px] md:text-lg flex-shrink-0 mt-1">
+                                    <i className="fa-solid fa-landmark-dome me-1"></i> {uiStr.lCapitalName}
+                                </span>
+                                <div className="space-y-3 w-full">
+                                    <strong className="text-white text-xl block border-b border-gray-800 pb-2">
+                                      {capital.name[lang]} <span className="text-gray-500 text-sm font-normal uppercase tracking-widest ms-1">({capital.englishName})</span>
+                                    </strong>
+                                    <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white font-medium me-1">{uiStr.lCapitalEty}</strong> {capital.etymology[lang]}</p>
+                                    <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white font-medium me-1">{uiStr.lCapitalFounding}</strong> {capital.foundingYear[lang]}</p>
+                                    <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white font-medium me-1">{uiStr.lCapitalReason}</strong> {capital.reason[lang]}</p>
+                                </div>
                             </li>
                         </ul>
                     </div>
                 </section>
 
-                <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gray-800/20 p-6 rounded-xl border border-gray-800/50">
+                <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 text-start">
                     <div>
-                        <div className="flex items-center mb-4 border-b border-gray-700 pb-2">
-                            <svg className="w-6 h-6 ml-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                            <h3 className="text-2xl font-bold text-white">פרופיל מנהיג מכונן</h3>
+                        <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg className="w-6 h-6 me-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                            <h3 className="text-2xl font-bold text-white">{uiStr.sectionSymbols}</h3>
                         </div>
-                        <h4 className="text-xl text-rose-300 font-bold mb-3">{figure.name} <span className="text-base text-gray-400">({figure.years})</span></h4>
-                        <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
-                            <div><strong className="text-white block mb-1">ילדות ורקע:</strong> {figure.childhood}</div>
-                            <div><strong className="text-white block mb-1">אידאולוגיה:</strong> {figure.ideology}</div>
-                            <div><strong className="text-white block mb-1">הישגים מרכזיים:</strong> {figure.achievements}</div>
+                        <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 h-full">
+                            <h4 className="text-lg font-bold text-white mb-2"><i className="fa-solid fa-flag text-green-400 me-2"></i> {uiStr.lFlagMeaning}</h4>
+                            <p className="text-gray-300 leading-relaxed text-lg mb-6 pb-6 border-b border-gray-800/70">{flagSymbolism[lang]}</p>
+                            
+                            <h4 className="text-lg font-bold text-white mb-2"><i className="fa-solid fa-paw text-orange-400 me-2"></i> {uiStr.lNationalAnimal} {nationalAnimal.name[lang]}</h4>
+                            <p className="text-gray-300 leading-relaxed text-lg">{nationalAnimal.reason[lang]}</p>
                         </div>
                     </div>
 
                     <div>
-                        <div className="flex items-center mb-4 border-b border-gray-700 pb-2">
-                            <svg className="w-6 h-6 ml-2 text-cyan-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"></path><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
-                            <h3 className="text-2xl font-bold text-white">קרטוגרפיה היסטורית</h3>
+                        <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg className="w-6 h-6 me-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                            <h3 className="text-2xl font-bold text-white">{uiStr.sectionLeader}</h3>
                         </div>
-                        <div className="flex flex-col cursor-pointer group rounded-xl overflow-hidden border border-gray-700 bg-gray-800/30 hover:border-gray-500 transition-all duration-300 shadow-lg" onClick={() => onModalOpen({type: 'image', url: map.url, title: map.title})}>
-                            <div className="relative h-48 md:h-56 w-full overflow-hidden bg-black">
-                                <img 
-                                  src={map.url} 
-                                  alt={map.title} 
-                                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                  onError={(e) => {
-                                    e.target.onerror = null; 
-                                    e.target.src = 'https://placehold.co/800x400/1e293b/a3a8b8?text=Historical+Map';
-                                  }}
-                                />
-                                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300"></div>
+                        <div className="bg-gray-800/20 rounded-xl p-5 border border-gray-800/50 h-full">
+                            <h4 className="text-xl text-rose-300 font-bold mb-3">{figure.name[lang]} <span className="text-base text-gray-400">({figure.years})</span></h4>
+                            <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
+                                <div><strong className="text-white block mb-1">{uiStr.lChildhood}</strong> {figure.childhood[lang]}</div>
+                                <div><strong className="text-white block mb-1">{uiStr.lIdeology}</strong> {figure.ideology[lang]}</div>
+                                <div><strong className="text-white block mb-1">{uiStr.lAchievements}</strong> {figure.achievements[lang]}</div>
                             </div>
-                            <div className="p-4 text-center border-t border-gray-700/50">
-                                <strong className="text-cyan-300 block mb-2 text-base">{map.title}</strong>
-                                <span className="text-gray-300 text-sm leading-relaxed block">{map.desc}</span>
-                                <span className="inline-block mt-3 text-gray-400 text-xs font-medium bg-gray-900/80 px-3 py-1.5 rounded-full border border-gray-700 transition-colors group-hover:text-cyan-300 group-hover:border-cyan-800/50">(לחץ להגדלת המפה)</span>
-                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                        <svg className="w-6 h-6 me-2 text-cyan-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"></path><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                        <h3 className="text-2xl font-bold text-white">{uiStr.sectionCartography}</h3>
+                    </div>
+                    <div className="flex flex-col cursor-pointer group rounded-xl overflow-hidden border border-gray-700 bg-gray-800/30 hover:border-gray-500 transition-all duration-300 shadow-lg" onClick={() => onModalOpen({url: map.url, title: map.title[lang]})}>
+                        <div className="relative h-64 md:h-80 w-full overflow-hidden bg-black">
+                            <img 
+                              src={map.url} 
+                              alt={map.title[lang]} 
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                              onError={(e) => {
+                                e.target.onerror = null; 
+                                e.target.src = 'https://placehold.co/800x400/1e293b/a3a8b8?text=Historical+Map';
+                              }}
+                            />
+                            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300"></div>
+                        </div>
+                        <div className="p-4 text-center border-t border-gray-700/50">
+                            <strong className="text-cyan-300 block mb-2 text-lg">{map.title[lang]}</strong>
+                            <span className="text-gray-300 text-base leading-relaxed block">{map.desc[lang]}</span>
+                            <span className="inline-block mt-3 text-gray-400 text-sm font-medium bg-gray-900/80 px-4 py-1.5 rounded-full border border-gray-700 transition-colors group-hover:text-cyan-300 group-hover:border-cyan-800/50">{uiStr.lClickEnlargeMap}</span>
                         </div>
                     </div>
                 </section>
@@ -533,7 +904,7 @@
                 <button 
                   onClick={onClose}
                   className="absolute -top-14 right-0 md:-right-14 text-gray-400 hover:text-white bg-gray-800/80 hover:bg-gray-700 rounded-full p-2 transition-colors z-50"
-                  aria-label="סגור חלון"
+                  aria-label="Close"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -541,47 +912,60 @@
                   </svg>
                 </button>
                 
-                {content.type === 'flag' ? (
-                  <div className="w-full max-w-4xl aspect-[3/2] bg-black shadow-2xl rounded-lg overflow-hidden border border-gray-700" onClick={e => e.stopPropagation()}>
-                    <content.component />
-                  </div>
-                ) : (
-                  <img 
-                    src={content.url} 
-                    alt={content.title} 
-                    className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-gray-700" 
-                    onClick={e => e.stopPropagation()}
-                    onError={(e) => {
-                      e.target.onerror = null; 
-                      e.target.src = 'https://placehold.co/800x400/1e293b/a3a8b8?text=Historical+Map';
-                    }}
-                  />
-                )}
+                <img 
+                  src={content.url} 
+                  alt={content.title} 
+                  className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-gray-700" 
+                  onClick={e => e.stopPropagation()}
+                  onError={(e) => {
+                    e.target.onerror = null; 
+                    e.target.src = 'https://placehold.co/800x400/1e293b/a3a8b8?text=Image+Not+Found';
+                  }}
+                />
               </div>
             </div>
           );
         };
 
         function App() {
+          const [lang, setLang] = useState('he');
           const [modalContent, setModalContent] = useState(null);
 
-          // סגירת החלון במקש אסקייפ
+          const uiStr = ui[lang];
+
+          // ניהול כיוון המסמך לפי שפה
           React.useEffect(() => {
-            const handleEsc = (e) => { if (e.key === 'Escape') setModalContent(null); };
+            document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+            document.documentElement.lang = lang;
+          }, [lang]);
+
+          React.useEffect(() => {
+            const handleEsc = (e) => { if (e.key === "Escape") setModalContent(null); };
             window.addEventListener('keydown', handleEsc);
             return () => window.removeEventListener('keydown', handleEsc);
           }, []);
 
-          // מניעת גלילה כאשר המודל פתוח
           React.useEffect(() => {
             document.body.style.overflow = modalContent ? 'hidden' : '';
           }, [modalContent]);
 
           return (
-            <div className="max-w-5xl mx-auto pt-4 md:pt-8">
-              <header className="mb-10 text-center">
-                  <h1 className="text-3xl md:text-5xl font-bold text-white mb-3">דגלי חצי האי ערב</h1>
-                  <p className="text-gray-400 text-lg">מחקר וקסלולוגי, אטימולוגי, היסטורי וקרטוגרפי</p>
+            <div className="max-w-5xl mx-auto pt-4 md:pt-8 relative">
+              
+              {/* כפתור החלפת שפה */}
+              <div className="absolute top-0 right-4 md:right-8">
+                <button 
+                  onClick={() => setLang(lang === 'he' ? 'en' : 'he')}
+                  className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-full border border-gray-600 transition-colors shadow-lg font-medium text-sm"
+                >
+                  <i className="fa-solid fa-globe text-blue-400"></i>
+                  {uiStr.langBtn}
+                </button>
+              </div>
+
+              <header className="mb-10 text-center mt-12 md:mt-0">
+                  <h1 className="text-3xl md:text-5xl font-bold text-white mb-3">{uiStr.mainTitle}</h1>
+                  <p className="text-gray-400 text-lg">{uiStr.subTitle}</p>
               </header>
 
               <div className="space-y-12">
@@ -590,6 +974,8 @@
                     key={country.id} 
                     country={country} 
                     onModalOpen={setModalContent} 
+                    lang={lang}
+                    uiStr={uiStr}
                   />
                 ))}
               </div>
@@ -597,15 +983,15 @@
               <footer className="mt-12 mb-8 pt-8 border-t border-gray-800 text-center text-gray-500 w-full max-w-6xl mx-auto px-4">
                   <div className="flex justify-center items-center gap-2 mb-4">
                       <svg className="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                      <h4 className="font-bold text-gray-400 text-lg">פרטי המחקר והפרויקט</h4>
+                      <h4 className="font-bold text-gray-400 text-lg">{uiStr.footerTitle}</h4>
                   </div>
-                  <div className="inline-block text-right bg-gray-900/50 p-6 rounded-xl border border-gray-800 w-full max-w-2xl">
+                  <div className="inline-block text-start bg-gray-900/50 p-6 rounded-xl border border-gray-800 w-full max-w-2xl">
                       <p className="text-gray-300 leading-loose">
-                          <strong className="text-white ml-2">שם ההוגה:</strong> רם<br />
-                          <strong className="text-white ml-2">שם הבונה/היצרן:</strong> ג'מיני (Gemini 3.1 Pro)<br />
-                          <strong className="text-white ml-2">סיבת ההמצאה/הבנייה:</strong> המרת מחקר חצי האי ערב למבנה React וקטורי מדויק ונקי מניווט.<br />
-                          <strong className="text-white ml-2">שנת הבנייה/היצירה:</strong> 2026<br />
-                          <strong className="text-white ml-2">מקורות וקרדיט:</strong> אטימולוגיה מהספרות ההיסטורית. סמלי SVG וקטוריים פנימיים. מפות היסטוריות מ-GitHub.
+                          <strong className="text-white me-2">{uiStr.fConcept}</strong> {uiStr.fConceptVal}<br />
+                          <strong className="text-white me-2">{uiStr.fBuilder}</strong> {uiStr.fBuilderVal}<br />
+                          <strong className="text-white me-2">{uiStr.fReason}</strong> {uiStr.fReasonVal}<br />
+                          <strong className="text-white me-2">{uiStr.fYear}</strong> {uiStr.fYearVal}<br />
+                          <strong className="text-white me-2">{uiStr.fCredits}</strong> {uiStr.fCreditsVal}
                       </p>
                   </div>
               </footer>
