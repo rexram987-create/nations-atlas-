@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Stan Project | המזרח התיכון</title>
     
+    <!-- טעינת ספריות העיצוב -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -19,419 +20,686 @@
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- טעינת React ו-Babel -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body class="min-h-screen bg-gray-950 text-gray-200 p-4 md:p-8 font-sans antialiased selection:bg-blue-500/30">
+    
     <div id="root"></div>
+
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useEffect } = React;
 
         // ==========================================
-        // רכיבי ה-SVG של הדגלים (בנייה וקטורית פנימית)
+        // מילון ממשק משתמש (UI Dictionary)
         // ==========================================
-
-        const FlagIsrael = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="200" fill="#FFFFFF" />
-            <rect y="20" width="300" height="30" fill="#0038B8" />
-            <rect y="150" width="300" height="30" fill="#0038B8" />
-            <g transform="translate(150, 100) scale(1.5)" stroke="#0038B8" strokeWidth="4" fill="none">
-              <polygon points="0,-25 21.65,12.5 -21.65,12.5" />
-              <polygon points="0,25 21.65,-12.5 -21.65,-12.5" />
-            </g>
-          </svg>
-        );
-
-        const FlagEgypt = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="66.6" fill="#CE1126" />
-            <rect y="66.6" width="300" height="66.6" fill="#FFFFFF" />
-            <rect y="133.2" width="300" height="66.6" fill="#000000" />
-            <g transform="translate(150, 100) scale(0.6)" fill="#C09300">
-              <path d="M-15,-10 L15,-10 L20,10 L0,25 L-20,10 Z" />
-              <circle cx="0" cy="-15" r="5" />
-            </g>
-          </svg>
-        );
-
-        const FlagJordan = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="66.6" fill="#000000" />
-            <rect y="66.6" width="300" height="66.6" fill="#FFFFFF" />
-            <rect y="133.2" width="300" height="66.6" fill="#007A3D" />
-            <polygon points="0,0 150,100 0,200" fill="#CE1126" />
-            <g transform="translate(50, 100) scale(0.8)" fill="#FFFFFF">
-              <polygon points="0,-15 3.5,-4.5 14.2,-6.4 7.5,1.5 11.7,11.8 3,-1 0,15 -3,-1 -11.7,11.8 -7.5,1.5 -14.2,-6.4 -3.5,-4.5" />
-            </g>
-          </svg>
-        );
-
-        const FlagLebanon = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="50" fill="#ED1C24" />
-            <rect y="50" width="300" height="100" fill="#FFFFFF" />
-            <rect y="150" width="300" height="50" fill="#ED1C24" />
-            <g transform="translate(150, 100)" fill="#00A651">
-              <polygon points="0,-40 25,10 5,10 30,40 -30,40 -5,10 -25,10" />
-              <rect x="-5" y="40" width="10" height="10" fill="#00A651" />
-            </g>
-          </svg>
-        );
-
-        const FlagSyria = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="66.6" fill="#CE1126" />
-            <rect y="66.6" width="300" height="66.6" fill="#FFFFFF" />
-            <rect y="133.2" width="300" height="66.6" fill="#000000" />
-            <g transform="translate(100, 100) scale(0.8)" fill="#007A3D">
-              <polygon points="0,-15 4,-4 15,-4 6,3 9,14 0,7 -9,14 -6,3 -15,-4 -4,-4" />
-            </g>
-            <g transform="translate(200, 100) scale(0.8)" fill="#007A3D">
-              <polygon points="0,-15 4,-4 15,-4 6,3 9,14 0,7 -9,14 -6,3 -15,-4 -4,-4" />
-            </g>
-          </svg>
-        );
-
-        const FlagIraq = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="66.6" fill="#CE1126" />
-            <rect y="66.6" width="300" height="66.6" fill="#FFFFFF" />
-            <rect y="133.2" width="300" height="66.6" fill="#000000" />
-            <text x="150" y="115" fontSize="24" fontFamily="serif" textAnchor="middle" fill="#007A3D" fontWeight="bold">الله أكبر</text>
-          </svg>
-        );
-
-        const FlagIran = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="66.6" fill="#239F40" />
-            <rect y="66.6" width="300" height="66.6" fill="#FFFFFF" />
-            <rect y="133.2" width="300" height="66.6" fill="#DA0000" />
-            <g transform="translate(150, 100) scale(0.8)" fill="#DA0000">
-              <path d="M-10,-15 C-5,-5 -15,10 0,15 C15,10 5,-5 10,-15 C15,0 20,20 0,25 C-20,20 -15,0 -10,-15 Z" />
-              <path d="M-2,-20 L2,-20 L2,-10 L-2,-10 Z" />
-            </g>
-          </svg>
-        );
-
-        const FlagTurkey = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="200" fill="#E30A17" />
-            <g transform="translate(120, 100) scale(1.2)">
-              <path d="M0,-30 A30,30 0 1,0 0,30 A24,24 0 1,1 0,-30 Z" fill="#FFFFFF" />
-              <polygon points="25,-10 28,-3 36,-3 30,2 33,9 25,5 17,9 20,2 14,-3 22,-3" fill="#FFFFFF" />
-            </g>
-          </svg>
-        );
+        const ui = {
+          he: {
+            mainTitle: "דגלי המזרח התיכון",
+            subTitle: "מחקר וקסלולוגי, אטימולוגי, היסטורי וקרטוגרפי",
+            langBtn: "English",
+            capital: "עיר בירה:",
+            currency: "מטבע לאומי:",
+            founding: "שנת ייסוד:",
+            population: "אוכלוסייה:",
+            area: "שטח:",
+            leader: "מנהיג:",
+            sectionPhysical: "רקע פיזי ואנושי",
+            lAreaTopo: "שטח וטופוגרפיה:",
+            lDemographics: "דמוגרפיה",
+            lModernHistory: "היסטוריה מודרנית:",
+            sectionEtymology: "אטימולוגיה ושמות",
+            lNameMeaning: "משמעות השם:",
+            lCapitalName: "עיר הבירה:",
+            lCapitalEty: "אטימולוגיה:",
+            lCapitalFounding: "שנת ייסוד הבירה:",
+            lCapitalReason: "הסיבה לבחירתה:",
+            sectionSymbols: "סמלים וזהות לאומית",
+            lFlagMeaning: "משמעות צבעי הדגל:",
+            lNationalAnimal: "החיה הלאומית:",
+            sectionLeader: "פרופיל מנהיג מכונן",
+            lChildhood: "ילדות ורקע:",
+            lIdeology: "אידאולוגיה:",
+            lAchievements: "הישגים מרכזיים:",
+            sectionCartography: "קרטוגרפיה היסטורית",
+            lClickEnlargeMap: "(לחץ להגדלת המפה)",
+            lClickEnlargeFlag: "לחץ להגדלה",
+            footerTitle: "פרטי המחקר והפרויקט",
+            fConcept: "שם ההוגה:",
+            fBuilder: "שם הבונה/היצרן:",
+            fReason: "סיבת ההמצאה/הבנייה:",
+            fYear: "שנת הבנייה/היצירה:",
+            fCredits: "מקורות וקרדיט:",
+            fConceptVal: "רם",
+            fBuilderVal: "ג'מיני (Gemini 3.1 Pro)",
+            fReasonVal: "המרת מחקר המזרח התיכון למבנה React וקטורי מדויק בשילוב מפות היסטוריות ייעודיות ותרגום דו-לשוני מלא (עברית/אנגלית).",
+            fYearVal: "2026",
+            fCreditsVal: "אטימולוגיה מהספרות. מפות גיאוגרפיות קרטוגרפיות ייחודיות פרי יצירת AI. קובצי דגלים באדיבות Flagpedia.net."
+          },
+          en: {
+            mainTitle: "Flags of the Middle East",
+            subTitle: "Vexillological, Etymological, Historical, and Cartographic Research",
+            langBtn: "עברית",
+            capital: "Capital City:",
+            currency: "Currency:",
+            founding: "Founded:",
+            population: "Population:",
+            area: "Area:",
+            leader: "Leader:",
+            sectionPhysical: "Physical and Human Background",
+            lAreaTopo: "Area & Topography:",
+            lDemographics: "Demographics",
+            lModernHistory: "Modern History:",
+            sectionEtymology: "Etymology and Names",
+            lNameMeaning: "Name Meaning:",
+            lCapitalName: "Capital City:",
+            lCapitalEty: "Etymology:",
+            lCapitalFounding: "Founding Year:",
+            lCapitalReason: "Reason for Selection:",
+            sectionSymbols: "Symbols & National Identity",
+            lFlagMeaning: "Flag Symbolism:",
+            lNationalAnimal: "National Animal:",
+            sectionLeader: "Founding Leader Profile",
+            lChildhood: "Childhood & Background:",
+            lIdeology: "Ideology:",
+            lAchievements: "Major Achievements:",
+            sectionCartography: "Historical Cartography",
+            lClickEnlargeMap: "(Click to enlarge map)",
+            lClickEnlargeFlag: "Click to enlarge",
+            footerTitle: "Research and Project Details",
+            fConcept: "Concept by:",
+            fBuilder: "Builder/Generator:",
+            fReason: "Reason for Creation:",
+            fYear: "Year of Creation:",
+            fCredits: "Sources & Credits:",
+            fConceptVal: "Ram",
+            fBuilderVal: "Gemini (Gemini 3.1 Pro)",
+            fReasonVal: "Conversion of the Middle East research into a precise React structure with historical maps and full bilingual translation (Heb/Eng).",
+            fYearVal: "2026",
+            fCreditsVal: "Etymology from literature. Unique AI-generated historical cartographic maps. Flag files courtesy of Flagpedia.net."
+          }
+        };
 
         // ==========================================
-        // מאגר הנתונים המלא והמורחב - המזרח התיכון (עם מפות מקומיות מגיטהאב)
+        // מאגר הנתונים המלא והמורחב (דו-לשוני) - המזרח התיכון
         // ==========================================
 
         const countriesData = [
           {
-            id: "israel",
-            name: "ישראל",
-            englishName: "Israel",
-            officialName: "מדינת ישראל",
-            FlagComponent: FlagIsrael,
-            areaNum: "~22,072 קמ\"ר",
-            populationNum: "~9,800,000",
-            currency: "שקל חדש (ILS)",
-            area: "כ-22,072 קמ\"ר (גבולות הקו הירוק ורמת הגולן). גיאוגרפיה מגוונת להפליא הכוללת את מדבר הנגב בדרום, רכסי הרים במרכז ובצפון, מישור חוף ארוך, ואת הבקע הסורי-אפריקני (ים המלח).",
-            demographics: {
-              mainNationName: "יהודים",
-              mainNationPercent: "כ-73%",
-              description: "מדינת הלאום היחידה של העם היהודי. אוכלוסייתה מורכבת מקיבוץ גלויות נרחב (אשכנזים, ספרדים, מזרחים, עולי אתיופיה ורוסיה). המיעוט הגדול ביותר הוא המיעוט הערבי (כ-21%), הכולל מוסלמים סונים, נוצרים ודרוזים."
-            },
-            modernHistory: "הוקמה ב-14 במאי 1948 בעקבות החלטת החלוקה של האו\"ם (החלטה 181) וסיום המנדט הבריטי. מאז הקמתה חוותה ישראל רצף של מלחמות הישרדות מול שכנותיה הערביות (מלחמת העצמאות, ששת הימים, יום הכיפורים ועוד), אך במקביל הגיעה להישגים כבירים בטכנולוגיה, מדע, כלכלה וחקלאות, וחתמה על הסכמי שלום היסטוריים עם מצרים, ירדן ומדינות המפרץ.",
-            foundingYears: "1948 (הכרזת העצמאות)",
-            flagSymbolism: "הדגל עוצב לקראת הקונגרס הציוני הראשון (1897). שני פסי התכלת מסמלים את הטלית (בגד התפילה היהודי) ומייצגים את שמירת המסורת והאמונה. מגן דוד במרכז הוא סמל יהודי עתיק המייצג גבורה וקשר היסטורי עמוק לארץ.",
-            etymology: {
-              parts: [
-                { text: "ישׂר", color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: "נגזר מהשורש ש-ר-ה (לשרוֹת, להיאבק, או לשלוט). מתייחס למאבקו של יעקב אבינו במלאך, כפי שמתואר בספר בראשית." },
-                { text: "אֵל", color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: "שם האלוהות. הסיומת הנפוצה בתנ\"ך המציינת שייכות לכוח עליון או קרבה אלוהית." }
-              ],
-              synthesis: "המשמעות המקראית המלאה היא \"כי שרית עם אלוהים ועם אנשים ותוכל\" - האומה שנאבקה ושרדה מול האל והאדם."
-            },
-            figure: {
-              name: "דוד בן-גוריון",
-              years: "1886 - 1973",
-              childhood: "נולד בשם דוד גרין בעיירה פלונסק שבפולין (אז באימפריה הרוסית). ספג בילדותו חינוך יהודי-ציוני חזק מאביו, ייסד אגודת נוער ציונית כבר בגיל 14, ועלה לארץ ישראל ב-1906 כחלק מהעלייה השנייה, שם עבד כפועל חקלאי ועיצב את עולמו.",
-              ideology: "הוגה \"הממלכתיות\" – פילוסופיה שדרשה את הכפפת כל האינטרסים הסקטוריאליים, המפלגתיים והמעמדיים למרותה של מדינה ריבונית אחת. דגל בציונות סוציאליסטית-מעשית, בהתיישבות, הפרחת הנגב, ובבניין כוח צבאי עצמאי וחזק (צה\"ל).",
-              achievements: "מייסד מדינת ישראל ואדריכל הקמתה. הכריז על הקמת המדינה בה' באייר תש\"ח, ניווט אותה כראש ממשלה ושר ביטחון במהלך מלחמת העצמאות הקיומית, הקים את צה\"ל ופיזר את המחתרות, והוביל את המדינה הצעירה לקליטת מיליוני עולים בעשור הראשון לקיומה."
-            },
-            map: {
-              url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_levant_syria_lebanon.jpg",
-              title: "מפת ארץ הקודש והלבנט",
-              desc: "מפה המציגה את המרחב הגיאוגרפי של הלבנט וארץ ישראל, נתיב היסטורי שחיבר בין אימפריות מצרים ומסופוטמיה."
-            }
-          },
-          {
             id: "egypt",
-            name: "מצרים",
+            name: { he: "מצרים", en: "Egypt" },
             englishName: "Egypt",
-            officialName: "רפובליקת מצרים הערבית",
-            FlagComponent: FlagEgypt,
-            areaNum: "~1,010,408 קמ\"ר",
-            populationNum: "~112,000,000",
-            currency: "לירה מצרית (EGP)",
-            area: "כ-1,010,408 קמ\"ר. שוכנת בפינה הצפון-מזרחית של אפריקה וכוללת גם את חצי האי סיני (השייך גיאוגרפית לאסיה). רובה הגדול מדבר צחיח לחלוטין, והחיים מרוכזים כמעט בלעדית לאורך עמק נהר הנילוס הפורה והדלתא שלו.",
-            demographics: {
-              mainNationName: "ערבים מצרים",
-              mainNationPercent: "כ-90%",
-              description: "המדינה המאוכלסת ביותר בעולם הערבי. רוב עצום של מוסלמים סונים. קיים מיעוט נוצרי קופטי גדול ומשמעותי (מוערך בכ-10%), המהווה קהילה עתיקה בעלת תרבות ושפה ליטורגית ייחודית הקודמת לכיבוש הערבי."
+            officialName: { he: "רפובליקת מצרים הערבית", en: "Arab Republic of Egypt" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/egypt.webp",
+            capital: {
+              name: { he: "קהיר", en: "Cairo" },
+              englishName: "Cairo",
+              etymology: { 
+                he: "מקור השם מהמילה הערבית 'אל-קאהירה' (Al-Qahira), שפירושה 'המנצחת' או 'המדכאת' (את אויביה). האגדה מספרת שכאשר הונחו יסודות העיר, הופיע בשמיים כוכב הלכת מאדים (המוכר באסטרולוגיה הערבית כ'אל-קאהר'), ולכן ניתן לה שם זה. שם היסטורי נוסף הוא 'אום א-דוניא' (אם העולם).",
+                en: "The name originates from the Arabic word 'Al-Qahira', meaning 'The Victorious' or 'The Subduer' (of its enemies). Legend has it that when the city's foundations were laid, the planet Mars (known in Arabic astrology as 'Al-Qahir') appeared in the sky, thus lending it this name. Another historical moniker is 'Umm ad-Dunya' (Mother of the World)."
+              },
+              foundingYear: { he: "969 לספירה (על ידי השושלת הפאטמית)", en: "969 AD (by the Fatimid dynasty)" },
+              reason: { 
+                he: "לאחר שהשושלת הפאטמית כבשה את מצרים, הם רצו להקים עיר בירה חדשה, מפוארת ומוגנת שתשמש כמתחם מלכותי אקסקלוסיבי מצפון לבירה הישנה, פוסטאט. קהיר נבנתה במפגש האסטרטגי של נהר הנילוס במקום שבו הוא מתפצל לדלתא, מה שהבטיח לה שליטה אבסולוטית על התנועה הימית והכלכלה של מצרים, והפך אותה למרכז העולם האסלאמי.",
+                en: "After the Fatimid dynasty conquered Egypt, they wanted to build a new, magnificent, and protected capital to serve as an exclusive royal enclosure north of the old capital, Fustat. Cairo was built at the strategic junction of the Nile River where it branches into the Delta, ensuring absolute control over Egypt's maritime traffic and economy, making it the center of the Islamic world."
+              }
             },
-            modernHistory: "לאחר שנים של מונרכיה תחת השפעה והתערבות בריטית כבדה, עברה מצרים מהפכה דרמטית ב-1952 (\"מהפכת הקצינים החופשיים\"). בהמשך, גמאל עבד אל-נאצר הפך אותה למנהיגת העולם הערבי. ב-1979 הייתה מצרים למדינה הערבית הראשונה שחתמה על הסכם שלום היסטורי ופורץ דרך עם ישראל.",
-            foundingYears: "1922 (עצמאות פורמלית) | 1952 (רפובליקה)",
-            flagSymbolism: "דגל הלאומיות הערבית המודרנית. האדום מסמל את המאבק, הדם והתקווה טרם המהפכה; הלבן מסמל עתיד בהיר ושלום (ללא שפיכות דמים במהפכת הקצינים); השחור מייצג את העבר החשוך של דיכוי קולוניאליסטי וזר. במרכז מתנוסס \"עיט צלאח א-דין\" המוזהב, סמל עוצמה ריבונית.",
+            areaNum: { he: "~1,010,408 קמ\"ר", en: "~1,010,408 sq km" },
+            populationNum: "~112,000,000",
+            currency: { he: "לירה מצרית (EGP)", en: "Egyptian Pound (EGP)" },
+            area: { 
+              he: "כ-1,010,408 קמ\"ר. מצרים שוכנת בפינה הצפון-מזרחית של אפריקה וכוללת גם את חצי האי סיני (השייך גיאוגרפית לאסיה, מה שהופך אותה למדינה טרנס-יבשתית). כ-95% משטחה הוא מדבר צחיח לחלוטין (מדבר סהרה). החיים והאוכלוסייה מרוכזים כמעט בלעדית ברצועה ירוקה וצרה לאורך עמק נהר הנילוס הפורה ואזור הדלתא שלו.",
+              en: "Approx. 1,010,408 sq km. Egypt is located in the northeastern corner of Africa and includes the Sinai Peninsula (geographically part of Asia, making it a transcontinental country). About 95% of its territory is completely arid desert (the Sahara). Life and the population are concentrated almost exclusively in a narrow green strip along the fertile Nile River Valley and its Delta."
+            },
+            demographics: {
+              mainNationName: { he: "ערבים מצרים", en: "Egyptian Arabs" },
+              mainNationPercent: { he: "כ-90%", en: "~90%" },
+              description: { 
+                he: "מצרים היא המדינה המאוכלסת ביותר בעולם הערבי והשלישית באפריקה. רוב עצום מורכב ממוסלמים סונים המזהים עצמם כערבים-מצרים. עם זאת, קיים במדינה מיעוט נוצרי קופטי גדול ומשמעותי מאוד (מוערך בכ-10%), המהווה קהילה עתיקה בעלת תרבות ושפה ליטורגית ייחודית הקודמת לכיבוש הערבי של מצרים במאה ה-7.",
+                en: "Egypt is the most populous country in the Arab world and the third in Africa. The vast majority are Sunni Muslims who identify as Egyptian-Arabs. However, there is a large and highly significant Coptic Christian minority (estimated at ~10%), an ancient community with a unique culture and liturgical language predating the Arab conquest of Egypt in the 7th century."
+              }
+            },
+            modernHistory: { 
+              he: "לאחר עשרות שנים של מונרכיה תחת השפעה והתערבות כבדה של האימפריה הבריטית, עברה מצרים ב-1952 הפיכה דרמטית (\"מהפכת הקצינים החופשיים\") שהדיחה את המלך פארוק והקימה רפובליקה. תחת הנהגתו של גמאל עבד אל-נאצר, מצרים הלאימה את תעלת סואץ, הפכה למנהיגת העולם הערבי והובילה שורת מלחמות נגד ישראל. ב-1979, תחת הנהגת אנואר סאדאת, שברה מצרים את החרם הערבי והייתה למדינה הערבית הראשונה שחתמה על הסכם שלום היסטורי ופורץ דרך עם ישראל.",
+              en: "After decades of a monarchy under heavy British Empire influence and intervention, Egypt underwent a dramatic coup in 1952 ('The Free Officers Revolution') that ousted King Farouk and established a republic. Under Gamal Abdel Nasser's leadership, Egypt nationalized the Suez Canal, became the leader of the Arab world, and led a series of wars against Israel. In 1979, under Anwar Sadat, Egypt broke the Arab boycott and became the first Arab country to sign a historic, groundbreaking peace treaty with Israel."
+            },
+            foundingYears: { he: "1922 (עצמאות פורמלית) | 1952 (הקמת הרפובליקה)", en: "1922 (Formal Independence) | 1952 (Republic)" },
+            flagSymbolism: { 
+              he: "דגל הלאומיות הערבית המודרנית (הראשון שהציג את צבעי השחרור הערבי במבנה זה). האדום מסמל את המאבק, הדם והתקווה טרם המהפכה; הלבן מסמל עתיד בהיר, טוהר ושלום (מהפכת הקצינים התרחשה כמעט ללא שפיכות דמים); השחור מייצג את העבר החשוך של דיכוי קולוניאליסטי ושלטון זר. במרכז הפס הלבן מתנוסס 'עיט צלאח א-דין' המוזהב, סמל היסטורי של עוצמה, ריבונות וגאווה פאן-ערבית.",
+              en: "The flag of modern Arab nationalism (the first to introduce the Arab Liberation colors in this layout). Red symbolizes the struggle, blood, and hope before the revolution; White symbolizes a bright future, purity, and peace (the Officers' Revolution was largely bloodless); Black represents the dark past of colonial oppression and foreign rule. In the center of the white stripe waves the golden 'Eagle of Saladin', a historical symbol of power, sovereignty, and Pan-Arab pride."
+            },
+            nationalAnimal: {
+              name: { he: "עיט ערבות (Steppe Eagle)", en: "Steppe Eagle" },
+              reason: { 
+                he: "במצרים, סמל המדינה הרשמי המעטר את הדגל ידוע כ'עיט צלאח א-דין' (Saladin's Eagle). עיט זה, המבוסס ויזואלית על עיט הערבות החסון או העיט הזהוב, הוא סמל של כוח, עליונות צבאית והדר שיוחס לסולטאן צלאח א-דין שהקים את האימפריה האיובית ממצרים. הוא מסמל עבור המצרים את הגבורה בהגנה על המולדת ואת מנהיגותה ההיסטורית של מצרים במזרח התיכון.",
+                en: "In Egypt, the official state emblem adorning the flag is known as 'Saladin's Eagle'. This eagle, visually based on the robust Steppe Eagle or Golden Eagle, is a symbol of power, military superiority, and majesty attributed to Sultan Saladin who established the Ayyubid Empire from Egypt. It symbolizes for Egyptians the heroism in defending the homeland and Egypt's historical leadership in the Middle East."
+              }
+            },
             etymology: {
               parts: [
-                { text: "מִצְרַיִם (Mitzrayim)", color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: "מקור שמי עתיק. המילה מתורגמת כ\"מצרים\" (מיצרים/גבולות), ומסמלת בעברית את המדינה הצרה שלאורך הנילוס. הסיומת \"-ים\" מסמלת זוגיות, לציון מצרים העליונה (הדרום) ומצרים התחתונה (הצפון)." },
-                { text: "Aegyptus", color: "text-indigo-400", bg: "bg-indigo-400/10", border: "border-indigo-500/30", desc: "השם הלועזי Egypt נגזר מהמילה היוונית Aegyptus, שהיא עצמה ככל הנראה שיבוש של השם המצרי הקדום למקדש האל פתח בממפיס: \"Hut-ka-Ptah\"." }
+                { text: { he: "מִצְרַיִם / מיצר (Mişr)", en: "Misr / Mitzrayim" }, color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: { he: "מקור שמי עתיק. המילה מתורגמת כ'מיצרים' או 'גבולות', ומסמלת את המדינה הצרה שלאורך הנילוס. הסיומת העברית '-ים' מסמלת זוגיות: מצרים העליונה (הדרום ההררי) ומצרים התחתונה (הדלתא שבצפון).", en: "Ancient Semitic origin. The word translates to 'straits' or 'borders', symbolizing the narrow country along the Nile. The Hebrew suffix '-yim' denotes a pair: Upper Egypt (the mountainous south) and Lower Egypt (the northern Delta)." } },
+                { text: { he: "אייגופטוס (Aegyptus)", en: "Aegyptus (Egypt)" }, color: "text-indigo-400", bg: "bg-indigo-400/10", border: "border-indigo-500/30", desc: { he: "השם הלועזי Egypt נגזר מהמילה היוונית Aegyptus, שהיא עצמה שיבוש של השם המצרי הקדום (Hwt-ka-Ptah) - מתחם המקדש של האל פתח בעיר העתיקה ממפיס.", en: "The foreign name Egypt is derived from the Greek word Aegyptus, which itself is a corruption of the ancient Egyptian name (Hwt-ka-Ptah) - the temple complex of the god Ptah in the ancient city of Memphis." } }
               ],
-              synthesis: "שם דו-משמעי: בשפות השמיות משמעותו \"ארץ המְצָרִים הכפולה\" (עליונה ותחתונה), ובלועזית שיבוש של שם מקדש מצרי עתיק ומרכזי."
+              synthesis: { he: "ארץ המְצָרִים הכפולה (העליונה והתחתונה), או 'מקדש נשמת האל פתח'.", en: "The double narrow land (Upper and Lower), or 'Temple of the soul of Ptah'." }
             },
             figure: {
-              name: "גמאל עבד אל-נאצר",
+              name: { he: "גמאל עבד אל-נאצר", en: "Gamal Abdel Nasser" },
               years: "1918 - 1970",
-              childhood: "נולד באלכסנדריה למשפחת עובד דואר פשוטה. התחנך במסגרות צבאיות, קרא רבות על פילוסופיה, היסטוריה ולאומיות, והושפע עמוקות מהפערים המעמדיים וההתערבות הזרה במדינתו שעיצבו את שנאתו למלוכה המושחתת.",
-              ideology: "נאצריזם – שילוב של סוציאליזם ערבי (חלוקת אדמות והלאמת נכסים), פאן-ערביות נלהבת (שאיפה לאיחוד כלל העולם הערבי למדינה אחת חזקה), אנטי-אימפריאליזם, ואי-הזדהות פוליטית במהלך המלחמה הקרה.",
-              achievements: "היה ממובילי \"מהפכת הקצינים החופשיים\" ב-1952 שהפילה את המלך פארוק. הלאים את תעלת סואץ ב-1956 (אירוע שגרר את מבצע קדש אך העצים את תדמיתו בעולם הערבי), בנה את סכר אסואן הענק והפך לדמות הפופולרית והנערצת ביותר במזרח התיכון במאה ה-20."
+              childhood: { 
+                he: "נולד באלכסנדריה למשפחה פשוטה של עובד דואר. נדד בילדותו ברחבי מצרים בשל עבודת אביו. התחנך במסגרות צבאיות, קרא בשקיקה ספרי פילוסופיה, היסטוריה ולאומיות, והושפע עמוקות מהפערים המעמדיים העצומים וההתערבות הצבאית הזרה (הבריטית) במדינתו, שעיצבו את שאיפתו למהפכה.",
+                en: "Born in Alexandria to a modest postal worker's family. Moved around Egypt during his childhood due to his father's work. He was educated in military institutions, voraciously read books on philosophy, history, and nationalism, and was deeply influenced by the immense class gaps and foreign (British) military intervention in his country, which shaped his ambition for revolution."
+              },
+              ideology: { 
+                he: "נאצריזם – אידאולוגיה שעיצבה את המזרח התיכון: שילוב של סוציאליזם ערבי (רפורמות אגרריות והלאמת נכסים למען העניים), פאן-ערביות נלהבת (שאיפה לאיחוד כלל העולם הערבי למדינה אחת חזקה נגד הקולוניאליזם), ואנטי-אימפריאליזם נוקשה. הוא דגל במדיניות של אי-הזדהות במהלך המלחמה הקרה.",
+                en: "Nasserism – an ideology that shaped the Middle East: a blend of Arab socialism (agrarian reforms and nationalization of assets for the poor), enthusiastic Pan-Arabism (the aspiration to unite the entire Arab world into one strong state against colonialism), and strict anti-imperialism. He championed a policy of non-alignment during the Cold War."
+              },
+              achievements: { 
+                he: "היה האדריכל ומוביל 'מהפכת הקצינים החופשיים' ב-1952 שהפילה את מוסד המלוכה המושחת. כנשיא מצרים, הלאים את תעלת סואץ ב-1956 (מהלך אמיץ שגרר את 'מבצע קדש' אך שדרג את תדמיתו כגיבור ערבי), בנה את סכר אסואן הענק שסיפק חשמל למצרים, והפך לדמות הפוליטית הפופולרית, המשפיעה והנערצת ביותר במזרח התיכון במאה ה-20.",
+                en: "He was the architect and leader of the 'Free Officers Revolution' in 1952 that overthrew the corrupt monarchy. As President of Egypt, he nationalized the Suez Canal in 1956 (a bold move that provoked the Suez Crisis but upgraded his image as an Arab hero), built the massive Aswan High Dam that provided electricity to Egypt, and became the most popular, influential, and revered political figure in the Middle East in the 20th century."
+              }
             },
             map: {
               url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_egypt_1570.jpg",
-              title: "מפת מצרים העתיקה - 1570",
-              desc: "מציגה את המבנה הצר והייחודי של ארץ מצרים, הנשענת כולה על עורק החיים של הנילוס, מוקפת במדבריות סהרה."
+              title: { he: "מפת מצרים העתיקה - 1570", en: "Map of Ancient Egypt - 1570" },
+              desc: { 
+                he: "מפה קרטוגרפית אירופאית המציגה את המבנה הצר והייחודי של ארץ מצרים, הנשענת כולה על עורק החיים של נהר הנילוס הזורם צפונה אל הדלתא, כשהיא מוקפת במדבריות סהרה חסרי החיים.",
+                en: "A European cartographic map showing the narrow and unique structure of the land of Egypt, relying entirely on the lifeline of the Nile River flowing north to the Delta, surrounded by the lifeless Sahara deserts."
+              }
             }
           },
           {
             id: "jordan",
-            name: "ירדן",
+            name: { he: "ירדן", en: "Jordan" },
             englishName: "Jordan",
-            officialName: "הממלכה הירדנית ההאשמית",
-            FlagComponent: FlagJordan,
-            areaNum: "~89,342 קמ\"ר",
-            populationNum: "~11,000,000",
-            currency: "דינר ירדני (JOD)",
-            area: "כ-89,342 קמ\"ר. שוכנת ממזרח לנהר הירדן. שטחה מורכב ברובו ממדבר צחיח ורמות גבוהות במזרח, עם רצועה יחסית צרה של אדמות פוריות יותר לאורך בקעת הירדן והשבר הסורי-אפריקני במערב.",
-            demographics: {
-              mainNationName: "ערבים (בדואים ופלסטינים)",
-              mainNationPercent: "כ-98%",
-              description: "הדמוגרפיה הירדנית מורכבת בעיקרה משני פלגים עיקריים תחת כתר אחד: השבטים הבדואים ממזרח לירדן (המהווים את עמוד השדרה הפוליטי והצבאי של בית המלוכה ההאשמי), וערבים פלסטינים שהיגרו בעקבות מלחמות ישראל-ערב, המהווים כיום רוב באוכלוסייה הכללית."
+            officialName: { he: "הממלכה הירדנית ההאשמית", en: "Hashemite Kingdom of Jordan" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/jordan.webp",
+            capital: {
+              name: { he: "עמאן", en: "Amman" },
+              englishName: "Amman",
+              etymology: { 
+                he: "העיר קרויה על שם העם העתיק שישב באזור – העמונים. בתנ\"ך ובמקורות הקדומים היא נקראה 'רבת עמון' (העיר הגדולה/הבירה של בני עמון). בתקופה ההלניסטית והרומית היא שנתה את שמה ל'פילדלפיה' (על שם תלמי פילדלפוס מלך מצרים), אך עם הכיבוש הערבי-אסלאמי חזר השם לשורשיו השמיים כ'עמאן'.",
+                en: "The city is named after the ancient people who settled in the region – the Ammonites. In the Bible and ancient sources, it was called 'Rabbath Ammon' (the great city/capital of the Ammonites). During the Hellenistic and Roman periods, it changed its name to 'Philadelphia' (after Ptolemy Philadelphus, King of Egypt), but with the Arab-Islamic conquest, the name reverted to its Semitic roots as 'Amman'."
+              },
+              foundingYear: { he: "העת העתיקה (הוכרזה כבירת אמירות עבר הירדן ב-1921)", en: "Antiquity (Declared capital of the Emirate of Transjordan in 1921)" },
+              reason: { 
+                he: "כאשר האמיר עבדאללה הראשון הגיע לאזור בתמיכת הבריטים כדי להקים ישות מדינית חדשה, עמאן הייתה עיירה קטנה. היא נבחרה להיות עיר הבירה משום שהייתה ממוקמת אסטרטגית על נתיב 'רכבת החיג'אז' החשובה (שחיברה בין דמשק למדינה), והציעה נקודת מרכז גיאוגרפית נוחה לניהול וריכוז השבטים הבדואים של פנים המדבר הרחק מסוריה הצרפתית.",
+                en: "When Emir Abdullah I arrived in the region with British support to establish a new political entity, Amman was a small town. It was chosen to be the capital city because it was strategically located on the route of the important 'Hejaz Railway' (connecting Damascus to Medina), and offered a convenient central geographical point to manage and concentrate the Bedouin tribes of the inner desert far from French Syria."
+              }
             },
-            modernHistory: "הוקמה כ\"עבר הירדן\" (אמירות) ב-1921 על ידי הבריטים כדי להמליך עליה את עבדאללה הראשון מהשושלת ההאשמית (שאבדה את שליטתה בחג'אז שבסעודיה). ב-1946 זכתה לעצמאות מלאה. ירדן עברה את מלחמות ישראל, אבדה את יהודה ושומרון ב-1967, וב-1994 חתמה על הסכם שלום היסטורי וחשוב עם ישראל.",
-            foundingYears: "1946 (עצמאות מבריטניה)",
-            flagSymbolism: "מבוסס במקורו על דגל המרד הערבי הגדול. הפס השחור מסמל את שושלת בית עבאס; הלבן את שושלת בית אומיה; והירוק את שושלת פאטמה (החליפויות הגדולות של האסלאם). המשולש האדום במנוף הדגל מסמל את השושלת ההאשמית. במרכז המשולש כוכב בעל 7 קרניים, המייצג את שבעת הפסוקים של סורת \"אל-פאתחה\" (הפותחת את הקוראן).",
+            areaNum: { he: "~89,342 קמ\"ר", en: "~89,342 sq km" },
+            populationNum: "~11,000,000",
+            currency: { he: "דינר ירדני (JOD)", en: "Jordanian Dinar (JOD)" },
+            area: { 
+              he: "כ-89,342 קמ\"ר. הממלכה שוכנת ממזרח לנהר הירדן ההיסטורי. שטחה מורכב ברובו הגדול ממדבר צחיח ורמות גבוהות במזרח ובדרום. החיים החקלאיים והעירוניים מתרכזים ברצועה יחסית צרה של אדמות פוריות יותר לאורך בקעת הירדן והשבר הסורי-אפריקני במערב המדינה.",
+              en: "Approx. 89,342 sq km. The kingdom lies east of the historic Jordan River. Its territory mostly consists of arid desert and high plateaus in the east and south. Agricultural and urban life is concentrated in a relatively narrow strip of more fertile lands along the Jordan Valley and the Syrian-African Rift in the west of the country."
+            },
+            demographics: {
+              mainNationName: { he: "ערבים ירדנים (ופלסטינים)", en: "Jordanian Arabs (and Palestinians)" },
+              mainNationPercent: { he: "כ-98%", en: "~98%" },
+              description: { 
+                he: "הדמוגרפיה הירדנית היא מורכבת פוליטית, ובנויה משני פלגים עיקריים תחת כתר אחד: השבטים הבדואים ממזרח לירדן (המהווים את עמוד השדרה הפוליטי והצבאי של משפחת המלוכה ההאשמית), וערבים פלסטינים שהיגרו (או נמלטו) בעקבות מלחמות ישראל-ערב, המהווים כיום את הרוב באוכלוסייה הכללית ובכלכלה האזרחית. קיימים גם מיעוטים צ'רקסים ונוצרים קטנים.",
+                en: "Jordanian demographics are politically complex, built of two main factions under one crown: the Bedouin tribes from east of the Jordan (who form the political and military backbone of the Hashemite royal family), and Palestinian Arabs who migrated (or fled) following the Arab-Israeli wars, who now constitute the majority in the general population and civil economy. There are also small Circassian and Christian minorities."
+              }
+            },
+            modernHistory: { 
+              he: "הישות הוקמה באופן מלאכותי למדי כ\"אמירות עבר הירדן\" ב-1921 על ידי הבריטים. המטרה הייתה להעניק נחלה לעבדאללה הראשון מהשושלת ההאשמית (שאבדה את שליטתה בחג'אז לטובת אבן סעוד). ב-1946 זכתה לעצמאות מלאה מהמנדט הבריטי. ירדן השתתפה במלחמות ישראל, סיפחה את יהודה ושומרון ב-1948 אך אבדה אותם ב-1967. היא שרדה הפיכות פנימיות רבות, דיכאה ניסיון הפיכה פלסטיני ('ספטמבר השחור'), וב-1994, תחת המלך חוסיין, חתמה על הסכם שלום היסטורי ויציב עם מדינת ישראל.",
+              en: "The entity was created somewhat artificially as the 'Emirate of Transjordan' in 1921 by the British. The goal was to grant an estate to Abdullah I of the Hashemite dynasty (which lost its control of the Hejaz to Ibn Saud). In 1946, it gained full independence from the British Mandate. Jordan participated in the Arab-Israeli wars, annexed the West Bank in 1948 but lost it in 1967. It survived many internal coups, suppressed a Palestinian uprising ('Black September'), and in 1994, under King Hussein, signed a historic and stable peace treaty with Israel."
+            },
+            foundingYears: { he: "1921 (הקמת האמירות) | 1946 (עצמאות כממלכה)", en: "1921 (Emirate formation) | 1946 (Kingdom Independence)" },
+            flagSymbolism: { 
+              he: "הדגל מבוסס לחלוטין על 'דגל המרד הערבי הגדול' (1916). הפס השחור מסמל את שושלת בית עבאס; הפס הלבן את שושלת בית אומיה; והפס הירוק את שושלת פאטמה (שלוש החליפויות הגדולות של האסלאם ההיסטורי). המשולש האדום במנוף הדגל מסמל את השושלת ההאשמית עצמה שמרדה בעות'מאנים. במרכז המשולש נוסף כוכב לבן בעל 7 קרניים, המייצג את שבעת הפסוקים של סורת 'אל-פאתחה' (הפרק הפותח של הקוראן הקדוש) ואת האחדות הערבית.",
+              en: "The flag is entirely based on the 'Flag of the Great Arab Revolt' (1916). The black stripe symbolizes the Abbasid dynasty; the white stripe the Umayyad dynasty; and the green stripe the Fatimid dynasty (the three great caliphates of historical Islam). The red triangle at the hoist symbolizes the Hashemite dynasty itself which rebelled against the Ottomans. In the center of the triangle, a white 7-pointed star was added, representing the seven verses of Surah 'Al-Fatiha' (the opening chapter of the Holy Quran) and Arab unity."
+            },
+            nationalAnimal: {
+              name: { he: "ראם ערבי (Arabian Oryx)", en: "Arabian Oryx" },
+              reason: { 
+                he: "הראם הערבי המלכותי, אנטילופה לבנה עם קרניים ארוכות, הוא חיה המותאמת באופן פלאי לשרוד בתנאי המדבר הצחיחים של ירדן. הוא נבחר כחיה הלאומית משום שהוא מסמל עבור הבדואים בממלכה יופי, סיבולת, אצילות והסתגלות לטבע הקשה. כמו במדינות מפרץ נוספות, גם ירדן השקיעה משאבים אדירים בתוכניות שימור כדי להשיב את הראם, שנכחד כמעט כליל, בחזרה לנופי מזרח הממלכה.",
+                en: "The majestic Arabian Oryx, a white antelope with long horns, is an animal miraculously adapted to survive in Jordan's arid desert conditions. It was chosen as the national animal because it symbolizes beauty, endurance, nobility, and adaptation to harsh nature for the Kingdom's Bedouins. Like other Gulf states, Jordan has invested immense resources in conservation programs to reintroduce the oryx, which was almost completely extinct, back to the landscapes of the eastern kingdom."
+              }
+            },
             etymology: {
               parts: [
-                { text: "ירדן (Jordan)", color: "text-cyan-400", bg: "bg-cyan-400/10", border: "border-cyan-500/30", desc: "השם נגזר ישירות מנהר הירדן הזורם בגבולה המערבי. משמעות המילה בשפות השמיות (כמו עברית) היא \"היורד\" או \"לרדת\", עקב שיפוע הנהר היורד מהצפון התלול אל הבקע העמוק בעולם (ים המלח)." },
-                { text: "האשמית (Hashemite)", color: "text-red-400", bg: "bg-red-400/10", border: "border-red-500/30", desc: "מתייחס למשפחת המלוכה. ההאשמים מייחסים את מוצאם להאשם בן עבד מנאף, סבא רבא של הנביא מוחמד, ונחשבו לשומרי המקומות הקדושים עד שגורשו מסעודיה." }
+                { text: { he: "ירדן (Jordan)", en: "Jordan" }, color: "text-cyan-400", bg: "bg-cyan-400/10", border: "border-cyan-500/30", desc: { he: "השם נגזר ישירות מנהר הירדן המהווה את גבולה המערבי והטבעי. משמעות השורש 'ירד' בשפות השמיות היא 'לרדת', עקב שיפוע הנהר היורד בתלילות מהצפון אל הבקע העמוק בעולם (ים המלח).", en: "The name is derived directly from the Jordan River which forms its western and natural border. The meaning of the root 'Y-R-D' in Semitic languages is 'to descend', due to the steep slope of the river descending from the north to the deepest rift in the world (the Dead Sea)." } },
+                { text: { he: "האשמית (Hashemite)", en: "Hashemite" }, color: "text-red-400", bg: "bg-red-400/10", border: "border-red-500/30", desc: { he: "מתייחס למשפחת המלוכה עצמה. ההאשמים מייחסים את מוצאם ההיסטורי להאשם בן עבד מנאף, סבא רבא של הנביא מוחמד, ונחשבו לשומרי מכה עד שגורשו על ידי הסעודים.", en: "Refers to the royal family itself. The Hashemites trace their historical lineage to Hashim ibn Abd Manaf, the great-grandfather of Prophet Muhammad, and were considered the guardians of Mecca until expelled by the Saudis." } }
               ],
-              synthesis: "הממלכה הירדנית השוכנת מעבר לנהר \"היורד\", ונשלטת על ידי צאצאי הנביא מוחמד (ההאשמים)."
+              synthesis: { he: "הממלכה השוכנת מעבר לנהר ה'יורד', ונשלטת על ידי צאצאיו הישירים של הנביא מוחמד.", en: "The Kingdom situated beyond the 'descending' river, and ruled by the direct descendants of Prophet Muhammad." }
             },
             figure: {
-              name: "המלך חוסיין בן טלאל",
+              name: { he: "המלך חוסיין בן טלאל", en: "King Hussein bin Talal" },
               years: "1935 - 1999",
-              childhood: "נולד בעמאן. חווה טראומה בגיל צעיר כאשר סבו, המלך עבדאללה הראשון, נרצח בירושלים בעת שחוסיין (הנער) שהה לצידו וניצל בנס. חונך באקדמיות הצבאיות סנדהרסט ובהארו בבריטניה, מה שעיצב את אופיו כמנהיג צבאי ומערבי.",
-              ideology: "הישרדות פוליטית וממלכתית, פרגמטיזם מדיני עמוק, מתינות ושיתוף פעולה עם המערב תוך שמירה על איזון זהיר מול מדינות ערב הקיצוניות סביבו.",
-              achievements: "עלה לכס המלוכה בגיל 17. צלח אין-ספור ניסיונות התנקשות והפיכות, כשלם את אירועי \"ספטמבר השחור\" מול אש\"ף. הנהיג את מדינתו במשברים אדירים והיה האדריכל הראשי של הסכם השלום האמיץ בין ירדן לישראל בשנת 1994."
+              childhood: { 
+                he: "נולד בעמאן. חווה טראומה עמוקה בגיל צעיר כאשר סבו, המלך עבדאללה הראשון (מייסד הממלכה), נרצח לעיניו במסגד אל-אקצא בירושלים. חוסיין הנער ניצל בנס לאחר שקליע נהדף ממדליה שענד. בעקבות כך נשלח להתחנך באקדמיות היוקרתיות הארו וסנדהרסט בבריטניה, מה שעיצב את אופיו המערבי והצבאי.",
+                en: "Born in Amman. Experienced profound trauma at a young age when his grandfather, King Abdullah I (the Kingdom's founder), was assassinated before his eyes at the Al-Aqsa Mosque in Jerusalem. The teenage Hussein miraculously survived after a bullet deflected off a medal he wore. Consequently, he was sent to be educated at the prestigious Harrow and Sandhurst academies in Britain, shaping his Western and military character."
+              },
+              ideology: { 
+                he: "האידאולוגיה שלו התבססה מעל הכל על הישרדות פוליטית וממלכתית ('פוליטיקה של לוליין'). הוא דגל בפרגמטיזם מדיני עמוק, מתינות, פיתוח כלכלי פנימי, ושיתוף פעולה מודיעיני וצבאי עם המערב (ואף עם ישראל מתחת לרדאר), כל זאת תוך שמירה על איזון זהיר ומסוכן מול מדינות ערב הרדיקליות סביבו והאוכלוסייה הפלסטינית בתוכו.",
+                en: "His ideology was based above all on political and state survival ('tightrope politics'). He advocated deep political pragmatism, moderation, internal economic development, and intelligence and military cooperation with the West (and even with Israel under the radar), all while maintaining a careful and dangerous balance against the radical Arab states around him and the Palestinian population within."
+              },
+              achievements: { 
+                he: "עלה לכס המלוכה במפתיע בגיל 17. במהלך 47 שנות שלטונו הוא צלח עשרות ניסיונות התנקשות והפיכות צבאיות. הוא הכריע באומץ את הכוחות הפלסטיניים שאיימו על כיסאו ב'ספטמבר השחור' (1970). הישגו ההיסטורי והמונצח ביותר היה האומץ הדיפלומטי לשבור את קירות האיבה, ולהיות האדריכל הראשי של הסכם השלום החשוב בין ירדן לישראל באוקטובר 1994.",
+                en: "Unexpectedly ascended to the throne at age 17. During his 47-year reign, he survived dozens of assassination attempts and military coups. He courageously defeated the Palestinian forces that threatened his throne in 'Black September' (1970). His most historic and memorialized achievement was the diplomatic courage to break the walls of hostility, acting as the main architect of the crucial peace treaty between Jordan and Israel in October 1994."
+              }
             },
             map: {
               url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_jordan_1658.jpg",
-              title: "מפת אזור ירדן - 1658",
-              desc: "מציגה את נהר הירדן כגבול טבעי בולט, ומדגישה את האזורים ההיסטוריים של עבר הירדן המזרחי."
-            }
-          },
-          {
-            id: "lebanon",
-            name: "לבנון",
-            englishName: "Lebanon",
-            officialName: "הרפובליקה הלבנונית",
-            FlagComponent: FlagLebanon,
-            areaNum: "~10,452 קמ\"ר",
-            populationNum: "~5,500,000",
-            currency: "לירה לבנונית (LBP)",
-            area: "כ-10,452 קמ\"ר. מדינה הררית מאוד, הידועה בשני רכסי הרים מרכזיים (הרי הלבנון והרי מול הלבנון) וביניהם עמק הבאקע הפורה. נהנית משפע מים ואקלים ים-תיכוני ייחודי יחסית לאזור.",
-            demographics: {
-              mainNationName: "ערבים (פסיפס עדתי)",
-              mainNationPercent: "100% אבל שסוע",
-              description: "לבנון היא המדינה המסובכת והמגוונת ביותר מבחינה עדתית במזרח התיכון. אין בה רוב מוחלט לאף דת. היא מורכבת מנוצרים מרונים ואורתודוקסים (כ-30%), מוסלמים שיעים (כ-30%), מוסלמים סונים (כ-30%), דרוזים (כ-5%), ועוד. הדמוגרפיה הזו היא שורש המערכת הפוליטית והמשברים בה."
-            },
-            modernHistory: "הוקמה במקור כ\"לבנון הגדולה\" על ידי צרפת לאחר מלחמת העולם הראשונה, מתוך מטרה ליצור מדינה בעלת רוב נוצרי באזור. היא זכתה לעצמאות ב-1943. תקופות של שגשוג כלכלי עצום (בהן כונתה \"שווייץ של המזרח התיכון\") התרסקו לתוך מלחמת אזרחים אכזרית וממושכת (1975-1990) והתבססות ארגון חזבאללה, שהובילו להרס כלכלתה ויציבותה.",
-            foundingYears: "1943 (עצמאות מצרפת)",
-            flagSymbolism: "פסי האדום מסמלים את הדם הרב שנשפך להגנת המדינה ומאבקיה לאורך ההיסטוריה. הפס הלבן האמצעי (שרוחבו כפול) מסמל טוהר, שלום, ואת הפסגות המושלגות של הרי הלבנון. עץ הארז הירוק במרכז הוא הסמל ההיסטורי והמקראי של הלבנון, המסמל חיי נצח, שורשיות, עוצמה וחוסן לאומי.",
-            etymology: {
-              parts: [
-                { text: "ל-ב-ן (L-B-N)", color: "text-gray-400", bg: "bg-gray-400/10", border: "border-gray-500/30", desc: "השם מגיע משפות שמיות עתיקות, ביניהן עברית וארמית. השורש המילולי מתייחס לצבע הלבן." },
-                { text: "ההרים המושלגים", color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: "המילה מתארת את הפסגות הגבוהות של הרי הלבנון, המושלגות למשך חודשים רבים בשנה, מה שהיה מראה נדיר ובולט עבור יושבי המרחב השמי והכנעני הצחיח." }
-              ],
-              synthesis: "הארץ הלבנה – על שום הפסגות המושלגות של הריה, כפי שתוארו בטקסטים מקראיים וקדומים."
-            },
-            figure: {
-              name: "בשארה אל-ח'ורי",
-              years: "1890 - 1964",
-              childhood: "נולד בהרי עאליי למשפחה נוצרית מרונית עשירה, משכילה ובעלת השפעה. למד משפטים במקומות יוקרתיים בצרפת, ספג תרבות מערבית עמוקה והפך לעורך דין מצליח ומוכר בביירות טרם כניסתו לפוליטיקה.",
-              ideology: "הוגה ומיישם ה\"אמנה הלאומית\" – אידאולוגיה שניסתה ליצור פשרה היסטורית בלבנון: הנוצרים יוותרו על החסות הצרפתית ופניה מערבה, והמוסלמים יוותרו על הדרישה להסתפח לסוריה ולאומה הערבית הגדולה. יחד, ייצרו לאומיות לבנונית עצמאית מאוזנת.",
-              achievements: "היה הנשיא הראשון של לבנון העצמאית. חתם על האמנה הלאומית ב-1943 שעיצבה את חלוקת הכוח העדתי במדינה (נשיא נוצרי, ראש ממשלה סוני). על אף שהאמנה קרסה מאוחר יותר במלחמת האזרחים, ח'ורי נחשב לאדריכל העצמאות של המדינה."
-            },
-            map: {
-              url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_levant_syria_lebanon.jpg",
-              title: "מפת הלבנון והמרחב - המאה ה-17",
-              desc: "מציגה את רכסי ההרים הגבוהים של הלבנון והעמקים הפוריים כחלק ממזרח הים התיכון."
+              title: { he: "מפת אזור עבר הירדן - 1658", en: "Map of the Transjordan Region - 1658" },
+              desc: { 
+                he: "מפה היסטורית המציגה את נהר הירדן וים המלח כגבולות טבעיים בולטים, ומדגישה את האזורים המדבריים ההיסטוריים של עבר הירדן המזרחי שהפכו לממלכה המודרנית.",
+                en: "A historical map showing the Jordan River and the Dead Sea as prominent natural borders, highlighting the historical desert regions of Eastern Transjordan that became the modern kingdom."
+              }
             }
           },
           {
             id: "syria",
-            name: "סוריה",
+            name: { he: "סוריה", en: "Syria" },
             englishName: "Syria",
-            officialName: "הרפובליקה הערבית הסורית",
-            FlagComponent: FlagSyria,
-            areaNum: "~185,180 קמ\"ר",
-            populationNum: "~22,000,000 (הערכה)",
-            currency: "לירה סורית (SYP)",
-            area: "כ-185,180 קמ\"ר. גיאוגרפיה מגוונת: אזור חוף במערב, רכסי הרים, מישור פורה (החוראן) במרכז, ומדבר סורי עצום המשתרע מזרחה לעבר עיראק.",
-            demographics: {
-              mainNationName: "ערבים סונים ומיעוטים",
-              mainNationPercent: "74% סונים, השאר מעורב",
-              description: "רוב מוחלט של האוכלוסייה הם מוסלמים סונים. עם זאת, הכוח והשלטון הפוליטי והצבאי נמצאים מזה עשרות שנים בידי העלווים (כת שהתפצלה מהשיעה, כ-10%). קיימים גם מיעוטים נוצרים (כ-10%), דרוזים וכורדים."
+            officialName: { he: "הרפובליקה הערבית הסורית", en: "Syrian Arab Republic" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/syria.webp",
+            capital: {
+              name: { he: "דמשק", en: "Damascus" },
+              englishName: "Damascus",
+              etymology: { 
+                he: "דמשק נחשבת לאחת הערים העתיקות בעולם המיושבות ברציפות. מקור שמה נעוץ בשפות הפרה-שמיות או הארמיות כ'דר מסק' (Dar Mesheq), שפירושו המקובל הוא 'מקום מושקה היטב' או 'ארץ מלאת מים'. תיאור זה הולם את העיר שקמה בלב 'נווה דמשק' (הע'וטה) הפורה, הניזון ממימי נהר ברדה באמצע המדבר הצחיח.",
+                en: "Damascus is considered one of the oldest continuously inhabited cities in the world. The origin of its name is rooted in pre-Semitic or Aramaic languages as 'Dar Mesheq', which is commonly translated as 'a well-watered place' or 'land full of water'. This description fits the city that arose in the heart of the fertile 'Damascus Oasis' (the Ghouta), fed by the waters of the Barada River in the middle of the arid desert."
+              },
+              foundingYear: { he: "האלף ה-3 לפנה\"ס (עיר עתיקה ביותר)", en: "3rd Millennium BC (Extremely ancient city)" },
+              reason: { 
+                he: "דמשק הפכה למרכז כוח גיאופוליטי ולבירה לאורך אינספור אימפריות (מארם דמשק דרך בית אומיה ועד ימינו) בזכות יתרונה הגיאוגרפי יוצא הדופן: היא מהווה נווה מדבר חקלאי עצום ומשגשג, הממוקם על צומת הדרכים האסטרטגי ביותר בין הים התיכון, מסופוטמיה, ואסיה הקטנה – מה שהפך אותה לשער המסחר הראשי של המזרח הקדום.",
+                en: "Damascus became a geopolitical power center and capital throughout countless empires (from Aram-Damascus through the Umayyad Caliphate to the present day) due to its extraordinary geographical advantage: it constitutes a massive, thriving agricultural oasis located at the most strategic crossroads between the Mediterranean, Mesopotamia, and Asia Minor - making it the main trade gateway of the ancient East."
+              }
             },
-            modernHistory: "לאחר סיום המנדט הצרפתי, סוריה ידעה סדרה ארוכה ורצופה של הפיכות צבאיות עד עלייתה של מפלגת הבעת' לשלטון. ב-1970 תפס חאפז אל-אסד (העלווי) את השלטון, וביסס דיקטטורה נוקשה. ב-2011 פרצה מלחמת אזרחים אכזרית והרסנית שטלטלה והחריבה חלקים עצומים מהמדינה ופיצלה אותה לאזורי שליטה.",
-            foundingYears: "1946 (עצמאות מצרפת)",
-            flagSymbolism: "דגל פאן-ערבי מובהק. האדום מסמל את המאבקים והדם; הלבן את העתיד המזהיר ואת בית אומיה (שבירתו הייתה דמשק); והשחור את בית עבאס. שני הכוכבים הירוקים נוספו במקור כסמל לאיחוד ההיסטורי הקצר בין סוריה למצרים (הקע\"ם - הרפובליקה הערבית המאוחדת).",
+            areaNum: { he: "~185,180 קמ\"ר", en: "~185,180 sq km" },
+            populationNum: "~22,000,000",
+            currency: { he: "לירה סורית (SYP)", en: "Syrian Pound (SYP)" },
+            area: { 
+              he: "כ-185,180 קמ\"ר. הטופוגרפיה הסורית מגוונת מאוד ומחולקת לכמה רצועות: רצועת חוף קצרה וירוקה במערב הנושקת לים התיכון, רכסי ההרים האנסארים המפרידים את החוף מהפנים, מישורים פוריים במרכז (כמו אזור חוראן וסביב חלב), ומדבר סורי (באדיה) רחב ידיים וצחיח המשתרע מזרחה ודרומה לעבר עיראק וירדן. נהר הפרת חוצה את המזרח ומספק מים לחקלאות.",
+              en: "Approx. 185,180 sq km. Syrian topography is highly diverse and divided into several zones: a short, green coastal strip in the west touching the Mediterranean Sea, the Ansariyeh mountain ranges separating the coast from the interior, fertile plains in the center (like the Hauran region and around Aleppo), and a vast, arid Syrian desert (Badiya) stretching east and south towards Iraq and Jordan. The Euphrates River crosses the east, providing water for agriculture."
+            },
+            demographics: {
+              mainNationName: { he: "ערבים סונים ומיעוטים", en: "Sunni Arabs and Minorities" },
+              mainNationPercent: { he: "כ-74% סונים", en: "~74% Sunnis" },
+              description: { 
+                he: "אוכלוסיית סוריה היא פסיפס מורכב ומתוח. רוב מוחלט של האוכלוסייה הם מוסלמים סונים. עם זאת, הכוח והשלטון הפוליטי, הכלכלי והצבאי נמצאים מזה עשרות שנים בידי המיעוט העלווי (כת סינקרטית וסודית שהתפצלה מהשיעה, המהווה כ-10-12%). פער זה הוא גורם תסיסה מרכזי. קיימים במדינה גם מיעוטים נוצרים היסטוריים (כ-10%), דרוזים בהר הדרוזים, וכורדים (כ-9%) בצפון המבקשים אוטונומיה.",
+                en: "Syria's population is a complex and tense mosaic. An absolute majority of the population are Sunni Muslims. However, political, economic, and military power and rule have been held for decades by the Alawite minority (a syncretic and secretive sect that split from Shia Islam, comprising about 10-12%). This disparity is a major source of unrest. The country also has historical Christian minorities (~10%), Druze in Jabal al-Druze, and Kurds (~9%) in the north seeking autonomy."
+              }
+            },
+            modernHistory: { 
+              he: "לאחר סיום המנדט הצרפתי (1946), סוריה העצמאית חוותה חוסר יציבות כרוני וסדרה ארוכה של הפיכות צבאיות, ואף איחוד קצר וכושל עם מצרים. ב-1970 תפס שר הביטחון חאפז אל-אסד (העלווי) את השלטון, וביסס בו דיקטטורה נוקשה, חילונית לכאורה אך עדתית בפועל. סוריה נלחמה בישראל שוב ושוב (ואיבדה את הגולן). בשנת 2011, בהשראת האביב הערבי, פרצה נגד בנו (בשאר) התקוממות אזרחית שהידרדרה למלחמת אזרחים אכזרית, עקובה מדם והרסנית ביותר, שטלטלה והחריבה חלקים עצומים מהמדינה, הפכה מיליונים לפליטים, ופיצלה את סוריה לאזורי שליטה שונים.",
+              en: "After the end of the French Mandate (1946), independent Syria experienced chronic instability and a long series of military coups, and even a brief, failed union with Egypt. In 1970, Defense Minister Hafez al-Assad (Alawite) seized power and established a strict dictatorship, ostensibly secular but practically sectarian. Syria fought Israel repeatedly (losing the Golan Heights). In 2011, inspired by the Arab Spring, a civil uprising erupted against his son (Bashar) which deteriorated into an extremely brutal, bloody, and destructive civil war that ravaged vast parts of the country, turned millions into refugees, and fractured Syria into different zones of control."
+            },
+            foundingYears: { he: "1946 (עצמאות מצרפת)", en: "1946 (Independence from France)" },
+            flagSymbolism: { 
+              he: "דגל סוריה הנוכחי הוא דגל פאן-ערבי מובהק המשקף אידאולוגיית מפלגת הבעת'. האדום מסמל את המאבקים לשחרור ואת דם השהידים; הלבן מסמל את העתיד המזהיר ואת בית אומיה (שבירתו ההיסטורית המפוארת הייתה דמשק); והשחור מסמל את עברה של שושלת בית עבאס. שני הכוכבים הירוקים במרכז לא נבחרו במקרה – הם הוספו במקור ב-1958 כסמל לאיחוד הגיאופוליטי (הרפובליקה הערבית המאוחדת) שבו כוכב אחד ייצג את סוריה והשני את מצרים.",
+              en: "The current Syrian flag is a distinct Pan-Arab flag reflecting the Ba'ath party ideology. Red symbolizes the struggles for liberation and the martyrs' blood; White symbolizes the bright future and the Umayyad Caliphate (whose glorious historical capital was Damascus); and Black symbolizes the past of the Abbasid dynasty. The two green stars in the center were not chosen randomly - they were originally added in 1958 as a symbol of the geopolitical union (the United Arab Republic) where one star represented Syria and the other Egypt."
+            },
+            nationalAnimal: {
+              name: { he: "נץ קורייש (Hawk of Quraish)", en: "Hawk of Quraish" },
+              reason: { 
+                he: "בדומה למצרים, החיה הלאומית אינה חיית בר אלא סמל הרלדי. 'נץ קורייש' (או נשר) מופיע בסמל המדינה הרשמי של סוריה. סמל זה אומץ כהוקרה לשבט קורייש – שבטו של הנביא מוחמד שבו החל האסלאם. הנץ מסמל עליונות, חדות ראייה, הגנה על הריבונות הערבית, ואת השאיפה הלאומית הסורית להוביל את המזרח התיכון כיורשת הלגיטימית של האימפריות הערביות הקדומות.",
+                en: "Similar to Egypt, the national animal is not a wild beast but a heraldic symbol. The 'Hawk of Quraish' (or eagle) appears in Syria's official state emblem. This symbol was adopted in tribute to the Quraish tribe - the tribe of Prophet Muhammad where Islam began. The hawk symbolizes superiority, sharp vision, protection of Arab sovereignty, and the Syrian national aspiration to lead the Middle East as the legitimate successor of the ancient Arab empires."
+              }
+            },
             etymology: {
               parts: [
-                { text: "אשור (Assyria)", color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: "מקור השם סוריה מגיע ככל הנראה מיוונית קדומה, כשיבוש של המילה \"אשור\". היוונים הקדמונים קראו לכל אזור הלבנט ושאר האזורים שבשליטת האימפריה האשורית הגדולה בשם \"סוריה\"." },
-                { text: "ארם (Aram)", color: "text-amber-400", bg: "bg-amber-400/10", border: "border-amber-500/30", desc: "בערבית הקלאסית ובמקורות עתיקים, אזור סוריה נקרא לרוב \"א-שאם\" (שמאל/צפון, ביחס לחצי האי ערב) או \"ארם\", על שם הארמים שישבו בו." }
+                { text: { he: "אשור (Assyria)", en: "Assyria" }, color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: { he: "מקור השם המודרני 'סוריה' מגיע ככל הנראה מיוונית קדומה, כשיבוש לשוני של המילה 'אשור'. היוונים הקדמונים קראו לכל אזור הלבנט והשטחים שבשליטת האימפריה האשורית הגדולה ממזרח בשם זה.", en: "The modern name 'Syria' likely comes from ancient Greek, as a linguistic corruption of the word 'Assyria'. The ancient Greeks called the entire Levant region and territories controlled by the great Assyrian Empire to the east by this name." } },
+                { text: { he: "ארם / א-שאם", en: "Aram / Ash-Sham" }, color: "text-amber-400", bg: "bg-amber-400/10", border: "border-amber-500/30", desc: { he: "בערבית הקלאסית ובמקורות עתיקים, אזור סוריה אינו נקרא כך, אלא קרוי לרוב 'ארם' (על שם הארמים שישבו בו) או 'בילד א-שאם' (ארץ השמאל/הצפון, ביחס לאדם העומד בחג'אז).", en: "In classical Arabic and ancient sources, the region of Syria is not called by that name, but is mostly referred to as 'Aram' (after the Arameans who settled there) or 'Bilad Ash-Sham' (Land of the Left/North, relative to a person standing in the Hejaz)." } }
               ],
-              synthesis: "השם המודרני הוא נגזרת יוונית-רומית לארץ האשורים הקדומים שהשתלטו על המרחב הצפוני."
+              synthesis: { he: "השם המודרני הוא כינוי יווני-רומי לארץ האשורים הקדומים שהשתלטו על המרחב.", en: "The modern name is a Greco-Roman moniker for the land of the ancient Assyrians who conquered the area." }
             },
             figure: {
-              name: "חאפז אל-אסד",
+              name: { he: "חאפז אל-אסד", en: "Hafez al-Assad" },
               years: "1930 - 2000",
-              childhood: "נולד בכפר העלווי העני קרדאחה למשפחת איכרים בעלת מוניטין של לוחמים מקומיים (\"האריה\"). הצטרף למפלגת הבעת' בהיותו נער, מצא את ייעודו וזינוקו החברתי דרך האקדמיה הצבאית, שם הפך לטייס קרב מוכשר ולמפקד חיל האוויר.",
-              ideology: "השתייך לזרם הקיצוני של מפלגת הבעת' (\"תחייה\") הערבית-הסוציאליסטית. דגל באנטי-ציונות יוקדת, פאן-ערביות סמכותנית בהנהגת סוריה, הלאמה של הכלכלה, ויצירת מנגנון ביטחון ומודיעין חסר רחמים להבטחת השלטון (במיוחד מול האחים המוסלמים).",
-              achievements: "תפס את השלטון בהפיכה צבאית שקטה ב-1970 והפך לנשיא הכול-יכול. סיים עשרות שנים של תוהו ובוהו פוליטי בסוריה, אך עשה זאת במחיר של בניית דיקטטורה אכזרית ומדכאת (כפי שהומחש בטבח בחמה ב-1982). הפך את סוריה לשחקנית מפתח אזורית מול ישראל וארה\"ב."
+              childhood: { 
+                he: "נולד בכפר קרדאחה שבהרי אנסריה למשפחת איכרים ענייה מהמיעוט העלווי (שסבל מאפליה קשה מצד הסונים). משפחתו זכתה למוניטין של לוחמים מקומיים והחליפה את שמה ל'אל-אסד' (האריה). כנער הצטרף למפלגת הבעת' החילונית, שמציעה שוויון למיעוטים. הוא מצא את ייעודו ומוביליותו החברתית באקדמיה הצבאית, שם הפך לטייס קרב מוכשר ולמפקד חיל האוויר הסורי.",
+                en: "Born in the village of Qardaha in the Ansariyeh mountains to a poor peasant family from the Alawite minority (who suffered severe discrimination from Sunnis). His family gained a reputation as local fighters and changed their name to 'al-Assad' (The Lion). As a teenager, he joined the secular Ba'ath party, which offered equality for minorities. He found his calling and social mobility in the military academy, becoming a talented fighter pilot and commander of the Syrian Air Force."
+              },
+              ideology: { 
+                he: "דגל באידאולוגיה של מפלגת הבעת' ('תחייה'): פאן-ערביות סמכותנית בהנהגת סוריה, סוציאליזם ערבי והלאמת הכלכלה. אמונתו המדינית הייתה נטועה באנטי-אימפריאליזם ואנטי-ציונות יוקדת. מבחינה פנימית, האידאולוגיה האמיתית שלו הייתה הבטחת הישרדות שלטונו והעדה העלווית בכל מחיר, באמצעות יצירת מנגנון ביטחון ומודיעין (מוח'אבראת) חסר רחמים המדכא כל אופוזיציה חופשית או דתית.",
+                en: "Advocated the ideology of the Ba'ath ('Resurrection') party: authoritarian Pan-Arabism led by Syria, Arab socialism, and nationalization of the economy. His political belief was rooted in burning anti-imperialism and anti-Zionism. Internally, his true ideology was ensuring the survival of his regime and the Alawite sect at any cost, by creating a ruthless security and intelligence apparatus (Mukhabarat) that suppresses any free or religious opposition."
+              },
+              achievements: { 
+                he: "לאחר שנים של חוסר יציבות סורית, תפס את השלטון בהפיכה צבאית שקטה ב-1970 ('תנועת התיקון') והפך לנשיא הכול-יכול. הוא סיים את התוהו ובוהו הפוליטי בסוריה והפך אותה לשחקנית מפתח אסטרטגית מול ישראל וארה\"ב, ולכוח שולט בלבנון. אולם, הוא השיג את 'היציבות' הזו במחיר של בניית דיקטטורה אכזרית ומדכאת, כפי שהומחש בטבח בחמה (1982) בו הורה על החרבת עיר שלמה כדי לחסל את מרידת האחים המוסלמים.",
+                en: "After years of Syrian instability, he seized power in a quiet military coup in 1970 (the 'Corrective Movement') and became an all-powerful president. He ended the political chaos in Syria and turned it into a key strategic player against Israel and the US, and a dominant force in Lebanon. However, he achieved this 'stability' at the cost of building a brutal and oppressive dictatorship, as demonstrated in the Hama massacre (1982) where he ordered the destruction of an entire city to crush a Muslim Brotherhood rebellion."
+              }
+            },
+            map: {
+              url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_levant_syria.jpg",
+              title: { he: "מפת סוריה והלבנט המורחב - המאה ה-18", en: "Map of Syria and Greater Levant - 18th Century" },
+              desc: { 
+                he: "מפה היסטורית נדירה המציגה את המרחב הרחב והעתיק המכונה היסטורית 'א-שאם' או 'סוריה הגדולה', הכולל את גבולות סוריה, ירדן, לבנון וארץ ישראל טרם חלוקת המנדטים של סייקס-פיקו.",
+                en: "A rare historical map showing the broad and ancient region historically known as 'Ash-Sham' or 'Greater Syria', including the borders of Syria, Jordan, Lebanon, and Palestine before the Sykes-Picot mandate divisions."
+              }
+            }
+          },
+          {
+            id: "lebanon",
+            name: { he: "לבנון", en: "Lebanon" },
+            englishName: "Lebanon",
+            officialName: { he: "הרפובליקה הלבנונית", en: "Lebanese Republic" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/lebanon.webp",
+            capital: {
+              name: { he: "ביירות", en: "Beirut" },
+              englishName: "Beirut",
+              etymology: { 
+                he: "השם עתיק ביותר ונגזר מהמילה הכנענית-פיניקית 'בארות' (Be'erot). השם ניתן לאזור על ידי מתיישביו הקדומים, ומתייחס לאקוויפר מי התהום העשיר ולשפע הבארות שנחפרו באזור החוף כדי להרוות את צמאונם של תושבי העיר, שאין בה נהר מרכזי משלה.",
+                en: "The name is extremely ancient and is derived from the Canaanite-Phoenician word 'Be'erot' (wells). The name was given to the area by its ancient settlers, referring to the rich underground aquifer and the abundance of wells dug in the coastal area to quench the thirst of the city's inhabitants, as it lacks a major river of its own."
+              },
+              foundingYear: { he: "כ-3000 לפנה\"ס (הוכרזה כבירת 'לבנון הגדולה' ב-1920)", en: "Approx. 3000 BC (Declared capital of 'Greater Lebanon' in 1920)" },
+              reason: { 
+                he: "ביירות נבחרה לבירה בזכות מיקומה כנמל ים-תיכוני אסטרטגי במרכז קו החוף הלבנוני, המהווה את השער הטבעי והנגיש ביותר בין המזרח התיכון לאירופה. בניגוד להרי הלבנון המבודדים, ביירות הייתה עיר קוסמופוליטית פתוחה ומפותחת ששימשה כמרכז הכלכלי, התרבותי, והמסחרי האולטימטיבי של הלבנט, מה שהפך אותה לבירה אידיאלית עבור הצרפתים שהקימו את המדינה.",
+                en: "Beirut was chosen as the capital due to its location as a strategic Mediterranean port in the center of the Lebanese coastline, serving as the most natural and accessible gateway between the Middle East and Europe. Unlike the isolated Mount Lebanon, Beirut was an open, developed cosmopolitan city serving as the ultimate economic, cultural, and commercial hub of the Levant, making it an ideal capital for the French who established the state."
+              }
+            },
+            areaNum: { he: "~10,452 קמ\"ר", en: "~10,452 sq km" },
+            populationNum: "~5,500,000",
+            currency: { he: "לירה לבנונית (LBP)", en: "Lebanese Pound (LBP)" },
+            area: { 
+              he: "כ-10,452 קמ\"ר. לבנון היא מדינה קטנה והררית מאוד, הידועה בנופיה המרהיבים שאינם אופייניים למזרח התיכון. הגיאוגרפיה שלה בנויה מארבע רצועות מקבילות: מישור חוף צר במערב, רכס הרי הלבנון הגבוהים והמיוערים (שם גדלים הארזים), עמק הבאקע החקלאי והפורה, ורכס מול הלבנון במזרח המהווה את הגבול עם סוריה. בזכות הפסגות, המדינה נהנית משפע מים ואקלים ים-תיכוני.",
+              en: "Approx. 10,452 sq km. Lebanon is a small and very mountainous country, known for its spectacular landscapes atypical of the Middle East. Its geography is built of four parallel strips: a narrow coastal plain in the west, the high and forested Mount Lebanon range (where cedars grow), the fertile agricultural Beqaa Valley, and the Anti-Lebanon mountain range in the east forming the border with Syria. Thanks to the peaks, the country enjoys abundant water and a Mediterranean climate."
+            },
+            demographics: {
+              mainNationName: { he: "ערבים (פסיפס עדתי)", en: "Arabs (Sectarian Mosaic)" },
+              mainNationPercent: { he: "100% אבל שסוע", en: "100% but fractured" },
+              description: { 
+                he: "לבנון היא המדינה המסובכת, העדינה והמגוונת ביותר מבחינה עדתית במזרח התיכון. הדמוגרפיה היא נושא כה רגיש שלא נערך בה מפקד אוכלוסין רשמי מאז 1932. אין בה רוב מוחלט לאף דת. היא מורכבת מנוצרים מרונים, אורתודוקסים ואחרים (כ-30%), מוסלמים שיעים (כ-30%), מוסלמים סונים (כ-30%), דרוזים (כ-5%), ועוד. הדמוגרפיה הזו היא שורש המערכת הפוליטית (הדמוקרטיה ההסדרית) אך גם שורש המשברים הכרוניים בה.",
+                en: "Lebanon is the most complicated, delicate, and sect-diverse country in the Middle East. Demographics are such a sensitive issue that no official census has been conducted since 1932. No religion holds an absolute majority. It consists of Maronite, Orthodox, and other Christians (~30%), Shia Muslims (~30%), Sunni Muslims (~30%), Druze (~5%), and others. This demography is the root of the political system (confessional democracy) but also the root of its chronic crises."
+              }
+            },
+            modernHistory: { 
+              he: "הוקמה במקור כ'מדינת לבנון הגדולה' ב-1920 על ידי צרפת לאחר מלחמת העולם הראשונה, מתוך כוונה אימפריאלית ליצור מדינה בעלת רוב וצביון נוצרי ברור. היא זכתה לעצמאות מלאה ב-1943 בעקבות 'האמנה הלאומית'. לבנון ידעה תקופות של שגשוג כלכלי ותרבותי עצום (בהן כונתה 'שווייץ של המזרח התיכון' ובירתה 'פריז של המזרח'), אך השסעים העדתיים והתערבות זרה (פלסטינית, סורית וישראלית) ריסקו אותה לתוך מלחמת אזרחים אכזרית וממושכת (1975-1990). לאחר המלחמה, התבססות ארגון חיזבאללה השיעי כשחקן החמוש והחזק במדינה הובילה להרס הכלכלה, הפיצוץ בנמל ביירות ב-2020, וחוסר יציבות מתמשך.",
+              en: "Originally established as the 'State of Greater Lebanon' in 1920 by France after WWI, with the imperial intention of creating a state with a clear Christian majority and character. It gained full independence in 1943 following the 'National Pact'. Lebanon experienced periods of immense economic and cultural prosperity (being called the 'Switzerland of the Middle East' and its capital the 'Paris of the East'), but sectarian rifts and foreign intervention (Palestinian, Syrian, and Israeli) crashed it into a brutal, prolonged civil war (1975-1990). Post-war, the entrenchment of the Shia Hezbollah organization as the strongest armed player in the country led to economic ruin, the 2020 Beirut port explosion, and enduring instability."
+            },
+            foundingYears: { he: "1943 (עצמאות מצרפת)", en: "1943 (Independence from France)" },
+            flagSymbolism: { 
+              he: "דגל לבנון עוצב בעת קבלת העצמאות כפשרה היסטורית. פסי האדום בחלק העליון והתחתון מסמלים את הדם הרב שנשפך להגנת המדינה ומאבקיה לשחרור לאורך ההיסטוריה. הפס הלבן האמצעי (שרוחבו כפול משל האדומים) מסמל טוהר, שלום, ואת הפסגות המושלגות של הרי הלבנון. במרכז הפס הלבן ניצב עץ הארז הירוק. הארז הלבנוני הוא הסמל ההיסטורי והמקראי האולטימטיבי של האזור (שימש לבניית מקדש שלמה), והוא מסמל חיי נצח, שורשיות עמוקה, עוצמה חסינה וחוסן לאומי נגד סערות.",
+              en: "The Lebanese flag was designed upon gaining independence as a historical compromise. The red stripes at the top and bottom symbolize the copious blood shed defending the country and its liberation struggles throughout history. The middle white stripe (which is twice the width of the red ones) symbolizes purity, peace, and the snow-capped peaks of Mount Lebanon. In the center of the white stripe stands the green Cedar tree. The Lebanese cedar is the ultimate historical and biblical symbol of the region (used to build Solomon's Temple), symbolizing eternal life, deep roots, invulnerable strength, and national resilience against storms."
+            },
+            nationalAnimal: {
+              name: { he: "צבוע מפוספס (Striped Hyena)", en: "Striped Hyena" },
+              reason: { 
+                he: "בחירה יוצאת דופן בנוף סמלי המדינות. הצבוע המפוספס, טורף אקולוגי חיוני הניזון מנבלות החי בהרי ועמקי לבנון, נבחר לחיה הלאומית. הוא מסמל הישרדות עיקשת בסביבה קשה, יכולת הסתגלות למצבי קיצון, ואת עבודת הטיהור וניקיון הטבע. הבחירה בו מדגישה את ההכרה הייחודית של המדינה בחשיבות שימור חיות הבר האנדמיות שלה אל מול הציד הלא-חוקי הפושה באזור.",
+                en: "An unusual choice in the landscape of state symbols. The Striped Hyena, a vital ecological scavenger feeding on carrion living in the mountains and valleys of Lebanon, was chosen as the national animal. It symbolizes stubborn survival in a harsh environment, adaptability to extreme situations, and the purification and cleaning of nature. Its selection highlights the country's unique recognition of the importance of preserving its endemic wildlife against the rampant illegal hunting in the region."
+              }
+            },
+            etymology: {
+              parts: [
+                { text: { he: "ל-ב-ן (L-B-N)", en: "L-B-N" }, color: "text-gray-400", bg: "bg-gray-400/10", border: "border-gray-500/30", desc: { he: "השם מגיע ישירות מהשפות השמיות העתיקות ביותר, ביניהן ארמית, פיניקית, ועברית. השורש המילולי מתייחס חד משמעית לצבע הלבן.", en: "The name comes directly from the oldest Semitic languages, including Aramaic, Phoenician, and Hebrew. The literal root unequivocally refers to the color white." } },
+                { text: { he: "ההרים המושלגים", en: "The Snowy Mountains" }, color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: { he: "המילה 'לבנון' מתארת את הפסגות הגבוהות של הרי הלבנון (ג'בל לובנאן), המכוסות בשלג בוהק למשך חודשים רבים בשנה. מראה הרים לבנים זה היה נדיר, בולט וקסום עבור יושבי המרחב השמי והכנעני הסובב שהיה צחיח ברובו.", en: "The word 'Lebanon' describes the high peaks of Mount Lebanon (Jabal Lubnan), covered in bright snow for many months of the year. This sight of white mountains was rare, prominent, and magical for the inhabitants of the surrounding, largely arid, Semitic and Canaanite space." } }
+              ],
+              synthesis: { he: "הארץ הלבנה – על שום הפסגות המושלגות של הריה, כפי שתוארו בטקסטים המקראיים הקדומים.", en: "The White Land - due to the snowy peaks of its mountains, as described in ancient biblical texts." }
+            },
+            figure: {
+              name: { he: "בשארה אל-ח'ורי", en: "Bechara El Khoury" },
+              years: "1890 - 1964",
+              childhood: { 
+                he: "נולד בעיירה ההררית עאליי למשפחה נוצרית מרונית עשירה, משכילה ובעלת השפעה עמוקה בהר הלבנון. הוא למד לימודי משפטים מתקדמים באוניברסיטאות יוקרתיות בצרפת, ספג תרבות צרפתית-מערבית עמוקה והפך לעורך דין מצליח, אינטלקטואל ומוכר בביירות טרם כניסתו לחיים הפוליטיים הסוערים של המנדט.",
+                en: "Born in the mountainous town of Aley to a wealthy, educated, and deeply influential Maronite Christian family in Mount Lebanon. He studied advanced law at prestigious universities in France, absorbed deep French-Western culture, and became a successful, well-known lawyer and intellectual in Beirut before entering the turbulent political life of the Mandate."
+              },
+              ideology: { 
+                he: "ח'ורי היה ההוגה והמיישם של 'האמנה הלאומית' (1943) – אידאולוגיה שניסתה ליצור פשרה היסטורית ואזרחית בלבנון השסועה: הנוצרים המרונים יוותרו על דרישתם לחסות צרפתית ויפסיקו לשאת עיניים רק למערב, ובתמורה, המוסלמים יוותרו על דרישתם להתבטל ולהסתפח לסוריה ולאומה הערבית הגדולה. יחד, הם ייצרו לאומיות לבנונית עצמאית, פלורליסטית ומאוזנת.",
+                en: "Khoury was the conceiver and implementer of the 'National Pact' (1943) – an ideology that attempted to create a historical and civil compromise in fractured Lebanon: Maronite Christians would renounce their demand for French protection and stop looking solely to the West, and in return, Muslims would renounce their demand to dissolve into and annex to Syria and the greater Arab nation. Together, they would create an independent, pluralistic, and balanced Lebanese nationalism."
+              },
+              achievements: { 
+                he: "היה הנשיא הראשון של הרפובליקה של לבנון העצמאית. הוא נכלא על ידי הצרפתים (יחד עם ראש הממשלה הסוני) בשל מאבקו לעצמאות. חתימתו על האמנה הלאומית ב-1943 עיצבה את חלוקת הכוח העדתי הדמוקרטי במדינה עד ימינו (נשיא מרוני, ראש ממשלה סוני, יו\"ר פרלמנט שיעי). על אף שהאמנה קרסה מאוחר יותר לתוך מלחמת האזרחים, ח'ורי נחשב לאדריכל העצמאות ההיסטורי של לבנון.",
+                en: "He was the first President of the independent Lebanese Republic. He was imprisoned by the French (along with the Sunni Prime Minister) for his struggle for independence. His signing of the National Pact in 1943 shaped the democratic sectarian power-sharing in the country to this day (Maronite President, Sunni PM, Shia Speaker of Parliament). Although the pact later collapsed into the civil war, Khoury is considered the historical architect of Lebanon's independence."
+              }
             },
             map: {
               url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_levant_syria_lebanon.jpg",
-              title: "מפת סוריה והלבנט המורחב",
-              desc: "מציגה את המרחב הרחב המכונה היסטורית א-שאם או סוריה הגדולה."
+              title: { he: "מפת הלבנון והמרחב - המאה ה-17", en: "Map of Lebanon and the Levant - 17th Century" },
+              desc: { 
+                he: "מפה היסטורית מרשימה המציגה את רכסי ההרים הגבוהים והבולטים של הר הלבנון, יחד עם ערי הנמל הפיניקיות העתיקות כצור וצידון, שהיוו את מרכז הסחר והתרבות של מזרח הים התיכון.",
+                en: "An impressive historical map showing the high and prominent mountain ranges of Mount Lebanon, along with ancient Phoenician port cities like Tyre and Sidon, which formed the trade and cultural hub of the Eastern Mediterranean."
+              }
             }
           },
           {
             id: "iraq",
-            name: "עיראק",
+            name: { he: "עיראק", en: "Iraq" },
             englishName: "Iraq",
-            officialName: "רפובליקת עיראק",
-            FlagComponent: FlagIraq,
-            areaNum: "~438,317 קמ\"ר",
-            populationNum: "~43,000,000",
-            currency: "דינר עיראקי (IQD)",
-            area: "כ-438,317 קמ\"ר. אזור פורה ועשיר במים (מסופוטמיה - בין הנהרות הפרת והחידקל) במרכז, המוקף במדבריות במערב ורכסי הרים במזרח (כורדיסטן). עיראק יושבת על צומת דרכים עתיק בין חצי האי ערב, אסיה הקטנה ואיראן.",
-            demographics: {
-              mainNationName: "ערבים וכורדים (פסיפס עדתי)",
-              mainNationPercent: "ערבים 75%, כורדים 15%",
-              description: "עיראק סובלת ממשולש דמוגרפי מתוח: הרוב במדינה הם מוסלמים שיעים (כ-60%, מרוכזים בדרום), אך בעבר השלטון היה בידי המיעוט המוסלמי הסוני (כ-20%, במרכז). בצפון המדינה, אזור הררי, שולטים הכורדים המהווים מיעוט לאומי (סוני ברובו) בעל שאיפות עצמאות."
+            officialName: { he: "רפובליקת עיראק", en: "Republic of Iraq" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/iraq.webp",
+            capital: {
+              name: { he: "בגדאד", en: "Baghdad" },
+              englishName: "Baghdad",
+              etymology: { 
+                he: "קיימות שתי תיאוריות מרכזיות לשם. המובילה היא המקור מהפרסית האמצעית (פהלווי): 'באע'' (Bagh) שמשמעותו אל, ו-'דאד' (dad) שמשמעותו נתן או מתנה. כלומר: 'מתנת האל'. התיאוריה השנייה קושרת את השם לארמית בבלית: 'בג דד', שמשמעותו גן הכבשים. העיר זכתה גם לכינוי ההיסטורי 'מדינת א-סלאם' (עיר השלום).",
+                en: "There are two main theories for the name. The leading one is of Middle Persian (Pahlavi) origin: 'Bagh' meaning god, and 'dad' meaning given or gift. Thus: 'Gift of God'. The second theory links the name to Babylonian Aramaic: 'Bag Dad', meaning sheep enclosure/garden. The city also earned the historical moniker 'Madinat as-Salam' (City of Peace)."
+              },
+              foundingYear: { he: "762 לספירה (על ידי הח'ליף אל-מנצור)", en: "762 AD (By Caliph Al-Mansur)" },
+              reason: { 
+                he: "הח'ליף העבאסי אל-מנצור חיפש את המיקום המושלם לבירת האימפריה האסלאמית החדשה שלו. בגדאד נבחרה מכיוון ששכנה בנקודה קריטית שבה נהרות הפרת והחידקל קרובים מאוד זה לזה, מה שהבטיח שפע חקלאי עצום. מיקום זה אפשר לה לשלוט על נתיבי הסחר בין המזרח (פרס והודו) למערב (סוריה ואירופה), והפך אותה לעיר המעגלית המפוארת ולמרכז הלמידה, המדע והעושר של ימי הביניים ('בית החוכמה').",
+                en: "The Abbasid Caliph Al-Mansur searched for the perfect location for the capital of his new Islamic Empire. Baghdad was chosen because it lay at a critical point where the Euphrates and Tigris rivers are very close to each other, ensuring massive agricultural abundance. This location allowed it to control trade routes between the East (Persia and India) and West (Syria and Europe), turning it into the magnificent circular city and the center of learning, science, and wealth in the Middle Ages ('House of Wisdom')."
+              }
             },
-            modernHistory: "הוקמה כארץ מנדט בריטית. עברה תקופת מלוכה שהסתיימה בהפיכה עקובה מדם ב-1958. עליית מפלגת הבעת' וסדאם חוסיין לשלטון גררה את המדינה לעשורים של רודנות קשה ומלחמות נוראות (מלחמת איראן-עיראק ומלחמת המפרץ). ב-2003, הפלישה האמריקאית הפילה את סדאם אך הובילה לכאוס עדתי עמוק ולעליית דאעש שמאוחר יותר הובס.",
-            foundingYears: "1932 (עצמאות מבריטניה)",
-            flagSymbolism: "הצבעים הפאן-ערביים הסטנדרטיים (אדום, לבן, שחור). במרכז הפס הלבן מופיע כיתוב מסורתי באותיות קופיות ירוקות של ה\"תכביר\": \"אללה אכבר\" (האל גדול מכל). הכיתוב נוסף במקור על ידי סדאם חוסיין ב-1991 ועבר שינויי גופן לאורך השנים כדי לנתקו מהדיקטטור.",
+            areaNum: { he: "~438,317 קמ\"ר", en: "~438,317 sq km" },
+            populationNum: "~43,000,000",
+            currency: { he: "דינר עיראקי (IQD)", en: "Iraqi Dinar (IQD)" },
+            area: { 
+              he: "כ-438,317 קמ\"ר. עיראק יושבת בלב הגיאוגרפי וההיסטורי של 'הסיהר הפורה' – אזור מסופוטמיה (ארץ בין הנהרות). נהרות הפרת והחידקל האדירים חוצים אותה מהצפון לדרום ומעניקים לה חיים מול המדבר הסורי במערב. בצפון ובמזרח, באזור כורדיסטן, מתנשאים רכסי הרי הזגרוס. יש לה גישה זעירה ואסטרטגית למפרץ הפרסי בדרום דרך אזור הביצות שעל יד בצרה.",
+              en: "Approx. 438,317 sq km. Iraq sits at the geographical and historical heart of the 'Fertile Crescent' – the region of Mesopotamia (Land between the rivers). The mighty Euphrates and Tigris rivers cross it from north to south, giving it life against the Syrian desert in the west. In the north and east, in the Kurdistan region, rise the Zagros mountain ranges. It has a tiny, strategic access to the Persian Gulf in the south through the marshlands near Basra."
+            },
+            demographics: {
+              mainNationName: { he: "ערבים וכורדים (פסיפס עדתי)", en: "Arabs & Kurds (Sectarian Mosaic)" },
+              mainNationPercent: { he: "ערבים כ-75%, כורדים כ-15%", en: "~75% Arabs, ~15% Kurds" },
+              description: { 
+                he: "עיראק סובלת ממשולש דמוגרפי מתוח ורווי דם. הרוב במדינה הם מוסלמים שיעים (כ-60%, המרוכזים בעיקר בדרום ובבגדאד), אך במשך רוב ההיסטוריה המודרנית השלטון והאליטה היו בידי המיעוט הערבי הסוני (כ-20%, באזור המרכז המשולש הסוני). בצפון ההררי של המדינה שולטים הכורדים (מיעוט לאומי סוני ברובו) בעלי אוטונומיה ושאיפות עצמאות. קיימים גם מיעוטים נוצרים (אשורים), טורקמנים ויזידים שסבלו מרדיפות קשות.",
+                en: "Iraq suffers from a tense and blood-soaked demographic triangle. The majority in the country are Shia Muslims (~60%, concentrated mainly in the south and Baghdad), but for most of modern history, rule and the elite were held by the Sunni Arab minority (~20%, in the central Sunni Triangle). In the mountainous north, the Kurds rule (a predominantly Sunni national minority) with autonomy and independence aspirations. There are also Assyrian Christian, Turkmen, and Yazidi minorities who suffered severe persecution."
+              }
+            },
+            modernHistory: { 
+              he: "לאחר התפרקות האימפריה העות'מאנית הוקמה על ידי הבריטים כמדינת מנדט (הם המליכו את המלך פייסל הראשון). המלוכה הסתיימה בהפיכה צבאית עקובה מדם ב-1958. עליית מפלגת הבעת' ולאחריה עליית סדאם חוסיין לרודנות אבסולוטית ב-1979, גררה את המדינה לעשורים של מלחמות נוראות (מלחמת שמונה השנים מול איראן, והפלישה לכווית שגררה את מלחמת המפרץ הראשונה והסנקציות). ב-2003, פלישה אמריקאית הפילה את משטר הבעת', אך פירקה את המדינה מנשקה, מה שהוביל לכאוס עדתי אכזרי, למלחמת אזרחים, ולעליית ארגון הטרור דאעש (המדינה האסלאמית) שכבש כשליש מעיראק בטרם הובס על ידי קואליציה.",
+              en: "After the Ottoman Empire's collapse, it was established by the British as a mandate state (they installed King Faisal I). The monarchy ended in a bloody military coup in 1958. The rise of the Ba'ath party, followed by Saddam Hussein's ascent to absolute dictatorship in 1979, dragged the country into decades of horrific wars (the eight-year war with Iran, and the invasion of Kuwait leading to the First Gulf War and sanctions). In 2003, a US invasion toppled the Ba'ath regime but dismantled the state apparatus, leading to brutal sectarian chaos, civil war, and the rise of the ISIS terrorist organization (Islamic State), which captured about a third of Iraq before being defeated by a coalition."
+            },
+            foundingYears: { he: "1932 (עצמאות מבריטניה)", en: "1932 (Independence from Britain)" },
+            flagSymbolism: { 
+              he: "דגל עיראק הנוכחי בנוי מהצבעים הפאן-ערביים הקלאסיים: אדום מסמל גבורה ודם; לבן מסמל שלום ועתיד מזהיר; ושחור מסמל את דיכוי העבר ואת צבעי האסלאם. במרכז הפס הלבן מופיע כיתוב מסורתי באותיות קופיות ירוקות של ה'תכביר': 'אללה אכבר' (האל גדול מכל). הכיתוב נוסף במקור על ידי הרודן סדאם חוסיין ב-1991 (בכתב ידו, בניסיון למשוך אהדה דתית בזמן מלחמת המפרץ). לאחר הפלתו ב-2003, שונה רק גופן הכיתוב לכתב קופי עתיק ואובייקטיבי כדי לנתקו מהדיקטטור, אך הכיתוב נשאר לבקשת הציבור.",
+              en: "The current Iraqi flag features the classic Pan-Arab colors: Red symbolizes bravery and blood; White symbolizes peace and a bright future; Black symbolizes past oppression and Islamic colors. In the center of the white stripe appears traditional text in green Kufic script of the 'Takbir': 'Allahu Akbar' (God is the greatest). The text was originally added by dictator Saddam Hussein in 1991 (in his own handwriting, trying to garner religious sympathy during the Gulf War). After his fall in 2003, only the font was changed to ancient, objective Kufic script to disassociate it from the dictator, but the text remained at the public's request."
+            },
+            nationalAnimal: {
+              name: { he: "אריה מסופוטמי / אריה בבל (Mesopotamian Lion)", en: "Mesopotamian Lion / Lion of Babylon" },
+              reason: { 
+                he: "אף על פי שהאריה המסופוטמי נכחד מהטבע העיראקי בראשית המאה ה-20, האריה הוא הסמל הלאומי, ההיסטורי והמיתולוגי החשוב ביותר של המדינה. דמות 'אריה בבל' (המופיעה בפסלים ותבליטים עתיקים מעיר בבל) מסמלת עוצמה, אימה, גבורה מלכותית ואת השורשים האימפריאליים העמוקים של הציוויליזציות הקדומות שצמחו בבין הנהרות (שומר, אכד, בבל ואשור). עד היום, נבחרת הכדורגל הלאומית של עיראק מכונה 'אריות מסופוטמיה'.",
+                en: "Although the Mesopotamian lion went extinct from the Iraqi wild in the early 20th century, the lion is the most important national, historical, and mythological symbol of the state. The figure of the 'Lion of Babylon' (appearing in ancient statues and reliefs from the city of Babylon) symbolizes power, terror, royal bravery, and the deep imperial roots of the ancient civilizations that arose between the rivers (Sumer, Akkad, Babylon, and Assyria). To this day, the Iraqi national football team is nicknamed the 'Lions of Mesopotamia'."
+              }
+            },
             etymology: {
               parts: [
-                { text: "עֻרוּק (Uruk)", color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: "מקור שומרי ואכדי. ככל הנראה השם נגזר מעיר המדינה השומרית העתיקה 'אורוכ' (Uruk). השם מציין את השורשים העתיקים של הציביליזציה באזור מסופוטמיה." },
-                { text: "עיראק - משמעות בערבית", color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: "בערבית קלאסית, משמעות המילה \"עיראק\" היא \"חוף\", \"גדה פורייה\" או \"מקום סמוך למים\" – תיאור מדויק של האזור המשגשג שבין נהרות הפרת והחידקל אל מול הצחיחות סביבו." }
+                { text: { he: "עֻרוּק (Uruk)", en: "Uruk" }, color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: { he: "המקור העתיק ביותר המוצע הוא שומרי ואכדי. ככל הנראה השם נגזר מעיר המדינה השומרית המקראית 'ארך' או 'אורוכ' (Uruk). השם מציין את השורשים העתיקים של הציביליזציה באזור מסופוטמיה.", en: "The oldest proposed origin is Sumerian and Akkadian. It is highly likely the name derives from the biblical Sumerian city-state 'Erech' or 'Uruk'. The name denotes the ancient roots of civilization in the Mesopotamia region." } },
+                { text: { he: "עיראק - משמעות בערבית", en: "Iraq - Arabic Meaning" }, color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: { he: "בשפה הערבית הקלאסית, משמעות המילה 'עיראק' היא 'חוף', 'גדה פורייה' או 'מקום סמוך למים' – זהו תיאור גיאוגרפי מדויק של האזור המשגשג והמושקה שבין נהרות הפרת והחידקל, המהווה מובלעת חיים ירוקה אל מול הצחיחות המדברית העוטפת אותו.", en: "In classical Arabic, the word 'Iraq' means 'coast', 'fertile bank', or 'place near water' - this is an accurate geographical description of the prosperous, well-watered area between the Euphrates and Tigris rivers, forming a green enclave of life against the desert aridity surrounding it." } }
               ],
-              synthesis: "ארץ גדות הנהר הפורייה, אשר נושאת את שם העיר השומרית העתיקה ביותר."
+              synthesis: { he: "ארץ גדות הנהר הפורייה, אשר נושאת את שם עיר המדינה השומרית הקדומה.", en: "The fertile riverbank land, bearing the name of the ancient Sumerian city-state." }
             },
             figure: {
-              name: "סדאם חוסיין",
-              years: "1937 - 2006",
-              childhood: "נולד בכפר עוג'ה שליד תיכרית למשפחת איכרים סונית. גדל בעוני, בסביבה אלימה וקשה, וגודל בעיקר על ידי דודו שהיה לאומן ערבי קיצוני ושונא בריטים, שעיצב את השקפת עולמו הלוחמנית.",
-              ideology: "השתייך למפלגת הבעת'. דגל בלאומיות ערבית סמכותנית ומיליטריסטית, חילוניות מסוימת (עד שהתחזק באסלאם פוליטי בשנות ה-90), אכזריות פוליטית חסרת מעצורים, ושאיפה מגלומנית להפוך את עיראק להגמוניה האזורית שתשחזר את תהילת בבל והחליפות העבאסית.",
-              achievements: "הפך לנשיא עיראק ודיקטטור אבסולוטי ב-1979. פיתח תשתיות חזקות בשנותיו הראשונות, אך גרר את עיראק לשלוש מלחמות הרסניות. הודח בפלישה האמריקאית ב-2003, נשפט על פשעים נגד האנושות (כולל רצח עם של כורדים ושיעים) והוצא להורג בתלייה."
+              name: { he: "המלך פייסל הראשון", en: "King Faisal I" },
+              years: "1885 - 1933",
+              childhood: { 
+                he: "נולד בעיר טאיף שבחג'אז (כיום בסעודיה) כבנו של חוסיין בן עלי, השריף ההאשמי של מכה. בילדותו גדל בגלות מכובדת באיסטנבול תחת עין הסולטאן העות'מאני, שם רכש השכלה פוליטית, צבאית ודיפלומטית ברמה הגבוהה ביותר, ולמד כיצד פועלות אימפריות.",
+                en: "Born in the city of Taif in the Hejaz (now Saudi Arabia) as the son of Hussein bin Ali, the Hashemite Sharif of Mecca. In his childhood, he grew up in honorable exile in Istanbul under the eye of the Ottoman Sultan, where he acquired top-level political, military, and diplomatic education, learning how empires operate."
+              },
+              ideology: { 
+                he: "האידאולוגיה שלו התבססה על לאומיות פאן-ערבית נאורה ומתקדמת. הוא שאף לשחרר את הערבים מעול העות'מאנים ולאחדם לממלכה אחת גדולה וסובלנית. הוא דגל בהידברות ופשרה (אף חתם על הסכם ויצמן-פייסל ההיסטורי עם התנועה הציונית), וחיפש דרך לאחד את השסעים העמוקים (שיעים, סונים וכורדים) בעיראק באמצעות בניית צבא חזק וזהות עיראקית מודרנית.",
+                en: "His ideology was based on enlightened and progressive Pan-Arab nationalism. He aspired to liberate the Arabs from the Ottoman yoke and unite them into one large, tolerant kingdom. He advocated dialogue and compromise (even signing the historic Faisal-Weizmann Agreement with the Zionist movement), and sought a way to unite the deep rifts (Shias, Sunnis, and Kurds) in Iraq by building a strong army and a modern Iraqi identity."
+              },
+              achievements: { 
+                he: "היה מפקד 'המרד הערבי הגדול' (יחד עם לורנס איש ערב) שסייע לבריטים לכבוש את דמשק. לאחר שגורש מסוריה על ידי הצרפתים, הבריטים המליכו אותו ב-1921 למלך עיראק (שהורכבה מ-3 מחוזות עות'מאניים נפרדים). פייסל נחשב לאבי האומה העיראקית, ניווט במיומנות בין האינטרס הבריטי לדרישות העצמאות, והצליח להכריז על עצמאותה וכניסתה של עיראק לחבר הלאומים ב-1932.",
+                en: "He was a commander of the 'Great Arab Revolt' (alongside Lawrence of Arabia) that helped the British capture Damascus. After being expelled from Syria by the French, the British crowned him in 1921 as King of Iraq (formed from 3 disparate Ottoman provinces). Faisal is considered the father of the Iraqi nation, navigating skillfully between British interests and independence demands, and successfully declaring Iraq's independence and entry into the League of Nations in 1932."
+              }
             },
             map: {
               url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_iraq_mesopotamia.jpg",
-              title: "מפת מסופוטמיה והאזור",
-              desc: "מציגה את עיראק (מסופוטמיה) כישות מוגדרת היטב סביב נהרות הפרת והחידקל."
+              title: { he: "מפת מסופוטמיה העתיקה - 1710", en: "Map of Ancient Mesopotamia - 1710" },
+              desc: { 
+                he: "מפה קרטוגרפית אירופאית המציגה את מסופוטמיה ('הארץ שבין הנהרות') כישות מוגדרת היטב סביב נהרות הפרת והחידקל, בטרם שורטטו גבולותיה הישרים והמנדטוריים של עיראק המודרנית.",
+                en: "A European cartographic map showing Mesopotamia ('The land between the rivers') as a well-defined entity around the Euphrates and Tigris rivers, before the straight, mandatory borders of modern Iraq were drawn."
+              }
             }
           },
           {
             id: "iran",
-            name: "איראן",
+            name: { he: "איראן", en: "Iran" },
             englishName: "Iran",
-            officialName: "הרפובליקה האסלאמית של איראן",
-            FlagComponent: FlagIran,
-            areaNum: "~1,648,195 קמ\"ר",
-            populationNum: "~89,000,000",
-            currency: "ריאל איראני (IRR)",
-            area: "כ-1,648,195 קמ\"ר. המדינה השנייה בגודלה במזרח התיכון. טופוגרפיה מורכבת ועוצמתית: רמה מרכזית צחיחה המוקפת בשרשראות הרים אדירות (הרי הזגרוס במערב ואלבורז), התוחמות את אזורי החקלאות והיישוב.",
-            demographics: {
-              mainNationName: "פרסים",
-              mainNationPercent: "כ-61%",
-              description: "איראן איננה מדינה ערבית. היא מורכבת מרוב של דוברי פרסית (הודו-אירופאים), אך היא פסיפס לאומי מרתק הכולל מיעוטים גדולים של אזרים ממוצא טורקי (כ-16%), כורדים (כ-10%), לורים, ערבים, ובלוצ'ים. מבחינה דתית, היא המדינה השיעית הגדולה והמשפיעה בעולם."
+            officialName: { he: "הרפובליקה האסלאמית של איראן", en: "Islamic Republic of Iran" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/iran.webp",
+            capital: {
+              name: { he: "טהראן", en: "Tehran" },
+              englishName: "Tehran",
+              etymology: { 
+                he: "מקור השם עטוף בערפל לשוני פרסי קדום. התיאוריה המובילה גורסת כי השם מורכב מהמילים 'טאה' (תחתון/תחתית) ו-'ראן' (מדרון הר), כלומר 'המקום שלמרגלות ההר' – תיאור מדויק של העיר השוכנת למרגלות הרי אלבורז הענקיים. תיאוריה אחרת בפרסית עתיקה מתרגמת זאת כ'מקום חם' בניגוד להרים הקפואים סביב.",
+                en: "The name's origin is shrouded in ancient Persian linguistic fog. The leading theory suggests the name is composed of the words 'Tah' (bottom/under) and 'Ran' (mountain slope), meaning 'the place at the foot of the mountain' - an accurate description of the city lying at the foothills of the giant Alborz mountains. Another ancient Persian theory translates it as 'warm place', in contrast to the freezing mountains around it."
+              },
+              foundingYear: { he: "המאה ה-9 (הפכה לבירת האימפריה הפרסית ב-1786)", en: "9th Century (Became capital of the Persian Empire in 1786)" },
+              reason: { 
+                he: "במשך מאות שנים טהראן הייתה כפר קטן ולא מוכר סמוך לעיר העתיקה והחשובה 'ריי'. לאחר שריי נחרבה בידי המונגולים, הפליטים ברחו לטהראן והיא גדלה. ב-1786, אע'א מוחמד חאן, מייסד שושלת קאג'אר, החליט להעביר את בירת האימפריה לטהראן מסיבות אסטרטגיות צבאיות: העיר הייתה מוקפת ברכס הרים שהגן עליה מפני חדירות של צבאות רוסיה מצפון ופשיטות של נוודים טורקמנים ממזרח.",
+                en: "For centuries, Tehran was a small, unknown village near the important ancient city of 'Rayy'. After Rayy was destroyed by the Mongols, refugees fled to Tehran, and it grew. In 1786, Agha Mohammad Khan, founder of the Qajar dynasty, decided to move the empire's capital to Tehran for military strategic reasons: the city was surrounded by a mountain range that protected it from incursions by Russian armies from the north and raids by Turkmen nomads from the east."
+              }
             },
-            modernHistory: "לאחר שנים של שלטון מונרכי תחת השושלת הפהלווית הפרו-מערבית (השאה), חוותה איראן ב-1979 את המהפכה האסלאמית ההיסטורית. השאה הודח, ורוחאללה ח'ומייני שב מהגלות כדי להקים תיאוקרטיה דתית רדיקלית (שלטון חכם ההלכה). המהפכה שינתה לחלוטין את פני המזרח התיכון ויצרה עימות גיאופוליטי מתמשך מול המערב וישראל.",
-            foundingYears: "1979 (המהפכה האסלאמית)",
-            flagSymbolism: "הצבעים (ירוק, לבן, אדום) הם צבעי המסורת האיראנית: הירוק מסמל אסלאם וצמיחה, הלבן טוהר, והאדום דם המרטירים. במרכז מצוי סמל אדום ייחודי דמוי צבעוני המייצג את המילה \"אללה\" בצורה מסוגננת וכן ארבעה חרמשים (אדריכלות המייצגת את 5 עמודי האסלאם). לאורך שולי הפס הלבן כתוב \"אללה אכבר\" 22 פעמים, לציון תאריך המהפכה בלוח השנה הפרסי (22 בבהמן).",
+            areaNum: { he: "~1,648,195 קמ\"ר", en: "~1,648,195 sq km" },
+            populationNum: "~89,000,000",
+            currency: { he: "ריאל איראני (IRR)", en: "Iranian Rial (IRR)" },
+            area: { 
+              he: "כ-1,648,195 קמ\"ר. המדינה השנייה בגודלה במזרח התיכון (אחרי סעודיה). הגיאוגרפיה שלה עוצמתית, מבודדת וטבעית להגנה: רמה מרכזית רחבת ידיים וצחיחה ביותר, המוקפת ומבוצרת לחלוטין על ידי שרשראות הרים אדירות ובלתי עבירות – הרי הזגרוס במערב ורכס אלבורז בצפון. הגיאוגרפיה הזו מכתיבה את ריכוז האוכלוסייה בשולי המדינה ואת בידודה התרבותי.",
+              en: "Approx. 1,648,195 sq km. The second largest country in the Middle East (after Saudi Arabia). Its geography is powerful, isolated, and naturally defensible: a vast, extremely arid central plateau, completely surrounded and fortified by massive, impassable mountain chains - the Zagros Mountains in the west and the Alborz range in the north. This geography dictates the concentration of population at the country's edges and its cultural isolation."
+            },
+            demographics: {
+              mainNationName: { he: "פרסים", en: "Persians" },
+              mainNationPercent: { he: "כ-61%", en: "~61%" },
+              description: { 
+                he: "חשוב להדגיש: איראן איננה מדינה ערבית! היא מורכבת מרוב דומיננטי של דוברי השפה הפרסית (בני עמים הודו-אירופאים), אך היא מהווה פסיפס לאומי ואתני מרתק הכולל מיעוטים גדולים של אזרים ממוצא טורקי (כ-16%, כולל המנהיג חמינאי), כורדים (כ-10%), לורים, ערבים (בדרום בדרום-מערב), ובלוצ'ים (במזרח). מבחינה דתית, איראן היא המעוז והמדינה השיעית (תריסריים) הגדולה, החזקה והמשפיעה ביותר בעולם.",
+                en: "It's important to emphasize: Iran is NOT an Arab country! It comprises a dominant majority of Persian speakers (Indo-European peoples), but it forms a fascinating national and ethnic mosaic including large minorities of Turkic-origin Azerbaijanis (~16%, including Supreme Leader Khamenei), Kurds (~10%), Lurs, Arabs (in the southwest), and Balochs (in the east). Religiously, Iran is the stronghold and the largest, strongest, and most influential (Twelver) Shia state in the world."
+              }
+            },
+            modernHistory: { 
+              he: "ההיסטוריה האיראנית המודרנית סוערת במיוחד. לאחר עשרות שנים של שלטון מונרכי, חילוני וראוותני תחת השושלת הפהלווית הפרו-מערבית (השאה, שנתמך על ידי ארה\"ב ובריטניה לאחר הפיכת 1953 נגד רה\"מ מוסאדק), חוותה איראן ב-1979 את המהפכה האסלאמית ההיסטורית. השאה הודח, והאייתוללה ח'ומייני שב מהגלות כמנצח כדי להקים תיאוקרטיה דתית רדיקלית (שלטון חכמי ההלכה). המהפכה, יחד עם מלחמת איראן-עיראק האכזרית (1980-1988), שינו לחלוטין את פני המזרח התיכון, יצרו נתק ועימות גיאופוליטי מתמשך מול המערב וגישה אנטי-ציונית קנאית המלווה בתוכנית גרעין ובתמיכה במיליציות שילוח ברחבי הלבנט.",
+              en: "Modern Iranian history is exceptionally turbulent. After decades of secular, ostentatious monarchical rule under the pro-Western Pahlavi dynasty (the Shah, supported by the US and UK post the 1953 coup against PM Mosaddegh), Iran experienced the historic Islamic Revolution in 1979. The Shah was ousted, and Ayatollah Khomeini returned from exile as a victor to establish a radical religious theocracy (Rule of the Islamic Jurist). The revolution, along with the brutal Iran-Iraq War (1980-1988), completely changed the face of the Middle East, creating an ongoing geopolitical rift and confrontation with the West and a zealous anti-Zionist approach accompanied by a nuclear program and support for proxy militias across the Levant."
+            },
+            foundingYears: { he: "1979 (המהפכה האסלאמית וייסוד הרפובליקה)", en: "1979 (Islamic Revolution & Republic founding)" },
+            flagSymbolism: { 
+              he: "הצבעים (ירוק, לבן, אדום) הם צבעי המסורת האיראנית העתיקה, אך הדגל עצמו עוצב מחדש לאחר מהפכת 1979. הירוק מסמל אסלאם וצמיחה, הלבן טוהר, והאדום את דם המרטירים (השהידים). במרכז הפס הלבן ניצב סמל אדום ייחודי דמוי פרח צבעוני (סמל לאבל); הסמל מורכב מארבעה חרמשים וחרב, המייצגים את המילה 'אללה' בצורה גיאומטרית מסוגננת ואת 5 עמודי האסלאם. לאורך שולי הפס הלבן המפרידים בין הצבעים, כתוב בכתב כופי אומנותי 'אללה אכבר' בדיוק 22 פעמים – המספר מסמל את תאריך ניצחון המהפכה בלוח השנה הפרסי (22 בחודש בהמן).",
+              en: "The colors (green, white, red) are ancient Iranian traditional colors, but the flag itself was redesigned after the 1979 revolution. Green symbolizes Islam and growth, White purity, and Red the blood of martyrs. In the center of the white stripe stands a unique red emblem resembling a tulip (a symbol of mourning); the emblem consists of four crescents and a sword, geometrically representing the word 'Allah' and the 5 pillars of Islam. Along the inner edges of the white stripe, 'Allahu Akbar' is written in stylized Kufic script exactly 22 times - the number symbolizes the date of the revolution's victory in the Persian calendar (the 22nd of the month of Bahman)."
+            },
+            nationalAnimal: {
+              name: { he: "ברדלס אסיאתי (Asiatic Cheetah)", en: "Asiatic Cheetah" },
+              reason: { 
+                he: "הברדלס האסיאתי (המכונה גם 'ברדלס איראני') הוא תת-מין נדיר ביותר ונמצא בסכנת הכחדה קריטית, אשר שרד בטבע אך ורק באזורי המדבר המרכזי של איראן. החיה מסמלת את המהירות, הזריזות והיופי הפראי של הטבע האיראני. המאבק הנואש לשמר את הברדלסים האחרונים שנותרו באיראן הפך למקור של גאווה לאומית, ואף הופיע כקמע וכהדפס על חולצות נבחרת הכדורגל הלאומית ('טים מלי') במונדיאל להעלאת המודעות למורשת הטבע האיראנית.",
+                en: "The Asiatic Cheetah (also known as the 'Iranian Cheetah') is a critically endangered and extremely rare subspecies that has survived in the wild exclusively in the central desert regions of Iran. The animal symbolizes the speed, agility, and wild beauty of Iranian nature. The desperate struggle to preserve the last remaining cheetahs in Iran has become a source of national pride, and even appeared as a mascot and print on the national football team's jerseys ('Team Melli') at the World Cup to raise awareness of Iranian natural heritage."
+              }
+            },
             etymology: {
               parts: [
-                { text: "אריה (Arya)", color: "text-red-400", bg: "bg-red-400/10", border: "border-red-500/30", desc: "מקור השם עתיק ביותר ונגזר מהשפות ההודו-איראניות הקדומות. המילה אריה משמעותה \"אצילי\" או \"בן חורין\"." },
-                { text: "ארץ הארים (Eran)", color: "text-yellow-400", bg: "bg-yellow-400/10", border: "border-yellow-500/30", desc: "המושג התפתח ל\"איראן\" בפרסית אמצעית (Eran-shahr), שפירושה \"ארצם של הארים\" (העמים האיראניים המקוריים). בשנת 1935, השאה האיראני פנה באופן רשמי לעולם ודרש להשתמש בשם המקורי \"איראן\" במקום בשם היווני העתיק \"פרס\" (Persia)." }
+                { text: { he: "אריה (Arya)", en: "Arya" }, color: "text-red-400", bg: "bg-red-400/10", border: "border-red-500/30", desc: { he: "מקור השם עתיק ביותר ונגזר מהשפות ההודו-איראניות הקדומות. המילה 'אריה' (Arya) משמעותה 'אצילי', 'מכובד' או 'בן חורין'.", en: "The name's origin is extremely ancient, derived from ancient Indo-Iranian languages. The word 'Arya' means 'noble', 'honorable', or 'free man'." } },
+                { text: { he: "ארץ הארים (Eran)", en: "Land of the Aryans (Eran)" }, color: "text-yellow-400", bg: "bg-yellow-400/10", border: "border-yellow-500/30", desc: { he: "המושג התפתח ל'איראן' בפרסית אמצעית (Eran-shahr), שפירושה המילולי 'ארצם של הארים' (העמים האיראניים המקוריים). בשנת 1935, השאה האיראני רזה פהלווי פנה למדינות העולם ודרש להשתמש בשם המקורי 'איראן' במקום בשם היווני-מערבי 'פרס' (Persia).", en: "The concept evolved into 'Iran' in Middle Persian (Eran-shahr), literally meaning 'Land of the Aryans' (the original Iranian peoples). In 1935, the Iranian Shah Reza Pahlavi officially asked the international community to use the native name 'Iran' instead of the Western-Greek name 'Persia'." } }
               ],
-              synthesis: "ארצם של האריים העתיקים, בני החורין והאצילים של הרמה האיראנית."
+              synthesis: { he: "ארצם של בני החורין והאצילים של הרמה האיראנית.", en: "Land of the free men and nobles of the Iranian plateau." }
             },
             figure: {
-              name: "האייתוללה רוחאללה ח'ומייני",
+              name: { he: "האייתוללה רוחאללה ח'ומייני", en: "Ayatollah Ruhollah Khomeini" },
               years: "1902 - 1989",
-              childhood: "נולד בעיר ח'ומיין למשפחת אנשי דת שיעים. התייתם מאביו (שנרצח) בגיל צעיר. השקיע את כל נעוריו בלימודים אינטנסיביים של תיאולוגיה, הלכה (פיקה), פילוסופיה ומיסטיקה בסמינרים של קום.",
-              ideology: "הוגה \"שלטון חכם ההלכה\" (ולאית-י פקיה) – תפיסה מהפכנית שלפיה עד לחזרתו של האימאם הנעלם, השלטון המדיני המוחלט והעליון חייב להימצא בידיו של איש הדת הבכיר ביותר (המנהיג העליון). דגל באנטי-מערביות, פופוליזם אסלאמי קיצוני, וחיסול כל השפעה תרבותית זרה.",
-              achievements: "הצליח, מתוך מקום גלותו בצרפת ובעיראק, להצית ולהנהיג את המהפכה העממית האדירה של 1979 שהפילה את מונרכיית הפהלווי העוצמתית. הקים את הרפובליקה האסלאמית של איראן והפך למנהיגה העליון עד יום מותו."
+              childhood: { 
+                he: "נולד בעיר ח'ומיין למשפחה של אנשי דת שיעים. הוא חווה טראומה בילדותו כשהתייתם מאביו (שנרצח על ידי בעלי אדמות מקומיים). הוא עבר לעיר הקדושה קום, שם השקיע את כל שנות נעוריו ובגרותו בלימודים אינטנסיביים של תיאולוגיה שיעית, הלכה (פיקה), פילוסופיה איסלאמית ומיסטיקה (אירפאן).",
+                en: "Born in the town of Khomein to a family of Shia clerics. He experienced childhood trauma when orphaned of his father (murdered by local landlords). He moved to the holy city of Qom, where he spent his entire youth and adulthood in intensive studies of Shia theology, jurisprudence (Fiqh), Islamic philosophy, and mysticism (Irfan)."
+              },
+              ideology: { 
+                he: "הוגה ומיישם תורת 'שלטון חכם ההלכה' (ולאית-י פקיה) – תפיסה שיעית פוליטית מהפכנית וחסרת תקדים, שלפיה עד לחזרתו המשיחית של 'האימאם הנעלם' (המהדי), השלטון המדיני המוחלט והעליון חייב להימצא בידיו של איש הדת וההלכה הבכיר ביותר (המנהיג העליון). הוא דגל באנטי-מערביות יוקדת ('השטן הגדול'), פופוליזם אסלאמי לעזרת המדוכאים, אנטי-ציונות רדיקלית ('השטן הקטן'), וחיסול כל השפעה תרבותית וחילונית זרה באיראן.",
+                en: "Conceiver and implementer of the 'Guardianship of the Islamic Jurist' (Velayat-e Faqih) – an unprecedented, revolutionary political Shia concept dictating that until the messianic return of the 'Hidden Imam' (Mahdi), absolute and supreme political rule must reside in the hands of the highest religious jurist (Supreme Leader). He championed burning anti-Westernism ('The Great Satan'), Islamic populism for the oppressed, radical anti-Zionism ('The Little Satan'), and the eradication of any foreign secular cultural influence in Iran."
+              },
+              achievements: { 
+                he: "הישגו האדיר היה היכולת, מתוך מקום גלותו הממושכת בצרפת ובעיראק (אליה גורש על ידי השאה), להצית, להנחות ולהנהיג את המהפכה העממית האדירה של 1979 שהפילה את מונרכיית הפהלווי העוצמתית שנתמכה על ידי כל מעצמות המערב. הוא חזר לאיראן לקבלת פנים של מיליונים, הקים מאפס את הרפובליקה האסלאמית של איראן על מוסדותיה (משמרות המהפכה), שרד מלחמה קיומית נגד עיראק, והפך למנהיגה העליון עד יום מותו.",
+                en: "His colossal achievement was the ability, from his prolonged exile in France and Iraq (where he was banished by the Shah), to ignite, guide, and lead the massive popular revolution of 1979 that toppled the powerful Pahlavi monarchy supported by all Western powers. He returned to Iran to a reception of millions, built the Islamic Republic of Iran and its institutions (IRGC) from scratch, survived an existential war against Iraq, and became its Supreme Leader until his dying day."
+              }
             },
             map: {
               url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_iran_persia.jpg",
-              title: "מפת פרס ואיראן ההיסטורית",
-              desc: "מציגה את הגבולות ההיסטוריים של האימפריה הפרסית המפוארת והרמה האיראנית."
+              title: { he: "מפת האימפריה הפרסית - 1740", en: "Map of the Persian Empire - 1740" },
+              desc: { 
+                he: "מפה היסטורית המציגה את הגבולות ההיסטוריים של האימפריה הפרסית המפוארת והרמה האיראנית, הכלואה באופן טבעי בין רכסי ההרים לבין הים הכספי והמפרץ הפרסי.",
+                en: "A historical map showing the historical borders of the glorious Persian Empire and the Iranian plateau, naturally confined between mountain ranges, the Caspian Sea, and the Persian Gulf."
+              }
             }
           },
           {
             id: "turkey",
-            name: "טורקיה",
+            name: { he: "טורקיה", en: "Turkey" },
             englishName: "Turkey",
-            officialName: "רפובליקת טורקיה",
-            FlagComponent: FlagTurkey,
-            areaNum: "~783,562 קמ\"ר",
-            populationNum: "~85,000,000",
-            currency: "לירה טורקית (TRY)",
-            area: "כ-783,562 קמ\"ר. מדינה טרנס-יבשתית ייחודית היושבת ברובה הגדול באסיה הקטנה (אנטוליה) וחלקה המערבי הקטן (תראקיה המזרחית) נמצא באירופה. הגיאוגרפיה כוללת הרים נישאים, רמות גבוהות, וקווי חוף ארוכים של הים השחור, הים התיכון והים האגאי.",
-            demographics: {
-              mainNationName: "טורקים",
-              mainNationPercent: "כ-75%",
-              description: "רוב מוחלט של מוסלמים סונים המגדירים עצמם כטורקים אתניים. המיעוט הבולט והמשמעותי ביותר הוא הכורדים (כ-18% עד 25%), המרוכזים בעיקר בדרום-מזרח המדינה ומנהלים מאבק ארוך שנים להכרה פוליטית ולעצמאות תרבותית."
+            officialName: { he: "רפובליקת טורקיה", en: "Republic of Turkey" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/turkey.webp",
+            capital: {
+              name: { he: "אנקרה", en: "Ankara" },
+              englishName: "Ankara",
+              etymology: { 
+                he: "מקור השם עתיק במיוחד ונגזר מהמילה הפריגית או היוונית הקדומה 'אנְקִירָה' (Ancyra), שמשמעותה 'עוגן'. על פי המיתולוגיה היוונית, המלך מידאס הקים את העיר במקום שבו מצא עוגן ספינה שהושלך על הקרקע, הרחק מכל ים. העיר נודעה בפי האירופאים גם כ'אנגורה' (Angora), שם שניתן לחיות בעלות שיער ארוך שגודלו באזור (כמו צמר אנגורה של ארנבות וחתולים).",
+                en: "The name's origin is exceedingly ancient, derived from the Phrygian or ancient Greek word 'Ancyra', meaning 'anchor'. According to Greek mythology, King Midas founded the city on the spot where he found a ship's anchor cast on the ground, far from any sea. The city was also known to Europeans as 'Angora', a name given to long-haired animals bred in the region (like Angora rabbits and cats)."
+              },
+              foundingYear: { he: "העת העתיקה (הוכרזה כבירת הרפובליקה המודרנית ב-1923)", en: "Antiquity (Declared capital of the modern Republic in 1923)" },
+              reason: { 
+                he: "לאחר מלחמת העולם הראשונה ותבוסת העות'מאנים, העיר הגדולה איסטנבול הייתה פגיעה מאוד וכבושה בידי כוחות זרים (בריטים, צרפתים ויוונים). מוסטפא כמאל אטאטורק בחר להקים את מפקדת המרד שלו באנקרה מכיוון שהיא מוקמה עמוק ובטוח בלב רמת אנטוליה המרכזית. ההחלטה לקבע אותה כבירה ב-1923 הייתה סמלית ופוליטית לא פחות משהייתה אסטרטגית: זה היה אקט של שבירה מוחלטת מהעבר העות'מאני-אימפריאלי והמושחת של איסטנבול, והעברת מרכז הכובד הלאומי אל הליבה הטורקית-האנטולית החילונית והחדשה.",
+                en: "After WWI and the Ottoman defeat, the great city of Istanbul was highly vulnerable and occupied by foreign forces (British, French, and Greeks). Mustafa Kemal Ataturk chose to establish his rebellion headquarters in Ankara because it was located deep and safe within the central Anatolian plateau. The decision to cement it as the capital in 1923 was symbolic and political as much as it was strategic: it was an act of a complete break from Istanbul's Ottoman-imperial and corrupt past, shifting the national center of gravity to the new, secular Turkish-Anatolian core."
+              }
             },
-            modernHistory: "קמה על חורבותיה של האימפריה העות'מאנית האדירה שהתפרקה לחלוטין לאחר תבוסתה במלחמת העולם הראשונה. בהנהגתו הכריזמטית של מוסטפא כמאל אטאטורק, טורקיה הדפה פלישות זרות (מלחמת העצמאות של טורקיה) והפכה לרפובליקה חילונית מודרנית בשנת 1923. בעשורים האחרונים, תחת שלטון רג'פ טאיפ ארדואן, המדינה עברה תהליכים של התקרבות חזרה למסורת אסלאמית ולשמרנות לאומנית.",
-            foundingYears: "1923 (הקמת הרפובליקה)",
-            flagSymbolism: "דגל בעל היסטוריה של מאות שנים שהיה גם דגלה של האימפריה העות'מאנית בסופה. הרקע האדום נחשב לצבע המסורתי של השבטים הטורקיים ומסמל את דם הלוחמים. הסהר והכוכב הלבנים הם סמלים אסלאמיים עתיקים שאומצו על ידי הטורקים וזוהו עמם, המייצגים תקווה, התחדשות ואמונה.",
+            areaNum: { he: "~783,562 קמ\"ר", en: "~783,562 sq km" },
+            populationNum: "~85,000,000",
+            currency: { he: "לירה טורקית (TRY)", en: "Turkish Lira (TRY)" },
+            area: { 
+              he: "כ-783,562 קמ\"ר. טורקיה היא מדינה טרנס-יבשתית ייחודית היושבת על צומת הדרכים הקריטי בין המזרח התיכון לאירופה. רובה המוחלט של המדינה (97%) שוכן באסיה הקטנה (חצי האי אנטוליה), וחלקה המערבי הקטן (תראקיה המזרחית, הכולל חלק מאיסטנבול) נמצא ביבשת אירופה. הגיאוגרפיה הטורקית פראית ומועדת לרעידות אדמה, וכוללת הרים נישאים, רמות גבוהות (רמת אנטוליה), אגמים עצומים, וקווי חוף ארוכים, יפים ומפורצים של הים השחור (בצפון), הים התיכון (בדרום) והים האגאי (במערב). מיצרי הבוספורוס והדרדנלים שולטים על המעבר הימי החיוני לאירופה.",
+              en: "Approx. 783,562 sq km. Turkey is a unique transcontinental country sitting at the critical crossroads between the Middle East and Europe. The absolute majority of the country (97%) lies in Asia Minor (the Anatolian Peninsula), and its small western part (East Thrace, including part of Istanbul) is on the European continent. Turkish geography is rugged and prone to earthquakes, featuring towering mountains, high plateaus (Anatolian Plateau), vast lakes, and long, beautiful, indented coastlines of the Black Sea (north), Mediterranean (south), and Aegean Sea (west). The Bosphorus and Dardanelles straits control the vital maritime passage to Europe."
+            },
+            demographics: {
+              mainNationName: { he: "טורקים", en: "Turks" },
+              mainNationPercent: { he: "כ-75%", en: "~75%" },
+              description: { 
+                he: "אוכלוסיית טורקיה מורכבת מרוב מוחלט של מוסלמים סונים המגדירים עצמם כטורקים אתניים (כור היתוך של עממי אנטוליה ושבטים טורקיים עתיקים). עם זאת, המיעוט הבולט, המשמעותי והרגיש ביותר פוליטית הוא הכורדים (המוערכים בכ-18% עד 25% מהאוכלוסייה), המרוכזים בעיקר בהרים של דרום-מזרח המדינה ומנהלים מזה עשורים מאבק עקוב מדם להכרה פוליטית ולעצמאות תרבותית מלאה. בנוסף, ישנו מיעוט דתי של עלווים (Alevis), המהווים זרם מתון ושונה של האסלאם השיעי.",
+                en: "Turkey's population consists of an absolute majority of Sunni Muslims who identify as ethnic Turks (a melting pot of Anatolian peoples and ancient Turkic tribes). However, the most prominent, significant, and politically sensitive minority is the Kurds (estimated at 18% to 25% of the population), concentrated mainly in the mountains of the southeast, who have been waging a decades-long bloody struggle for political recognition and full cultural independence. Additionally, there is a religious minority of Alevis, constituting a different, moderate branch of Shia Islam."
+              }
+            },
+            modernHistory: { 
+              he: "טורקיה המודרנית קמה כאות של תקומה על חורבותיה המעשנים של האימפריה העות'מאנית האדירה, שהתפרקה לחלוטין לאחר תבוסתה במלחמת העולם הראשונה וחלוקת שטחיה על ידי המעצמות. בהנהגתו הכריזמטית והצבאית של מוסטפא כמאל אטאטורק, טורקיה הדפה פלישות זרות ומיוון (מלחמת העצמאות של טורקיה) והפכה לרפובליקה חילונית מודרנית בשנת 1923. במשך עשורים הצבא הטורקי שמר על אופייה החילוני של המדינה באמצעות הפיכות צבאיות בעת הצורך. בעשורים האחרונים של המאה ה-21, תחת שלטונו הארוך של רג'פ טאיפ ארדואן ומפלגת ה-AKP, המדינה עברה תהליכים דרמטיים של התקרבות חזרה למסורת האסלאמית, ריכוז סמכויות נשיאותיות, ושמרנות לאומנית המשנה את פניה של מורשת אטאטורק.",
+              en: "Modern Turkey emerged as a sign of resurgence on the smoking ruins of the mighty Ottoman Empire, which completely collapsed after its defeat in WWI and the partition of its territories by the powers. Under the charismatic and military leadership of Mustafa Kemal Ataturk, Turkey repelled foreign and Greek invasions (Turkish War of Independence) and became a modern, secular republic in 1923. For decades, the Turkish military guarded the state's secular character through military coups when necessary. In the recent decades of the 21st century, under the long rule of Recep Tayyip Erdogan and the AKP party, the country has undergone dramatic processes of returning to Islamic tradition, centralizing presidential powers, and nationalist conservatism altering the face of Ataturk's legacy."
+            },
+            foundingYears: { he: "1923 (הקמת הרפובליקה הטורקית מתוך האימפריה)", en: "1923 (Founding of the Turkish Republic from the Empire)" },
+            flagSymbolism: { 
+              he: "דגל בעל היסטוריה של מאות שנים שהיה גם דגלה של האימפריה העות'מאנית בערוב ימיה. הרקע האדום העז נחשב לאורך ההיסטוריה לצבע המסורתי של השבטים הטורקיים ומסמל את דם הלוחמים הרבים שנשפך למען המולדת. הסהר והכוכב הלבנים (המחומש) הם סמלים מזרח-תיכוניים ואסלאמיים עתיקים ביותר שאומצו על ידי הטורקים וזוהו עמם במערב, המייצגים תקווה, התחדשות ואמונה. אגדה טורקית מספרת כי הסמל נראה כהשתקפות של הירח והכוכבים בבריכת דם של לוחמים טורקים לאחר קרב קוסובו (1389).",
+              en: "A flag with centuries of history that was also the flag of the Ottoman Empire in its twilight. The vivid red background has historically been considered the traditional color of Turkic tribes and symbolizes the blood of the many warriors shed for the homeland. The white crescent and star (five-pointed) are highly ancient Middle Eastern and Islamic symbols adopted by the Turks and associated with them in the West, representing hope, renewal, and faith. A Turkish legend claims the symbol was seen as a reflection of the moon and stars in a pool of Turkish warriors' blood after the Battle of Kosovo (1389)."
+            },
+            nationalAnimal: {
+              name: { he: "זאב אפור (Gray Wolf)", en: "Gray Wolf" },
+              reason: { 
+                he: "הזאב האפור הוא הסמל הלאומי האולטימטיבי והקדום ביותר של העמים הטורקיים, המושרש עמוקות במיתולוגיה של טרום-האסלאם ובזהות הפאן-טורקית. באגדת הייסוד הטורקית המפורסמת ('אגדת אסינה' Asena), זאבה כחולה-אפורה הצילה ילד פצוע, הניקה אותו במערה נסתרת, ומצאצאיה נולד השבט הטורקי המקורי שיצא לכבוש את העולם. הזאב מסמל חירות מוחלטת (חיה שלא ניתן לאלפה), אומץ, מהירות ואת רוח הערבות המרכז-אסיאתיות שהיא מולדתם המקורית של הטורקים.",
+                en: "The Gray Wolf is the ultimate and most ancient national symbol of the Turkic peoples, deeply rooted in pre-Islamic mythology and Pan-Turkic identity. In the famous Turkic founding myth ('The Legend of Asena'), a blue-gray she-wolf saved an injured boy, nursed him in a hidden cave, and from her descendants was born the original Turkic tribe that went out to conquer the world. The wolf symbolizes absolute freedom (an un-tameable animal), courage, speed, and the spirit of the Central Asian steppes which is the original homeland of the Turks."
+              }
+            },
             etymology: {
               parts: [
-                { text: "טורק (Turk)", color: "text-cyan-400", bg: "bg-cyan-400/10", border: "border-cyan-500/30", desc: "מקור השם מצוי בשפות הטורקיות הקדומות של מרכז אסיה. המילה ככל הנראה משמעותה המקורית הייתה \"חזק\", \"אדיר\" או \"זה שנוצר/התגבש\". התיעוד הראשון הוא מהמאה ה-6 (גקטורקים)." },
-                { text: "יה (Iye)", color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: "סיומת ערבית-פרסית (או לטינית דרך אירופה כ-ia) שנוספה לשם כדי לציין בעלות וגיאוגרפיה: \"הארץ של\"." }
+                { text: { he: "טורק (Turk)", en: "Turk" }, color: "text-cyan-400", bg: "bg-cyan-400/10", border: "border-cyan-500/30", desc: { he: "מקור השם מצוי בשפות הטורקיות הקדומות של שבטי מרכז אסיה. המילה ככל הנראה משמעותה המקורית הייתה 'חזק', 'אדיר' או 'זה שנוצר/התגבש'. התיעוד הכתוב הראשון של השם הוא מהמאה ה-6 (האימפריה של הגקטורקים).", en: "The name's origin lies in the ancient Turkic languages of the Central Asian tribes. The word's original meaning was likely 'strong', 'mighty', or 'created/formed'. The first written record of the name is from the 6th century (the Göktürk Empire)." } },
+                { text: { he: "יה (Iye)", en: "Iye (ia)" }, color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: { he: "סיומת ממקור ערבי-פרסי (או לחלופין לטינית שהשתרשה דרך אירופה כ-'ia') שנוספה לשם הלאום כדי לציין בעלות וריבונות גיאוגרפית: 'הארץ של'. התחביר נוצר במערב במהלך ימי הביניים לתיאור אנטוליה.", en: "A suffix of Arab-Persian origin (or alternatively Latin that took root through Europe as 'ia') added to the nation's name to denote ownership and geographical sovereignty: 'The Land of'. The syntax was coined in the West during the Middle Ages to describe Anatolia." } }
               ],
-              synthesis: "ארצם של החזקים והאדירים (הטורקים) שישבו באסיה הקטנה."
+              synthesis: { he: "ארצם של החזקים והאדירים (הטורקים) שישבו באסיה הקטנה.", en: "The land of the strong and mighty (the Turks) who settled in Asia Minor." }
             },
             figure: {
-              name: "מוסטפא כמאל אטאטורק",
+              name: { he: "מוסטפא כמאל אטאטורק", en: "Mustafa Kemal Ataturk" },
               years: "1881 - 1938",
-              childhood: "נולד בסלוניקי (כיום ביוון, אז באימפריה העות'מאנית) בשם מוסטפא. אביו מת בילדותו. הוא התבלט בכישוריו במתמטיקה ולכן מורהו העניק לו את התואר \"כמאל\" (המושלם). פנה לקריירה צבאית באקדמיות היוקרתיות בבירה.",
-              ideology: "כמאליזם – אידאולוגיה רדיקלית של רפורמה: חילוניות מוחלטת והפרדת דת ממדינה (ביטול מוסד החליפות), לאומיות טורקית מודרנית במקום זהות עות'מאנית אסלאמית, התמערבות מלאה, ואטטיזם (שליטת המדינה בפיתוח הכלכלי).",
-              achievements: "מייסד טורקיה המודרנית ואבי האומה (ומכאן הכינוי \"אטאטורק\" - אבי הטורקים). הציל את טורקיה מפירוק וחלוקה אחרי מלחמת העולם הראשונה באמצעות ניצחונות צבאיים מזהירים. הוביל מהפכות אזרחיות חסרות תקדים: שינוי הכתב הטורקי מאותיות ערביות ללטיניות, ביטול החליפות, הענקת שוויון לנשים וכפיית לבוש מודרני."
+              childhood: { 
+                he: "נולד בסלוניקי (עיר נמל משגשגת, כיום ביוון, אז חלק מהאימפריה העות'מאנית) בשם מוסטפא בלבד. אביו פקיד המכס נפטר בילדותו והוא גודל על ידי אמו. הוא התבלט בכישוריו במתמטיקה בבית הספר הצבאי, ולכן מורהו העניק לו את התואר 'כמאל' (המושלם). מילדות פנה לקריירה צבאית והתחנך באקדמיות היוקרתיות בבירה איסטנבול.",
+                en: "Born in Thessaloniki (a prosperous port city, now in Greece, then part of the Ottoman Empire) simply as Mustafa. His customs-officer father died in his childhood and he was raised by his mother. He stood out for his math skills in military school, so his teacher gave him the title 'Kemal' (The Perfect). From childhood, he pursued a military career and was educated at the prestigious academies in the capital, Istanbul."
+              },
+              ideology: { 
+                he: "כמאליזם (Kemalism) – אידאולוגיה רדיקלית של רפורמה לאומית המבוססת על שישה עקרונות חיצים: חילוניות מוחלטת והפרדה נוקשה של דת ממדינה (כולל ביטול מוסד החליפות האסלאמי), לאומיות טורקית מודרנית במקום זהות עות'מאנית או אסלאמית רב-לאומית, התמערבות מלאה של החברה, רפובליקניזם, ואטטיזם (התערבות המדינה בפיתוח הכלכלי).",
+                en: "Kemalism – a radical ideology of national reform based on six arrow principles: absolute secularism and strict separation of religion and state (including the abolition of the Islamic Caliphate), modern Turkish nationalism replacing a multi-national Ottoman or Islamic identity, full Westernization of society, republicanism, and statism (state intervention in economic development)."
+              },
+              achievements: { 
+                he: "מייסד טורקיה המודרנית ואבי האומה הבלתי מעורער (ומכאן הכינוי שהוענק לו על ידי הפרלמנט - 'אטאטורק' - אבי הטורקים). הוא הציל את טורקיה מפירוק, מחיקה וחלוקה אחרי מלחמת העולם הראשונה באמצעות ניצחונות צבאיים מזהירים. כנשיא, הוביל מהפכות אזרחיות חסרות תקדים בעולם האסלאמי: שינוי הכתב הטורקי מאותיות ערביות ללטיניות במכת קולמוס, ביטול החליפות, הענקת שוויון זכויות מלא והצבעה לנשים, חוק השמות (המחייב שם משפחה), וכפיית לבוש אירופאי מודרני במקום התרבוש.",
+                en: "Founder of modern Turkey and the undisputed Father of the Nation (hence the title bestowed upon him by parliament - 'Ataturk' - Father of the Turks). He saved Turkey from dissolution, erasure, and partition after WWI through brilliant military victories. As president, he led unprecedented civil revolutions in the Islamic world: changing the Turkish script from Arabic to Latin letters at the stroke of a pen, abolishing the Caliphate, granting full equal rights and voting to women, the Surname Law (mandating a family name), and enforcing modern European dress instead of the fez."
+              }
             },
             map: {
               url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_turkey_anatolia.jpg",
-              title: "מפת אנטוליה ואסיה הקטנה",
-              desc: "מציגה את המרחב של אנטוליה שהפך לגרעין ליבתה של הרפובליקה הטורקית המודרנית."
+              title: { he: "מפת אנטוליה ואסיה הקטנה", en: "Map of Anatolia and Asia Minor" },
+              desc: { 
+                he: "מפה עתיקה המציגה את המרחב היבשתי והחופי של אסיה הקטנה ואנטוליה, חצי אי שהיווה גשר בין תרבויות המזרח והמערב לאורך אלפי שנים, והפך לגרעין ליבתה הגיאוגרפית של הרפובליקה הטורקית המודרנית.",
+                en: "An antique map showing the continental and coastal space of Asia Minor and Anatolia, a peninsula that has served as a bridge between Eastern and Western cultures for thousands of years, and became the geographic core of the modern Turkish Republic."
+              }
             }
           }
         ];
@@ -440,10 +708,10 @@
         // רכיבי התצוגה (UI) ללא הניווט העליון
         // ==========================================
 
-        const CountryCard = ({ country, onModalOpen }) => {
+        const CountryCard = ({ country, onModalOpen, lang, uiStr }) => {
           const { 
-            FlagComponent, name, englishName, officialName, areaNum, populationNum, currency, area, demographics, 
-            modernHistory, foundingYears, etymology, flagSymbolism, figure, map 
+            flagUrl, name, englishName, officialName, capital, areaNum, populationNum, currency, area, demographics, 
+            modernHistory, foundingYears, etymology, flagSymbolism, nationalAnimal, figure, map 
           } = country;
 
           return (
@@ -452,127 +720,171 @@
               <div className="flex flex-col md:flex-row gap-6 p-6 md:p-8 border-b border-gray-800">
                 <div 
                   className="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center bg-gray-950 p-4 rounded-xl cursor-pointer group relative" 
-                  onClick={() => onModalOpen({type: 'flag', component: FlagComponent, title: `דגל ${name}`})}
-                  title="לחץ להגדלת הדגל"
+                  onClick={() => onModalOpen({url: flagUrl, title: `${name[lang]}`})}
+                  title={uiStr.lClickEnlargeFlag}
                 >
-                  <div className="w-full max-h-40 shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105 overflow-hidden flex justify-center items-center">
-                    <div className="w-full h-32 md:h-40 relative">
-                       <FlagComponent />
-                    </div>
+                  <div className="w-full max-h-40 shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105 overflow-hidden flex justify-center items-center bg-black">
+                    <img 
+                      src={flagUrl} 
+                      alt={name[lang]}
+                      className="w-full h-32 md:h-40 object-cover opacity-95 group-hover:opacity-100 transition-opacity"
+                      onError={(e) => {
+                        e.target.onerror = null; 
+                        e.target.src = 'https://placehold.co/300x200/1e293b/a3a8b8?text=Flag+Loading...';
+                      }}
+                    />
                   </div>
                   <div className="absolute opacity-0 group-hover:opacity-100 bg-black/60 text-white text-sm px-3 py-1 rounded transition-opacity duration-300 pointer-events-none mt-32">
-                    לחץ להגדלה
+                    {uiStr.lClickEnlargeFlag}
                   </div>
                 </div>
                 
-                <div className="flex-grow flex flex-col justify-center">
-                  <h2 className="text-3xl font-bold text-white mb-2">{name} <span className="text-gray-500 text-lg ml-2 uppercase tracking-widest">{englishName}</span></h2>
-                  <h3 className="text-xl text-gray-400 mb-4">{officialName}</h3>
+                <div className="flex-grow flex flex-col justify-center text-start">
+                  <h2 className="text-3xl font-bold text-white mb-2">{name[lang]} <span className="text-gray-500 text-lg ms-2 uppercase tracking-widest">{englishName}</span></h2>
+                  <h3 className="text-xl text-gray-400 mb-4">{officialName[lang]}</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                      <span><strong className="text-white">שנת ייסוד:</strong> {foundingYears}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                      <span><strong className="text-white me-1">{uiStr.capital}</strong> {capital.name[lang]}</span>
                     </div>
+
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                      <span className="truncate" title={figure.name}><strong className="text-white">מנהיג:</strong> {figure.name.split('(')[0]}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+                      <span><strong className="text-white me-1">{uiStr.currency}</strong> {currency[lang]}</span>
                     </div>
+
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3h18v18H3zM12 8v8m-4-4h8"></path></svg>
-                      <span><strong className="text-white">שטח:</strong> {areaNum}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                      <span><strong className="text-white me-1">{uiStr.founding}</strong> {foundingYears[lang]}</span>
                     </div>
+
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                      <span><strong className="text-white">אוכלוסייה:</strong> {populationNum}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                      <span><strong className="text-white me-1">{uiStr.population}</strong> {populationNum}</span>
                     </div>
-                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg md:col-span-2">
-                      <svg className="w-5 h-5 ml-2 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
-                      <span><strong className="text-white">שם מטבע:</strong> {currency}</span>
+
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3h18v18H3zM12 8v8m-4-4h8"></path></svg>
+                      <span><strong className="text-white me-1">{uiStr.area}</strong> {areaNum[lang]}</span>
+                    </div>
+
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                      <span className="truncate" title={figure.name[lang]}><strong className="text-white me-1">{uiStr.leader}</strong> {figure.name[lang].split('(')[0]}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="p-6 md:p-8 space-y-10">
+              <div className="p-6 md:p-8 space-y-10 text-start">
                 
                 <section>
                     <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                        <i className="fa-solid fa-map-location-dot w-6 h-6 ml-2 text-sky-400 text-xl"></i>
-                        <h3 className="text-2xl font-bold text-white">רקע פיזי ואנושי</h3>
+                        <i className="fa-solid fa-map-location-dot w-6 h-6 me-2 text-sky-400 text-xl"></i>
+                        <h3 className="text-2xl font-bold text-white">{uiStr.sectionPhysical}</h3>
                     </div>
                     <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 space-y-4">
-                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">שטח וטופוגרפיה:</strong> {area}</p>
-                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">דמוגרפיה ({demographics.mainNationName} - {demographics.mainNationPercent}):</strong> {demographics.description}</p>
-                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">היסטוריה מודרנית:</strong> {modernHistory}</p>
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white me-1">{uiStr.lAreaTopo}</strong> {area[lang]}</p>
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white me-1">{uiStr.lDemographics} ({demographics.mainNationName[lang]} - {demographics.mainNationPercent[lang]}):</strong> {demographics.description[lang]}</p>
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white me-1">{uiStr.lModernHistory}</strong> {modernHistory[lang]}</p>
                     </div>
                 </section>
 
                 <section>
                     <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                        <svg className="w-6 h-6 ml-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
-                        <h3 className="text-2xl font-bold text-white">וקסלולוגיה</h3>
-                    </div>
-                    <p className="text-gray-300 leading-relaxed text-lg">{flagSymbolism}</p>
-                </section>
-                
-                <section>
-                    <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                        <svg className="w-6 h-6 ml-2 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                        <h3 className="text-2xl font-bold text-white">אטימולוגיה</h3>
+                        <svg className="w-6 h-6 me-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                        <h3 className="text-2xl font-bold text-white">{uiStr.sectionEtymology}</h3>
                     </div>
                     <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800">
                         <ul className="space-y-4">
-                            {etymology.parts.map((part, idx) => (
-                                <li key={idx} className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4">
-                                    <span className={`font-bold min-w-[140px] md:text-lg flex-shrink-0 ${part.color} ${part.bg} border ${part.border} px-2 py-1 rounded-md`}>• {part.text}:</span>
-                                    <span className="text-gray-300 leading-relaxed text-lg">{part.desc}</span>
+                            {/* חלקי שם המדינה */}
+                            {etymology.parts.map((part, index) => (
+                                <li key={index} className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4">
+                                    <span className={`font-bold min-w-[140px] md:text-lg flex-shrink-0 ${part.color} ${part.bg} border ${part.border} px-2 py-1 rounded-md`}>• {part.text[lang]}:</span>
+                                    <span className="text-gray-300 leading-relaxed text-lg">{part.desc[lang]}</span>
                                 </li>
                             ))}
                             <li className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4 mt-2 pt-4 border-t border-gray-800/50">
-                                <span className="font-bold text-amber-400 min-w-[140px] md:text-lg flex-shrink-0"><i className="fa-solid fa-quote-right ml-1"></i> משמעות השם:</span>
-                                <span className="text-gray-200 font-bold leading-relaxed text-lg">{etymology.synthesis}</span>
+                                <span className="font-bold text-amber-400 min-w-[140px] md:text-lg flex-shrink-0">
+                                  <i className="fa-solid fa-quote-right me-1"></i> {uiStr.lNameMeaning}
+                                </span>
+                                <span className="text-gray-200 font-bold leading-relaxed text-lg">{etymology.synthesis[lang]}</span>
+                            </li>
+                            
+                            {/* אטימולוגיה של עיר הבירה */}
+                            <li className="flex flex-col md:flex-row md:items-start gap-2 md:gap-4 mt-6 pt-5 border-t border-gray-700/80">
+                                <span className="font-bold text-purple-400 min-w-[140px] md:text-lg flex-shrink-0 mt-1">
+                                    <i className="fa-solid fa-landmark-dome me-1"></i> {uiStr.lCapitalName}
+                                </span>
+                                <div className="space-y-3 w-full">
+                                    <strong className="text-white text-xl block border-b border-gray-800 pb-2">
+                                      {capital.name[lang]} <span className="text-gray-500 text-sm font-normal uppercase tracking-widest ms-1">({capital.englishName})</span>
+                                    </strong>
+                                    <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white font-medium me-1">{uiStr.lCapitalEty}</strong> {capital.etymology[lang]}</p>
+                                    <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white font-medium me-1">{uiStr.lCapitalFounding}</strong> {capital.foundingYear[lang]}</p>
+                                    <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white font-medium me-1">{uiStr.lCapitalReason}</strong> {capital.reason[lang]}</p>
+                                </div>
                             </li>
                         </ul>
                     </div>
                 </section>
 
-                <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gray-800/20 p-6 rounded-xl border border-gray-800/50">
+                <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {/* סמלים וזהות לאומית */}
                     <div>
-                        <div className="flex items-center mb-4 border-b border-gray-700 pb-2">
-                            <svg className="w-6 h-6 ml-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                            <h3 className="text-2xl font-bold text-white">פרופיל מנהיג מכונן</h3>
+                        <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg className="w-6 h-6 me-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                            <h3 className="text-2xl font-bold text-white">{uiStr.sectionSymbols}</h3>
                         </div>
-                        <h4 className="text-xl text-rose-300 font-bold mb-3">{figure.name} <span className="text-base text-gray-400">({figure.years})</span></h4>
-                        <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
-                            <div><strong className="text-white block mb-1">ילדות ורקע:</strong> {figure.childhood}</div>
-                            <div><strong className="text-white block mb-1">אידאולוגיה:</strong> {figure.ideology}</div>
-                            <div><strong className="text-white block mb-1">הישגים מרכזיים:</strong> {figure.achievements}</div>
+                        <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 h-full">
+                            <h4 className="text-lg font-bold text-white mb-2"><i className="fa-solid fa-flag text-green-400 me-2"></i> {uiStr.lFlagMeaning}</h4>
+                            <p className="text-gray-300 leading-relaxed text-lg mb-6 pb-6 border-b border-gray-800/70">{flagSymbolism[lang]}</p>
+                            
+                            <h4 className="text-lg font-bold text-white mb-2"><i className="fa-solid fa-paw text-orange-400 me-2"></i> {uiStr.lNationalAnimal} {nationalAnimal.name[lang]}</h4>
+                            <p className="text-gray-300 leading-relaxed text-lg">{nationalAnimal.reason[lang]}</p>
                         </div>
                     </div>
 
+                    {/* פרופיל מנהיג */}
                     <div>
-                        <div className="flex items-center mb-4 border-b border-gray-700 pb-2">
-                            <svg className="w-6 h-6 ml-2 text-cyan-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"></path><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
-                            <h3 className="text-2xl font-bold text-white">קרטוגרפיה היסטורית</h3>
+                        <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg className="w-6 h-6 me-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                            <h3 className="text-2xl font-bold text-white">{uiStr.sectionLeader}</h3>
                         </div>
-                        <div className="flex flex-col cursor-pointer group rounded-xl overflow-hidden border border-gray-700 bg-gray-800/30 hover:border-gray-500 transition-all duration-300 shadow-lg" onClick={() => onModalOpen({type: 'image', url: map.url, title: map.title})}>
-                            <div className="relative h-48 md:h-56 w-full overflow-hidden bg-black">
-                                <img 
-                                  src={map.url} 
-                                  alt={map.title} 
-                                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                  onError={(e) => {
-                                    e.target.onerror = null; 
-                                    e.target.src = "https://placehold.co/800x400/1e293b/a3a8b8?text=Historical+Map";
-                                  }}
-                                />
-                                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300"></div>
+                        <div className="bg-gray-800/20 rounded-xl p-5 border border-gray-800/50 h-full">
+                            <h4 className="text-xl text-rose-300 font-bold mb-3">{figure.name[lang]} <span className="text-base text-gray-400">({figure.years})</span></h4>
+                            <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
+                                <div><strong className="text-white block mb-1">{uiStr.lChildhood}</strong> {figure.childhood[lang]}</div>
+                                <div><strong className="text-white block mb-1">{uiStr.lIdeology}</strong> {figure.ideology[lang]}</div>
+                                <div><strong className="text-white block mb-1">{uiStr.lAchievements}</strong> {figure.achievements[lang]}</div>
                             </div>
-                            <div className="p-4 text-center border-t border-gray-700/50">
-                                <strong className="text-cyan-300 block mb-2 text-base">{map.title}</strong>
-                                <span className="text-gray-300 text-sm leading-relaxed block">{map.desc}</span>
-                                <span className="inline-block mt-3 text-gray-400 text-xs font-medium bg-gray-900/80 px-3 py-1.5 rounded-full border border-gray-700 transition-colors group-hover:text-cyan-300 group-hover:border-cyan-800/50">(לחץ להגדלת המפה)</span>
-                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                        <svg className="w-6 h-6 me-2 text-cyan-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"></path><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                        <h3 className="text-2xl font-bold text-white">{uiStr.sectionCartography}</h3>
+                    </div>
+                    <div className="flex flex-col cursor-pointer group rounded-xl overflow-hidden border border-gray-700 bg-gray-800/30 hover:border-gray-500 transition-all duration-300 shadow-lg" onClick={() => onModalOpen({url: map.url, title: map.title[lang]})}>
+                        <div className="relative h-64 md:h-80 w-full overflow-hidden bg-black">
+                            <img 
+                              src={map.url} 
+                              alt={map.title[lang]} 
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                              onError={(e) => {
+                                e.target.onerror = null; 
+                                e.target.src = 'https://placehold.co/800x400/1e293b/a3a8b8?text=Historical+Map';
+                              }}
+                            />
+                            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300"></div>
+                        </div>
+                        <div className="p-4 text-center border-t border-gray-700/50">
+                            <strong className="text-cyan-300 block mb-2 text-lg">{map.title[lang]}</strong>
+                            <span className="text-gray-300 text-base leading-relaxed block">{map.desc[lang]}</span>
+                            <span className="inline-block mt-3 text-gray-400 text-sm font-medium bg-gray-900/80 px-4 py-1.5 rounded-full border border-gray-700 transition-colors group-hover:text-cyan-300 group-hover:border-cyan-800/50">{uiStr.lClickEnlargeMap}</span>
                         </div>
                     </div>
                 </section>
@@ -594,7 +906,7 @@
                 <button 
                   onClick={onClose}
                   className="absolute -top-14 right-0 md:-right-14 text-gray-400 hover:text-white bg-gray-800/80 hover:bg-gray-700 rounded-full p-2 transition-colors z-50"
-                  aria-label="סגור חלון"
+                  aria-label="Close"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -602,29 +914,32 @@
                   </svg>
                 </button>
                 
-                {content.type === 'flag' ? (
-                  <div className="w-full max-w-4xl aspect-[3/2] bg-black shadow-2xl rounded-lg overflow-hidden border border-gray-700" onClick={e => e.stopPropagation()}>
-                    <content.component />
-                  </div>
-                ) : (
-                  <img 
-                    src={content.url} 
-                    alt={content.title} 
-                    className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-gray-700" 
-                    onClick={e => e.stopPropagation()}
-                    onError={(e) => {
-                      e.target.onerror = null; 
-                      e.target.src = "https://placehold.co/800x400/1e293b/a3a8b8?text=Historical+Map";
-                    }}
-                  />
-                )}
+                <img 
+                  src={content.url} 
+                  alt={content.title} 
+                  className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-gray-700" 
+                  onClick={e => e.stopPropagation()}
+                  onError={(e) => {
+                    e.target.onerror = null; 
+                    e.target.src = 'https://placehold.co/800x400/1e293b/a3a8b8?text=Image+Not+Found';
+                  }}
+                />
               </div>
             </div>
           );
         };
 
         function App() {
+          const [lang, setLang] = useState('he');
           const [modalContent, setModalContent] = useState(null);
+
+          const uiStr = ui[lang];
+
+          // ניהול כיוון המסמך לפי שפה
+          React.useEffect(() => {
+            document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+            document.documentElement.lang = lang;
+          }, [lang]);
 
           React.useEffect(() => {
             const handleEsc = (e) => { if (e.key === "Escape") setModalContent(null); };
@@ -637,10 +952,22 @@
           }, [modalContent]);
 
           return (
-            <div className="max-w-5xl mx-auto pt-4 md:pt-8">
-              <header className="mb-10 text-center">
-                  <h1 className="text-3xl md:text-5xl font-bold text-white mb-3">דגלי המזרח התיכון</h1>
-                  <p className="text-gray-400 text-lg">מחקר וקסלולוגי, אטימולוגי, היסטורי וקרטוגרפי</p>
+            <div className="max-w-5xl mx-auto pt-4 md:pt-8 relative">
+              
+              {/* כפתור החלפת שפה */}
+              <div className="absolute top-0 right-4 md:right-8 z-50">
+                <button 
+                  onClick={() => setLang(lang === 'he' ? 'en' : 'he')}
+                  className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-full border border-gray-600 transition-colors shadow-lg font-medium text-sm"
+                >
+                  <i className="fa-solid fa-globe text-blue-400"></i>
+                  {uiStr.langBtn}
+                </button>
+              </div>
+
+              <header className="mb-10 text-center mt-12 md:mt-0">
+                  <h1 className="text-3xl md:text-5xl font-bold text-white mb-3">{uiStr.mainTitle}</h1>
+                  <p className="text-gray-400 text-lg">{uiStr.subTitle}</p>
               </header>
 
               <div className="space-y-12">
@@ -649,6 +976,8 @@
                     key={country.id} 
                     country={country} 
                     onModalOpen={setModalContent} 
+                    lang={lang}
+                    uiStr={uiStr}
                   />
                 ))}
               </div>
@@ -656,15 +985,15 @@
               <footer className="mt-12 mb-8 pt-8 border-t border-gray-800 text-center text-gray-500 w-full max-w-6xl mx-auto px-4">
                   <div className="flex justify-center items-center gap-2 mb-4">
                       <svg className="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                      <h4 className="font-bold text-gray-400 text-lg">פרטי המחקר והפרויקט</h4>
+                      <h4 className="font-bold text-gray-400 text-lg">{uiStr.footerTitle}</h4>
                   </div>
-                  <div className="inline-block text-right bg-gray-900/50 p-6 rounded-xl border border-gray-800 w-full max-w-2xl">
+                  <div className="inline-block text-start bg-gray-900/50 p-6 rounded-xl border border-gray-800 w-full max-w-2xl">
                       <p className="text-gray-300 leading-loose">
-                          <strong className="text-white ml-2">שם ההוגה:</strong> רם<br />
-                          <strong className="text-white ml-2">שם הבונה/היצרן:</strong> ג'מיני (Gemini 3.1 Pro)<br />
-                          <strong className="text-white ml-2">סיבת ההמצאה/הבנייה:</strong> המרת מחקר המזרח התיכון למבנה React עשיר, מפורט ונקי מניווט פנימי.<br />
-                          <strong className="text-white ml-2">שנת הבנייה/היצירה:</strong> 2026<br />
-                          <strong className="text-white ml-2">מקורות וקרדיט:</strong> אטימולוגיה מהספרות המקצועית. סמלי SVG וקטוריים פנימיים. מפות היסטוריות מהמאגר האישי ב-GitHub.
+                          <strong className="text-white me-2">{uiStr.fConcept}</strong> {uiStr.fConceptVal}<br />
+                          <strong className="text-white me-2">{uiStr.fBuilder}</strong> {uiStr.fBuilderVal}<br />
+                          <strong className="text-white me-2">{uiStr.fReason}</strong> {uiStr.fReasonVal}<br />
+                          <strong className="text-white me-2">{uiStr.fYear}</strong> {uiStr.fYearVal}<br />
+                          <strong className="text-white me-2">{uiStr.fCredits}</strong> {uiStr.fCreditsVal}
                       </p>
                   </div>
               </footer>
@@ -679,5 +1008,3 @@
     </script>
 </body>
 </html>
-
-
