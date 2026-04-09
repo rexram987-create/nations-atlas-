@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Stan Project | מדינות הסטן</title>
     
+    <!-- טעינת ספריות העיצוב -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -19,347 +20,686 @@
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- טעינת React ו-Babel -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body class="min-h-screen bg-gray-950 text-gray-200 p-4 md:p-8 font-sans antialiased selection:bg-amber-500/30">
+    
     <div id="root"></div>
+
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useEffect } = React;
 
         // ==========================================
-        // מאגר הנתונים המלא - מדינות הסטן
+        // מילון ממשק משתמש (UI Dictionary)
+        // ==========================================
+        const ui = {
+          he: {
+            mainTitle: "דגלי מדינות הסטן",
+            subTitle: "מחקר וקסלולוגי, אטימולוגי, היסטורי וקרטוגרפי",
+            langBtn: "English",
+            capital: "עיר בירה:",
+            currency: "מטבע לאומי:",
+            founding: "שנת ייסוד:",
+            population: "אוכלוסייה:",
+            area: "שטח:",
+            leader: "מנהיג:",
+            sectionPhysical: "רקע פיזי ואנושי",
+            lAreaTopo: "שטח וטופוגרפיה:",
+            lDemographics: "דמוגרפיה",
+            lModernHistory: "היסטוריה מודרנית:",
+            sectionEtymology: "אטימולוגיה ושמות",
+            lNameMeaning: "משמעות השם:",
+            lCapitalName: "עיר הבירה:",
+            lCapitalEty: "אטימולוגיה:",
+            lCapitalFounding: "שנת ייסוד הבירה:",
+            lCapitalReason: "הסיבה לבחירתה:",
+            sectionSymbols: "סמלים וזהות לאומית",
+            lFlagMeaning: "משמעות צבעי הדגל:",
+            lNationalAnimal: "החיה הלאומית:",
+            sectionLeader: "פרופיל מנהיג מכונן",
+            lChildhood: "ילדות ורקע:",
+            lIdeology: "אידאולוגיה:",
+            lAchievements: "הישגים מרכזיים:",
+            sectionCartography: "קרטוגרפיה היסטורית",
+            lClickEnlargeMap: "(לחץ להגדלת המפה)",
+            lClickEnlargeFlag: "לחץ להגדלה",
+            footerTitle: "פרטי המחקר והפרויקט",
+            fConcept: "שם ההוגה:",
+            fBuilder: "שם הבונה/היצרן:",
+            fReason: "סיבת ההמצאה/הבנייה:",
+            fYear: "שנת הבנייה/היצירה:",
+            fCredits: "מקורות וקרדיט:",
+            fConceptVal: "רם",
+            fBuilderVal: "ג'מיני (Gemini 3.1 Pro)",
+            fReasonVal: "המרת מחקר מדינות הסטן למבנה React וקטורי מדויק בשילוב מפות היסטוריות ייעודיות ותרגום דו-לשוני מלא (עברית/אנגלית).",
+            fYearVal: "2026",
+            fCreditsVal: "אטימולוגיה מהספרות. מפות גיאוגרפיות קרטוגרפיות ייחודיות פרי יצירת AI. קובצי דגלים באדיבות Flagpedia.net."
+          },
+          en: {
+            mainTitle: "Flags of the 'Stan' Nations",
+            subTitle: "Vexillological, Etymological, Historical, and Cartographic Research",
+            langBtn: "עברית",
+            capital: "Capital City:",
+            currency: "Currency:",
+            founding: "Founded:",
+            population: "Population:",
+            area: "Area:",
+            leader: "Leader:",
+            sectionPhysical: "Physical and Human Background",
+            lAreaTopo: "Area & Topography:",
+            lDemographics: "Demographics",
+            lModernHistory: "Modern History:",
+            sectionEtymology: "Etymology and Names",
+            lNameMeaning: "Name Meaning:",
+            lCapitalName: "Capital City:",
+            lCapitalEty: "Etymology:",
+            lCapitalFounding: "Founding Year:",
+            lCapitalReason: "Reason for Selection:",
+            sectionSymbols: "Symbols & National Identity",
+            lFlagMeaning: "Flag Symbolism:",
+            lNationalAnimal: "National Animal:",
+            sectionLeader: "Founding Leader Profile",
+            lChildhood: "Childhood & Background:",
+            lIdeology: "Ideology:",
+            lAchievements: "Major Achievements:",
+            sectionCartography: "Historical Cartography",
+            lClickEnlargeMap: "(Click to enlarge map)",
+            lClickEnlargeFlag: "Click to enlarge",
+            footerTitle: "Research and Project Details",
+            fConcept: "Concept by:",
+            fBuilder: "Builder/Generator:",
+            fReason: "Reason for Creation:",
+            fYear: "Year of Creation:",
+            fCredits: "Sources & Credits:",
+            fConceptVal: "Ram",
+            fBuilderVal: "Gemini (Gemini 3.1 Pro)",
+            fReasonVal: "Conversion of the 'Stan' nations research into a precise React structure with historical maps and full bilingual translation (Heb/Eng).",
+            fYearVal: "2026",
+            fCreditsVal: "Etymology from literature. Unique AI-generated historical cartographic maps. Flag files courtesy of Flagpedia.net."
+          }
+        };
+
+        // ==========================================
+        // מאגר הנתונים המלא והמורחב (דו-לשוני) - מדינות הסטן
         // ==========================================
 
         const countriesData = [
           {
             id: 'afghanistan',
-            name: 'אפגניסטן',
-            englishName: 'Afghanistan',
-            officialName: 'האמירות האסלאמית של אפגניסטן',
-            flagUrl: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/afghanistan.webp',
+            name: { he: "אפגניסטן", en: "Afghanistan" },
+            englishName: "Afghanistan",
+            officialName: { he: "האמירות האסלאמית של אפגניסטן", en: "Islamic Emirate of Afghanistan" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/afghanistan.webp",
             capital: {
-              name: 'קאבול',
-              englishName: 'Kabul',
-              etymology: 'השם נגזר מנהר הקאבול הזורם בעיר. בסנסקריט עתיקה הוא נקרא "קובהה" (Kubhā). תיאוריה לשונית נוספת קושרת את השם לשפה הפרסית: "קאו" (זרם/נהר) ו-"פול" (גשר) – כלומר "גשר על הנהר", המשקף את מיקומה הגיאוגרפי של העיר כצומת אסטרטגי היסטורי על דרך המשי.'
+              name: { he: "קאבול", en: "Kabul" },
+              englishName: "Kabul",
+              etymology: { 
+                he: "השם נגזר מנהר הקאבול הזורם בעיר. בסנסקריט עתיקה הוא נקרא 'קובהה' (Kubhā). תיאוריה לשונית נוספת קושרת את השם לשפה הפרסית: 'קאו' (זרם/נהר) ו-'פול' (גשר) – כלומר 'גשר על הנהר', המשקף את מיקומה הגיאוגרפי כצומת סחר.",
+                en: "The name is derived from the Kabul River flowing through the city. In ancient Sanskrit, it was called 'Kubhā'. Another linguistic theory links the name to Persian: 'Kaw' (stream/river) and 'Pul' (bridge) - meaning 'Bridge over the river', reflecting its geographic location as a trade junction."
+              },
+              foundingYear: { he: "העת העתיקה (הפכה לבירת האימפריה הדוראנית ב-1776)", en: "Antiquity (Became capital of the Durrani Empire in 1776)" },
+              reason: { 
+                he: "קאבול נבחרה להיות בירת המדינה האפגנית בזכות מיקומה האסטרטגי בעמק פורה המוקף ברכסי הרים בלתי עבירים של הינדו-כוש. מיקום זה הפך אותה למבצר טבעי השולט על מעברי ההרים החשובים (כמו מעבר ח'ייבר) המחברים בין מרכז אסיה לתת-היבשת ההודית.",
+                en: "Kabul was chosen as the capital of the Afghan state due to its strategic location in a fertile valley surrounded by the impassable mountain ranges of the Hindu Kush. This location made it a natural fortress controlling crucial mountain passes (like the Khyber Pass) connecting Central Asia to the Indian subcontinent."
+              }
             },
-            areaNum: '~652,860 קמ"ר',
-            populationNum: '~40,000,000',
-            currency: 'אפגני (AFN)',
-            area: 'כ-652,860 קמ"ר (מקום 40 בעולם). מתאפיינת בטופוגרפיה הררית קשה ונופית, בפרט הרי הינדו-כוש.',
+            areaNum: { he: "~652,860 קמ\"ר", en: "~652,860 sq km" },
+            populationNum: "~40,000,000",
+            currency: { he: "אפגני (AFN)", en: "Afghani (AFN)" },
+            area: { 
+              he: "כ-652,860 קמ\"ר (מקום 40 בעולם). אפגניסטן מתאפיינת בטופוגרפיה הררית קשה במיוחד, כשבמרכזה מתנשא רכס הרי ההינדו-כוש המושלג, המפצל את המדינה למספר אזורים גיאוגרפיים מנותקים המקשים על יצירת תשתית תחבורתית ושלטון מרכזי אחיד.",
+              en: "Approx. 652,860 sq km (40th in the world). Afghanistan is characterized by extremely harsh mountainous topography, centered around the snow-capped Hindu Kush range, which splits the country into several disconnected geographic zones, making it difficult to create transport infrastructure and unified central rule."
+            },
             demographics: {
-              mainNationName: 'פשטונים',
-              mainNationPercent: 'כ-42%',
-              description: 'אפגניסטן היא אחת המדינות המפוצלות ביותר בעולם מבחינה אתנית ושבטית. אין בה קבוצה אחת המהווה רוב מוחלט. הפשטונים הם השליטים ההיסטוריים, אך הטג\'יקים (כ-27%) מהווים כוח פוליטי וצבאי מכריע בצפון. קבוצות נוספות כמו ההזארה השיעים (כ-9%) והאוזבקים (כ-9%) תורמות לפסיפס, שלרוב מעדיף נאמנות שבטית מקומית על פני זהות לאומית.'
+              mainNationName: { he: "פשטונים", en: "Pashtuns" },
+              mainNationPercent: { he: "כ-42%", en: "~42%" },
+              description: { 
+                he: "אפגניסטן היא אחת המדינות המפוצלות ביותר בעולם מבחינה אתנית ושבטית. אין בה קבוצה אחת המהווה רוב מוחלט. הפשטונים הם השליטים ההיסטוריים ואנשי ההרים, אך הטג'יקים (כ-27%) מהווים כוח פוליטי וצבאי מכריע בעמקים שבצפון. קבוצות נוספות כמו ההזארה השיעים (כ-9%) והאוזבקים תורמות לפסיפס, שלרוב מעדיף נאמנות שבטית על פני לאומית.",
+                en: "Afghanistan is one of the most ethnically and tribally divided countries in the world. No single group forms an absolute majority. The Pashtuns are the historical rulers and mountain people, but Tajiks (~27%) form a crucial political and military force in the northern valleys. Other groups like the Shia Hazaras (~9%) and Uzbeks contribute to a mosaic that often prioritizes tribal loyalty over national identity."
+              }
             },
-            modernHistory: 'לאחר עשרות שנים של ניסיונות השתלטות מצד האימפריה הבריטית ("המשחק הגדול"), אפגניסטן השיגה עצמאות מלאה ב-1919 תחת הנהגתו של האמיר אמאן אללה חאן. כיום נשלטת שוב על ידי תנועת הטליבאן.',
-            foundingYears: '1709 (הותכּ) | 1919',
-            flagSymbolism: 'השחור מסמל את העבר החשוך והקשה תחת אימפריות זרות, האדום מסמל את הדם שנשפך במאבקים לעצמאות, והירוק מסמל תקווה, שגשוג ואת דת האסלאם. הסמל במרכז מציג מסגד עם מיחראב הפונה למכה מוקף בחיטה.',
+            modernHistory: { 
+              he: "ההיסטוריה המודרנית ספוגת מלחמות זרות ומקומיות. לאחר שעמדה במוקד 'המשחק הגדול' בין האימפריות הבריטית והרוסית, היא השיגה עצמאות מלאה ב-1919. בשלהי המאה ה-20 עברה המדינה הפיכה קומוניסטית, פלישה סובייטית (1979-1989) שגבתה חיי מיליונים, מלחמת אזרחים אכזרית, ועליית משטר הטליבאן ב-1996. לאחר פלישה אמריקאית ב-2001 ועשרים שנות מלחמה וניסיונות דמוקרטיזציה, הטליבאן חזר לשלטון ב-2021 וכונן שוב את האמירות האסלאמית.",
+              en: "Modern history is soaked in foreign and local wars. After being the center of the 'Great Game' between the British and Russian empires, it gained full independence in 1919. In the late 20th century, it suffered a communist coup, a Soviet invasion (1979-1989) costing millions of lives, a brutal civil war, and the rise of the Taliban regime in 1996. After a 2001 US invasion and 20 years of war and democratization attempts, the Taliban returned to power in 2021, re-establishing the Islamic Emirate."
+            },
+            foundingYears: { he: "1709 (הותכּ) | 1919 (עצמאות)", en: "1709 (Hotak) | 1919 (Independence)" },
+            flagSymbolism: { 
+              he: "הדגל (בגרסתו הרפובליקנית ההיסטורית, המשמשת כיום גולים רבים) מציג את השחור המסמל את העבר החשוך תחת אימפריות זרות, האדום מסמל את הדם שנשפך במאבקים לחירות, והירוק את דת האסלאם ותקווה לעתיד. הסמל במרכז מציג מסגד עם מיחראב הפונה למכה, מוקף בחיטה המסמלת חקלאות. *הערה: דגל הטליבאן כיום הוא לבן עם הכיתוב השהאדה בשחור.",
+              en: "The flag (in its historical republican version, currently used by many exiles) features black symbolizing the dark past under foreign empires, red representing the blood shed in struggles for freedom, and green for the religion of Islam and hope for the future. The center emblem depicts a mosque with a mihrab facing Mecca, surrounded by wheat symbolizing agriculture. *Note: The current Taliban flag is white with the Shahada written in black."
+            },
             nationalAnimal: {
-              name: 'נמר השלג (Snow Leopard)',
-              reason: 'חתול בר נדיר ומלכותי זה, החי בפסגות הקפואות של הרי ההינדו-כוש, מסמל אומץ, כוח הישרדות, ופראיות חסרת פשרות. יכולתו של נמר השלג לשגשג בתנאי השטח הקיצוניים והמבודדים ביותר, מהדהדת את רוחם העצמאית ואת יכולת העמידה ההיסטורית של שבטי אפגניסטן מול אימפריות פולשות.'
+              name: { he: "נמר השלג (Snow Leopard)", en: "Snow Leopard" },
+              reason: { 
+                he: "חתול בר נדיר ומלכותי זה, החי בפסגות הקפואות והבלתי נגישות של הרי ההינדו-כוש, מסמל אומץ, כוח הישרדות בתנאי קיצון, ופראיות חסרת פשרות. יכולתו של נמר השלג לשגשג בבידוד המוחלט של ההרים הגבוהים מהדהדת בצורה פיוטית את רוחם העצמאית ואת יכולת העמידה ההיסטורית של שבטי אפגניסטן מול אימפריות פולשות.",
+                en: "This rare and majestic wildcat, living in the freezing and inaccessible peaks of the Hindu Kush mountains, symbolizes courage, extreme survival skills, and uncompromising ferocity. The snow leopard's ability to thrive in the absolute isolation of the high mountains poetically echoes the independent spirit and historic resilience of the Afghan tribes against invading empires."
+              }
             },
             etymology: {
               parts: [
-                { text: 'אפגן (Afghan)', color: 'text-indigo-400', desc: 'שם היסטורי עתיק יומין שניתן לעם הפשטוני על ידי שכניהם. המקור נובע מהמילה הסנסקריטית "Aśvaka" שפירושה "רוכבי סוסים". המונח תועד לראשונה במאה ה-3 לספירה על ידי האימפריה הסאסאנית כ-"Abgân", ושימש לתאר את השבטים ההרריים הלוחמניים שישבו באזור.' },
-                { text: 'סטן (Stan)', color: 'text-pink-400', desc: 'מקור הודו-איראני קדום (בפרסית עתיקה: "stāna") שמשמעותו המילולית היא "מקום עמידה", "מחנה" או "מקום התיישבות".' }
+                { text: { he: "אפגן (Afghan)", en: "Afghan" }, color: "text-indigo-400", bg: "bg-indigo-400/10", border: "border-indigo-500/30", desc: { he: "שם עתיק שניתן לפשטונים על ידי שכניהם. המקור נובע מהמילה הסנסקריטית 'Aśvaka' שפירושה 'רוכבי סוסים'.", en: "An ancient name given to the Pashtuns by their neighbors. The origin stems from the Sanskrit word 'Aśvaka', meaning 'horse riders'." } },
+                { text: { he: "סטן (Stan)", en: "Stan" }, color: "text-pink-400", bg: "bg-pink-400/10", border: "border-pink-500/30", desc: { he: "מקור פרסי קדום שמשמעותו 'מקום עמידה', 'מחנה' או 'מקום התיישבות'.", en: "An ancient Persian origin meaning 'place of standing', 'camp', or 'place of settlement'." } }
               ],
-              synthesis: 'ארצם של הפשטונים, או בפירוש הקדום והפואטי: "ארצם של רוכבי הסוסים הנועזים".'
+              synthesis: { he: "ארצם של רוכבי הסוסים (הפשטונים).", en: "Land of the horse riders (the Pashtuns)." }
             },
             figure: {
-              name: 'אחמד שאה דוראני',
-              years: '1722 - 1772',
-              childhood: 'נולד בהראט כבנו של מנהיג שבט פשטוני. בנעוריו נלקח בשבי על ידי השליט הפרסי נאדר שאה, אך בזכות גאונותו הפך למפקד בכיר בצבא שוביו.',
-              ideology: 'לאומנות פשטונית ואחדות אסלאמית. הוא האמין כי על השבטים להתאחד למדינה ריבונית עצמאית וחסונה, שלא תהיה כפופה לאימפריה הפרסית או המוגולית.',
-              achievements: 'מייסד האימפריה הדוראנית ומדינת אפגניסטן המודרנית. מוכר בתואר "אחמד שאה באבא" (אבי האומה).'
+              name: { he: "אחמד שאה דוראני", en: "Ahmad Shah Durrani" },
+              years: "1722 - 1772",
+              childhood: { 
+                he: "נולד בהראט כבנו של מנהיג שבט פשטוני. בנעוריו נלקח בשבי על ידי השליט הפרסי נאדר שאה, אך גאונותו הפכה אותו למפקד צבאי בכיר בצבא שוביו.",
+                en: "Born in Herat as the son of a Pashtun tribal leader. In his youth, he was taken prisoner by the Persian ruler Nader Shah, but his military genius turned him into a senior commander in his captor's army."
+              },
+              ideology: { 
+                he: "לאומנות פשטונית ואחדות אסלאמית. הוא האמין כי על השבטים המקומיים להתאחד למדינה עצמאית חזקה, שלא תהיה כפופה לאימפריה הפרסית ממערב או המוגולית ממזרח.",
+                en: "Pashtun nationalism and Islamic unity. He believed the local tribes must unite into a strong independent state, un-subjugated to the Persian Empire to the west or the Mughal Empire to the east."
+              },
+              achievements: { 
+                he: "מייסד האימפריה הדוראנית ומדינת אפגניסטן המודרנית. מוכר בתואר 'אחמד שאה באבא' (אבי האומה). לאחר הירצחו של פטרונו הפרסי, הוא איחד את השבטים וניהל מערכות כיבוש עצומות עד צפון הודו.",
+                en: "Founder of the Durrani Empire and the modern Afghan state. Known by the title 'Ahmad Shah Baba' (Father of the Nation). After the assassination of his Persian patron, he united the tribes and conducted massive conquest campaigns as far as northern India."
+              }
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_afghanistan_durrani.jpg',
-              title: 'מפת אפגניסטן והאימפריה הדוראנית',
-              desc: 'מפה קרטוגרפית היסטורית בסגנון המאה ה-18 המציגה את אפגניסטן, פרס וטרטאריה, תוך התמקדות בהרי ההינדו-כוש. משקפת את הגבולות ההיסטוריים של האימפריה הדוראנית בסגנון אירופאי עתיק עם טקסטורת קלף וגווני ספיה מרהיבים שיצרנו עבור האטלס.'
+              url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_afghanistan_durrani.jpg",
+              title: { he: "מפת אפגניסטן והאימפריה הדוראנית", en: "Map of Afghanistan & Durrani Empire" },
+              desc: { 
+                he: "מפה קרטוגרפית היסטורית המציגה את אפגניסטן וטרטאריה, ומשקפת את הגבולות ההיסטוריים של האימפריה הדוראנית בסגנון קלף עתיק.",
+                en: "An ancient historical cartographic map showing Afghanistan and Tartary, reflecting the historic borders of the Durrani Empire in an antique parchment style."
+              }
             }
           },
           {
             id: 'kazakhstan',
-            name: 'קזחסטן',
-            englishName: 'Kazakhstan',
-            officialName: 'רפובליקת קזחסטן',
-            flagUrl: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/kazakhstan.webp',
+            name: { he: "קזחסטן", en: "Kazakhstan" },
+            englishName: "Kazakhstan",
+            officialName: { he: "רפובליקת קזחסטן", en: "Republic of Kazakhstan" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/kazakhstan.webp",
             capital: {
-              name: 'אסטנה',
-              englishName: 'Astana',
-              etymology: 'פירוש המילה "אסטנה" בקזחית (ובשפות טורקיות נוספות) הוא פשוט "עיר בירה" או "כס השלטון". העיר עברה גלגולי שמות רבים (אקמולינסק, צלינוגרד, אקמולה, אסטנה, נור-סולטן ובחזרה לאסטנה). השם משקף את העברת הבירה הלאומית ב-1997 מהעיר אלמטי שבדרום אל לב הערבות שבצפון המדינה.'
+              name: { he: "אסטנה", en: "Astana" },
+              englishName: "Astana",
+              etymology: { 
+                he: "פירוש המילה 'אסטנה' בקזחית (ובשפות טורקיות נוספות) הוא פשוט 'עיר בירה' או 'כס השלטון'. העיר עברה גלגולי שמות רבים במהלך ההיסטוריה המודרנית (אקמולינסק, צלינוגרד, אקמולה, אסטנה, נור-סולטן ובחזרה לאסטנה ב-2022).",
+                en: "The meaning of the word 'Astana' in Kazakh (and other Turkic languages) is simply 'capital city' or 'seat of government'. The city has gone through numerous name changes in modern history (Akmolinsk, Tselinograd, Akmola, Astana, Nur-Sultan, and back to Astana in 2022)."
+              },
+              foundingYear: { he: "1830 (כמצודה צבאית רוסית) | 1997 (הפיכתה לבירת המדינה)", en: "1830 (As a Russian military fort) | 1997 (Becoming the state capital)" },
+              reason: { 
+                he: "הנשיא הראשון, נורסולטן נזרבייב, הזיז את הבירה מהעיר אלמטי שבדרום לאסטנה שבצפון. הסיבות היו גיאופוליטיות וסביבתיות: אלמטי קרובה מדי לגבול הסיני ולמוקדי רעידות אדמה. המעבר המרהיב ללב הערבות הצפוניות נועד לבסס שלטון קזחי באזור שאוכלס ברובו ברוסים, ולעודד פיתוח וצמיחה במרכז הגיאוגרפי של המדינה הענקית.",
+                en: "The first president, Nursultan Nazarbayev, moved the capital from Almaty in the south to Astana in the north. The reasons were geopolitical and environmental: Almaty is too close to the Chinese border and earthquake zones. The spectacular move to the heart of the northern steppes was intended to consolidate Kazakh rule in an area largely populated by Russians, and to encourage development in the geographical center of the massive country."
+              }
             },
-            areaNum: '~2,724,900 קמ"ר',
-            populationNum: '~19,500,000',
-            currency: 'טנגה קזחי (KZT)',
-            area: 'כ-2,724,900 קמ"ר (מקום 9 בעולם בגודלו, והמדינה הגדולה ביותר בעולם ללא מוצא לים פתוח).',
+            areaNum: { he: "~2,724,900 קמ\"ר", en: "~2,724,900 sq km" },
+            populationNum: "~19,500,000",
+            currency: { he: "טנגה קזחי (KZT)", en: "Kazakhstani Tenge (KZT)" },
+            area: { 
+              he: "כ-2,724,900 קמ\"ר (מקום 9 בעולם בגודלו). קזחסטן היא המדינה הגדולה ביותר בעולם ללא מוצא לים פתוח (Landlocked). נופה נשלט על ידי ה'סטפה' – ערבות דשא אינסופיות המשתרעות מאופק לאופק, מדבריות (קריזילקום) בדרום, והרי אלטאי הגבוהים במזרח.",
+              en: "Approx. 2,724,900 sq km (9th largest in the world). Kazakhstan is the largest landlocked country globally. Its landscape is dominated by the 'Steppe' - endless grassy plains stretching from horizon to horizon, deserts (Kyzylkum) in the south, and the high Altai Mountains in the east."
+            },
             demographics: {
-              mainNationName: 'קזחים',
-              mainNationPercent: 'כ-70%',
-              description: 'לאורך רוב המאה ה-20, בעקבות מדיניות ההגליה וההרעבה של סטלין, הקזחים הפכו למיעוט במולדתם. רק לאחר העצמאות ב-1991 והגירה רוסית חזרה לרוסיה, חזרו הקזחים להוות רוב מוצק. כיום המיעוט הרוסי עומד על כ-15%.'
+              mainNationName: { he: "קזחים", en: "Kazakhs" },
+              mainNationPercent: { he: "כ-70%", en: "~70%" },
+              description: { 
+                he: "הדמוגרפיה הקזחית ידעה זעזועים. בעקבות מדיניות הקולקטיביזציה, ההרעבה ('הולודומור הקזחי') וההגליה של סטלין בשנות ה-30, הקזחים הפכו למיעוט במולדתם שלהם. רק לאחר העצמאות ב-1991, עם גלי הגירה עצומים של רוסים וגרמנים חזרה לאירופה, חזרו הקזחים להוות רוב מוצק (כ-70%). כיום המיעוט הרוסי עומד על כ-15%, וישנם גם אוזבקים, אוקראינים ואויגורים.",
+                en: "Kazakh demographics have suffered massive shocks. Following Stalin's policies of collectivization, starvation (the 'Kazakh Holodomor'), and exile in the 1930s, Kazakhs became a minority in their own homeland. Only after independence in 1991, with massive waves of Russian and German emigration back to Europe, did Kazakhs return to being a solid majority (~70%). Today the Russian minority is around 15%, alongside Uzbeks, Ukrainians, and Uyghurs."
+              }
             },
-            modernHistory: 'קזחסטן הייתה הרפובליקה הסובייטית האחרונה שהכריזה על עצמאותה ב-16 בדצמבר 1991. המעבר הונהג על ידי נורסולטן נזרבייב, ששלט במדינה ביד חזקה במשך עשורים תוך פיתוח מואץ וביסוס הבירה אסטנה.',
-            foundingYears: '1465 (חאנות) | 1991',
-            flagSymbolism: 'הרקע התכלת מסמל את השמיים ואמונת הטנגרי העתיקה. השמש (32 קרניים) מסמלת עושר ונשר הערבות מסמל כוח וחופש. בצד מופיע עיטור "קרן האיל" המסורתי.',
+            modernHistory: { 
+              he: "קזחסטן הייתה הרפובליקה הסובייטית האחרונה שהכריזה על עצמאותה, ב-16 בדצמבר 1991 (לאחר התפרקות ברית המועצות). המעבר הונהג על ידי נורסולטן נזרבייב, ששלט במדינה ביד חזקה וללא אופוזיציה אמיתית במשך כמעט שלושה עשורים. הוא הוביל פיתוח מואץ מבוסס על משאבי נפט, גז ואורניום, וויתר מרצון על ארסנל הגרעין הסובייטי העצום שנשאר בשטחו. המדינה נחשבת כיום לכלכלה החזקה והמתקדמת ביותר במרכז אסיה.",
+              en: "Kazakhstan was the last Soviet republic to declare independence, on December 16, 1991 (after the USSR collapsed). The transition was led by Nursultan Nazarbayev, who ruled the country with an iron fist and no real opposition for nearly three decades. He led accelerated development based on oil, gas, and uranium resources, and voluntarily surrendered the massive Soviet nuclear arsenal left on its soil. The country is now considered the strongest and most advanced economy in Central Asia."
+            },
+            foundingYears: { he: "1465 (חאנות) | 1991 (עצמאות מודרנית)", en: "1465 (Khanate) | 1991 (Modern Independence)" },
+            flagSymbolism: { 
+              he: "הרקע התכלת מסמל את השמיים הרחבים ואת אמונת ה'טנגרי' העתיקה (דת השמיים הטורקית). השמש (בעלת 32 קרניים) מסמלת מקור חיים ועושר. תחתיה דואה עיט הזהב של הערבות, המסמל כוח, חופש ועצמאות. בצד שמאל מופיע פס אנכי עם עיטור 'קרן האיל' המסורתי (Koshkar-muiz) המייצג את התרבות האמנותית של הנוודים.",
+              en: "The light blue background symbolizes the broad skies and the ancient 'Tengri' faith (Turkic sky religion). The sun (with 32 rays) symbolizes a source of life and wealth. Beneath it soars the golden steppe eagle, symbolizing power, freedom, and independence. On the left is a vertical stripe with the traditional 'Ram's Horn' ornamentation (Koshkar-muiz) representing nomadic artistic culture."
+            },
             nationalAnimal: {
-              name: 'עיט הזהב (Golden Eagle)',
-              reason: 'עיט הזהב, המכונה גם "נשר הערבות", דואה בסמכותיות מעל הערבות הבלתי-נגמרות של קזחסטן. הוא מופיע בגאון על דגל המדינה ומסמל עצמאות, חופש, כוח ראייה למרחוק ואת רוחם האצילית של הנוודים הטורקיים שאימנו את העיטים הללו לציד במשך אלפי שנים (בזיירות).'
+              name: { he: "עיט הזהב (Golden Eagle)", en: "Golden Eagle" },
+              reason: { 
+                he: "עיט הזהב, המכונה לעיתים 'נשר הערבות', דואה בסמכותיות מעל הערבות הבלתי-נגמרות של קזחסטן ונחשב למלך השמיים. הוא מופיע בגאון על דגל המדינה ומסמל עצמאות, חופש תנועה, כוח ראייה למרחוק (חזון) ואת רוחם האצילית של הנוודים הטורקיים, שאימנו את העיטים הללו במסורת בזיירות ייחודית (Berkutchi) לצוד זאבים ושועלים במשך אלפי שנים.",
+                en: "The Golden Eagle, sometimes called the 'Steppe Eagle', soars authoritatively over the endless steppes of Kazakhstan and is considered the king of the skies. It appears proudly on the national flag and symbolizes independence, freedom of movement, far-sightedness (vision), and the noble spirit of the Turkic nomads, who trained these eagles in a unique falconry tradition (Berkutchi) to hunt wolves and foxes for thousands of years."
+              }
             },
             etymology: {
               parts: [
-                { text: 'קזח (Kazakh)', color: 'text-cyan-400', desc: 'מונח טורקי עתיק המתאר אדם שעזב את השבט המקורי שלו כדי לחיות חיי נוודות חופשיים. במאה ה-15, קבוצת שבטים בהנהגת ג\'אניבק פרשו מחאנות האוזבקים ויצאו לערבות הפתוחות וכונו "קזחים" – הנוודים החופשיים.' },
-                { text: 'סטן (Stan)', color: 'text-pink-400', desc: 'הסיומת הפרסית/איראנית המציינת אזור גיאוגרפי או מדינה ריבונית.' }
+                { text: { he: "קזח (Kazakh)", en: "Kazakh" }, color: "text-cyan-400", bg: "bg-cyan-400/10", border: "border-cyan-500/30", desc: { he: "מונח טורקי עתיק המתאר אדם חופשי שעזב את השבט המקורי שלו. במאה ה-15, קבוצת שבטים יצאו לערבות וכונו 'קזחים' – הנוודים החופשיים.", en: "An ancient Turkic term describing a free person who left his original tribe. In the 15th century, a group of tribes left for the steppes and were dubbed 'Kazakhs' - the free nomads." } },
+                { text: { he: "סטן (Stan)", en: "Stan" }, color: "text-pink-400", bg: "bg-pink-400/10", border: "border-pink-500/30", desc: { he: "הסיומת הפרסית/איראנית המציינת אזור גיאוגרפי או מדינה.", en: "The Persian/Iranian suffix indicating a geographic region or country." } }
               ],
-              synthesis: 'ארצם של האנשים החופשיים, או מולדת הנוודים העצמאיים.'
+              synthesis: { he: "ארצם של האנשים החופשיים / הנוודים העצמאיים.", en: "Land of the free people / independent nomads." }
             },
             figure: {
-              name: 'אבאי קוננבאיולי',
-              years: '1845 - 1904',
-              childhood: 'נולד בהרי צ\'ינגיז למשפחת אצולה אמידה. קיבל חינוך ששילב לימודי דת אסלאמית במדרסה עם חינוך חילוני רוסי.',
-              ideology: 'נאורות מתקדמת. הטיף לשימור התרבות הקזחית, אך טען בתוקף כי עליהם לאמץ השכלה מודרנית ופתיחות רוסית/אירופאית כדי לצאת מהפיגור החברתי.',
-              achievements: 'מייסד הספרות הקזחית המודרנית. ספרו הפילוסופי "ספר המילים" מהווה עמוד תווך בזהות הקזחית.'
+              name: { he: "אבאי קוננבאיולי", en: "Abai Qunanbaiuly" },
+              years: "1845 - 1904",
+              childhood: { 
+                he: "נולד בהרי צ'ינגיז למשפחת אצולה קזחית אמידה. קיבל חינוך מוקפד ששילב לימודי דת אסלאמית ופילוסופיה מזרחית במדרסה, יחד עם חינוך חילוני בבתי ספר רוסיים שם נחשף לספרות המערב.",
+                en: "Born in the Chingiz Mountains to a wealthy Kazakh noble family. Received a rigorous education combining Islamic religious studies and Eastern philosophy in a Madrasa, along with secular education in Russian schools where he was exposed to Western literature."
+              },
+              ideology: { 
+                he: "נאורות, מודרניזציה ורפורמה חינוכית. הוא הטיף לשימור המסורת והתרבות הקזחית, אך טען בתוקף כי על עמו לאמץ השכלה מדעית, שפות ופתיחות כדי לצאת מהפיגור החברתי ומחיי השבטיות המוגבלים.",
+                en: "Enlightenment, modernization, and educational reform. He preached the preservation of Kazakh tradition and culture, but strongly argued that his people must adopt scientific education, languages, and openness to escape social backwardness and limited tribal life."
+              },
+              achievements: { 
+                he: "נחשב לאבי האומה התרבותי ומייסד הספרות הקזחית הכתובה. יצירתו המופתית 'ספר המילים' (קרא סוזדר) מהווה עד היום את עמוד התווך של הזהות והמצפון הקזחי הלאומי.",
+                en: "Considered the cultural father of the nation and the founder of written Kazakh literature. His masterpiece 'The Book of Words' (Qara Sozder) remains to this day the pillar of Kazakh national identity and conscience."
+              }
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_kazakhstan_tartary.jpg',
-              title: 'מפת טרטאריה העתיקה והערבות',
-              desc: 'מפה היסטורית מפורטת ויפהפייה מהמאה ה-17 המציגה את הערבות העצומות של קזחסטן במרכז אסיה, אזור שהיה ידוע כ"טרטאריה העצמאית". ממחישה את הטריטוריות הנוודיות העתיקות עם שושנת רוחות ועיטורים קרטוגרפיים מסורתיים.'
+              url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_kazakhstan_tartary.jpg",
+              title: { he: "מפת טרטאריה העתיקה והערבות", en: "Map of Ancient Tartary and the Steppes" },
+              desc: { 
+                he: "מפה היסטורית מפורטת מהמאה ה-17 המציגה את האזור שהיה ידוע במערב כ'טרטאריה העצמאית'. ממחישה את המרחבים הבלתי נגמרים של הנוודים לפני הכיבוש הרוסי הקיסרי.",
+                en: "A detailed 17th-century historical map showing the region known in the West as 'Independent Tartary'. It illustrates the endless expanses of the nomads before the Russian Imperial conquest."
+              }
             }
           },
           {
             id: 'kyrgyzstan',
-            name: 'קירגיזסטן',
-            englishName: 'Kyrgyzstan',
-            officialName: 'הרפובליקה הקירגיזית',
-            flagUrl: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/kyrgyzstan.webp',
+            name: { he: "קירגיזסטן", en: "Kyrgyzstan" },
+            englishName: "Kyrgyzstan",
+            officialName: { he: "הרפובליקה הקירגיזית", en: "Kyrgyz Republic" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/kyrgyzstan.webp",
             capital: {
-              name: 'בישקק',
-              englishName: 'Bishkek',
-              etymology: 'הדעה המקובלת והרווחת במחקר היא שמקור השם הוא במילה הקירגיזית "בישקק" (Bishkek), שהיא למעשה מקל עץ מסורתי המשמש לערבוב (מחבצה) של "קומיס" - חלב סוסות תוסס שהוא המשקה הלאומי. אגדה עתיקה מספרת שגיבור מקומי איבד את הבישקק שלו באזור זה, וכך זכה המקום לשמו.'
+              name: { he: "בישקק", en: "Bishkek" },
+              englishName: "Bishkek",
+              etymology: { 
+                he: "מקור השם הוא במילה הקירגיזית 'בישקק' (Bishkek), שהיא למעשה מקל עץ מסורתי המשמש לערבוב (מחבצה) של 'קומיס' - חלב סוסות תוסס שהוא המשקה הלאומי הטורקמני. אגדה עתיקה מספרת שגיבור מקומי איבד את הבישקק שלו באזור, וכך המקום זכה לשמו המיוחד.",
+                en: "The origin of the name comes from the Kyrgyz word 'Bishkek', which is actually a traditional wooden stick used to churn 'Kumis' - fermented mare's milk, the national Turkic drink. An ancient legend tells of a local hero who lost his Bishkek in this area, giving the place its unique name."
+              },
+              foundingYear: { he: "1825 (כמצודת חוקאנד) | 1991 (כבירת המדינה המודרנית)", en: "1825 (As a Kokand fortress) | 1991 (As modern state capital)" },
+              reason: { 
+                he: "בישקק ממוקמת אסטרטגית בעמק הנהר צ'וי הפורה, למרגלות רכס ענק של הרי טיאן שאן. היא החלה כמצודה צבאית של חאנות חוקאנד כדי לגבות מיסים משיירות סוחרים, נכבשה על ידי האימפריה הרוסית (שכינתה אותה פישפק ולאחר מכן פרונזה), ופותחה כמרכז המנהלי והכלכלי הגדול ביותר באזור בזכות המים והאקלים הנוח.",
+                en: "Bishkek is strategically located in the fertile Chuy River Valley, at the foothills of a massive range of the Tian Shan mountains. It began as a military fortress of the Khanate of Kokand to collect taxes from trade caravans, was conquered by the Russian Empire (which called it Pishpek and later Frunze), and was developed as the largest administrative and economic center in the region due to its water and favorable climate."
+              }
             },
-            areaNum: '~199,951 קמ"ר',
-            populationNum: '~7,000,000',
-            currency: 'סום קירגיזי (KGS)',
-            area: 'כ-199,951 קמ"ר. מכונה "שווייץ של מרכז אסיה" בשל שרשראות ההרים העצומות של טיאן שאן (Tian Shan).',
+            areaNum: { he: "~199,951 קמ\"ר", en: "~199,951 sq km" },
+            populationNum: "~7,000,000",
+            currency: { he: "סום קירגיזי (KGS)", en: "Kyrgyzstani Som (KGS)" },
+            area: { 
+              he: "כ-199,951 קמ\"ר. המדינה מכונה לעיתים 'שווייץ של מרכז אסיה'. מעל 80% משטח המדינה מכוסה על ידי רכסי ההרים העצומים של 'טיאן שאן' (הרי השמיים) והרי הפאמיר, היוצרים עמקים עמוקים, קרחונים ואגם אלפיני מפורסם וענק בשם 'איסיק קול' שאינו קופא לעולם למרות גובהו.",
+              en: "Approx. 199,951 sq km. The country is often called the 'Switzerland of Central Asia'. Over 80% of its territory is covered by the massive mountain ranges of 'Tian Shan' (Mountains of Heaven) and the Pamir Mountains, creating deep valleys, glaciers, and a famous, giant alpine lake named 'Issyk-Kul' that never freezes despite its altitude."
+            },
             demographics: {
-              mainNationName: 'קירגיזים',
-              mainNationPercent: 'כ-73%',
-              description: 'שאר האוכלוסייה מורכבת בעיקר ממיעוטים אוזבקים (כ-15%) המרוכזים בדרום המדינה באזור עמק פרגאנה (דבר שהוביל היסטורית לעימותים אתניים), וכן מיעוט רוסי (כ-5%) באזור הבירה בישקק.'
+              mainNationName: { he: "קירגיזים", en: "Kyrgyz" },
+              mainNationPercent: { he: "כ-73%", en: "~73%" },
+              description: { 
+                he: "האוכלוסייה ברובה מוסלמית סונית (המשלבת לעיתים אלמנטים שמאניסטיים מסורתיים). לצד הרוב הקירגיזי, ישנו מיעוט אוזבקי גדול (כ-15%) המרוכז בעיקר בדרום המדינה באזור עמק פרגאנה הפורה, פילוג שהוביל בעבר לסכסוכים אתניים ופוליטיים מדממים (ב-1990 וב-2010). בנוסף קיים מיעוט רוסי (כ-5%) בבירה.",
+                en: "The population is mostly Sunni Muslim (often integrating traditional shamanistic elements). Alongside the Kyrgyz majority, there is a large Uzbek minority (~15%) concentrated mainly in the south in the fertile Fergana Valley, a division that has historically led to bloody ethnic and political conflicts (in 1990 and 2010). Additionally, there is a Russian minority (~5%) in the capital."
+              }
             },
-            modernHistory: 'הכריזה על עצמאותה ב-31 באוגוסט 1991. המדינה חוותה מאז מספר הפיכות ותהפוכות שלטוניות המכונות "מהפכות צבעונים" בחיפושיה אחר דמוקרטיה יציבה.',
-            foundingYears: 'המאה ה-9 | 1991',
-            flagSymbolism: 'הרקע האדום מסמל אומץ וגבורה (דגל הגיבור מאנאס). השמש (40 קרניים) מייצגת את 40 השבטים. במרכז מופיע ה"טונדוק" - חלקו העליון של אוהל היורטה, המסמל בית, שלום, וחיבור לשמיים.',
+            modernHistory: { 
+              he: "קירגיזסטן הכריזה על עצמאותה ב-1991. בשונה משכנותיה הרודניות במרכז אסיה, קירגיזסטן חוותה היסטוריה פוליטית סוערת ותוססת בניסיון לכונן דמוקרטיה חופשית. המדינה עברה מספר הפיכות עממיות ('מהפכת הצבעונים' ב-2005 ומהפכה נוספת ב-2010) שהדיחו נשיאים מושחתים, ונחשבת למדינה החופשית ביותר מבחינה פוליטית ועיתונאית באזור, למרות אי יציבות כרונית.",
+              en: "Kyrgyzstan declared independence in 1991. Unlike its authoritarian neighbors in Central Asia, Kyrgyzstan has experienced a turbulent and vibrant political history in its attempt to establish a free democracy. The country has undergone several popular uprisings (the 'Tulip Revolution' in 2005 and another revolution in 2010) that ousted corrupt presidents, and is considered the most politically and journalistically free country in the region, despite chronic instability."
+            },
+            foundingYears: { he: "המאה ה-9 | 1991 (עצמאות)", en: "9th Century | 1991 (Independence)" },
+            flagSymbolism: { 
+              he: "הרקע האדום העז מסמל אומץ, גבורה, ואת הדגל המקורי של הגיבור האגדי מאנאס. במרכז נמצאת שמש מוזהבת בעלת 40 קרניים המייצגות את 40 השבטים הקירגיזים ההיסטוריים. בתוך השמש משורטט ה'טונדוק' - חלקו העליון (התקרה) של אוהל היורטה הנוודי, המסמל בית, שלום, אחדות משפחתית וחיבור לשמיים (טנגרי).",
+              en: "The bright red background symbolizes courage, bravery, and the original flag of the legendary hero Manas. In the center is a golden sun with 40 rays representing the 40 historical Kyrgyz tribes. Inside the sun is a stylized 'Tunduk' - the top part (roof) of a nomadic yurt tent, symbolizing home, peace, family unity, and connection to the sky (Tengri)."
+            },
             nationalAnimal: {
-              name: 'נמר השלג (Ilbirs)',
-              reason: 'נמר השלג, הנקרא בקירגיזית "אילבירס" (Ilbirs), נטוע עמוק במיתולוגיה הקירגיזית ובאפוס ההיסטורי של הגיבור "מאנאס". הוא משקף את הוד והדרן של פסגות רכס הטיאן שאן ("הרי השמיים"), ומסמל אצילות, חוכמה, וקשר רוחני עמוק ואלמותי בין העם הקירגיזי לטבע ההררי.'
+              name: { he: "נמר השלג (Ilbirs)", en: "Snow Leopard (Ilbirs)" },
+              reason: { 
+                he: "נמר השלג, הנקרא בקירגיזית 'אילבירס' (Ilbirs), נטוע עמוק בנשמה, במיתולוגיה הקירגיזית ובאפוס ההיסטורי. הוא משקף את הוד והדרן של פסגות רכס הטיאן שאן המושלגות, ומסמל אצילות, חוכמה פראית, וקשר רוחני ואלמותי בין העם הקירגיזי לבין הטבע ההררי המבודד שבו הוא חי במשך מאות שנים.",
+                en: "The snow leopard, called 'Ilbirs' in Kyrgyz, is deeply rooted in the soul, Kyrgyz mythology, and historical epic. It reflects the majesty of the snowy Tian Shan mountain peaks and symbolizes nobility, wild wisdom, and an eternal spiritual connection between the Kyrgyz people and the isolated mountainous nature where they have lived for centuries."
+              }
             },
             etymology: {
               parts: [
-                { text: 'קירגיז (Kyrgyz)', color: 'text-red-400', desc: 'השם מורכב מהמילים הטורקיות הקדומות "kyrk" שמשמעותה 40, והסיומת "yz" או "uz" שמשמעותה שבטים. השם מסמל את 40 השבטים המקוריים שאוחדו על ידי הגיבור האגדי מאנאס במאבקם נגד האויגורים במאה ה-9 לספירה.' },
-                { text: 'סטן (Stan)', color: 'text-pink-400', desc: 'המילה הפרסית למקום או התיישבות.' }
+                { text: { he: "קירגיז (Kyrgyz)", en: "Kyrgyz" }, color: "text-red-400", bg: "bg-red-400/10", border: "border-red-500/30", desc: { he: "השם מורכב מהמילים הטורקיות הקדומות 'kyrk' (ארבעים) וסיומת 'yz' (שבטים). מסמל את 40 השבטים המקוריים שאוחדו במאבק נגד האויגורים במאה ה-9 לספירה.", en: "The name combines the ancient Turkic words 'kyrk' (forty) and suffix 'yz' (tribes). It symbolizes the original 40 tribes united in the struggle against the Uyghurs in the 9th century AD." } },
+                { text: { he: "סטן (Stan)", en: "Stan" }, color: "text-pink-400", bg: "bg-pink-400/10", border: "border-pink-500/30", desc: { he: "מילה הודו-אירופית המתארת ארץ התיישבות.", en: "An Indo-European word describing a land of settlement." } }
               ],
-              synthesis: 'ארץ ארבעים השבטים.'
+              synthesis: { he: "ארץ ארבעים השבטים.", en: "Land of the Forty Tribes." }
             },
             figure: {
-              name: 'מאנאס המפואר',
-              years: 'המאה ה-9 לספירה',
-              childhood: 'גיבור מיתולוגי. נולד באורח פלא להורים קשישים, וכבר מילדות הפגין כוח פיזי על-אנושי וחוכמה.',
-              ideology: 'אחדות מוחלטת של השבטים המפוזרים, ונאמנות להגנה על המולדת ההררית מפני פולשים זרים במרכז אסיה.',
-              achievements: 'איחד את 40 השבטים לאומה אחת חזקה. "האפוס של מאנאס" הוא מהארוכים בעולם ומהווה את הליבה התרבותית הקירגיזית.'
+              name: { he: "מאנאס המפואר", en: "Manas the Magnificent" },
+              years: "המאה ה-9 לספירה",
+              childhood: { 
+                he: "גיבור מיתולוגי היסטורי. על פי האפוס, הוא נולד באורח פלא להורים קשישים ועקרים. כבר מילדותו המוקדמת בערבות הוא הפגין כוח פיזי על-אנושי, חוכמה פוליטית וכריזמה סוחפת שמשכה אליו תומכים.",
+                en: "A historical-mythological hero. According to the epic, he was miraculously born to elderly, barren parents. From early childhood in the steppes, he exhibited superhuman physical strength, political wisdom, and sweeping charisma that drew supporters to him."
+              },
+              ideology: { 
+                he: "אחדות מוחלטת ואחוות דם של השבטים הטורקיים המפוזרים, ונאמנות בלתי מתפשרת להגנה על המולדת ההררית מפני פולשים זרים במרכז אסיה (בעיקר האויגורים והסינים).",
+                en: "Absolute unity and blood brotherhood of the scattered Turkic tribes, and uncompromising loyalty to defending the mountainous homeland from foreign invaders in Central Asia (primarily Uyghurs and Chinese)."
+              },
+              achievements: { 
+                he: "הוא איחד את 40 השבטים המפוצלים לאומה קירגיזית אחת חזקה והוביל אותם לניצחונות. 'האפוס של מאנאס', המספר את עלילותיו ומועבר בעל פה על ידי פייטנים, הוא מהארוכים והמורכבים ביותר בעולם (ארוך פי כמה מהאיליאדה), ומהווה את הליבה התרבותית והנשמה של האומה.",
+                en: "He united the 40 fragmented tribes into one strong Kyrgyz nation and led them to victories. The 'Epic of Manas', recounting his exploits and orally transmitted by bards, is one of the longest and most complex in the world (many times longer than the Iliad), constituting the cultural core and soul of the nation."
+              }
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_kyrgyzstan_tian_shan.jpg',
-              title: 'מפת מרכז אסיה ורכס טיאן שאן',
-              desc: 'מפה היסטורית קלאסית מהמאה ה-16 המתמקדת ברכס הרי הטיאן שאן ("הרי השמיים"). מציגה את העמקים העמוקים וההרים הגבוהים שבהם נדדו 40 השבטים הקירגיזים ההיסטוריים, עם דיו מיושנת וטקסטורת נייר וינטג\'.'
+              url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_kyrgyzstan_tian_shan.jpg",
+              title: { he: "מפת מרכז אסיה ורכס טיאן שאן", en: "Map of Central Asia and Tian Shan Range" },
+              desc: { 
+                he: "מפה קרטוגרפית היסטורית המציגה את העמקים העמוקים וההרים הגבוהים שבהם נדדו 40 השבטים הקירגיזים ההיסטוריים.",
+                en: "A historical cartographic map showing the deep valleys and high mountains where the historical 40 Kyrgyz tribes roamed."
+              }
             }
           },
           {
             id: 'pakistan',
-            name: 'פקיסטן',
-            englishName: 'Pakistan',
-            officialName: 'הרפובליקה האסלאמית של פקיסטן',
-            flagUrl: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/pakistan.webp',
+            name: { he: "פקיסטן", en: "Pakistan" },
+            englishName: "Pakistan",
+            officialName: { he: "הרפובליקה האסלאמית של פקיסטן", en: "Islamic Republic of Pakistan" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/pakistan.webp",
             capital: {
-              name: 'אסלאמאבאד',
-              englishName: 'Islamabad',
-              etymology: 'שם מודרני שנתפר בקפידה עבור עיר הבירה החדשה שנבנתה בשנות ה-60 של המאה ה-20. השם מורכב מהמילה "אסלאם" (דת האסלאם) ומהסיומת הפרסית "אבאד" (עיר או מקום יישוב משגשג). הפירוש המילולי הוא "עירו של האסלאם", המשקף את הרעיון והאידאולוגיה שעמדו בבסיס הקמתה של פקיסטן כולה - בית לאומי למוסלמים של תת-היבשת ההודית.'
+              name: { he: "אסלאמאבאד", en: "Islamabad" },
+              englishName: "Islamabad",
+              etymology: { 
+                he: "שם מודרני שנתפר בקפידה עבור עיר הבירה החדשה. השם מורכב מהמילה 'אסלאם' (דת האסלאם) ומהסיומת הפרסית 'אבאד' (עיר או מקום יישוב משגשג). הפירוש המילולי הוא 'עירו של האסלאם', המשקף באופן מובהק את הרעיון שעמד בבסיס הקמתה של המדינה - בית לאומי למוסלמים.",
+                en: "A modern name carefully tailored for the new capital. The name is composed of the word 'Islam' (the Islamic religion) and the Persian suffix 'Abad' (city or prosperous settlement). The literal meaning is 'City of Islam', distinctly reflecting the idea underlying the state's creation - a national home for Muslims."
+              },
+              foundingYear: { he: "1960 (התחלת הבנייה ותכנון הבירה המודרנית)", en: "1960 (Start of construction and planning of modern capital)" },
+              reason: { 
+                he: "פקיסטן תוכננה מראש להחליף את קראצ'י הצפופה (בירתה הראשונה). אסלאמאבאד נבנתה כ'בירה מתוכננת' (Planned city) למרגלות הרי ההימלאיה. המיקום נבחר בשל אקלים נעים יותר, התרחקות ממוקד העסקים והים שחשוף לתקיפות ימיות, וקרבה אסטרטגית למפקדת הצבא הכללית בעיר ראוולפינדי, וכן לאזור קשמיר השנוי במחלוקת.",
+                en: "Pakistan was planned from the outset to replace crowded Karachi (its first capital). Islamabad was built as a 'planned city' at the foothills of the Himalayas. The location was chosen for a more pleasant climate, moving away from the business center and the sea vulnerable to naval attacks, and strategic proximity to the Army's General Headquarters in Rawalpindi, as well as the disputed Kashmir region."
+              }
             },
-            areaNum: '~881,913 קמ"ר',
-            populationNum: '~240,000,000',
-            currency: 'רופי פקיסטני (PKR)',
-            area: 'כ-881,913 קמ"ר. נוף גיאוגרפי מגוון בצורה קיצונית: מפסגות ההימלאיה הקפואות בצפון ועד מדבריות והים הערבי בדרום.',
+            areaNum: { he: "~881,913 קמ\"ר", en: "~881,913 sq km" },
+            populationNum: "~240,000,000",
+            currency: { he: "רופי פקיסטני (PKR)", en: "Pakistani Rupee (PKR)" },
+            area: { 
+              he: "כ-881,913 קמ\"ר. המדינה מחזיקה בנוף גיאוגרפי מהמגוונים בעולם: מפסגות ההימלאיה וקארקוראם הקפואות בצפון (כולל פסגת K2 השנייה בגובהה בעולם), דרך מישורי עמק נהר האינדוס הפוריים במרכז, ועד למדבריות בלוצ'יסטן וחוף הים הערבי בדרום הפתוח.",
+              en: "Approx. 881,913 sq km. The country holds some of the world's most diverse geographical landscapes: from the freezing peaks of the Himalayas and Karakoram in the north (including K2, the world's 2nd highest peak), through the fertile plains of the Indus River valley in the center, to the deserts of Balochistan and the Arabian Sea coast in the open south."
+            },
             demographics: {
-              mainNationName: 'פנג\'אבים',
-              mainNationPercent: 'כ-45%',
-              description: 'המדינה בנויה על פסיפס ולא קיימת קבוצה אתנית הנקראת "פקיסטנים". הפנג\'אבים דומיננטיים, ולצידם פשטונים (15%), סינדהים (14%), בלוצ\'ים (3%) ומהגרים דוברי אורדו (מוהאג\'ירים). שפת האורדו הלאומית משמשת כשפת איחוד, אך היא שפת אם של מיעוט.'
+              mainNationName: { he: "פנג'אבים", en: "Punjabis" },
+              mainNationPercent: { he: "כ-45%", en: "~45%" },
+              description: { 
+                he: "המדינה בנויה על פסיפס אתני עצום ולא קיימת בה קבוצה אתנית הנקראת 'פקיסטנים'. הפנג'אבים הם השולטים בכלכלה ובצבא, ולצידם מיעוטים עצומים של פשטונים (15%), סינדהים (14%), בלוצ'ים ומהגרים מהודו (מוהאג'ירים). שפת האורדו הלאומית משמשת ככור היתוך, למרות שהיא שפת אם רק של מיעוט קטן באוכלוסייה.",
+                en: "The country is built on a vast ethnic mosaic and there is no ethnic group called 'Pakistanis'. Punjabis dominate the economy and military, alongside massive minorities of Pashtuns (15%), Sindhis (14%), Balochs, and immigrants from India (Muhajirs). The national language, Urdu, acts as a melting pot, although it is the mother tongue of only a small minority of the population."
+              }
             },
-            modernHistory: 'הוקמה ב-14 באוגוסט 1947 כתוצאה מחלוקת תת-היבשת ההודית על ידי הבריטים. היא נועדה לשמש כמדינת לאום ובית בטוח עבור המוסלמים של הודו. החלוקה גררה שפיכות דמים איומה וחילופי אוכלוסין של מיליוני בני אדם.',
-            foundingYears: '1947 (חלוקת הודו)',
-            flagSymbolism: 'הירוק העמוק מסמל את האסלאם, הפס הלבן האנכי מייצג סובלנות למיעוטים. חצי הסהר הלבן מסמל קידמה, והכוכב המחומש מסמל ידע והשכלה.',
+            modernHistory: { 
+              he: "פקיסטן הוקמה ב-14 באוגוסט 1947 כתוצאה מחלוקת תת-היבשת ההודית על ידי הבריטים. היא נועדה לשמש כמדינת לאום למוסלמים. החלוקה גררה שפיכות דמים איומה וחילופי אוכלוסין. במקור היא כללה גם את מזרח פקיסטן (בנגלדש דהיום), שמרדה והתנתקה ב-1971 במלחמה עקובה מדם. מאז, פקיסטן חוותה עימותים צבאיים חוזרים ונשנים עם הודו (בעיקר על חבל קשמיר), הפיכות צבאיות תכופות, והפכה למעצמה הגרעינית המוסלמית הראשונה והיחידה.",
+              en: "Pakistan was established on August 14, 1947, as a result of the partition of the Indian subcontinent by the British. It was intended as a nation-state for Muslims. The partition led to horrific bloodshed and population exchanges. Originally it also included East Pakistan (modern-day Bangladesh), which rebelled and seceded in 1971 in a bloody war. Since then, Pakistan has experienced repeated military conflicts with India (mainly over Kashmir), frequent military coups, and became the first and only Muslim nuclear power."
+            },
+            foundingYears: { he: "1947 (חלוקת הודו הבריטית)", en: "1947 (Partition of British India)" },
+            flagSymbolism: { 
+              he: "הירוק העמוק תופס את רוב הדגל ומסמל את האסלאם ורוב המדינה. הפס הלבן האנכי בצד התורן מייצג בצורה מכובדת את המיעוטים הדתיים במדינה (הינדים, נוצרים ואחרים). חצי הסהר הלבן מסמל קידמה, והכוכב המחומש מסמל ידע, אור והשכלה.",
+              en: "The deep green takes up most of the flag and symbolizes Islam and the state's majority. The vertical white stripe on the hoist side respectfully represents the country's religious minorities (Hindus, Christians, and others). The white crescent symbolizes progress, and the five-pointed star symbolizes light, knowledge, and education."
+            },
             nationalAnimal: {
-              name: 'מארחור / יעל בורגי (Markhor)',
-              reason: 'המארחור הוא עז הרים מלכותית, המאופיינת בקרניים מסולסלות ועצומות. פירוש השם בפרסית הוא "אוכל נחשים" (מאר=נחש, חור=אוכל). פקיסטן בחרה בו כחיה הלאומית משום שהוא מסמל את היכולת לגבור על כוחות הרשע והאויבים (הנחשים), וכן את העמידות והחוסן הנדרשים כדי לשרוד במצוקים התלולים של צפון המדינה.'
+              name: { he: "מארחור / יעל בורגי (Markhor)", en: "Markhor (Screw Horn Goat)" },
+              reason: { 
+                he: "המארחור הוא עז הרים מלכותית, המאופיינת בקרניים מסולסלות ועצומות. פירוש השם בפרסית הוא 'אוכל נחשים' (מאר=נחש, חור=אוכל). פקיסטן בחרה בו כחיה הלאומית משום שהוא מסמל את היכולת לגבור על כוחות הרשע והאויבים (הנחשים במיתולוגיה), וכן את העמידות והחוסן הנדרשים כדי לשרוד במצוקים התלולים של צפון המדינה המבודד.",
+                en: "The Markhor is a majestic mountain goat, characterized by massive, tightly curled corkscrew horns. The name in Persian translates to 'Snake Eater' (Mar=Snake, Khor=Eater). Pakistan chose it as the national animal because it symbolizes the ability to overcome evil forces and enemies (snakes in mythology), as well as the resilience and toughness required to survive in the steep cliffs of the isolated north."
+              }
             },
             etymology: {
               parts: [
-                { text: 'פקי (Paki / Pak)', color: 'text-emerald-400', desc: 'לשם זה שורשים כפולים. מבחינה לשונית פרסית/אורדו, "Pak" משמעותו "טהור" או "קדוש". במקביל, המונח הוטבע ב-1933 ע"י הפעיל צ\'אודרי רחמט עלי כראשי תיבות של המחוזות הצפוניים המוסלמים: P(unjab), A(fghania - פשטונים), K(ashmir), ו-(S)indh.' },
-                { text: 'סטן (Stan)', color: 'text-pink-400', desc: 'בנוסף למשמעות המסורתית של "ארץ", באקרונים של רחמט עלי, האותיות STAN מסמלות ישירות את חבל הבלוצ\'יסטן (BaluchiSTAN).' }
+                { text: { he: "פקי (Paki / Pak)", en: "Paki / Pak" }, color: "text-emerald-400", bg: "bg-emerald-400/10", border: "border-emerald-500/30", desc: { he: "לשם זה שורשים כפולים. באורדו פירושו 'טהור'. במקביל, זהו אקרונים שהגה רחמט עלי: P(unjab), A(fghania), K(ashmir), ו-(S)indh.", en: "Double roots. In Urdu it means 'Pure'. Simultaneously, it is an acronym coined by Rahmat Ali: P(unjab), A(fghania), K(ashmir), and (S)indh." } },
+                { text: { he: "סטן (Stan)", en: "Stan" }, color: "text-pink-400", bg: "bg-pink-400/10", border: "border-pink-500/30", desc: { he: "בנוסף למשמעות של 'ארץ', באקרונים של רחמט עלי, האותיות STAN מסמלות ישירות את חבל הבלוצ'יסטן (BaluchiSTAN).", en: "In addition to meaning 'Land', in Rahmat Ali's acronym, the letters STAN directly symbolize the Balochistan region (BaluchiSTAN)." } }
               ],
-              synthesis: 'משמעות כפולה: "ארץ הטהורים", ושילוב הרמוני של ראשי התיבות המרכיבים את מחוזות המדינה.'
+              synthesis: { he: "ארץ הטהורים, ושילוב הרמוני של מחוזות המדינה.", en: "Land of the Pure, and a harmonious blend of the nation's provinces." }
             },
             figure: {
-              name: 'מוחמד עלי ג\'ינה',
-              years: '1876 - 1948',
-              childhood: 'נולד בקראצ\'י למשפחת סוחרים מבוססת. בגיל 16 נשלח ללונדון ללמוד מנהל עסקים, אך במקום זאת פנה בחשאי ללימודי משפטים והפך לעורך דין מבריק.',
-              ideology: 'תחילה תמך באחדות הינדו-מוסלמית, אך בהמשך הגה וקידם בלהט את "תאוריית שתי האומות", בטענה שלמוסלמים יש זהות נפרדת לחלוטין ולכן הם זקוקים למדינה ריבונית.',
-              achievements: 'מייסד פקיסטן. "קאיד-י אעזם" (המנהיג הגדול). הוביל את המשא ומתן המורכב לחלוקת הודו והיה המושל הכללי הראשון.'
+              name: { he: "מוחמד עלי ג'ינה", en: "Muhammad Ali Jinnah" },
+              years: "1876 - 1948",
+              childhood: { 
+                he: "נולד בקראצ'י למשפחת סוחרים מבוססת ומשכילה. בגיל 16 נשלח ללונדון ללמוד מנהל עסקים כדי להשתלב בעסק המשפחתי, אך במקום זאת פנה בחשאי ללימודי משפטים באכסניות המשפט של לונדון, והפך לעורך דין מבריק, מערבי באורחות חייו ושנון.",
+                en: "Born in Karachi to an affluent and educated merchant family. At 16, he was sent to London to study business administration to join the family business, but instead secretly turned to law studies at the Inns of Court in London, becoming a brilliant, witty lawyer with a western lifestyle."
+              },
+              ideology: { 
+                he: "תחילה תמך באחדות הינדו-מוסלמית חילונית לשחרור הודו מבריטניה. אולם, כאשר הבין שהרוב ההינדי ירמוס את זכויות המוסלמים, הוא קידם בלהט את 'תאוריית שתי האומות', בטענה שלמוסלמים יש זהות תרבותית נפרדת לחלוטין הזקוקה לריבונות ומדינה חוקתית מגינה.",
+                en: "Initially, he supported secular Hindu-Muslim unity to liberate India from Britain. However, upon realizing the Hindu majority would crush Muslim rights, he passionately promoted the 'Two-Nation Theory', arguing Muslims possess a completely separate cultural identity requiring sovereignty and a protective constitutional state."
+              },
+              achievements: { 
+                he: "מייסד פקיסטן. ידוע בכינוי 'קאיד-י אעזם' (המנהיג הגדול). הוא הוביל את הליגה המוסלמית, ניצח על המשא ומתן המורכב והעיקש לחלוקת הודו מול הבריטים ומול גנדי, והיה למושל הכללי הראשון של פקיסטן העצמאית עד מותו.",
+                en: "Founder of Pakistan. Known by the title 'Quaid-e-Azam' (Great Leader). He led the Muslim League, masterminded the complex and stubborn negotiations for the partition of India against the British and Gandhi, and became the first Governor-General of independent Pakistan until his death."
+              }
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_pakistan_mughal.jpg',
-              title: 'מפת האימפריה המוגולית (המאה ה-17)',
-              desc: 'מפה עתיקה של תת-היבשת ההודית ועמק נהר האינדוס תחת שלטון האימפריה המוגולית. מציגה את קווי החוף המורכבים של הים הערבי ואת נתיבי הסחר הימיים ההיסטוריים (כולל ספינות מפרש מאוירות), הרבה לפני חלוקת האזור ב-1947.'
+              url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_pakistan_mughal.jpg",
+              title: { he: "מפת האימפריה המוגולית (המאה ה-17)", en: "Map of Mughal Empire (17th Century)" },
+              desc: { 
+                he: "מפה עתיקה של תת-היבשת ההודית תחת שלטון האימפריה המוגולית, המדגישה את עמק נהר האינדוס (כיום ליבת פקיסטן) הרבה לפני חלוקת האזור ב-1947.",
+                en: "An antique map of the Indian subcontinent under the rule of the Mughal Empire, highlighting the Indus River valley (today the core of Pakistan) long before the partition of the region in 1947."
+              }
             }
           },
           {
             id: 'tajikistan',
-            name: 'טג\'יקיסטן',
-            englishName: 'Tajikistan',
-            officialName: 'רפובליקת טג\'יקיסטן',
-            flagUrl: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/tajikistan.webp',
+            name: { he: "טג'יקיסטן", en: "Tajikistan" },
+            englishName: "Tajikistan",
+            officialName: { he: "רפובליקת טג'יקיסטן", en: "Republic of Tajikistan" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/tajikistan.webp",
             capital: {
-              name: 'דושנבה',
-              englishName: 'Dushanbe',
-              etymology: 'אחת האטימולוגיות המעניינות בעולם. פירוש המילה "דושנבה" בטג\'יקית (שהיא למעשה ניב של פרסית) הוא פשוט "יום שני" (דו=שתיים, שבת=יום). העיר, שהייתה בעברה כפר קטן על אם הדרך, זכתה לשם זה משום שהתקיים בה שוק סוחרים עצום ותוסס מדי יום שני, אליו נהרו תושבי ההרים והאזור כולו.'
+              name: { he: "דושנבה", en: "Dushanbe" },
+              englishName: "Dushanbe",
+              etymology: { 
+                he: "פירוש המילה 'דושנבה' בטג'יקית (ניב פרסי) הוא פשוט 'יום שני' (דו=שתיים, שבת=יום). העיר, שהייתה בעברה כפר קטן על אם הדרך, זכתה לשם זה משום שהתקיים בה שוק סוחרים עצום ותוסס מדי יום שני, אליו נהרו תושבי ההרים לקנות ולמכור סחורות.",
+                en: "The meaning of the word 'Dushanbe' in Tajik (a Persian dialect) is simply 'Monday' (Du=Two, Shanbe=Day). The city, formerly a small crossroads village, earned this name because a massive and vibrant merchants' market was held there every Monday, drawing mountain residents to buy and sell goods."
+              },
+              foundingYear: { he: "1924 (הוקמה ורוכזה כבירת הרפובליקה הסובייטית)", en: "1924 (Established & centralized as Soviet Republic capital)" },
+              reason: { 
+                he: "במהלך תהליך השרטוט השרירותי של גבולות מרכז אסיה על ידי הסובייטים (כדי לדכא מרידות לאומיות), הערים ההיסטוריות והתרבותיות של הטג'יקים, כסמרקנד ובוכרה, ניתנו לאוזבקיסטן. כתוצאה מכך, הסובייטים נאלצו לבחור בכפר השוק הקטן 'דושנבה' כבירה החדשה, ובנו אותה מאפס לעיר מודרנית עם שדרות רחבות כדי לשמש כמרכז מנהלי למדינה החדשה.",
+                en: "During the Soviets' arbitrary drawing of Central Asian borders (to suppress national uprisings), the historical and cultural Tajik cities of Samarkand and Bukhara were given to Uzbekistan. Consequently, the Soviets were forced to choose the small market village of Dushanbe as the new capital, building it from scratch into a modern city with wide boulevards to serve as the administrative center for the new state."
+              }
             },
-            areaNum: '~143,100 קמ"ר',
-            populationNum: '~10,000,000',
-            currency: 'סומוני טג\'יקי (TJS)',
-            area: 'כ-143,100 קמ"ר. המדינה הקטנה ביותר בשטחה במרכז אסיה, מעל 90% משטחה הררי במיוחד (רכס הפאמיר).',
+            areaNum: { he: "~143,100 קמ\"ר", en: "~143,100 sq km" },
+            populationNum: "~10,000,000",
+            currency: { he: "סומוני טג'יקי (TJS)", en: "Tajikistani Somoni (TJS)" },
+            area: { 
+              he: "כ-143,100 קמ\"ר. זוהי המדינה הקטנה ביותר בשטחה במרכז אסיה. מעל 90% משטחה הררי וצחיח, נשלט על ידי רכס הרי הפאמיר (המכונה 'גג העולם') ופסגות שחוצות את ה-7,000 מטרים. רק 7% מהאדמה ראויים לחקלאות.",
+              en: "Approx. 143,100 sq km. This is the smallest country by area in Central Asia. Over 90% of its territory is mountainous and arid, dominated by the Pamir Mountains (known as the 'Roof of the World') with peaks crossing 7,000 meters. Only 7% of the land is arable."
+            },
             demographics: {
-              mainNationName: 'טג\'יקים',
-              mainNationPercent: 'כ-84%',
-              description: 'בשונה משאר מדינות הסטן שמקורן בשבטים הטורקיים, הטג\'יקים הם ממוצא הודו-אירופי והם דוברים ניב של פרסית (טג\'יקית). ישנו מיעוט אוזבקי בולט (כ-14%) וקבוצת מבודדות בהרים הגבוהים, כמו בני הפאמיר.'
+              mainNationName: { he: "טג'יקים", en: "Tajiks" },
+              mainNationPercent: { he: "כ-84%", en: "~84%" },
+              description: { 
+                he: "ייחודם האזורי: בשונה משאר מדינות הסטן שמקורן בשבטים נודדים טורקיים, הטג'יקים הם ממוצא הודו-אירופי (איראני) והם דוברים שפה קרובה מאוד לפרסית המודרנית (טג'יקית). ישנו מיעוט אוזבקי בולט (כ-14%), וכן קבוצות אתניות מבודדות ואוטונומיות החיות בהרים הגבוהים של חבל בדח'שאן, כמו בני הפאמיר השיעים-איסמאעילים.",
+                en: "Their regional uniqueness: Unlike other 'Stan' nations originating from nomadic Turkic tribes, Tajiks are of Indo-European (Iranian) descent and speak a language very close to modern Persian (Tajik). There is a notable Uzbek minority (~14%), as well as isolated and autonomous ethnic groups living in the high mountains of Badakhshan, such as the Shia-Ismaili Pamiris."
+              }
             },
-            modernHistory: 'הכריזה עצמאות ב-1991. למרבה הטרגדיה, המדינה הצעירה הידרדרה כמעט מיד למלחמת אזרחים עקובה מדם (1992-1997). מאז תום המלחמה המדינה נשלטת תחת משטרו היציב אך הנוקשה של אמומאלי רחמון.',
-            foundingYears: '819 (סמאנים) | 1991',
-            flagSymbolism: 'אדום מסמל ניצחון ושמש, לבן מסמל את הכותנה ושלגי הרי הפאמיר, הירוק מסמל חקלאות ואסלאם. במרכז כתר המייצג את העם ("טאג\'" = כתר) מוקף ב-7 כוכבי שלמות.',
+            modernHistory: { 
+              he: "הכריזה עצמאות מברית המועצות ב-1991. מיד לאחר מכן, המדינה הצעירה הידרדרה למלחמת אזרחים עקובה מדם והרסנית במיוחד (1992-1997) בין כוחות קומוניסטיים חילוניים לאופוזיציה אזורית ואסלאמיסטית, אשר גבתה את חייהם של עשרות אלפים. מאז תום המלחמה, המדינה נשלטת על ידי אמומאלי רחמון תחת משטר יציב אך ריכוזי ונוקשה במיוחד, הנשען כלכלית על העברות כספים ממיליוני עובדים טג'יקים ברוסיה.",
+              en: "Declared independence from the USSR in 1991. Immediately after, the young state descended into a particularly bloody and devastating civil war (1992-1997) between secular communist forces and regional/Islamist opposition, costing tens of thousands of lives. Since the war ended, the country has been ruled by Emomali Rahmon under a stable but highly centralized and strict regime, economically relying on remittances from millions of Tajik workers in Russia."
+            },
+            foundingYears: { he: "819 (סמאנים) | 1991 (עצמאות)", en: "819 (Samanid) | 1991 (Independence)" },
+            flagSymbolism: { 
+              he: "אדום מסמל ניצחון, השמש ודם הלוחמים. לבן מסמל את העושר החקלאי של הכותנה ואת שלגי הרי הפאמיר העדניים. הירוק מסמל חקלאות, את עמקי המדינה, ואסלאם. במרכז נמצא כתר מוזהב המייצג את העם ('טאג'' משמעותו כתר בפרסית) מוקף ב-7 כוכבים המייצגים שלמות וקדושה במסורת הפרסית.",
+              en: "Red symbolizes victory, the sun, and warriors' blood. White symbolizes the agricultural wealth of cotton and the eternal snows of the Pamir Mountains. Green symbolizes agriculture, the country's valleys, and Islam. In the center is a golden crown representing the people ('Taj' means crown in Persian) surrounded by 7 stars representing perfection and holiness in Persian tradition."
+            },
             nationalAnimal: {
-              name: 'כבש מרקו פולו (Marco Polo Argali)',
-              reason: 'תת-מין ייחודי ונדיר של כבש הרים (ארגאלי) בעל קרניים מסולסלות וענקיות (העשויות להגיע לאורך של מטר וחצי). הוא אנדמי לאזור הרי הפאמיר הגבוהים של טג\'יקיסטן, ומסמל את חוסנו הפיזי של העם הטג\'יקי ויכולתו המופלאה לשגשג בתנאים הקיצוניים של "גג העולם".'
+              name: { he: "כבש מרקו פולו (Marco Polo Argali)", en: "Marco Polo Argali" },
+              reason: { 
+                he: "תת-מין ייחודי ונדיר של כבש הרים (ארגאלי) הקרוי על שם החוקר הוונציאני שניסה לתארו. הכבש מתאפיין בקרניים מסולסלות וענקיות (העשויות להגיע לאורך של מטר וחצי). הוא אנדמי לאזורים הגבוהים והקפואים של הרי הפאמיר בטג'יקיסטן, ומסמל בעיני המקומיים את חוסנו הפיזי של העם, יכולת הסיבולת, והחיבור המוחלט לטבע של 'גג העולם'.",
+                en: "A unique and rare subspecies of mountain sheep (Argali) named after the Venetian explorer who tried to describe it. The sheep is characterized by massive, curling horns (which can reach 1.5 meters in length). It is endemic to the high, freezing regions of the Pamir Mountains in Tajikistan, and symbolizes to the locals the physical resilience of the people, endurance, and the absolute connection to the nature of the 'Roof of the World'."
+              }
             },
             etymology: {
               parts: [
-                { text: 'טג\'יק (Tajik)', color: 'text-amber-400', desc: 'זהות נגדית. מקור השם בפרסית אמצעית "Tazig" – ששימשה לתיאור ערבים. בהמשך, שבטים טורקיים כינו כך כל אדם קבוע-מקום ודובר פרסית. דוברי הפרסית אימצו את השם כזהות לאומית גאה כדי לבדל את עצמם מהנוודים הטורקיים סביבם.' },
-                { text: 'סטן (Stan)', color: 'text-pink-400', desc: 'ארץ או טריטוריה. הצירוף הפרסי הקלאסי לתיאור ארץ מושב.' }
+                { text: { he: "טג'יק (Tajik)", en: "Tajik" }, color: "text-amber-400", bg: "bg-amber-400/10", border: "border-amber-500/30", desc: { he: "מקור השם הוא כזהות נגדית. בפרסית עתיקה 'Tazig' תיארו ערבים. בהמשך, השבטים הטורקיים הנודדים אימצו את המילה ככינוי מבדל לכל אדם נייח, עובד אדמה ודובר פרסית. הטג'יקים אימצו זאת בגאווה.", en: "Originates as an oppositional identity. In ancient Persian, 'Tazig' described Arabs. Later, nomadic Turkic tribes adopted the word as a distinguishing moniker for any sedentary, agricultural, Persian-speaking person. Tajiks adopted it with pride." } },
+                { text: { he: "סטן (Stan)", en: "Stan" }, color: "text-pink-400", bg: "bg-pink-400/10", border: "border-pink-500/30", desc: { he: "המונח ההיסטורי לארץ או מקום התיישבות.", en: "The historical term for a land or place of settlement." } }
               ],
-              synthesis: 'ארצם של הטג\'יקים – ארצם של דוברי השפות הפרסיות בלב מרכז אסיה.'
+              synthesis: { he: "ארצם של הטג'יקים (דוברי הפרסית).", en: "Land of the Tajiks (Persian speakers)." }
             },
             figure: {
-              name: 'איסמעיל סמאני',
-              years: '849 - 907',
-              childhood: 'נולד באזור המהווה כיום את אפגניסטן למשפחת אצולה בעלת שורשים פרסיים עמוקים. זכה לחינוך מנהלי באקדמיות היוקרתיות.',
-              ideology: 'תחייה של התרבות והלשון הפרסית תחת כנפי האסלאם. הוא ביקש לטפח סחר, מדע, ולבסס שלטון המושתת על צדק ומנהל תקין.',
-              achievements: 'הביא את האימפריה הסמאנית לשיא תפארתה, הפך את בוכרה למרכז אינטלקטואלי נוצץ ונחשב לאבי האומה.'
+              name: { he: "איסמעיל סמאני", en: "Ismail Samani" },
+              years: "849 - 907",
+              childhood: { 
+                he: "נולד למשפחת אצולה בעלת שורשים פרסיים עמוקים, שהתאסלמה וזכתה לאמונו של הח'ליפות העבאסית. זכה לחינוך מנהלי ואקדמי גבוה באקדמיות היוקרתיות ביותר של העולם האסלאמי באותה תקופה.",
+                en: "Born into a noble family with deep Persian roots, who converted to Islam and gained the trust of the Abbasid Caliphate. Received high administrative and academic education in the most prestigious academies of the Islamic world at the time."
+              },
+              ideology: { 
+                he: "הוביל את תחיית התרבות והלשון הפרסית תחת כנפי הדת האסלאמית. הוא ביקש לטפח סחר שוקק על דרך המשי, קידם מדע ואמנות כערכים עליונים, וביסס מודל של שלטון מרכזי המושתת על צדק ומנהל ריכוזי תקין.",
+                en: "Led the revival of Persian culture and language under the wings of the Islamic religion. He sought to foster bustling trade on the Silk Road, promoted science and art as supreme values, and established a model of central government based on justice and proper centralized administration."
+              },
+              achievements: { 
+                he: "הביא את האימפריה הסמאנית לשיא תפארתה הגיאוגרפית והרוחנית. הפך את עירו, בוכרה, למרכז אינטלקטואלי שמשך אליו מלומדים (כמו אבן סינא). נחשב כיום לאבי האומה הטג'יקית (המטבע והפסגה הגבוהה במדינה קרויים על שמו).",
+                en: "Brought the Samanid Empire to its geographic and spiritual peak. Turned his city, Bukhara, into an intellectual center attracting scholars (like Avicenna). Today, he is considered the father of the Tajik nation (the currency and the country's highest peak are named after him)."
+              }
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_tajikistan_samanid.jpg',
-              title: 'מפת הרי הפאמיר ובקטריה',
-              desc: 'מפה גיאוגרפית וינטג\' מהמאה ה-19 של אזור פרס וטרטאריה, עם מיקוד בטופוגרפיה ההררית המרשימה של הרי הפאמיר, סוגדיאנה ובקטריה. ממחישה את נתיבי הסחר של דרך המשי, משורטטת באמנות קלאסית עם דיו וגווני אדמה.'
+              url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_tajikistan_samanid.jpg",
+              title: { he: "מפת הרי הפאמיר ובקטריה", en: "Map of Pamir Mountains & Bactria" },
+              desc: { 
+                he: "מפה גיאוגרפית מהמאה ה-19 של אזור פרס וטרטאריה, עם מיקוד בטופוגרפיה ההררית המרשימה של הרי הפאמיר. ממחישה את נתיבי הסחר של דרך המשי העתיקה.",
+                en: "A 19th-century geographical map of the Persia and Tartary region, focusing on the impressive mountainous topography of the Pamirs. Illustrates the ancient Silk Road trade routes."
+              }
             }
           },
           {
             id: 'turkmenistan',
-            name: 'טורקמניסטן',
-            englishName: 'Turkmenistan',
-            officialName: 'טורקמניסטן',
-            flagUrl: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/turkmenistan.webp',
+            name: { he: "טורקמניסטן", en: "Turkmenistan" },
+            englishName: "Turkmenistan",
+            officialName: { he: "טורקמניסטן", en: "Turkmenistan" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/turkmenistan.webp",
             capital: {
-              name: 'אשגבאט',
-              englishName: 'Ashgabat',
-              etymology: 'התיאוריה הפופולרית ביותר, שהיא גם בעלת הנופך הרומנטי ביותר, קובעת כי השם נגזר מהמילים הפרסיות "אשק/עשק" (אהבה) ו"אבאד" (עיר) - מה שמעניק לה את הכינוי "עיר האהבה". תיאוריה היסטורית-מחקרית אחרת גורסת שהעיר קרויה על שם ארסאקס הראשון (הידוע כ-Ashk), שהיה מייסד האימפריה הפרתית העתיקה ששלטה באזור זה.'
+              name: { he: "אשגבאט", en: "Ashgabat" },
+              englishName: "Ashgabat",
+              etymology: { 
+                he: "התיאוריה הפופולרית ביותר קובעת כי השם נגזר מהמילים הפרסיות 'אשק/עשק' (אהבה) ו'אבאד' (עיר/מקום יישוב) - מה שמעניק לה את הכינוי 'עיר האהבה'. תיאוריה היסטורית-מחקרית אחרת גורסת שהעיר קרויה על שם ארסאקס הראשון (הידוע בשם Ashk), שהיה מייסד האימפריה הפרתית העתיקה ששלטה באזור זה לפני אלפי שנים.",
+                en: "The most popular theory claims the name is derived from the Persian words 'Ashq' (love) and 'Abad' (city/settlement) - giving it the moniker 'City of Love'. Another historical-academic theory suggests the city is named after Arsaces I (known as Ashk), the founder of the ancient Parthian Empire that ruled this region thousands of years ago."
+              },
+              foundingYear: { he: "1881 (ייסוד כעיר חיל מצב רוסית) | 1991 (כבירת המדינה העצמאית)", en: "1881 (Founded as Russian garrison town) | 1991 (As independent capital)" },
+              reason: { 
+                he: "העיר ממוקמת אסטרטגית בנאת מדבר למרגלות הרי קופטדאג המפרידים בין טורקמניסטן לאיראן. היא החלה כבסיס צבאי של האימפריה הרוסית. בשנת 1948 נחרבה העיר כמעט לחלוטין ברעידת אדמה קטלנית שגבתה את חייהם של כ-100,000 איש. לאחר העצמאות, היא נבנתה מחדש כפרויקט ראווה לאומי של הנשיא ניאזוב ('העיר הלבנה'), ושברה שיאי גינס על ריכוז מבני השיש הלבן הגדול בעולם, כסמל לעושר הגז של המדינה.",
+                en: "The city is strategically located in an oasis at the foothills of the Kopet Dag mountains separating Turkmenistan and Iran. It began as a military base for the Russian Empire. In 1948, the city was almost completely destroyed by a deadly earthquake claiming roughly 100,000 lives. After independence, it was rebuilt as a national showcase project by President Niyazov ('The White City'), breaking Guinness records for the highest concentration of white marble buildings in the world, as a symbol of the country's gas wealth."
+              }
             },
-            areaNum: '~491,210 קמ"ר',
-            populationNum: '~6,500,000',
-            currency: 'מאנאט טורקמני (TMT)',
-            area: 'כ-491,210 קמ"ר. רוב מוחלט של שטחה (מעל 70%) מכוסה על ידי מדבר החולות השחורים העצום, קאראקום.',
+            areaNum: { he: "~491,210 קמ\"ר", en: "~491,210 sq km" },
+            populationNum: "~6,500,000",
+            currency: { he: "מאנאט טורקמני (TMT)", en: "Turkmenistani Manat (TMT)" },
+            area: { 
+              he: "כ-491,210 קמ\"ר. טורקמניסטן היא מדינה שטוחה ברובה וקיצונית. למעלה מ-70% משטחה מכוסה על ידי 'קאראקום' (חולות שחורים), אחד המדבריות הצחיחים והאכזריים בעולם. במערב המדינה גובלת בים הכספי (אגם המלח הגדול בעולם), ובמזרח זורם נהר אמו דריה החיוני לחקלאות.",
+              en: "Approx. 491,210 sq km. Turkmenistan is a mostly flat and extreme country. Over 70% of its territory is covered by the 'Karakum' (Black Sands), one of the driest and harshest deserts in the world. In the west, it borders the Caspian Sea (the world's largest salt lake), and in the east flows the Amu Darya river, vital for agriculture."
+            },
             demographics: {
-              mainNationName: 'טורקמנים',
-              mainNationPercent: 'כ-85%',
-              description: 'הומוגניות אתנית גבוהה ביחס לשכנותיה. לצד הרוב הטורקמני, קיימים מיעוטים קטנים מאוד של אוזבקים (כ-5%) ורוסים (כ-4%), כאשר מרבית הרוסים היגרו לאחר התפרקות ברית המועצות.'
+              mainNationName: { he: "טורקמנים", en: "Turkmens" },
+              mainNationPercent: { he: "כ-85%", en: "~85%" },
+              description: { 
+                he: "מדינה בעלת הומוגניות אתנית גבוהה ביחס לשכנותיה, כתוצאה ממדיניות לאומנית נוקשה לאחר העצמאות. האוכלוסייה מחולקת לחמישה שבטים היסטוריים גדולים (המונצחים בדגל). לצד הרוב הטורקמני-סוני, קיימים מיעוטים קטנים של אוזבקים (כ-5%) ורוסים. מרבית הרוסים והאינטלקטואלים הזרים היגרו מהמדינה עקב צעדי ה'טורקמניזציה' של השלטון, שכפו את השפה והתרבות המקומית בכל תחומי החיים.",
+                en: "A country with high ethnic homogeneity relative to its neighbors, resulting from strict nationalist policies post-independence. The population is divided into five major historical tribes (immortalized on the flag). Alongside the Sunni-Turkmen majority, there are small minorities of Uzbeks (~5%) and Russians. Most Russians and foreign intellectuals emigrated due to the government's 'Turkmenization' measures, which forced local language and culture into all spheres of life."
+              }
             },
-            modernHistory: 'עצמאותה הוכרזה ב-1991. מנהיגה הראשון, ספרמורט ניאזוב, הפך ל"טורקמנבאשי" (אבי כל הטורקמנים). הוא כונן מדינת רווחה מבוססת גז, אך בד בבד הקים דיקטטורה מבודדת וסגורה המלווה בפולחן אישיות יוצא דופן.',
-            foundingYears: '1991 (עצמאות מברית המועצות)',
-            flagSymbolism: 'הירוק הוא הצבע האסלאמי. הפס האדום מציג 5 "גולים" (דוגמאות שטיחים) של 5 השבטים הגדולים. סהר ו-5 כוכבים מייצגים תקווה ואת מחוזות המדינה.',
+            modernHistory: { 
+              he: "עצמאותה הוכרזה ב-1991 מברית המועצות. מנהיגה הראשון, ספרמורט ניאזוב, הפך ל'טורקמנבאשי' (אבי כל הטורקמנים). הוא הוביל את המדינה לבידוד עולמי קיצוני והקים דיקטטורה אבסולוטית המלווה בפולחן אישיות ביזארי (שינה את שמות חודשי השנה על שם משפחתו, והציב פסל זהב שלו המסתובב עם השמש). בזכות עתודות הגז הטבעי העצומות, הוא סיפק חשמל ומים בחינם כדי לדכא התנגדות. מחליפו, גורבנגולי ברדימוחמדוב, המשיך באותו קו שלטוני סמכותני (תוך ריכוך קל), וכיום בנו יורש אותו.",
+              en: "Declared independence from the USSR in 1991. Its first leader, Saparmurat Niyazov, became 'Turkmenbashi' (Father of all Turkmens). He led the country into extreme global isolation and established an absolute dictatorship accompanied by a bizarre cult of personality (renamed the months of the year after his family, and erected a golden statue of himself that rotated to face the sun). Thanks to massive natural gas reserves, he provided free electricity and water to quell opposition. His successor, Gurbanguly Berdimuhamedow, continued this authoritarian line (with slight softening), and today his son succeeds him."
+            },
+            foundingYears: { he: "1991 (עצמאות מברית המועצות)", en: "1991 (Independence from the USSR)" },
+            flagSymbolism: { 
+              he: "נחשב לאחד הדגלים המפורטים בעולם. הירוק הוא הצבע האסלאמי וההיסטורי של הנוודים. סהר לבן ו-5 כוכבים מייצגים תקווה לעתיד מזהיר ואת 5 מחוזות המדינה (ולא את עמודי האסלאם כנהוג). המאפיין הייחודי ביותר הוא הפס האדום האנכי המציג 5 עיטורי שטיחים מסורתיים ומורכבים ('גולים'), המייצגים את 5 שבטי הטורקמנים הגדולים. בתחתית הפס הוסף ענף זית קטן לציון מדיניות הניטרליות של המדינה.",
+              en: "Considered one of the most detailed flags in the world. Green is the Islamic and historical color of the nomads. A white crescent and 5 stars represent hope for a bright future and the 5 regions of the country (not the pillars of Islam as is customary). The most unique feature is the vertical red stripe displaying 5 traditional, complex carpet motifs ('Guls'), representing the 5 major Turkmen tribes. At the bottom of the stripe, a small olive branch was added to denote the state's policy of neutrality."
+            },
             nationalAnimal: {
-              name: 'סוס אחאל-טקה (Akhal-Teke)',
-              reason: 'גזע סוסים עתיק ומרהיב המכונה "הסוס המוזהב" של מדבר קאראקום, בזכות הברק המתכתי הייחודי של פרוותו. הסוס הוא חלק בלתי נפרד מהזהות והנשמה הטורקמנית, ומסמל מהירות יוצאת דופן, סיבולת אינסופית בחום המדבר, חופש, ואת המסורת הנוודית רבת השנים. דמותו אף מתנוססת במרכז סמל המדינה הרשמי.'
+              name: { he: "סוס אחאל-טקה (Akhal-Teke)", en: "Akhal-Teke Horse" },
+              reason: { 
+                he: "גזע סוסים עתיק, נדיר ומרהיב המכונה בעולם 'הסוס המוזהב' בשל הברק המתכתי והייחודי של פרוותו באור השמש. הסוס הוא חלק בלתי נפרד מהזהות, מהיוקרה ומהנשמה הטורקמנית משחר ההיסטוריה. הוא מסמל מהירות יוצאת דופן (שימש לפשיטות פתע), סיבולת אינסופית בתנאי היובש של חולות מדבר קאראקום, חופש, ואת המסורת הנוודית רבת השנים. דמותו האצילה של הסוס אף מתנוססת בלב סמל המדינה הרשמי.",
+                en: "An ancient, rare, and spectacular horse breed known globally as the 'Golden Horse' due to the unique metallic sheen of its coat in the sunlight. The horse has been an inseparable part of the Turkmen identity, prestige, and soul since the dawn of history. It symbolizes exceptional speed (used for surprise raids), endless stamina in the dry conditions of the Karakum desert sands, freedom, and the long-standing nomadic tradition. The noble figure of the horse even features at the heart of the official state emblem."
+              }
             },
             etymology: {
               parts: [
-                { text: 'טורקמן (Turkmen)', color: 'text-teal-400', desc: 'השם מורכב מ-"Turk" (טורקי), וסיומת חיזוק עתיקה: "-myn" או "-men". יש המתרגמים זאת כ"טהור", "דומה לטורק", או ככינוי גוף ("אני"). לפיכך, הפירוש המקובל הוא "הטורקים הטהורים" או בגוף ראשון – "אני הוא הטורקי".' },
-                { text: 'סטן (Stan)', color: 'text-pink-400', desc: 'סיומת הודו-אירופית המתארת ארץ תחת שלטון אחד.' }
+                { text: { he: "טורקמן (Turkmen)", en: "Turkmen" }, color: "text-teal-400", bg: "bg-teal-400/10", border: "border-teal-500/30", desc: { he: "מורכב מ'טורק' וסיומת חיזוק 'men'. מתורגם לרוב כ'הטורקים הטהורים' או בגוף ראשון – 'אני הוא הטורקי'.", en: "Composed of 'Turk' and an intensifying suffix 'men'. Usually translated as 'Pure Turks' or in the first person - 'I am the Turk'." } },
+                { text: { he: "סטן (Stan)", en: "Stan" }, color: "text-pink-400", bg: "bg-pink-400/10", border: "border-pink-500/30", desc: { he: "ארץ ריבונית התיישבותית.", en: "A sovereign land of settlement." } }
               ],
-              synthesis: 'ארצם של הטורקים הטהורים (או האנשים הלוחמים "הדומים לטורקים").'
+              synthesis: { he: "ארצם של הטורקים הטהורים.", en: "Land of the Pure Turks." }
             },
             figure: {
-              name: 'מכתומקולי פראגי',
-              years: '1724 - 1807',
-              childhood: 'נולד סמוך לנהר האטרק כבנו של משורר. למד במדרסות היוקרתיות בבוכרה והיה בקיא בפרסית וערבית.',
-              ideology: 'סופיות רוחנית עמוקה שלובה בפטריוטיות בוערת. קרא לאיחוד כל שבטי הטורקמנים כדי לעמוד נגד דיכוי זר ולשים קץ לשפיכות הדמים בסכסוכי הדם הפנימיים.',
-              achievements: 'הדמות הרוחנית והספרותית העליונה של הטורקמנים. שדרג את שפתם המדוברת והפך אותה ללשון ספרותית ופיוטית עשירה.'
+              name: { he: "מכתומקולי פראגי", en: "Magtymguly Pyragy" },
+              years: "1724 - 1807",
+              childhood: { 
+                he: "נולד סמוך לנהר האטרק כבנו של מורה ומשורר מכובד. גדל בסביבה משכילה, למד במדרסות היוקרתיות ביותר בבוכרה ובחיווה, והיה בקיא בשפות הפרסית והערבית, מה שאפשר לו לקרוא את ספרות העולם האסלאמי.",
+                en: "Born near the Atrek river as the son of a respected teacher and poet. Grew up in an educated environment, studied in the most prestigious madrasas in Bukhara and Khiva, and was fluent in Persian and Arabic, allowing him to read the literature of the Islamic world."
+              },
+              ideology: { 
+                he: "היה פילוסוף ששילב סופיות רוחנית עמוקה עם פטריוטיות ארצית ובוערת. הוא זעק לאיחוד פוליטי של כל שבטי הטורקמנים המפוצלים, כדי שיוכלו לעמוד כגוף אחד נגד דיכוי אימפריות זרות ולשים קץ לשפיכות הדמים ההרסנית של סכסוכי הדם הפנימיים.",
+                en: "A philosopher who combined deep spiritual Sufism with burning earthly patriotism. He cried out for the political unification of all the divided Turkmen tribes, so they could stand as one body against the oppression of foreign empires and end the destructive bloodshed of internal blood feuds."
+              },
+              achievements: { 
+                he: "הוא מוכר כדמות הרוחנית, המוסרית והספרותית העליונה של האומה הטורקמנית (מעין 'שייקספיר טורקמני'). הישגו הכביר היה שדרוג שפתם המדוברת (הדיאלקט הטורקמני) והפיכתה ללשון ספרותית ופיוטית עשירה ומוכרת, שגיבשה את הזהות הלאומית עד ימינו.",
+                en: "He is recognized as the supreme spiritual, moral, and literary figure of the Turkmen nation (a sort of 'Turkmen Shakespeare'). His tremendous achievement was elevating their spoken language (the Turkmen dialect) and turning it into a rich and recognized literary and poetic language, which solidified national identity to this day."
+              }
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_turkmenistan_karakum.jpg',
-              title: 'מפת הים הכספי ומדבר קאראקום',
-              desc: 'מפה קרטוגרפית מהמאה ה-18 המציגה את קווי החוף המפורטים של הים הכספי, עם מצפן ימי, יישובים עתיקים לאורך מדבר קאראקום, וטקסטורת קלף דהויה. ממחישה את המרחב הנוודי ההיסטורי של הטורקמנים.'
+              url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_turkmenistan_karakum.jpg",
+              title: { he: "מפת הים הכספי ומדבר קאראקום", en: "Map of Caspian Sea & Karakum Desert" },
+              desc: { 
+                he: "מפה קרטוגרפית מהמאה ה-18 המציגה את הים הכספי, עם יישובים עתיקים לאורך נווה המדבר של קאראקום. ממחישה את המרחב הנוודי ההיסטורי של הטורקמנים טרם העידן הרוסי.",
+                en: "An 18th-century cartographic map showing the Caspian Sea, with ancient settlements along the oases of the Karakum. Illustrates the historic nomadic space of the Turkmens before the Russian era."
+              }
             }
           },
           {
             id: 'uzbekistan',
-            name: 'אוזבקיסטן',
-            englishName: 'Uzbekistan',
-            officialName: 'רפובליקת אוזבקיסטן',
-            flagUrl: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/uzbekistan.webp',
+            name: { he: "אוזבקיסטן", en: "Uzbekistan" },
+            englishName: "Uzbekistan",
+            officialName: { he: "רפובליקת אוזבקיסטן", en: "Republic of Uzbekistan" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/uzbekistan.webp",
             capital: {
-              name: 'טשקנט',
-              englishName: 'Tashkent',
-              etymology: 'השם מורכב משתי שפות שונות שחיו בסינרגיה באזור: המילה הטורקית "טש" (Tash) שמשמעותה "אבן", והמילה הסוגדיאנית/פרסית "קנט" (Kent) שמשמעותה "עיר". החיבור יוצר את השם "עיר האבן", המשקף את החוזק, היציבות והמעמד הצבאי והכלכלי שהיה לעיר כמבצר ונקודת סחר מרכזית ובלתי חדירה על דרך המשי.'
+              name: { he: "טשקנט", en: "Tashkent" },
+              englishName: "Tashkent",
+              etymology: { 
+                he: "השם מורכב משילוב של שתי שפות שונות שחיו בסינרגיה באזור: המילה הטורקית 'טש' (Tash) שמשמעותה 'אבן', והמילה הסוגדיאנית/פרסית קדומה 'קנט' (Kent) שמשמעותה 'עיר' או 'יישוב'. החיבור יוצר את השם המפורסם 'עיר האבן'. שם זה משקף את החוזק, היציבות, והמעמד הצבאי והכלכלי המבוצר שהיה לעיר כנקודת סחר מרכזית ובלתי חדירה על דרך המשי.",
+                en: "The name comprises a blend of two different languages that lived in synergy in the area: the Turkic word 'Tash' meaning 'stone', and the ancient Sogdian/Persian word 'Kent' meaning 'city' or 'settlement'. The combination creates the famous name 'Stone City'. This name reflects the strength, stability, and fortified military and economic status the city held as a central, impenetrable trading post on the Silk Road."
+              },
+              foundingYear: { he: "העת העתיקה (נווה מדבר צ'אצ') | 1930 (כבירת הרפובליקה הסובייטית האוזבקית)", en: "Antiquity (Chach oasis) | 1930 (As capital of the Uzbek SSR)" },
+              reason: { 
+                he: "טשקנט הייתה תמיד צומת כלכלי פורה (נווה מדבר). ב-1930, הסובייטים העבירו אליה את בירת הרפובליקה האוזבקית (מהעיר סמרקנד). טשקנט נבחרה משום שהייתה המרכז התעשייתי והתחבורתי (רכבת) המפותח ביותר באזור. לאחר רעידת האדמה ההרסנית של 1966, היא נבנתה מחדש לחלוטין כ'עיר המודל הסובייטית' של אסיה, עם רכבת תחתית, שדרות רחבות ופארקים, וביססה את מעמדה כבירה המודרנית המוחלטת.",
+                en: "Tashkent has always been a fertile economic crossroads (an oasis). In 1930, the Soviets moved the capital of the Uzbek Republic to it (from the city of Samarkand). Tashkent was chosen because it was the most developed industrial and transport (railway) hub in the region. After the devastating 1966 earthquake, it was completely rebuilt as the 'Soviet Model City' of Asia, with a metro, wide boulevards, and parks, cementing its status as the absolute modern capital."
+              }
             },
-            areaNum: '~448,978 קמ"ר',
-            populationNum: '~36,000,000',
-            currency: 'סום אוזבקי (UZS)',
-            area: 'כ-448,978 קמ"ר. שוכנת בלב מרכז אסיה, מוקפת יבשה מכל עבריה במדינות שגם להן אין מוצא לים (מדינה "כפולה ללא מוצא לים").',
+            areaNum: { he: "~448,978 קמ\"ר", en: "~448,978 sq km" },
+            populationNum: "~36,000,000",
+            currency: { he: "סום אוזבקי (UZS)", en: "Uzbekistani Som (UZS)" },
+            area: { 
+              he: "כ-448,978 קמ\"ר. אוזבקיסטן שוכנת בלב הפועם של מרכז אסיה. יש לה מאפיין גיאוגרפי נדיר מאוד: היא מדינה 'כפולה ללא מוצא לים' (Doubly landlocked) – מוקפת לחלוטין במדינות שגם להן אין מוצא לאוקיינוס. שטחה משלב את מדבר 'קיזילקום' האדיר במרכז, עמקים פוריים ועתירי מים (כעמק פרגאנה) במזרח, ואגן ימת אראל (שהתייבשה כליל באסון אקולוגי סובייטי) במערב הקשה והמלוח.",
+              en: "Approx. 448,978 sq km. Uzbekistan lies at the beating heart of Central Asia. It has a very rare geographical characteristic: it is a 'doubly landlocked' country – entirely surrounded by countries that also lack access to the ocean. Its territory combines the massive 'Kyzylkum' desert in the center, highly fertile and water-rich valleys (like the Fergana Valley) in the east, and the Aral Sea basin (completely dried up in a Soviet ecological disaster) in the harsh, salty west."
+            },
             demographics: {
-              mainNationName: 'אוזבקים',
-              mainNationPercent: 'כ-84%',
-              description: 'המדינה המאוכלסת ביותר במרכז אסיה. קיים במדינה מיעוט טג\'יקי רשמי של כ-5%, אם כי בפועל בערים כסמרקנד ובוכרה השיעור גבוה בהרבה. ישנם גם מיעוטים קזחים ורוסים.'
+              mainNationName: { he: "אוזבקים", en: "Uzbeks" },
+              mainNationPercent: { he: "כ-84%", en: "~84%" },
+              description: { 
+                he: "אוזבקיסטן היא המדינה המאוכלסת ביותר במרכז אסיה ואחת הצעירות שבהן (רוב האוכלוסייה מתחת לגיל 30). קיים במדינה מיעוט טג'יקי רשמי של כ-5%, אם כי בפועל בערים ההיסטוריות והמרכזיות כסמרקנד ובוכרה השיעור גבוה משמעותית והתרבות משלבת ערבוב עמוק של פרסית וטורקית. ישנם גם מיעוטים קזחים בערבות, מיעוט רוסי בערים הגדולות, וקהילה יהודית-בוכרית עתיקה שרובה עלתה לישראל.",
+                en: "Uzbekistan is the most populous country in Central Asia and one of the youngest (the majority of the population is under 30). There is an official Tajik minority of about 5%, though in reality, in central historical cities like Samarkand and Bukhara, the proportion is significantly higher, and the culture involves a deep blend of Persian and Turkic. There are also Kazakh minorities in the steppes, a Russian minority in big cities, and an ancient Bukharan-Jewish community, most of whom migrated to Israel."
+              }
             },
-            modernHistory: 'הכריזה עצמאות ב-1991. מנהיגה הראשון, אסלאם קרימוב, שלט בה ביד ברזל עד מותו ב-2016. יורשו החל בתהליך איטי של פתיחת הכלכלה ושיפור יחסי החוץ של המדינה מול העולם.',
-            foundingYears: '1991 (מדינה מודרנית)',
-            flagSymbolism: 'הכחול מסמל שמיים ומים (וצבע האימפריה של טימור). הלבן שלום, והירוק פריון. פסים אדומים מסמלים כוח חיים. סהר מתאר לידה מחדש, ו-12 כוכבים מסמלים את חודשי השנה ושלמות.',
+            modernHistory: { 
+              he: "לאחר שעמדה במוקד העושר והמדע של דרך המשי, נכבשה על ידי רוסיה הקיסרית. עם התפרקות ברית המועצות הכריזה אוזבקיסטן על עצמאותה ב-1991. מנהיגה הראשון והדומיננטי, אסלאם קרימוב, שלט בה ביד ברזל כדיקטטורה נוקשה ומסוגרת לעולם, תוך דיכוי כל אופוזיציה או התעוררות אסלאמית, עד מותו ב-2016. יורשו, שבקט מירזייאיב, החל בתהליך מורכב של 'הפשרה': פתיחת הכלכלה, שחרור אסירים, עידוד תיירות (פטור מוויזות), ושיפור משמעותי של יחסי החוץ עם המדינות השכנות באזור.",
+              en: "After being the center of wealth and science on the Silk Road, it was conquered by Imperial Russia. With the collapse of the Soviet Union, Uzbekistan declared independence in 1991. Its first and dominant leader, Islam Karimov, ruled with an iron fist as a strict dictatorship closed off from the world, suppressing all opposition or Islamic awakening, until his death in 2016. His successor, Shavkat Mirziyoyev, began a complex process of a 'thaw': opening the economy, releasing prisoners, encouraging tourism (visa exemptions), and significantly improving foreign relations with neighboring countries."
+            },
+            foundingYears: { he: "1991 (עצמאות והקמת המדינה המודרנית)", en: "1991 (Independence & modern state formation)" },
+            flagSymbolism: { 
+              he: "הפס הכחול למעלה מסמל את השמיים הרחבים והמים הטהורים (והוא גם הצבע המסורתי והמפורסם של האימפריה הטימורית ההיסטורית). הפס הלבן האמצעי מסמל שלום, פתיחות וטוהר המחשבה. הפס הירוק למטה מסמל את ההתעוררות מחדש של הטבע, חקלאות, והדת האסלאמית. הפסים האדומים הדקים המפרידים ביניהם מסמלים את כוח החיים הזורם בעורקיהם של בני האדם. סהר מחודד מתאר לידה מחדש של האומה, ו-12 כוכבים לבנים מסמלים את 12 חודשי השנה ואת השלמות במערכת האסטרונומית העתיקה של האזור.",
+              en: "The top blue stripe symbolizes broad skies and pure water (and is also the famous traditional color of the historical Timurid Empire). The middle white stripe symbolizes peace, openness, and purity of thought. The bottom green stripe symbolizes nature's reawakening, agriculture, and the Islamic religion. The thin red stripes separating them symbolize the life force flowing in the veins of human beings. A pointed crescent portrays the rebirth of the nation, and 12 white stars symbolize the 12 months of the year and perfection in the region's ancient astronomical system."
+            },
             nationalAnimal: {
-              name: 'ציפור ההומה המיתולוגית (Huma Bird)',
-              reason: 'למרות שאינה חיה ביולוגית קיימת, "ציפור ההומה" היא סמלה הרשמי והלאומי של אוזבקיסטן ומופיעה במרכז סמל המדינה הרשמי כשכנפיה פרושות. במיתולוגיה הסופית והפרסית-טורקית, זוהי ציפור פלאית שלעולם אינה נוחתת על הקרקע אלא דואה תמיד בשמיים הגבוהים. היא מסמלת מזל טוב, חופש נצחי, אושר, ועצמאות רוחנית ומדינית.'
+              name: { he: "ציפור ההומה המיתולוגית (Huma Bird)", en: "Mythological Huma Bird" },
+              reason: { 
+                he: "באופן ייחודי, החיה הלאומית של אוזבקיסטן אינה קיימת במציאות הביולוגית. 'ציפור ההומה' היא סמלה הלאומי של הרפובליקה ומופיעה במרכז סמל המדינה הרשמי כשכנפיה פרושות לרווחה אל מול שמש זורחת. במיתולוגיה הסופית והפרסית-טורקית, זוהי 'ציפור גן העדן' או ציפור פלאית שלעולם, אך לעולם, אינה נוחתת על הקרקע, אלא דואה תמיד בשמיים הגבוהים מחוץ לטווח ראייה. היא מסמלת ברכה, מזל טוב במיוחד, חופש נצחי, אלטרואיזם, ועצמאות רוחנית ומדינית שאינה ניתנת לכיבוש.",
+                en: "Uniquely, Uzbekistan's national animal does not exist in biological reality. The 'Huma Bird' is the national symbol of the republic and appears in the center of the official state emblem with its wings spread wide against a rising sun. In Sufi and Persian-Turkic mythology, this is the 'Bird of Paradise' or a wondrous bird that never, ever lands on the ground, but always soars in the high skies out of sight. It symbolizes blessing, extreme good fortune, eternal freedom, altruism, and unconquerable spiritual and political independence."
+              }
             },
             etymology: {
               parts: [
-                { text: 'אוזבק (Uzbek)', color: 'text-blue-400', desc: 'מורכב מ-"Öz" (עצמי/אני) והתואר "Bek" (אדון/מנהיג). משמעותו "אדון לעצמי". במקביל, סברה מובילה היא שהשם נלקח ישירות משמו של "אוזבק חאן", אחד מגדולי השליטים של אורדת הזהב, שהנחיל את האסלאם באזור.' },
-                { text: 'סטן (Stan)', color: 'text-pink-400', desc: 'המונח ההיסטורי והאזור הגיאוגרפי שבו יושבים בני האומה.' }
+                { text: { he: "אוזבק (Uzbek)", en: "Uzbek" }, color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: { he: "מורכב מ-'Öz' (עצמי/אני) והתואר המנהיגותי 'Bek' (אדון/קומנדר). משמעותו 'אדון לעצמי'. לחלופין, נלקח ישירות משמו של 'אוזבק חאן' הדגול מאורדת הזהב.", en: "Composed of 'Öz' (Self/I) and the leadership title 'Bek' (Master/Commander). Means 'Master of oneself'. Alternatively, taken directly from the name of the great 'Uzbek Khan' of the Golden Horde." } },
+                { text: { he: "סטן (Stan)", en: "Stan" }, color: "text-pink-400", bg: "bg-pink-400/10", border: "border-pink-500/30", desc: { he: "סיומת המתארת ארץ וריבונות גיאוגרפית.", en: "Suffix describing land and geographical sovereignty." } }
               ],
-              synthesis: 'ארץ האנשים שהם האדונים של עצמם (או: ארצם של הולכי דרכו של אוזבק חאן).'
+              synthesis: { he: "ארץ האנשים שהם האדונים של עצמם (עצמאיים).", en: "Land of the people who are their own masters (independent)." }
             },
             figure: {
-              name: 'אמיר טימור - טימור לנג',
-              years: '1336 - 1405',
-              childhood: 'נולד סמוך לשחריסאבז למשפחה משבט ברלאס הטורקו-מונגולי. פציעה קשה בנעוריו העניקה לו את הכינוי "הצולע" (לנג).',
-              ideology: 'תחייה ושחזורה של האימפריה של ג\'ינגיס חאן, בשילוב תרבות אסלאמית פרסית גבוהה, משמעת אכזרית, וקידום מדע ואומנויות.',
-              achievements: 'מייסד האימפריה הטימורית. כבש שטחים מדהימים בעולם הישן. הפך את בירתו סמרקנד לפנינה אדריכלית, ונחשב לגיבור העל הלאומי של אוזבקיסטן המודרנית.'
+              name: { he: "אמיר טימור - טימור לנג", en: "Amir Timur (Tamerlane)" },
+              years: "1336 - 1405",
+              childhood: { 
+                he: "נולד סמוך לעיר שחריסאבז למשפחה משבט ברלאס (קונפדרציה טורקו-מונגולית). בשנות ה-20 לחייו נפצע קשות בקרבות בחצים ברגלו ובידו הימנית. פציעה זו הותירה אותו נכה פיזית והעניקה לו את הכינוי המפורסם 'טימור לנג' (טימור הצולע), אך לא עצרה את שאיפותיו הצבאיות העצומות.",
+                en: "Born near the city of Shahrisabz to a family from the Barlas tribe (a Turco-Mongol confederation). In his 20s, he was severely injured by arrows in battle in his leg and right arm. This injury left him physically disabled and earned him the famous moniker 'Timur the Lame' (Tamerlane), but did not halt his immense military ambitions."
+              },
+              ideology: { 
+                he: "האידאולוגיה שלו הייתה כפולה: מצד אחד, הוא שאף לשחזר במדויק את האימפריה הגלובלית האדירה של ג'ינגיס חאן ולשלוט בעולם באכזריות צבאית ללא פשרות. מצד שני, הוא ראה עצמו כמגן האסלאם והתרבות, ודאג לקדם ולפתח מדע, מתמטיקה, אסטרונומיה ואומנויות פסיפס ואדריכלות פרסית-אסלאמית ברמה הגבוהה ביותר.",
+                en: "His ideology was dual: on the one hand, he aspired to accurately reconstruct the mighty global empire of Genghis Khan and rule the world with uncompromising military ruthlessness. On the other hand, he saw himself as the protector of Islam and culture, making sure to promote and develop science, mathematics, astronomy, and the highest level of Persian-Islamic mosaic art and architecture."
+              },
+              achievements: { 
+                he: "הוא המייסד העוצמתי של 'האימפריה הטימורית'. כמצביא גאון (ואכזר), הוא כבש שטחים מדהימים מהודו ועד טורקיה, והכריע את האימפריה העות'מאנית. את כל העושר והאומנים שכבש, הוא הביא לבירתו 'סמרקנד', אותה הפך לפנינה אדריכלית עולמית מרהיבה (כולל כיכר הרג'יסטאן ההיסטורית). לאחר קבלת העצמאות ב-1991, החליט הנשיא קרימוב למתג אותו מחדש כגיבור העל הלאומי של אוזבקיסטן המודרנית (במקום לנין או מרקס).",
+                en: "He is the powerful founder of the 'Timurid Empire'. As a genius (and ruthless) military commander, he conquered incredible territories from India to Turkey, and defeated the Ottoman Empire. All the wealth and artisans he captured were brought to his capital 'Samarkand', which he turned into a spectacular global architectural pearl (including the historic Registan Square). After gaining independence in 1991, President Karimov decided to rebrand him as the ultimate national superhero of modern Uzbekistan (replacing Lenin or Marx)."
+              }
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_uzbekistan_transoxiana.jpg',
-              title: 'מפת טראנסאוקסיאנה ובוכרה',
-              desc: 'מפה היסטורית מרשימה מהמאה ה-18 המציגה את האזור שבין הנהרות אמו דריה וסיר דריה. המפה מדגישה את מוקד האימפריה הטימורית (טראנסאוקסיאנה) עם ציוני דרך קרטוגרפיים עתיקים של ערי מפתח כסמרקנד ובוכרה.'
+              url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_uzbekistan_transoxiana.jpg",
+              title: { he: "מפת טראנסאוקסיאנה ובוכרה", en: "Map of Transoxiana and Bukhara" },
+              desc: { 
+                he: "מפה היסטורית מרשימה מהמאה ה-18 המציגה את האזור שבין הנהרות אמו דריה וסיר דריה. המפה מדגישה את מוקד האימפריה הטימורית וההשכלה האסלאמית (טראנסאוקסיאנה), עם ציוני דרך קרטוגרפיים עתיקים של ערי מפתח כסמרקנד, בוכרה וחיווה לאורך דרך המשי.",
+                en: "An impressive 18th-century historical map showing the region between the Amu Darya and Syr Darya rivers. The map highlights the focal point of the Timurid Empire and Islamic scholarship (Transoxiana), with ancient cartographic landmarks of key cities like Samarkand, Bukhara, and Khiva along the Silk Road."
+              }
             }
           }
         ];
@@ -368,7 +708,7 @@
         // רכיבי התצוגה (UI) 
         // ==========================================
 
-        const CountryCard = ({ country, onModalOpen }) => {
+        const CountryCard = ({ country, onModalOpen, lang, uiStr }) => {
           const { 
             flagUrl, name, englishName, officialName, capital, areaNum, populationNum, currency, area, demographics, 
             modernHistory, foundingYears, etymology, flagSymbolism, nationalAnimal, figure, map 
@@ -380,13 +720,13 @@
               <div className="flex flex-col md:flex-row gap-6 p-6 md:p-8 border-b border-gray-800">
                 <div 
                   className="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center bg-gray-950 p-4 rounded-xl cursor-pointer group relative" 
-                  onClick={() => onModalOpen({url: flagUrl, title: `דגל ${name}`})}
-                  title="לחץ להגדלת הדגל"
+                  onClick={() => onModalOpen({url: flagUrl, title: `${name[lang]}`})}
+                  title={uiStr.lClickEnlargeFlag}
                 >
                   <div className="w-full max-h-40 shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105 overflow-hidden flex justify-center items-center bg-black">
                     <img 
                       src={flagUrl} 
-                      alt={`דגל ${name}`}
+                      alt={name[lang]}
                       className="w-full h-32 md:h-40 object-cover opacity-95 group-hover:opacity-100 transition-opacity"
                       onError={(e) => {
                         e.target.onerror = null; 
@@ -395,47 +735,45 @@
                     />
                   </div>
                   <div className="absolute opacity-0 group-hover:opacity-100 bg-black/60 text-white text-sm px-3 py-1 rounded transition-opacity duration-300 pointer-events-none mt-32">
-                    לחץ להגדלה
+                    {uiStr.lClickEnlargeFlag}
                   </div>
                 </div>
                 
                 <div className="flex-grow flex flex-col justify-center">
-                  <h2 className="text-3xl font-bold text-white mb-2">{name} <span className="text-gray-500 text-lg ml-2 uppercase tracking-widest">{englishName}</span></h2>
-                  <h3 className="text-xl text-gray-400 mb-4">{officialName}</h3>
+                  <h2 className="text-3xl font-bold text-white mb-2">{name[lang]} <span className="text-gray-500 text-lg ms-2 uppercase tracking-widest">{englishName}</span></h2>
+                  <h3 className="text-xl text-gray-400 mb-4">{officialName[lang]}</h3>
                   
-                  {/* לוח נתונים עליון - אורגן מחדש ל-6 פריטים סימטריים */}
+                  {/* לוח נתונים עליון - 6 פריטים סימטריים */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                      <span><strong className="text-white">עיר בירה:</strong> {capital.name}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                      <span><strong className="text-white me-1">{uiStr.capital}</strong> {capital.name[lang]}</span>
                     </div>
 
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
-                      <span><strong className="text-white">מטבע לאומי:</strong> {currency}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+                      <span><strong className="text-white me-1">{uiStr.currency}</strong> {currency[lang]}</span>
                     </div>
 
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                      <span><strong className="text-white">שנת ייסוד:</strong> {foundingYears}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                      <span><strong className="text-white me-1">{uiStr.founding}</strong> {foundingYears[lang]}</span>
                     </div>
 
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                      <span><strong className="text-white">אוכלוסייה:</strong> {populationNum}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                      <span><strong className="text-white me-1">{uiStr.population}</strong> {populationNum}</span>
                     </div>
 
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3h18v18H3zM12 8v8m-4-4h8"></path></svg>
-                      <span><strong className="text-white">שטח:</strong> {areaNum}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3h18v18H3zM12 8v8m-4-4h8"></path></svg>
+                      <span><strong className="text-white me-1">{uiStr.area}</strong> {areaNum[lang]}</span>
                     </div>
 
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                      <span className="truncate" title={figure.name}><strong className="text-white">מנהיג:</strong> {figure.name.split('(')[0]}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                      <span className="truncate" title={figure.name[lang]}><strong className="text-white me-1">{uiStr.leader}</strong> {figure.name[lang].split('(')[0]}</span>
                     </div>
-
                   </div>
                 </div>
               </div>
@@ -444,77 +782,83 @@
                 
                 <section>
                     <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                        <i className="fa-solid fa-map-location-dot w-6 h-6 ml-2 text-sky-400 text-xl"></i>
-                        <h3 className="text-2xl font-bold text-white">רקע פיזי ואנושי</h3>
+                        <i className="fa-solid fa-map-location-dot w-6 h-6 me-2 text-sky-400 text-xl"></i>
+                        <h3 className="text-2xl font-bold text-white">{uiStr.sectionPhysical}</h3>
                     </div>
-                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 space-y-4">
-                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">שטח וטופוגרפיה:</strong> {area}</p>
-                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">דמוגרפיה ({demographics.mainNationName} - {demographics.mainNationPercent}):</strong> {demographics.description}</p>
-                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">היסטוריה מודרנית:</strong> {modernHistory}</p>
+                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 space-y-4 text-start">
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white me-1">{uiStr.lAreaTopo}</strong> {area[lang]}</p>
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white me-1">{uiStr.lDemographics} ({demographics.mainNationName[lang]} - {demographics.mainNationPercent[lang]}):</strong> {demographics.description[lang]}</p>
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white me-1">{uiStr.lModernHistory}</strong> {modernHistory[lang]}</p>
                     </div>
                 </section>
 
                 <section>
                     <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                        <svg className="w-6 h-6 ml-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                        <h3 className="text-2xl font-bold text-white">אטימולוגיה ושמות</h3>
+                        <svg className="w-6 h-6 me-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                        <h3 className="text-2xl font-bold text-white">{uiStr.sectionEtymology}</h3>
                     </div>
-                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800">
+                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 text-start">
                         <ul className="space-y-4">
                             {/* חלקי שם המדינה */}
                             {etymology.parts.map((part, index) => (
                                 <li key={index} className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4">
-                                    <span className={`font-bold min-w-[140px] md:text-lg flex-shrink-0 ${part.color}`}>• {part.text}:</span>
-                                    <span className="text-gray-300 leading-relaxed text-lg">{part.desc}</span>
+                                    <span className={`font-bold min-w-[140px] md:text-lg flex-shrink-0 ${part.color} ${part.bg} border ${part.border} px-2 py-1 rounded-md`}>• {part.text[lang]}:</span>
+                                    <span className="text-gray-300 leading-relaxed text-lg">{part.desc[lang]}</span>
                                 </li>
                             ))}
                             <li className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4 mt-2 pt-4 border-t border-gray-800/50">
-                                <span className="font-bold text-amber-400 min-w-[140px] md:text-lg flex-shrink-0"><i className="fa-solid fa-quote-right ml-1"></i> משמעות השם:</span>
-                                <span className="text-gray-200 font-bold leading-relaxed text-lg">{etymology.synthesis}</span>
+                                <span className="font-bold text-amber-400 min-w-[140px] md:text-lg flex-shrink-0">
+                                  <i className="fa-solid fa-quote-right me-1"></i> {uiStr.lNameMeaning}
+                                </span>
+                                <span className="text-gray-200 font-bold leading-relaxed text-lg">{etymology.synthesis[lang]}</span>
                             </li>
                             
-                            {/* אטימולוגיה של עיר הבירה (מופרד ויזואלית) */}
-                            <li className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4 mt-6 pt-5 border-t border-gray-700/80">
-                                <span className="font-bold text-purple-400 min-w-[140px] md:text-lg flex-shrink-0">
-                                    <i className="fa-solid fa-landmark-dome ml-1"></i> שם הבירה:
+                            {/* אטימולוגיה של עיר הבירה */}
+                            <li className="flex flex-col md:flex-row md:items-start gap-2 md:gap-4 mt-6 pt-5 border-t border-gray-700/80">
+                                <span className="font-bold text-purple-400 min-w-[140px] md:text-lg flex-shrink-0 mt-1">
+                                    <i className="fa-solid fa-landmark-dome me-1"></i> {uiStr.lCapitalName}
                                 </span>
-                                <div>
-                                    <strong className="text-white text-lg block mb-1">{capital.name}</strong>
-                                    <span className="text-gray-300 leading-relaxed text-lg block">{capital.etymology}</span>
+                                <div className="space-y-3 w-full">
+                                    <strong className="text-white text-xl block border-b border-gray-800 pb-2">
+                                      {capital.name[lang]} <span className="text-gray-500 text-sm font-normal uppercase tracking-widest ms-1">({capital.englishName})</span>
+                                    </strong>
+                                    <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white font-medium me-1">{uiStr.lCapitalEty}</strong> {capital.etymology[lang]}</p>
+                                    <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white font-medium me-1">{uiStr.lCapitalFounding}</strong> {capital.foundingYear[lang]}</p>
+                                    <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white font-medium me-1">{uiStr.lCapitalReason}</strong> {capital.reason[lang]}</p>
                                 </div>
                             </li>
                         </ul>
                     </div>
                 </section>
 
-                <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    {/* סמלים וזהות לאומית (וקסלולוגיה + חיה לאומית) */}
+                <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 text-start">
+                    {/* סמלים וזהות לאומית */}
                     <div>
                         <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                            <svg className="w-6 h-6 ml-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
-                            <h3 className="text-2xl font-bold text-white">סמלים וזהות לאומית</h3>
+                            <svg className="w-6 h-6 me-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                            <h3 className="text-2xl font-bold text-white">{uiStr.sectionSymbols}</h3>
                         </div>
                         <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 h-full">
-                            <h4 className="text-lg font-bold text-white mb-2"><i className="fa-solid fa-flag text-green-400 ml-2"></i> משמעות צבעי הדגל:</h4>
-                            <p className="text-gray-300 leading-relaxed text-lg mb-6 pb-6 border-b border-gray-800/70">{flagSymbolism}</p>
+                            <h4 className="text-lg font-bold text-white mb-2"><i className="fa-solid fa-flag text-green-400 me-2"></i> {uiStr.lFlagMeaning}</h4>
+                            <p className="text-gray-300 leading-relaxed text-lg mb-6 pb-6 border-b border-gray-800/70">{flagSymbolism[lang]}</p>
                             
-                            <h4 className="text-lg font-bold text-white mb-2"><i className="fa-solid fa-paw text-orange-400 ml-2"></i> החיה הלאומית: {nationalAnimal.name}</h4>
-                            <p className="text-gray-300 leading-relaxed text-lg">{nationalAnimal.reason}</p>
+                            <h4 className="text-lg font-bold text-white mb-2"><i className="fa-solid fa-paw text-orange-400 me-2"></i> {uiStr.lNationalAnimal} {nationalAnimal.name[lang]}</h4>
+                            <p className="text-gray-300 leading-relaxed text-lg">{nationalAnimal.reason[lang]}</p>
                         </div>
                     </div>
 
                     {/* פרופיל מנהיג */}
                     <div>
                         <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                            <svg className="w-6 h-6 ml-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                            <h3 className="text-2xl font-bold text-white">פרופיל מנהיג מכונן</h3>
+                            <svg className="w-6 h-6 me-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                            <h3 className="text-2xl font-bold text-white">{uiStr.sectionLeader}</h3>
                         </div>
                         <div className="bg-gray-800/20 rounded-xl p-5 border border-gray-800/50 h-full">
-                            <h4 className="text-xl text-rose-300 font-bold mb-3">{figure.name} <span className="text-base text-gray-400">({figure.years})</span></h4>
+                            <h4 className="text-xl text-rose-300 font-bold mb-3">{figure.name[lang]} <span className="text-base text-gray-400">({figure.years})</span></h4>
                             <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
-                                <div><strong className="text-white block mb-1">ילדות ורקע:</strong> {figure.childhood}</div>
-                                <div><strong className="text-white block mb-1">אידאולוגיה:</strong> {figure.ideology}</div>
-                                <div><strong className="text-white block mb-1">הישגים מרכזיים:</strong> {figure.achievements}</div>
+                                <div><strong className="text-white block mb-1">{uiStr.lChildhood}</strong> {figure.childhood[lang]}</div>
+                                <div><strong className="text-white block mb-1">{uiStr.lIdeology}</strong> {figure.ideology[lang]}</div>
+                                <div><strong className="text-white block mb-1">{uiStr.lAchievements}</strong> {figure.achievements[lang]}</div>
                             </div>
                         </div>
                     </div>
@@ -522,14 +866,14 @@
 
                 <section>
                     <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                        <svg className="w-6 h-6 ml-2 text-cyan-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"></path><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
-                        <h3 className="text-2xl font-bold text-white">קרטוגרפיה היסטורית</h3>
+                        <svg className="w-6 h-6 me-2 text-cyan-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"></path><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                        <h3 className="text-2xl font-bold text-white">{uiStr.sectionCartography}</h3>
                     </div>
-                    <div className="flex flex-col cursor-pointer group rounded-xl overflow-hidden border border-gray-700 bg-gray-800/30 hover:border-gray-500 transition-all duration-300 shadow-lg" onClick={() => onModalOpen({url: map.url, title: map.title})}>
+                    <div className="flex flex-col cursor-pointer group rounded-xl overflow-hidden border border-gray-700 bg-gray-800/30 hover:border-gray-500 transition-all duration-300 shadow-lg" onClick={() => onModalOpen({url: map.url, title: map.title[lang]})}>
                         <div className="relative h-64 md:h-80 w-full overflow-hidden bg-black">
                             <img 
                               src={map.url} 
-                              alt={map.title} 
+                              alt={map.title[lang]} 
                               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                               onError={(e) => {
                                 e.target.onerror = null; 
@@ -539,9 +883,9 @@
                             <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300"></div>
                         </div>
                         <div className="p-4 text-center border-t border-gray-700/50">
-                            <strong className="text-cyan-300 block mb-2 text-lg">{map.title}</strong>
-                            <span className="text-gray-300 text-base leading-relaxed block">{map.desc}</span>
-                            <span className="inline-block mt-3 text-gray-400 text-sm font-medium bg-gray-900/80 px-4 py-1.5 rounded-full border border-gray-700 transition-colors group-hover:text-cyan-300 group-hover:border-cyan-800/50">(לחץ להגדלת המפה)</span>
+                            <strong className="text-cyan-300 block mb-2 text-lg">{map.title[lang]}</strong>
+                            <span className="text-gray-300 text-base leading-relaxed block">{map.desc[lang]}</span>
+                            <span className="inline-block mt-3 text-gray-400 text-sm font-medium bg-gray-900/80 px-4 py-1.5 rounded-full border border-gray-700 transition-colors group-hover:text-cyan-300 group-hover:border-cyan-800/50">{uiStr.lClickEnlargeMap}</span>
                         </div>
                     </div>
                 </section>
@@ -563,7 +907,7 @@
                 <button 
                   onClick={onClose}
                   className="absolute -top-14 right-0 md:-right-14 text-gray-400 hover:text-white bg-gray-800/80 hover:bg-gray-700 rounded-full p-2 transition-colors z-50"
-                  aria-label="סגור חלון"
+                  aria-label="Close"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -587,10 +931,19 @@
         };
 
         function App() {
+          const [lang, setLang] = useState('he');
           const [modalContent, setModalContent] = useState(null);
 
+          const uiStr = ui[lang];
+
+          // ניהול כיוון המסמך לפי שפה
           React.useEffect(() => {
-            const handleEsc = (e) => { if (e.key === 'Escape') setModalContent(null); };
+            document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+            document.documentElement.lang = lang;
+          }, [lang]);
+
+          React.useEffect(() => {
+            const handleEsc = (e) => { if (e.key === "Escape") setModalContent(null); };
             window.addEventListener('keydown', handleEsc);
             return () => window.removeEventListener('keydown', handleEsc);
           }, []);
@@ -600,10 +953,22 @@
           }, [modalContent]);
 
           return (
-            <div className="max-w-5xl mx-auto pt-4 md:pt-8">
-              <header className="mb-10 text-center">
-                  <h1 className="text-3xl md:text-5xl font-bold text-white mb-3">דגלי מדינות הסטן</h1>
-                  <p className="text-gray-400 text-lg">מחקר וקסלולוגי, אטימולוגי, היסטורי וקרטוגרפי</p>
+            <div className="max-w-5xl mx-auto pt-4 md:pt-8 relative">
+              
+              {/* כפתור החלפת שפה */}
+              <div className="absolute top-0 right-4 md:right-8">
+                <button 
+                  onClick={() => setLang(lang === 'he' ? 'en' : 'he')}
+                  className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-full border border-gray-600 transition-colors shadow-lg font-medium text-sm z-50"
+                >
+                  <i className="fa-solid fa-globe text-blue-400"></i>
+                  {uiStr.langBtn}
+                </button>
+              </div>
+
+              <header className="mb-10 text-center mt-12 md:mt-0">
+                  <h1 className="text-3xl md:text-5xl font-bold text-white mb-3">{uiStr.mainTitle}</h1>
+                  <p className="text-gray-400 text-lg">{uiStr.subTitle}</p>
               </header>
 
               <div className="space-y-12">
@@ -612,6 +977,8 @@
                     key={country.id} 
                     country={country} 
                     onModalOpen={setModalContent} 
+                    lang={lang}
+                    uiStr={uiStr}
                   />
                 ))}
               </div>
@@ -619,15 +986,15 @@
               <footer className="mt-12 mb-8 pt-8 border-t border-gray-800 text-center text-gray-500 w-full max-w-6xl mx-auto px-4">
                   <div className="flex justify-center items-center gap-2 mb-4">
                       <svg className="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                      <h4 className="font-bold text-gray-400 text-lg">פרטי המחקר והפרויקט</h4>
+                      <h4 className="font-bold text-gray-400 text-lg">{uiStr.footerTitle}</h4>
                   </div>
-                  <div className="inline-block text-right bg-gray-900/50 p-6 rounded-xl border border-gray-800 w-full max-w-2xl">
+                  <div className="inline-block text-start bg-gray-900/50 p-6 rounded-xl border border-gray-800 w-full max-w-2xl">
                       <p className="text-gray-300 leading-loose">
-                          <strong className="text-white ml-2">שם ההוגה:</strong> רם<br />
-                          <strong className="text-white ml-2">שם הבונה/היצרן:</strong> ג'מיני (Gemini 3.1 Pro)<br />
-                          <strong className="text-white ml-2">סיבת ההמצאה/הבנייה:</strong> המרת מחקר מדינות הסטן למבנה React וקטורי מדויק בשילוב מפות היסטוריות ייעודיות.<br />
-                          <strong className="text-white ml-2">שנת הבנייה/היצירה:</strong> 2026<br />
-                          <strong className="text-white ml-2">מקורות וקרדיט:</strong> אטימולוגיה מהספרות. מפות גיאוגרפיות קרטוגרפיות ייחודיות פרי יצירת AI. קובצי דגלים באדיבות <a href="https://flagpedia.net/" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">Flagpedia.net</a>.
+                          <strong className="text-white me-2">{uiStr.fConcept}</strong> {uiStr.fConceptVal}<br />
+                          <strong className="text-white me-2">{uiStr.fBuilder}</strong> {uiStr.fBuilderVal}<br />
+                          <strong className="text-white me-2">{uiStr.fReason}</strong> {uiStr.fReasonVal}<br />
+                          <strong className="text-white me-2">{uiStr.fYear}</strong> {uiStr.fYearVal}<br />
+                          <strong className="text-white me-2">{uiStr.fCredits}</strong> {uiStr.fCreditsVal}
                       </p>
                   </div>
               </footer>
