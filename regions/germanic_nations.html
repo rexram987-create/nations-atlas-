@@ -1,11 +1,11 @@
-```html
 <!DOCTYPE html>
 <html lang="he" dir="rtl" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>אטלס האומות | המדינות הגרמאניות</title>
+    <title>The Balkan Project | הבלקן המזרחי והדרומי</title>
     
+    <!-- טעינת ספריות העיצוב -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -20,221 +20,524 @@
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- טעינת React ו-Babel -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="min-h-screen bg-gray-950 text-gray-200 p-4 md:p-8 font-sans antialiased selection:bg-amber-500/30">
+<body class="min-h-screen bg-gray-950 text-gray-200 p-4 md:p-8 font-sans antialiased selection:bg-rose-500/30">
+    
     <div id="root"></div>
+
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useEffect } = React;
+
+        const fallbackImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400' viewBox='0 0 800 400'%3E%3Crect width='800' height='400' fill='%231e293b'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='26' fill='%2394a3b8'%3EHistorical Map%3C/text%3E%3C/svg%3E";
 
         // ==========================================
-        // תמונת גיבוי חכמה פנימית
+        // מילון ממשק משתמש (UI Dictionary)
         // ==========================================
-        const fallbackImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400' viewBox='0 0 800 400'%3E%3Crect width='800' height='400' fill='%231e293b'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='26' fill='%2394a3b8'%3Eתמונה חסרה - יש לעדכן את שם הקובץ%3C/text%3E%3C/svg%3E";
+        const ui = {
+          he: {
+            mainTitle: "הבלקן המזרחי והדרומי",
+            subTitle: "צומת האימפריות: מחקר וקסלולוגי, אטימולוגי, היסטורי וקרטוגרפי",
+            langBtn: "English",
+            capital: "עיר בירה:",
+            currency: "מטבע לאומי:",
+            founding: "שנת ייסוד:",
+            population: "אוכלוסייה:",
+            area: "שטח:",
+            leader: "מנהיג:",
+            sectionPhysical: "רקע פיזי ואנושי",
+            lAreaTopo: "שטח וטופוגרפיה:",
+            lDemographics: "דמוגרפיה",
+            lModernHistory: "היסטוריה מודרנית:",
+            sectionEtymology: "אטימולוגיה ושמות",
+            lNameMeaning: "משמעות השם:",
+            lCapitalName: "עיר הבירה:",
+            lCapitalEty: "אטימולוגיה:",
+            lCapitalFounding: "שנת ייסוד הבירה:",
+            lCapitalReason: "הסיבה לבחירתה:",
+            sectionSymbols: "סמלים וזהות לאומית",
+            lFlagMeaning: "משמעות צבעי הדגל:",
+            lNationalAnimal: "החיה הלאומית:",
+            sectionLeader: "פרופיל מנהיג מכונן",
+            lChildhood: "ילדות ורקע:",
+            lIdeology: "אידאולוגיה:",
+            lAchievements: "הישגים מרכזיים:",
+            sectionCartography: "קרטוגרפיה היסטורית",
+            lClickEnlargeMap: "(לחץ להגדלת המפה)",
+            lClickEnlargeFlag: "לחץ להגדלה",
+            footerTitle: "פרטי המחקר והפרויקט",
+            fConcept: "שם ההוגה:",
+            fBuilder: "שם הבונה/היצרן:",
+            fReason: "סיבת ההמצאה/הבנייה:",
+            fYear: "שנת הבנייה/היצירה:",
+            fCredits: "מקורות וקרדיט:",
+            fConceptVal: "רם",
+            fBuilderVal: "ג'מיני (Gemini 3.1 Pro)",
+            fReasonVal: "המשך פרויקט 'אטלס האומות המלא' – חקר הבלקן המזרחי והדרומי. המרה למבנה React וקטורי ודו-לשוני מתקדם.",
+            fYearVal: "2026",
+            fCreditsVal: "אטימולוגיה מהספרות ההיסטורית. מפות קרטוגרפיות קלאסיות מ-GitHub. תמונות דגלים באדיבות שרתי Flagpedia.net (API)."
+          },
+          en: {
+            mainTitle: "Eastern & Southern Balkans",
+            subTitle: "Crossroads of Empires: Vexillological, Etymological, Historical, and Cartographic Research",
+            langBtn: "עברית",
+            capital: "Capital City:",
+            currency: "Currency:",
+            founding: "Founded:",
+            population: "Population:",
+            area: "Area:",
+            leader: "Leader:",
+            sectionPhysical: "Physical and Human Background",
+            lAreaTopo: "Area & Topography:",
+            lDemographics: "Demographics",
+            lModernHistory: "Modern History:",
+            sectionEtymology: "Etymology and Names",
+            lNameMeaning: "Name Meaning:",
+            lCapitalName: "Capital City:",
+            lCapitalEty: "Etymology:",
+            lCapitalFounding: "Founding Year:",
+            lCapitalReason: "Reason for Selection:",
+            sectionSymbols: "Symbols & National Identity",
+            lFlagMeaning: "Flag Symbolism:",
+            lNationalAnimal: "National Animal:",
+            sectionLeader: "Founding Leader Profile",
+            lChildhood: "Childhood & Background:",
+            lIdeology: "Ideology:",
+            lAchievements: "Major Achievements:",
+            sectionCartography: "Historical Cartography",
+            lClickEnlargeMap: "(Click to enlarge map)",
+            lClickEnlargeFlag: "Click to enlarge",
+            footerTitle: "Research and Project Details",
+            fConcept: "Concept by:",
+            fBuilder: "Builder/Generator:",
+            fReason: "Reason for Creation:",
+            fYear: "Year of Creation:",
+            fCredits: "Sources & Credits:",
+            fConceptVal: "Ram",
+            fBuilderVal: "Gemini (Gemini 3.1 Pro)",
+            fReasonVal: "Continuation of the 'Complete Nations Atlas' project – researching the Eastern and Southern Balkans. Conversion to an advanced bilingual React structure.",
+            fYearVal: "2026",
+            fCreditsVal: "Etymology from historical literature. Classic cartographic maps from GitHub. Flag images courtesy of Flagpedia.net API."
+          }
+        };
 
         // ==========================================
-        // רכיבי ה-SVG של הדגלים
-        // ==========================================
-
-        const FlagGermany = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="66.6" fill="#000000"/>
-            <rect y="66.6" width="300" height="66.6" fill="#FF0000"/>
-            <rect y="133.2" width="300" height="66.6" fill="#FFCC00"/>
-          </svg>
-        );
-
-        const FlagAustria = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="66.6" fill="#ED2939"/>
-            <rect y="66.6" width="300" height="66.6" fill="#FFFFFF"/>
-            <rect y="133.2" width="300" height="66.6" fill="#ED2939"/>
-          </svg>
-        );
-
-        const FlagSwitzerland = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="200" fill="#FF0000"/>
-            <g fill="#FFFFFF" transform="translate(150, 100)">
-              <rect x="-15" y="-50" width="30" height="100"/>
-              <rect x="-50" y="-15" width="100" height="30"/>
-            </g>
-          </svg>
-        );
-
-        const FlagLiechtenstein = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="100" fill="#002B7F"/>
-            <rect y="100" width="300" height="100" fill="#CE1126"/>
-            <g transform="translate(45, 25) scale(0.4)" fill="#FFD700">
-              <path d="M0,80 L100,80 L100,60 L0,60 Z" />
-              <path d="M10,60 L20,20 L30,60 L50,10 L70,60 L80,20 L90,60 Z" />
-              <circle cx="20" cy="10" r="5" />
-              <circle cx="50" cy="0" r="6" />
-              <circle cx="80" cy="10" r="5" />
-            </g>
-          </svg>
-        );
-
-        // ==========================================
-        // מאגר הנתונים המלא - המדינות הגרמאניות
+        // מאגר הנתונים המלא והמורחב (דו-לשוני) - הבלקן המזרחי והדרומי
         // ==========================================
 
         const countriesData = [
           {
-            id: 'germany',
-            name: 'גרמניה',
-            englishName: 'Germany',
-            officialName: 'הרפובליקה הפדרלית של גרמניה',
-            FlagComponent: FlagGermany,
-            areaNum: '~357,022 קמ"ר',
-            populationNum: '~84,000,000',
-            currency: 'אירו (EUR)',
-            area: 'כ-357,022 קמ"ר. שוכנת בלב אירופה ומהווה את הכלכלה הגדולה ביבשת. גיאוגרפיה מגוונת להפליא: ממישורי החוף של הים הבלטי והים הצפוני, דרך יערות עבותים (כמו היער השחור) ונהרות ענק (הריין והאלבה), ועד להרי האלפים הבוואריים בדרום.',
-            demographics: {
-              mainNationName: 'גרמנים',
-              mainNationPercent: 'כ-80%',
-              description: 'אומה גרמאנית-מרכזית. מבחינה דתית, גרמניה מפוצלת היסטורית: הצפון והמזרח נוטים להיות פרוטסטנטים (מורשת מרטין לותר) וחילונים (מורשת מזרח גרמניה הקומוניסטית), בעוד הדרום והמערב נותרו קתולים אדוקים יותר. קיים מיעוט טורקי וזר משמעותי מאוד, תוצר של הגירת "פועלים אורחים" לאחר המלחמה.'
+            id: 'romania',
+            name: { he: 'רומניה', en: 'Romania' },
+            englishName: 'Romania',
+            officialName: { he: 'רומניה', en: 'Romania' },
+            flagUrl: 'https://flagcdn.com/w640/ro.webp',
+            capital: {
+              name: { he: "בוקרשט", en: "Bucharest" },
+              englishName: "Bucharest",
+              etymology: { 
+                he: "על פי האגדה והמסורת העממית, העיר נקראת על שמו של רועה צאן בשם בוקור (Bucur). בשפה הרומנית, המילה 'bucurie' משמעותה 'שמחה' או 'אושר', ולכן בוקרשט מכונה לעיתים קרובות 'עיר השמחה'.",
+                en: "According to legend and folk tradition, the city is named after a shepherd named Bucur. In the Romanian language, the word 'bucurie' means 'joy' or 'gladness', which is why Bucharest is often called the 'City of Joy'."
+              },
+              foundingYear: { he: "1459 (אזכור ראשון בכתובים)", en: "1459 (First written mention)" },
+              reason: { 
+                he: "בוקרשט הוזכרה לראשונה במסמך על ידי ולאד המשפד (דראקולה). היא הפכה בהדרגה לבירת נסיכות ולאכיה משום שמיקומה במישור איפשר הגנה טובה יותר וגישה נוחה יותר לנתיבי המסחר, הרחק מגבולות האימפריה העות'מאנית שאיימו על הבירה הקודמת טרגובישטה. עם איחוד הנסיכויות, נבחרה באופן טבעי לבירת האומה כולה.",
+                en: "Bucharest was first mentioned in a document by Vlad the Impaler (Dracula). It gradually became the capital of the Principality of Wallachia because its location on the plain allowed better defense and access to trade routes, further from the Ottoman borders that threatened the previous capital, Târgoviște. With the unification of the principalities, it naturally became the capital of the entire nation."
+              }
             },
-            modernHistory: 'לאחר מאות שנים של פיצול כ"אימפריה הרומית הקדושה", אוחדה המדינה ב-1871 על ידי ביסמרק. במאה ה-20 הובילה את העולם לשתי מלחמות עולם הרסניות, וביצעה את שואת יהודי אירופה. לאחר תבוסתה, חולקה לגרמניה המזרחית והמערבית על ידי מסך הברזל. איחודה מחדש ב-1990 סימל את תום המלחמה הקרה. כיום זו דמוקרטיה פדרלית איתנה והעוגן של האיחוד האירופי.',
-            foundingYears: '1871 (איחוד האימפריה) | 1990 (איחוד מחדש)',
-            flagSymbolism: 'הטריקולור השחור-אדום-זהוב. צבעים אלו הופיעו לראשונה בתחילת המאה ה-19 בקרב "הפרייקורפס של ליצו" (מתנדבים גרמנים שלחמו בנפוליאון) שלבשו מדים שחורים עם עיטורים אדומים וכפתורי פליז זהובים. הצבעים מסמלים את יציאתה של גרמניה מהחשכה (שחור), דרך דם הקרבות (אדום), אל עבר אור החירות והזהב.',
+            areaNum: { he: '~238,397 קמ"ר', en: '~238,397 sq km' },
+            populationNum: '~19,000,000',
+            currency: { he: 'לאו רומני (RON)', en: 'Romanian Leu (RON)' },
+            area: { 
+              he: 'כ-238,397 קמ"ר. המדינה הגדולה ביותר בחצי האי הבלקני/מזרח אירופה. הגיאוגרפיה שלה שופעת ומגוונת, נשלטת במרכזה על ידי הרי הקרפטים המעוגלים המקיפים את רמת טרנסילבניה, וממישורי חקלאות עצומים של מחוז ולאכיה (בדרום) הנחתכים על ידי נהר הדנובה האדיר הנשפך מזרחה אל הים השחור.',
+              en: 'Approx. 238,397 sq km. The largest country in the Balkan Peninsula/Eastern Europe. Its geography is lush and diverse, dominated in the center by the sweeping Carpathian Mountains encircling the Transylvanian Plateau, and vast agricultural plains in the Wallachia region (in the south) cut by the mighty Danube River flowing east into the Black Sea.'
+            },
+            demographics: {
+              mainNationName: { he: 'רומנים', en: 'Romanians' },
+              mainNationPercent: { he: 'כ-89%', en: '~89%' },
+              description: { 
+                he: 'אומה ממוצא וזהות רומאנית-לטינית הנטועה בלב מרחב סלאבי ברובו. הרוב המוחלט של התושבים משתייך לכנסייה האורתודוקסית הרומנית. ישנו מיעוט הונגרי היסטורי גדול (כ-6%) המרוכז בעיקר בחבל טרנסילבניה (זכר לשלטון האימפריה האוסטרו-הונגרית), וכן קהילת רומה (צוענים) משמעותית.',
+                en: 'A nation of Romance-Latin origin and identity rooted in a predominantly Slavic region. The vast majority of the inhabitants belong to the Romanian Orthodox Church. There is a large historical Hungarian minority (~6%) concentrated mainly in the Transylvania region (a legacy of the Austro-Hungarian Empire), as well as a significant Roma community.'
+              }
+            },
+            modernHistory: { 
+              he: 'רומניה המודרנית נוצרה מאיחוד נסיכויות ולאכיה ומולדביה ב-1859. היא זכתה בעצמאות מוחלטת מהאימפריה העות\'מאנית ב-1877. לאחר מלחמת העולם השנייה היא נפלה תחת שלטון קומוניסטי מבודד, פרנואידי ואכזרי במיוחד בהנהגת הדיקטטור ניקולאה צ\'אושסקו. משטר זה הסתיים במהפכה עממית עקובה מדם ב-1989. כיום היא רפובליקה דמוקרטית שצומחת במהירות, החברה באיחוד האירופי ובנאט"ו.',
+              en: 'Modern Romania was formed from the unification of the principalities of Wallachia and Moldavia in 1859. It gained full independence from the Ottoman Empire in 1877. After WWII, it fell under a particularly isolated, paranoid, and cruel communist regime led by dictator Nicolae Ceaușescu. This regime ended in a bloody popular revolution in 1989. Today, it is a rapidly growing democratic republic, a member of the EU and NATO.'
+            },
+            foundingYears: { he: '1859 (איחוד הנסיכויות) | 1877 (עצמאות)', en: '1859 (Unification) | 1877 (Independence)' },
+            flagSymbolism: { 
+              he: 'דגל טריקולור אנכי המורכב מכחול, צהוב ואדום. הצבעים נשאבו מסמלי הנסיכויות ההיסטוריות שהרכיבו את המדינה. הכחול (השואב את השראתו ממולדביה) מסמל את השמיים, החירות והעצמאות; הצהוב מסמל את תבואת השדות, העושר, המינרלים והצדק; והאדום (מוולאכיה) מסמל את האחווה הלאומית ואת הדם שנשפך בקרבות המרים.',
+              en: 'A vertical tricolor flag composed of blue, yellow, and red. The colors were drawn from the symbols of the historical principalities that formed the country. Blue (drawing inspiration from Moldavia) symbolizes the sky, liberty, and independence; yellow symbolizes the harvest of the fields, wealth, minerals, and justice; and red (from Wallachia) symbolizes national fraternity and the blood shed in bitter battles.'
+            },
+            nationalAnimal: {
+              name: { he: "שונר אירואסיאתי (Eurasian Lynx)", en: "Eurasian Lynx" },
+              reason: { 
+                he: "השונר האירואסיאתי הוא חתול הבר הגדול ביותר באירופה ונחשב לסמל לאומי לא רשמי (לצד הדוב החום) המייצג את הטבע של רומניה. הוא חי ושגשג ביערות העבותים והבתוליים של הרי הקרפטים הרומניים, המכילים את אוכלוסיית הטורפים הגדולה באירופה. השונר מסמל פראיות, מסתוריות, חופש והגנה על גבולות הטבע של האומה.",
+                en: "The Eurasian Lynx is the largest wildcat in Europe and is considered an unofficial national symbol (alongside the Brown Bear) representing Romania's nature. It lives and thrives in the dense and pristine forests of the Romanian Carpathian Mountains, which host the largest predator population in Europe. The lynx symbolizes wildness, mystery, freedom, and the defense of the nation's natural borders."
+              }
+            },
             etymology: {
               parts: [
-                { text: 'גרמאניה (Germania)', color: 'text-stone-400', bg: 'bg-stone-400/10', border: 'border-stone-500/30', desc: 'השם הבינלאומי (Germany) מגיע מהמונח הלטיני "Germania", בו השתמשו הרומאים (כמו יוליוס קיסר) כדי לתאר את כלל השבטים הפראיים שחיו מעבר לנהר הריין. מקור המילה בקרב השבטים הגאלים אינו ברור, אך ייתכן ומשמעותו "שכנים" או "אנשי היער".' },
-                { text: 'דויטשלנד (Deutschland)', color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-500/30', desc: 'זהו השם המקומי. נגזר מהמילה הגרמאנית העתיקה "Diutisc" שמשמעותה "של העם" (בניגוד לשפה הלטינית של האליטה הדתית). "Deutschland" משמעותו פשוט "ארצם של האנשים הפשוטים (הדוברים את שפת העם)".' }
+                { text: { he: 'רומאנוס (Romanus)', en: 'Romanus' }, color: 'text-rose-400', bg: 'bg-rose-400/10', border: 'border-rose-500/30', desc: { he: 'המקור הוא המילה הלטינית "Romanus" שפירושה "רומאי" או "אזרח רומא". תושבי האזור, ילידי פרובינקיית דאקיה הרומית העתיקה שכבש הקיסר טריאנוס, שימרו את זהותם הלטינית ואת שפתם הרומאנית כגאווה לאומית לאורך אלף שנות ימי הביניים מול פלישות מתמידות של שבטים נוודים סלאבים, הונים וגרמאנים.', en: 'The origin is the Latin word "Romanus" meaning "Roman" or "citizen of Rome". The inhabitants of the region, natives of the former ancient Roman province of Dacia conquered by Emperor Trajan, preserved their Latin identity and Romance language as a matter of national pride throughout the thousand years of the Middle Ages against constant invasions by nomadic Slavic, Hunnic, and Germanic tribes.' } },
+                { text: { he: 'סיומת איה (IA)', en: 'Suffix IA' }, color: 'text-indigo-400', bg: 'bg-indigo-400/10', border: 'border-indigo-500/30', desc: { he: 'הסיומת הלטינית/יוונית הקלאסית והנפוצה המציינת אזור גיאוגרפי או "ארץ".', en: 'The common classical Latin/Greek suffix indicating a geographical area or "land".' } }
               ],
-              synthesis: 'מילולית: על פי המקור הלטיני - "ארץ השבטים הגרמאניים". על פי הגרמנית - "הארץ של שפת העם".'
+              synthesis: { he: 'מילולית: "ארצם של הרומאים" (יורשי השפה והזהות הלטינית במזרח אירופה).', en: 'Literally: "Land of the Romans" (the inheritors of Latin language and identity in Eastern Europe).' }
             },
             figure: {
-              name: 'אוטו פון ביסמרק (Otto von Bismarck)',
-              years: '1815 - 1898',
-              childhood: 'נולד באחוזת אצולה בפרוסיה למשפחת אצילים ("יונקרים"). היה סטודנט פרוע ודו-קרבני באוניברסיטה, ובילה את שנותיו הראשונות בניהול האחוזה המשפחתית, לפני שגילה את כישרונו הדיפלומטי האדיר כנציג פרוסיה.',
-              ideology: 'ריאל-פוליטיק (Realpolitik) – פוליטיקה פרגמטית מבוססת על כוח, מציאות ואינטרסים קרים ולא על רגשות או אידאולוגיה. הוא התנגד לליברליזם והאמין שאת אחדות גרמניה אי אפשר להשיג בנאומים ובהחלטות רוב, אלא רק ב"דם וברזל" (Blut und Eisen).',
-              achievements: '"קנצלר הברזל". הגאון הדיפלומטי שאיחד את עשרות הנסיכויות הגרמניות המפוזרות לאימפריה גרמנית אחת וחזקה (הידועה כרייך השני) ב-1871. הוא בנה את מדינת הרווחה המודרנית הראשונה בעולם (כדי לבלום את הסוציאליסטים) ושמר על שלום יחסי באירופה באמצעות רשת בריתות מתוחכמת עד פיטוריו.'
+              name: { he: 'מיכאי האמיץ (Mihai Viteazul)', en: 'Michael the Brave (Mihai Viteazul)' },
+              years: '1558 - 1601',
+              childhood: { 
+                he: 'נולד למשפחת אצולה נמוכה בחבל ולאכיה. בצעירותו בנה את עושרו ואת רשת הקשרים שלו כסוחר סוסים ותכשיטים בין-לאומי מצליח שנדד ברחבי הבלקן והאימפריה העות\'מאנית. מסעותיו אפשרו לו ללמוד שפות רבות ולרכוש הבנה מעמיקה של הפוליטיקה האזורית המורכבת.',
+                en: 'Born to a minor noble family in Wallachia. In his youth, he built his wealth and network as a successful international horse and jewelry merchant traveling across the Balkans and the Ottoman Empire. His travels allowed him to learn multiple languages and acquire a deep understanding of the complex regional politics.'
+              },
+              ideology: { 
+                he: 'עצמאות נוצרית ולאומית, שחרור מוחלט מהיטל המיסים הכבד והמשפיל של השלטון העות\'מאני, ואיחוד כוחות פוליטי וצבאי של הנסיכויות הרומניות כדי לעמוד בפני איומי מעצמות האזור שרצו לבלוע אותן – האימפריה העות\'מאנית, ההבסבורגים והאיחוד הפולני-ליטאי.',
+                en: 'Christian and national independence, complete liberation from the heavy and humiliating tax tribute of Ottoman rule, and political and military unification of the Romanian principalities to withstand the threats of regional powers seeking to absorb them – the Ottoman Empire, the Habsburgs, and the Polish-Lithuanian Commonwealth.'
+              },
+              achievements: { 
+                he: 'נחשב לגיבור לאומי עליון. הוא השליט ההיסטורי הראשון (בשנת 1600) שהצליח במבצע צבאי אדיר לאחד תחת שלטונו האישי את כל שלוש הנסיכויות הרומניות – ולאכיה, מולדביה וטרנסילבניה. למרות שהאיחוד שרד רק זמן קצר מאוד עד להירצחו כתוצאה מבגידה פוליטית, רגע זה הפך למיתוס המכונן ולאידיאל העליון של הלאומיות הרומנית המודרנית.',
+                en: 'Considered a supreme national hero. He is the first historical ruler (in the year 1600) who managed through a massive military operation to unite all three Romanian principalities – Wallachia, Moldavia, and Transylvania – under his personal rule. Although the union lasted only a very short time until his assassination due to political betrayal, this moment became the founding myth and supreme ideal of modern Romanian nationalism.'
+              }
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_germany_hre.jpg?v=2',
-              title: 'האימפריה הרומית הקדושה',
-              desc: 'מפת וינטג\' היסטורית המציגה את מרחב המדינות הגרמניות העתיקות בימי הביניים ובעת החדשה המוקדמת, מנוקדת בערי מדינה, יערות אפלים ומסלולו של נהר הריין.'
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_romania_wallachia.jpg?t=1',
+              title: { he: 'הנסיכויות הרומניות ההיסטוריות', en: 'Historical Romanian Principalities' },
+              desc: { 
+                he: 'מפה קרטוגרפית מרשימה מהמאה ה-18 המציגה את הנסיכויות העתיקות של ולאכיה ומולדביה, תוך פירוט הגיאוגרפיה, תוואי נהר הדנובה והרי הקרפטים, שעיצבו והגנו על גבולותיהן הטבעיים.',
+                en: 'An impressive cartographic map from the 18th century showing the ancient principalities of Wallachia and Moldavia, detailing the geography, the course of the Danube River, and the Carpathian Mountains that shaped and protected their natural borders.'
+              }
             }
           },
           {
-            id: 'austria',
-            name: 'אוסטריה',
-            englishName: 'Austria',
-            officialName: 'רפובליקת אוסטריה',
-            FlagComponent: FlagAustria,
-            areaNum: '~83,871 קמ"ר',
-            populationNum: '~9,100,000',
-            currency: 'אירו (EUR)',
-            area: 'כ-83,871 קמ"ר. מדינה הררית ברובה המוחלט, ללא מוצא לים, הנשלטת על ידי הרי האלפים (המהווים למעלה מ-60% משטחה). העיר וינה יושבת באגן מישורי יותר על גדות נהר הדנובה.',
-            demographics: {
-              mainNationName: 'אוסטרים',
-              mainNationPercent: 'כ-80%',
-              description: 'אומה דוברת גרמנית, אך בניגוד לגרמנים של הצפון, האוסטרים מזוהים באופן היסטורי ומובהק עם הנצרות הקתולית ועם המורשת האימפריאלית ההבסבורגית. ישנם מיעוטים מזרח-אירופאיים משמעותיים, עקב היותה של אוסטריה מרכז אימפריאלי לשעבר.'
+            id: 'bulgaria',
+            name: { he: 'בולגריה', en: 'Bulgaria' },
+            englishName: 'Bulgaria',
+            officialName: { he: 'רפובליקת בולגריה', en: 'Republic of Bulgaria' },
+            flagUrl: 'https://flagcdn.com/w640/bg.webp',
+            capital: {
+              name: { he: "סופיה", en: "Sofia" },
+              englishName: "Sofia",
+              etymology: { 
+                he: "העיר נקראת על שמה של 'כנסיית סופיה הקדושה' (Hagia Sophia) העתיקה השוכנת במרכזה. ביוונית, המילה 'סופיה' (σοφία) משמעותה 'חוכמה', והיא מתייחסת ל'חוכמה הקדושה' של האלוהים במסורת הנוצרית האורתודוקסית. לפני כן, שמה העתיק של העיר היה 'סרדיקה' (Serdica) על שם השבטים התראקים שחיו בה.",
+                en: "The city is named after the ancient 'Saint Sophia Church' (Hagia Sophia) located in its center. In Greek, the word 'sophia' (σοφία) means 'wisdom', referring to the 'Holy Wisdom' of God in the Orthodox Christian tradition. Previously, the ancient name of the city was 'Serdica', named after the Thracian tribes who lived there."
+              },
+              foundingYear: { he: "המאה ה-8 לפנה\"ס (מוזכרת כסופיה במאה ה-14)", en: "8th century BC (Mentioned as Sofia in the 14th century)" },
+              reason: { 
+                he: "סופיה הוקמה בזכות המעיינות התרמיים החמים שמשכו אליהם מתיישבים קדומים (תראקים ורומאים). לאחר שחרור בולגריה מהאימפריה העות'מאנית ב-1878, סופיה נבחרה לבירה בשל מיקומה הגיאוגרפי והאסטרטגי בדיוק במרכז ההיסטורי של חצי האי הבלקני. היא היוותה צומת דרכים מסחרי המחבר את מערב אירופה עם איסטנבול והמזרח התיכון.",
+                en: "Sofia was founded thanks to the hot thermal springs that attracted ancient settlers (Thracians and Romans). After Bulgaria's liberation from the Ottoman Empire in 1878, Sofia was chosen as the capital due to its geographical and strategic location exactly in the historical center of the Balkan Peninsula. It served as a commercial crossroads connecting Western Europe with Istanbul and the Middle East."
+              }
             },
-            modernHistory: 'הייתה מרכז הכוח של בית הבסבורג ששלט בחצי מאירופה במשך מאות שנים. לאחר מלחמת העולם הראשונה, התרסקה האימפריה האוסטרו-הונגרית ואוסטריה הפכה לרפובליקה קטנה. ב-1938 סופחה לגרמניה הנאצית (ה"אנשלוס"). לאחר המלחמה חולקה על ידי בעלות הברית, וב-1955 קיבלה עצמאות מחודשת בתמורה להתחייבות חוקתית לניטרליות מוחלטת (בדומה לשווייץ).',
-            foundingYears: '976 (מרקיזות) | 1955 (אמנת המדינה)',
-            flagSymbolism: 'אחד הדגלים הלאומיים העתיקים בעולם. האגדה מספרת שלאחר המצור על עכו (1191) במסע הצלב השלישי, הטוניקה הלבנה של הדוכס ליאופולד החמישי הייתה ספוגה כולה בדם אויביו. כשהסיר את חגורתו, נותר פס לבן וטהור במרכז החולצה האדומה – מראה שהפך לסמל שושלתו ולדגלה של אוסטריה.',
+            areaNum: { he: '~110,994 קמ"ר', en: '~110,994 sq km' },
+            populationNum: '~6,400,000',
+            currency: { he: 'לב בולגרי (BGN)', en: 'Bulgarian Lev (BGN)' },
+            area: { 
+              he: 'כ-110,994 קמ"ר. המדינה ממוקמת במזרח הבלקן. הגיאוגרפיה שלה נחצית לרוחבה (ממערב למזרח) על ידי שרשרת הרי הבלקן התלולים. בצפונה היא גובלת בנהר הדנובה (הגבול עם רומניה), בדרום מתנשאים רכסי הרי הרודופי, ובמזרח ישנה רצועת חוף יפהפייה ותיירותית לאורך הים השחור.',
+              en: 'Approx. 110,994 sq km. The country is located in the eastern Balkans. Its geography is crossed horizontally (from west to east) by the steep Balkan Mountains range. In the north it borders the Danube River (the border with Romania), in the south the Rhodope Mountains rise, and in the east there is a beautiful, touristic coastline along the Black Sea.'
+            },
+            demographics: {
+              mainNationName: { he: 'בולגרים', en: 'Bulgarians' },
+              mainNationPercent: { he: 'כ-84%', en: '~84%' },
+              description: { 
+                he: 'אומה סלאבית-אורתודוקסית גאה בעלת זהות תרבותית, נוצרית ושפתית עתיקה ועמוקה, שהשפיעה על כל המרחב הסלאבי. קיים במדינה מיעוט טורקי-מוסלמי משמעותי מאוד (כ-8%), שהוא שריד דמוגרפי למאות שנות שלטון עות\'מאני באזור, וכן אוכלוסייה של בני רומה (צוענים).',
+                en: 'A proud Slavic-Orthodox nation with an ancient and deep cultural, Christian, and linguistic identity that influenced the entire Slavic sphere. There is a very significant Turkish-Muslim minority (~8%) in the country, a demographic remnant of centuries of Ottoman rule in the region, as well as a Roma population.'
+              }
+            },
+            modernHistory: { 
+              he: 'בולגריה הייתה מעצמה אזורית צבאית (אימפריה) אדירה בימי הביניים שהתחרתה ישירות בביזנטיון. לאחר קריסתה, סבלה כמעט 500 שנות כיבוש עות\'מאני נוקשה. היא שוחררה סופית ב-1878 בעקבות מלחמת רוסיה-טורקיה (ותמיכה לאומית מבפנים). היא כונתה "הפרוסיה של הבלקן" בשל צבאה החזק בתחילת המאה ה-20 (במלחמות הבלקן). לאחר מלחמת העולם השנייה, חוותה עשרות שנות דיקטטורה קומוניסטית ארוכה, וכיום היא דמוקרטיה החברה באיחוד האירופי.',
+              en: 'Bulgaria was a mighty regional military power (empire) in the Middle Ages that competed directly with Byzantium. After its collapse, it suffered nearly 500 years of harsh Ottoman occupation. It was finally liberated in 1878 following the Russo-Turkish War (and internal national support). It was dubbed the "Prussia of the Balkans" due to its strong army in the early 20th century (Balkan Wars). After WWII, it experienced decades of a long communist dictatorship, and today is a democracy within the EU.'
+            },
+            foundingYears: { he: '681 (האימפריה הראשונה) | 1878 (עצמאות מודרנית)', en: '681 (First Empire) | 1878 (Modern Independence)' },
+            flagSymbolism: { 
+              he: 'דגל טריקולור אופקי. הפס הלבן (למעלה) מסמל את הרוחניות, השלום והאהבה לחירות; הפס הירוק (במרכז) מסמל את עושרו של הטבע הבולגרי, את היערות ואת פוריות האדמה והחקלאות של המדינה; והפס האדום (למטה) מסמל את מאבק העם ההיסטורי לחירות ואת הדם של גיבורי המדינה שנפלו למענה.',
+              en: 'A horizontal tricolor flag. The white stripe (top) symbolizes spirituality, peace, and love of liberty; the green stripe (middle) symbolizes the wealth of Bulgarian nature, its forests, and the fertility of the country\'s soil and agriculture; and the red stripe (bottom) symbolizes the historical struggle of the people for freedom and the blood of the state heroes who fell for it.'
+            },
+            nationalAnimal: {
+              name: { he: "אריה (Lion)", en: "Lion" },
+              reason: { 
+                he: "האריה נחשב לסמל הלאומי הבלתי מעורער של בולגריה מזה מאות שנים. הוא מופיע במרכז שלט האצולה הלאומי כשהוא עומד על רגליו האחוריות ועוטה כתר זהב. האריה מסמל אומץ לב, גבורה עילאית, ואת רוח הלחימה והמרד ההירואית של הבולגרים במאבקם להשגת עצמאות לאחר 500 שנות שליטה עות'מאנית. המטבע הלאומי 'לב' (Lev) קרוי אף הוא על שם האריה.",
+                en: "The Lion has been the undisputed national symbol of Bulgaria for centuries. It appears in the center of the national coat of arms standing rampant on its hind legs wearing a golden crown. The lion symbolizes bravery, supreme valor, and the heroic fighting and rebellious spirit of the Bulgarians in their struggle to achieve independence after 500 years of Ottoman rule. The national currency 'Lev' is also named after the lion."
+              }
+            },
             etymology: {
               parts: [
-                { text: 'אוסטאריחי (Ostarrihhi)', color: 'text-rose-400', bg: 'bg-rose-400/10', border: 'border-rose-500/30', desc: 'המסמך העתיק ביותר שמזכיר את השם (משנת 996) מכנה את האזור בגרמנית עליונה עתיקה "Ostarrîchi". המילה מורכבת מ-"Ostar" (מזרח) ו-"Rîchi" (ממלכה או תחום שליטה).' },
-                { text: 'תרגום לטיני (Austria)', color: 'text-stone-400', bg: 'bg-stone-400/10', border: 'border-stone-500/30', desc: 'כשהשם תורגם ללטינית בימי הביניים, הוא הפך ל"אוסטריה". באופן אירוני, למרות שבלטינית "Auster" פירושו דרום, השם השתרש כתרגום לממלכה המזרחית, שכן היא היוותה את ספר-הגבול המזרחי של האימפריה הפרנקית.' }
+                { text: { he: 'בולגאר (Bulgar)', en: 'Bulgar' }, color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-500/30', desc: { he: 'השם מגיע משבטי ה"בולגארים" הקדומים – עם נוודי ולוחם ממוצא טורקי שפלש לאזור הבלקן ממרכז אסיה. מקור השם נגזר מהפועל הטורקי העתיק "bulğa" שפירושו "לערבב", "למרוד" או "לעורר מהומה". בולגאר משמעותו "המעורבים" (כלומר שילוב כוחות של מספר שבטים שונים) או פשוט "המורדים". השבטים הטורקיים הקדומים נטמעו לחלוטין באוכלוסייה הסלאבית המקומית, אך הותירו לה את שמם לתמיד.', en: 'The name comes from the ancient "Bulgar" tribes – a nomadic warrior people of Turkic origin who invaded the Balkan region from Central Asia. The name is derived from the Old Turkic verb "bulğa" meaning "to mix", "to rebel", or "to cause a commotion". Bulgar means "the mixed ones" (i.e., a coalition of various tribes) or simply "the rebels". The ancient Turkic tribes completely assimilated into the local Slavic population but left them their name forever.' } },
+                { text: { he: 'סיומת איה (IA)', en: 'Suffix IA' }, color: 'text-indigo-400', bg: 'bg-indigo-400/10', border: 'border-indigo-500/30', desc: { he: 'הסיומת הלטינית/היוונית המציינת טריטוריה או ארץ.', en: 'The Latin/Greek suffix indicating a territory or land.' } }
               ],
-              synthesis: 'מילולית: המקור הגרמני המקומי (Österreich) משמעותו "ממלכת המזרח".'
+              synthesis: { he: 'מילולית: "ארץ השבטים המעורבים" או "ארץ המורדים (מערבבי המהומות)".', en: 'Literally: "Land of the mixed tribes" or "Land of the rebels (commotion mixers)".' }
             },
             figure: {
-              name: 'מריה תרזה (Maria Theresa)',
-              years: '1717 - 1780',
-              childhood: 'הבת הבכורה של הקיסר קרל השישי. למרות שיועדה רק להיות רעיית-קיסר, אביה שינה את החוק כדי שתוכל לרשת את כס המלכות. עם מותו, כשהיא בת 23 בלבד והרתה, מצאה את עצמה מותקפת מכל עבר על ידי מנהיגי אירופה שניסו לקרוע נתחים מהאימפריה.',
-              ideology: 'אבסולוטיזם נאור, אדיקות קתולית, וריכוזיות. מריה תרזה לא הייתה פמיניסטית או ליברלית, אך היא הבינה שכדי שהאימפריה תשרוד, עליה להיות יעילה. היא קידמה רפורמות אדירות בבריאות, בחינוך (חינוך חובה) ובצבא, ומרכזה את השלטון בווינה.',
-              achievements: 'השליטה היחידה בתולדות שושלת הבסבורג. למרות שירשה צבא חלש ואוצר מרוקן, היא חילצה את האימפריה מקריסה, הובילה אותה לשיא תפארתה, הרחיבה את החינוך הציבורי, וזכתה לכינוי "אם האימפריה" (בין היתר בזכות 16 הילדים שילדה, ביניהם מארי אנטואנט אשת מלך צרפת).'
+              name: { he: 'הצאר סימאון הראשון ("הגדול")', en: 'Tsar Simeon I ("The Great")' },
+              years: '864 - 927',
+              childhood: { 
+                he: 'היה בנו השלישי של הצאר בוריס הראשון (שקיבל לראשונה את הנצרות לבולגריה). הוא לא יועד למלוכה, ולכן נשלח בצעירותו ללמוד כמלומד וכנזיר באקדמיית המגנאורה היוקרתית בקונסטנטינופול, הבירת הביזנטית. שם ספג השכלה פילוסופית, תיאולוגיה ותרבות יוונית, אך במקביל פיתח גם הבנה פוליטית שאפתנית להחליף את האימפריה הביזנטית בעצמה.',
+                en: 'He was the third son of Tsar Boris I (who first accepted Christianity for Bulgaria). He was not destined for the throne, so in his youth he was sent to study as a scholar and monk at the prestigious Magnaura academy in Constantinople, the Byzantine capital. There he absorbed philosophical education, theology, and Greek culture, while simultaneously developing an ambitious political understanding to replace the Byzantine Empire itself.'
+              },
+              ideology: { 
+                he: 'אימפריאליזם סלאבי-אורתודוקסי דתי, תחרות פוליטית וצבאית חזיתית מול ביזנטיון על השליטה בבלקן, וביסוס בולגריה העוצמתית כמרכז התרבותי, הדתי והרוחני העליון של כלל העולם הסלאבי (מעין בניית "רומא/קונסטנטינופול חדשה" במזרח אירופה).',
+                en: 'Religious Slavic-Orthodox imperialism, frontal political and military competition against Byzantium for control of the Balkans, and establishing powerful Bulgaria as the supreme cultural, religious, and spiritual center of the entire Slavic world (a sort of building a "New Rome/Constantinople" in Eastern Europe).'
+              },
+              achievements: { 
+                he: 'הביא את האימפריה הבולגרית הראשונה לשיא התפשטותה הטריטוריאלית והצבאית. תקופת שלטונו מכונה באופן רשמי כ-"תור הזהב של התרבות הבולגרית" – תחת חסותו הישירה פותח הכתב הקירילי באקדמיות בולגריות (הכתב שמשמש כיום את רוסיה ורוב העולם הסלאבי), והספרות, החינוך והאדריכלות הבולגרית פרחו לממדים היסטוריים.',
+                en: 'Brought the First Bulgarian Empire to the peak of its territorial and military expansion. His reign is officially termed the "Golden Age of Bulgarian Culture" – under his direct patronage, the Cyrillic script was developed in Bulgarian academies (the script used today by Russia and most of the Slavic world), and Bulgarian literature, education, and architecture flourished to historical proportions.'
+              }
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_austria_habsburg.jpg?v=2',
-              title: 'מפת ממלכת ההבסבורגים',
-              desc: 'מפה עתיקה המציגה את מרחב השליטה העצום של האימפריה האוסטרית בלב אירופה, עם התמקדות בווינה כבירת התרבות והאלפים האוסטריים המשוננים.'
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_bulgaria_empire.jpg?t=1',
+              title: { he: 'האימפריה הבולגרית הראשונה', en: 'The First Bulgarian Empire' },
+              desc: { 
+                he: 'מפת וינטג\' קלאסית המציגה את שיא התפשטותה הטריטוריאלית של האימפריה הבולגרית הראשונה בימי הביניים, החולשת על רוב שטחו של חצי האי הבלקני ומתחרה חזיתית על ההגמוניה מול האימפריה הביזנטית הגדולה.',
+                en: 'A classic vintage map showing the peak territorial expansion of the First Bulgarian Empire in the Middle Ages, dominating most of the Balkan Peninsula and directly competing for hegemony against the great Byzantine Empire.'
+              }
             }
           },
           {
-            id: 'switzerland',
-            name: 'שווייץ',
-            englishName: 'Switzerland',
-            officialName: 'הקונפדרציה השווייצרית',
-            FlagComponent: FlagSwitzerland,
-            areaNum: '~41,285 קמ"ר',
-            populationNum: '~8,800,000',
-            currency: 'פרנק שווייצרי (CHF)',
-            area: 'כ-41,285 קמ"ר. ממוקמת בלב הגיאוגרפי וההררי של אירופה. כ-60% משטחה מכוסה על ידי הרי האלפים האדירים, ובנוסף הרי היורה בצפון-מערב. בין הרכסים שוכנת "רמת שווייץ" ובה אגמים צלולים רבים (כמו אגם ז\'נבה).' ,
-            demographics: {
-              mainNationName: 'שווייצרים',
-              mainNationPercent: 'אין "רוב אתני" אחיד',
-              description: 'אומה מיוחדת במינה באירופה. אינה מבוססת על שפה אחידה או דת אחידה (האזרחים נחלקים שווה בשווה בין קתולים לפרוטסטנטים), אלא על רצון פוליטי משותף. ישנן 4 שפות רשמיות: גרמנית-שווייצרית (כ-62%), צרפתית (22%), איטלקית (8%) ורומאנש (פחות מ-1%). כ-25% מאוכלוסיית המדינה הם תושבים זרים.'
+            id: 'greece',
+            name: { he: 'יוון', en: 'Greece' },
+            englishName: 'Greece',
+            officialName: { he: 'הרפובליקה ההלנית', en: 'Hellenic Republic' },
+            flagUrl: 'https://flagcdn.com/w640/gr.webp',
+            capital: {
+              name: { he: "אתונא", en: "Athens" },
+              englishName: "Athens",
+              etymology: { 
+                he: "על פי המיתולוגיה היוונית, העיר נקראת על שמה של אתנה (Athena), אלת החוכמה, האסטרטגיה והצדק. האגדה מספרת שאתנה התחרתה מול פוסידון (אל הים) על החסות לעיר. פוסידון הכה בקלשונו והעניק מעיין מים מלוחים, בעוד אתנה שתלה את עץ הזית הראשון שסיפק לעיר מזון, שמן ועץ. האזרחים בחרו במתנתה והעיר נקראה על שמה.",
+                en: "According to Greek mythology, the city is named after Athena, the goddess of wisdom, strategy, and justice. Legend says Athena competed against Poseidon (god of the sea) for patronage of the city. Poseidon struck with his trident and provided a saltwater spring, while Athena planted the first olive tree, providing the city with food, oil, and wood. The citizens chose her gift and named the city after her."
+              },
+              foundingYear: { he: "כ-3000 לפנה\"ס (מהערים העתיקות בעולם)", en: "c. 3000 BC (One of the oldest cities in the world)" },
+              reason: { 
+                he: "אתונא התפתחה סביב האקרופוליס (העיר העליונה), גבעה מבוצרת טבעית שסיפקה הגנה מעולה. בעת העתיקה היא הפכה לערש התרבות המערבית והדמוקרטיה, ולמרכז פילוסופי ותרבותי אדיר. לאחר מלחמת העצמאות של יוון במאה ה-19, נבחרה אתונא (שהייתה אז כפר קטן ושולי) כבירת המדינה המודרנית בשנת 1834, בראש ובראשונה כדי להדגיש את החיבור הרוחני, הלאומי וההיסטורי למורשת יוון העתיקה והמפוארת.",
+                en: "Athens developed around the Acropolis (high city), a naturally fortified hill providing excellent defense. In antiquity, it became the cradle of Western civilization and democracy, and a massive philosophical and cultural center. Following the Greek War of Independence in the 19th century, Athens (then a small, marginal village) was chosen as the modern state's capital in 1834, primarily to emphasize the spiritual, national, and historical connection to the glorious heritage of Ancient Greece."
+              }
             },
-            modernHistory: 'שווייץ החלה כברית של שלושה קנטונים קטנים (1291) שהתאגדו כדי להגן על עצמם בהרים. מאז תבוסתה ב-1515, היא מנהיגה מדיניות ברזל של ניטרליות צבאית מוחלטת. היא לא לקחה חלק באף אחת ממלחמות העולם, מה שאיפשר לה להפוך למעצמה כלכלית, בנקאית והומניטרית, ולמקום מושבם של מוסדות בינלאומיים (הצלב האדום).',
-            foundingYears: '1291 (הקונפדרציה הישנה) | 1848 (חוקה)',
-            flagSymbolism: 'אחד משני הדגלים הריבועיים היחידים בעולם (יחד עם הוותיקן). הצלב הלבן על רקע אדום אומץ על ידי חיילי הקונפדרציה בימי הביניים כדי לזהות איש את רעהו בשדה הקרב. הצלב מסמל את הנצרות, ואת החופש, השלום, והכבוד הניטרלי שאפיינו את השווייצרים לאורך ההיסטוריה. (היפוך צבעיו יצר את סמל "הצלב האדום").',
+            areaNum: { he: '~131,957 קמ"ר', en: '~131,957 sq km' },
+            populationNum: '~10,300,000',
+            currency: { he: 'אירו (EUR)', en: 'Euro (EUR)' },
+            area: { 
+              he: 'כ-131,957 קמ"ר. מדינה ייחודית גיאוגרפית בקצה הדרומי של הבלקן, בעלת קו החוף הארוך ביותר באגן הים התיכון. היא מורכבת מחצי אי יבשתי הררי ומבותר (כ-80% מהשטח הררי), ומהווה ריבוי עצום של למעלה מ-2,000 איים (שרק כ-220 מהם מיושבים) הפזורים בים האגאי ובים היוני סביבה.',
+              en: 'Approx. 131,957 sq km. A geographically unique country at the southern tip of the Balkans, possessing the longest coastline in the Mediterranean basin. It consists of a mountainous and rugged mainland peninsula (about 80% is mountainous), and an enormous multitude of over 2,000 islands (only about 220 of which are inhabited) scattered in the Aegean and Ionian Seas surrounding it.'
+            },
+            demographics: {
+              mainNationName: { he: 'יוונים (הלנים)', en: 'Greeks (Hellenes)' },
+              mainNationPercent: { he: 'מעל 90%', en: 'Over 90%' },
+              description: { 
+                he: 'אוכלוסייה לאומית הומוגנית מאוד המזהה עצמה ברובה המוחלט מבחינה דתית עם הכנסייה האורתודוקסית-היוונית, אשר מוגדרת כ"דת השלטת" בחוקה ולה תפקיד לאומי עמוק. הלאומיות והזהות היוונית המודרנית מתגאה מאוד ברצף תרבותי, שפתי והיסטורי מתמשך החל מהעת העתיקה ועד ימינו.',
+                en: 'A highly homogeneous national population that identifies overwhelmingly in terms of religion with the Greek Orthodox Church, which is defined as the "prevailing religion" in the constitution and plays a deep national role. Modern Greek nationalism and identity take great pride in a continuous cultural, linguistic, and historical continuum from antiquity to the present day.'
+              }
+            },
+            modernHistory: { 
+              he: 'יוון נחשבת לערש התרבות המערבית והדמוקרטיה בעת העתיקה. במאה ה-15 המדינה נכבשה על ידי האימפריה העות\'מאנית וחוותה תקופת שקיעה ארוכה. בשנת 1821 פתחו היוונים במלחמת עצמאות לאומית מפוארת וקשה, שזכתה לאהדתן ולתמיכתן של מעצמות אירופה הליברליות, עד להקמת המדינה המודרנית ב-1830. בהמשך המדינה עברה תהפוכות, מלחמות עולם הרסניות ומלחמת אזרחים. כיום היא דמוקרטיה יציבה ומהווה יעד תיירותי בינלאומי מרכזי כחלק מהאיחוד האירופי.',
+              en: 'Greece is considered the cradle of Western civilization and democracy in antiquity. In the 15th century, the country was conquered by the Ottoman Empire, experiencing a long period of decline. In 1821, the Greeks launched a glorious and difficult national war of independence, which gained the sympathy and support of liberal European powers, culminating in the founding of the modern state in 1830. Subsequently, the country went through upheavals, devastating world wars, and a civil war. Today, it is a stable democracy and a major international tourist destination as part of the EU.'
+            },
+            foundingYears: { he: '1821 (תחילת מלחמת העצמאות) | 1830 (הכרה)', en: '1821 (War of Independence begins) | 1830 (Recognition)' },
+            flagSymbolism: { 
+              he: 'הקנטון (הפינה השמאלית העליונה) מכיל צלב לבן על רקע כחול, המייצג את ההוקרה לדת הנצרות האורתודוקסית היוונית. הדגל כולו מכיל תשעה פסים אופקיים של כחול ולבן. פסים אלו מסמלים את תשע ההברות של המוטו הלאומי ההיסטורי ביוונית: "אֶלֶפְתֶרִיאָה אִי תַנָאטוֹס" (Eleftheria i thanatos) - שמשמעותו "חירות או מוות". הצבעים הכחול והלבן מסמלים את צבעי השמיים היווניים ואת הקצף הלבן של גלי הים האגאי העמוקים.',
+              en: 'The canton (upper left corner) contains a white cross on a blue background, representing reverence for the Greek Orthodox Christian religion. The entire flag consists of nine horizontal stripes of blue and white. These stripes symbolize the nine syllables of the historical national motto in Greek: "Eleftheria i thanatos" - meaning "Freedom or Death". The blue and white colors symbolize the colors of the Greek sky and the white foam of the deep Aegean Sea waves.'
+            },
+            nationalAnimal: {
+              name: { he: "דולפין מצוי (Dolphin)", en: "Dolphin" },
+              reason: { 
+                he: "הדולפין הוא חיה ימית אינטליגנטית ושובבה, המהווה סמל יווני עתיק עוד מימי המינואים ואתונה הקדומה. במיתולוגיה היוונית, הדולפין היה חיה קדושה לאפולו (אל השמש) ולפוסידון (אל הים), ונחשב לידיד האדם שהציל מלחים מטביעה. הבחירה בדולפין מסמלת את האוריינטציה הימית המוחלטת של העם היווני (אומת איים ומלחים), את החופש בים הפתוח, חוכמה, והרמוניה עם הים התיכון.",
+                en: "The dolphin is an intelligent and playful marine animal, serving as an ancient Greek symbol dating back to the Minoans and ancient Athens. In Greek mythology, the dolphin was a sacred animal to Apollo (god of the sun) and Poseidon (god of the sea), and was considered a friend to mankind who saved drowning sailors. The choice of the dolphin symbolizes the absolute maritime orientation of the Greek people (a nation of islands and sailors), freedom in the open sea, wisdom, and harmony with the Mediterranean."
+              }
+            },
             etymology: {
               parts: [
-                { text: 'שווִיץ (Schwyz)', color: 'text-red-400', bg: 'bg-red-400/10', border: 'border-red-500/30', desc: 'המדינה קרויה על שם אחד משלושת הקנטונים (המחוזות) המייסדים של ברית הקונפדרציה הראשונה ב-1291 – קנטון שוויץ.' },
-                { text: 'שורש הצתה (Suedan)', color: 'text-stone-300', bg: 'bg-stone-300/10', border: 'border-stone-500/30', desc: 'שמו של קנטון "שוויץ" נגזר מהפועל הגרמאני העתיק "Suedan", שפירושו "לשרוף" או "לברא יער". תושבי האלפים הראשונים נאלצו לשרוף חורשות עבותות כדי לפנות מקום להתיישבות ולחקלאות בעמקי ההרים.' },
-                { text: 'קונפדרציו הלווטיקה (CH)', color: 'text-emerald-400', bg: 'bg-emerald-400/10', border: 'border-emerald-500/30', desc: 'השם הרשמי בלטינית (Confoederatio Helvetica - מכאן הסיומת .ch באינטרנט) נועד לא להעדיף אף אחת מהשפות הרשמיות. הוא נקרא על שם ה"הלווטים", שבט קלטי קדום שחי באזור לפני הכיבוש הרומי.' }
+                { text: { he: 'גראיקיה (Graecia / Greece)', en: 'Graecia / Greece' }, color: 'text-cyan-400', bg: 'bg-cyan-400/10', border: 'border-cyan-500/30', desc: { he: 'השם המערבי הלועזי "יוון/Greece" הוענק לאזור על ידי הרומאים. הוא נגזר משמו של אחד השבטים היוונים העתיקים ביותר שחיו באפירוס (צפון מערב יוון המודרנית) – ה"גראיקי" (Graeci). מכיוון שהרומאים פגשו אותם תחילה מעבר לים, הם השתמשו והכלילו את שמם כדי לקרוא לכלל תושבי חצי האי והאזור על שמם.', en: 'The Western foreign name "Greece" was bestowed upon the region by the Romans. It is derived from the name of one of the most ancient Greek tribes living in Epirus (northwestern modern Greece) – the "Graeci". Because the Romans encountered them first across the sea, they generalized and used their name to refer to all inhabitants of the peninsula and region.' } },
+                { text: { he: 'הלס (Hellas / Elláda)', en: 'Hellas / Elláda' }, color: 'text-blue-400', bg: 'bg-blue-400/10', border: 'border-blue-500/30', desc: { he: 'זהו השם הפנימי שבו היוונים קוראים לארצם. במיתולוגיה היוונית הקלאסית, "הלן" (Hellen) היה בנם של דאוקליון ופירה (שהיו ניצולי המבול המיתולוגי הגדול). הוא נחשב לאב הקדמון המיתולוגי של כלל השבטים היוונים, ולכן צאצאיו הם ה"הלנים" וארצם נקראת "הלס".', en: 'This is the internal name by which Greeks call their country. In classical Greek mythology, "Hellen" was the son of Deucalion and Pyrrha (who were the survivors of the great mythological flood). He is considered the mythological patriarch of all Greek tribes, hence his descendants are the "Hellenes" and their land is called "Hellas".' } }
               ],
-              synthesis: 'מילולית: "הארץ של קנטון שוויץ (ארץ יערות-הברא)".'
+              synthesis: { he: 'מילולית: השם הלועזי – "ארצם של שבט הגראיקי". השם המקומי (הלס) – "ארצו המשותפת של הלן (האב הקדמון)".', en: 'Literally: The foreign name – "Land of the Graeci tribe". The local name (Hellas) – "The shared land of Hellen (the patriarch)".' }
             },
             figure: {
-              name: 'הגנרל אנרי גיזאן (Henri Guisan)',
-              years: '1874 - 1960',
-              childhood: 'נולד בקנטון ווֹ (Vaud) דובר הצרפתית במערב שווייץ. למד חקלאות, אך התאהב באמנות הצבאית והתגייס לצבא המיליציה השווייצרי, שם התקדם בדרגות בזכות כריזמה כובשת ומקצועיות.',
-              ideology: 'ניטרליות חמושה עד שיניים ("הקיפוד השווייצרי"). גיזאן האמין שניטרליות אינה כניעה. כשכל המדינות סביב שווייץ נפלו לידי הנאצים, הוא הכריז ששווייץ תילחם עד הכדור האחרון ולעולם לא תיכנע, גם אם תכותר לחלוטין.',
-              achievements: 'המפקד העליון של צבא שווייץ במלחמת העולם השנייה. הוא הגה את "האסטרטגיה של הרדואיט" (המבצר האלפיני): תכנית לפיה במקרה של פלישה גרמנית, הצבא ייסוג מיד להרי האלפים, יפוצץ את המנהרות והגשרים (שהם קריטיים לסחר הנאצי עם איטליה), וינהל מלחמת גרילה שבה לטנקים הגרמנים לא יהיה יתרון. בזכות תכנית אמיצה זו (שנתמכה ברוח לחימה שהחדיר בעם בנאומו המפורסם באחו הרִיטְלִי), היטלר נרתע מלפלוש לשווייץ.'
+              name: { he: 'אלפתריוס וניזלוס (Eleftherios Venizelos)', en: 'Eleftherios Venizelos' },
+              years: '1864 - 1936',
+              childhood: { 
+                he: 'נולד באי כרתים בזמן שהאי היה עדיין תחת שלטון עות\'מאני, למשפחה שהייתה מעורבת אקטיבית במרידות נגד השלטון. בגלל המרידות משפחתו גלתה ליוון. הוא נשלח ללמוד משפטים באתונה ובאירופה, הפך לעורך דין מבריק, וחזר לכרתים כדי להנהיג פוליטית את המאבק הלאומי לאיחוד האי ("אנוסיס") עם מדינת האם יוון.',
+                en: 'Born on the island of Crete while it was still under Ottoman rule, to a family actively involved in rebellions against the regime. Due to the rebellions, his family was exiled to Greece. He was sent to study law in Athens and Europe, became a brilliant lawyer, and returned to Crete to politically lead the national struggle for the island\'s union ("Enosis") with the motherland Greece.'
+              },
+              ideology: { 
+                he: 'ההוגה המעשי של רעיון "יוון הגדולה" (Megali Idea) – החזון האירידנטי הלאומי לאחד את כל השטחים ההיסטוריים בבלקן ובחופי אסיה הקטנה שבהם חיו אוכלוסיות יווניות לתוך מדינת לאום יוונית אחת חזקה. הוא קידם מודרניזציה ליברלית חסרת פשרות, רפורמות חוקתיות וכלכליות, ומדיניות חוץ פרו-בריטית/צרפתית אקטיבית.',
+                en: 'The practical visionary of the "Megali Idea" (Great Idea) – the irredentist national vision to unite all historical territories in the Balkans and the coasts of Asia Minor inhabited by Greek populations into a single, strong Greek nation-state. He promoted uncompromising liberal modernization, constitutional and economic reforms, and an active pro-British/French foreign policy.'
+              },
+              achievements: { 
+                he: 'נחשב למדינאי ולפוליטיקאי החשוב ביותר בתולדות יוון המודרנית. כיהן כראש ממשלה מספר פעמים בתקופות משבר. באמצעות מלחמות הבלקן והדיפלומטיה המבריקה שלו בזמן ולאחר מלחמת העולם הראשונה, הוא הכפיל את שטחה הגיאוגרפי ואת אוכלוסייתה של יוון, ויזם רפורמות עומק מהותיות בחוקה, בחינוך ובחברה היוונית.',
+                en: 'Considered the most important statesman and politician in the history of modern Greece. Served as Prime Minister several times during crisis periods. Through the Balkan Wars and his brilliant diplomacy during and after WWI, he doubled the geographical territory and population of Greece, and initiated profound fundamental reforms in the constitution, education, and Greek society.'
+              }
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_switzerland_cantons.jpg?v=2',
-              title: 'מפת הקונפדרציה האלפינית',
-              desc: 'מפת קרטוגרפיה של שווייץ העתיקה, המציגה את החלוקה ההיסטורית לקנטונים מוקפים בטופוגרפיה מושלגת תלולה ובלתי עבירה של הרי האלפים.'
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_greece_megali.jpg?t=1',
+              title: { he: 'מפת חזון "יוון הגדולה"', en: 'Map of the "Megali Idea" Vision' },
+              desc: { 
+                he: 'מפה היסטורית מהמאה ה-19 המתארת את חצי האי הבלקני ואת אגן הים האגאי כולו. המפה משקפת את האוריינטציה הימית העתיקה של יוון ומתארת את השפעתה הגיאוגרפית והתרבותית הרחבה סביב האגן הים-תיכוני.',
+                en: 'A historical map from the 19th century depicting the Balkan Peninsula and the entire Aegean Sea basin. The map reflects Greece\'s ancient maritime orientation and illustrates its broad geographical and cultural influence around the Mediterranean basin.'
+              }
             }
           },
           {
-            id: 'liechtenstein',
-            name: 'ליכטנשטיין',
-            englishName: 'Liechtenstein',
-            officialName: 'נסיכות ליכטנשטיין',
-            FlagComponent: FlagLiechtenstein,
-            areaNum: '~160 קמ"ר',
-            populationNum: '~39,000',
-            currency: 'פרנק שווייצרי (CHF)',
-            area: 'כ-160 קמ"ר. מדינה זעירה ביותר (השישית בקוטנה בעולם) הכלואה בין שווייץ לאוסטריה. היא "כפולה ללא מוצא לים" (כלומר, כל המדינות המקיפות אותה חסרות מוצא לים בעצמן). חלקה המערבי יושב בעמק נהר הריין, וחלקה המזרחי מטפס גבוה אל תוך הרי האלפים.',
-            demographics: {
-              mainNationName: 'ליכטנשטיינים',
-              mainNationPercent: 'כ-66%',
-              description: 'האוכלוסייה קטנה ומורכבת ברובה המכריע מנוצרים קתולים הדוברים ניב אלמני של השפה הגרמנית. למעלה משליש מתושבי המדינה הם זרים (בעיקר אוסטרים, שווייצרים וגרמנים) העובדים במגזר הפיננסי העשיר שלה.'
+            id: 'albania',
+            name: { he: 'אלבניה', en: 'Albania' },
+            englishName: 'Albania',
+            officialName: { he: 'רפובליקת אלבניה', en: 'Republic of Albania' },
+            flagUrl: 'https://flagcdn.com/w640/al.webp',
+            capital: {
+              name: { he: "טירנה", en: "Tirana" },
+              englishName: "Tirana",
+              etymology: { 
+                he: "מקור השם טירנה אינו מוחלט ומוסכם. סברה אחת קושרת אותו לטירת 'טירקאן' (Tirkan) העתיקה המוזכרת בכתבים מוקדמים. סברה אחרת מקשרת אותו למילה היוונית 'תראנדה' (Theranda). אגדה אורבנית מקומית ומאוחרת (אך כנראה שגויה) טוענת שהמייסד העות'מאני קרא לעיר על שם העיר טהראן כדי לציין ניצחון פרסי.",
+                en: "The origin of the name Tirana is not definitively agreed upon. One theory links it to the ancient castle of 'Tirkan' mentioned in early writings. Another theory connects it to the Greek word 'Theranda'. A local, later urban legend (though likely incorrect) claims the Ottoman founder named the city after Tehran to commemorate a Persian victory."
+              },
+              foundingYear: { he: "1614 (כיישוב מודרני מוסדר)", en: "1614 (As a formal modern settlement)" },
+              reason: { 
+                he: "העיר המודרנית הוקמה על ידי סולימאן פאשה האציל, שבנה בה מסגד, שוק מרכזי ומרחץ ציבורי כדי לעודד מסחר. לאחר הכרזת העצמאות, בקונגרס הלאומי בעיר לושניה (Lushnjë) בשנת 1920, הוחלט לבחור בטירנה כבירת אלבניה החופשית. הסיבה הייתה גיאוגרפית לחלוטין: היא ממוקמת בדיוק במרכז הארץ ומהווה נקודת מפגש וגשר נייטרלי בין תושבי הצפון (ה'גגים') לתושבי הדרום (ה'טוסקים').",
+                en: "The modern city was founded by the noble Sulejman Pasha, who built a mosque, a central market, and a public bath to encourage trade. After the declaration of independence, at the National Congress of Lushnjë in 1920, it was decided to choose Tirana as the capital of free Albania. The reason was entirely geographical: it is located exactly in the center of the country and serves as a meeting point and a neutral bridge between the northerners (Ghegs) and the southerners (Tosks)."
+              }
             },
-            modernHistory: 'הוקמה כנסיכות באימפריה הרומית הקדושה. באופן מדהים, שרדה את מלחמות נפוליאון, פירוק האימפריה הגרמנית, ואת שתי מלחמות העולם מבלי להיבלע על ידי שכנותיה הענקיות (בזכות ניטרליות וקשרים חכמים עם שווייץ ואוסטריה). כיום היא מונרכיה חוקתית עם כלכלה פורחת בזכות מיסים נמוכים ומגזר בנקאי חזק.',
-            foundingYears: '1719 (הקמת הנסיכות)',
-            flagSymbolism: 'הדגל מורכב משני פסים אופקיים של כחול ואדום. הכחול מסמל את השמיים הבהירים; האדום מסמל את האש הבוערת באח הבית (משפחתיות וחמימות). הכתר הזהוב בצד השמאלי העליון התווסף רק ב-1937, לאחר שבאולימפיאדה של 1936 הליכטנשטיינים גילו לתדהמתם שהדגל שלהם זהה לחלוטין לזה של האיטי.',
+            areaNum: { he: '~28,748 קמ"ר', en: '~28,748 sq km' },
+            populationNum: '~2,800,000',
+            currency: { he: 'לק אלבני (ALL)', en: 'Albanian Lek (ALL)' },
+            area: { 
+              he: 'כ-28,748 קמ"ר. מדינה הררית, פראית וסגורה מאוד מבחינה טופוגרפית (כ-70% משטחה הם הרים תלולים וגבעות של הרי האלפים הדינריים). למרות הריחוק ההררי, היא שוכנת על חוף הים האדריאטי והים היוני (הריביירה האלבנית), ומהווה גשר גיאוגרפי היסטורי קצר בין מרכז חצי האי הבלקני לבין איטליה והים התיכון.',
+              en: 'Approx. 28,748 sq km. A highly mountainous, wild, and topographically enclosed country (about 70% of its area consists of steep mountains and hills of the Dinaric Alps). Despite its mountainous remoteness, it lies on the coast of the Adriatic and Ionian Seas (the Albanian Riviera), acting as a short historical geographical bridge between the central Balkan Peninsula and Italy and the Mediterranean.'
+            },
+            demographics: {
+              mainNationName: { he: 'אלבנים', en: 'Albanians' },
+              mainNationPercent: { he: 'כ-82%', en: '~82%' },
+              description: { 
+                he: 'אומה הררית בעלת שפה ומוצא היסטורי ייחודיים ובודדים באירופה, שאינם קשורים לסלאבים או ליוונים (נחשבים צאצאי השבטים האיליריים הקדומים). הרוב במדינה הוא מוסלמי (סוני ומסדר בקטאשי סופי), לצד מיעוטים נוצרים אורתודוקסים וקתולים. אלבניה מפורסמת בסובלנות הדתית המוחלטת שלה, ולמעשה יש בה מסורת חילונית לאומית חזקה וגאה הגוברת כמעט תמיד על כל פיצול או זהות דתית.',
+                en: 'A mountainous nation with a unique and isolated historical origin and language in Europe, unrelated to the Slavs or Greeks (considered descendants of the ancient Illyrian tribes). The majority in the country is Muslim (Sunni and the Sufi Bektashi order), alongside Orthodox and Catholic Christian minorities. Albania is famous for its absolute religious tolerance, effectively possessing a strong, proud national secular tradition that almost always transcends any religious division or identity.'
+              }
+            },
+            modernHistory: { 
+              he: 'הכריזה על עצמאותה מהאימפריה העות\'מאנית השוקעת ב-1912. לאחר מלחמת העולם השנייה, המדינה נפלה לידיו של הדיקטטור הקומוניסטי הפראנואידי אנוור הוג\'ה, שהטיל עליה בידוד קיצוני (בדומה לצפון קוריאה של ימינו), ניתק קשרים עם כל העולם, בנה מאות אלפי בונקרים פרטיים ברחבי המדינה מתוך פחד פלישה, ואסר בחוק כליל על קיום כל דת שהיא. עם נפילת הקומוניזם ב-1991, החלה המדינה תהליך קשה אך מתמיד של פתיחות למערב ומעבר לדמוקרטיה כלכלת-שוק.',
+              en: 'Declared its independence from the declining Ottoman Empire in 1912. After WWII, the country fell into the hands of paranoid communist dictator Enver Hoxha, who imposed extreme isolation on it (similar to modern-day North Korea), cut ties with the entire world, built hundreds of thousands of private bunkers across the country out of fear of invasion, and completely outlawed the practice of any religion. With the fall of communism in 1991, the country began a difficult but steady process of opening to the West and transitioning to a market-economy democracy.'
+            },
+            foundingYears: { he: '1912 (הכרזת עצמאות מודרנית)', en: '1912 (Modern Declaration of Independence)' },
+            flagSymbolism: { 
+              he: 'הדגל הלאומי מציג עיט דו-ראשי שחור ופרוש כנפיים הממוקם במרכז על רקע אדום עז. רקע האדום מסמל אומץ, כוח גולמי, ואת הדם הרב שנשפך למען הגנת החירות. העיט הדו-ראשי השחור הוא סמלו האישי ההיסטורי של הגיבור הלאומי סקנדרבג (שאימץ ושינה את הסמל הביזנטי העתיק) מהמאה ה-15, שבו השתמש כנס במרידותיו המפוארות מול האימפריה העות\'מאנית.',
+              en: 'The national flag displays a black, double-headed eagle with spread wings positioned in the center on a vivid red background. The red background symbolizes courage, raw strength, and the copious blood shed in defense of freedom. The black double-headed eagle is the personal historical emblem of the 15th-century national hero Skanderbeg (who adopted and modified the ancient Byzantine symbol), which he used as a banner in his glorious rebellions against the Ottoman Empire.'
+            },
+            nationalAnimal: {
+              name: { he: "עיט זהוב (Golden Eagle / Shqiponja)", en: "Golden Eagle" },
+              reason: { 
+                he: "העיט (Shqiponja באלבנית) הוא הסמל הלאומי המוחלט והעוצמתי ביותר של המדינה, אשר עיצב את זהותה מראשיתה. אלבניה אף נקראת בפי תושביה 'ארץ העיטים'. חיה דורסת, אצילית ורבת עוצמה זו, השולטת בפסגות ההרים הבלתי נגישים, מסמלת את הריבונות האבסולוטית, החופש, העוז והעצמאות הפראית וההירואית של תושבי ההרים האלבנים שסירבו להיכנע לכובשים זרים.",
+                en: "The eagle (Shqiponja in Albanian) is the absolute and most powerful national symbol of the country, which has shaped its identity from its inception. Albania is even called the 'Land of the Eagles' by its inhabitants. This noble and powerful bird of prey, reigning over the inaccessible mountain peaks, symbolizes absolute sovereignty, freedom, boldness, and the wild, heroic independence of the Albanian mountain dwellers who refused to surrender to foreign conquerors."
+              }
+            },
             etymology: {
               parts: [
-                { text: 'שושלת ליכטנשטיין', color: 'text-yellow-400', bg: 'bg-yellow-400/10', border: 'border-yellow-500/30', desc: 'המדינה הקטנה לא קרויה על שם תושביה או ההיסטוריה הגיאוגרפית שלה, אלא על שם השושלת המלוכתית שרכשה אותה – משפחת ליכטנשטיין האוסטרית.' },
-                { text: 'ליכט (Licht)', color: 'text-slate-300', bg: 'bg-slate-300/10', border: 'border-slate-500/30', desc: 'פירושה בגרמנית "אור" או "בהיר".' },
-                { text: 'שטיין (Stein)', color: 'text-stone-500', bg: 'bg-stone-400/10', border: 'border-stone-600/30', desc: 'פירושה בגרמנית "אבן" או "סלע". השם ליכטנשטיין מתייחס במקור לטירה המקורית של המשפחה (טירת ליכטנשטיין) ליד וינה, שנבנתה על סלע בהיר.' }
+                { text: { he: 'אלבנוי (Albanoi)', en: 'Albanoi' }, color: 'text-stone-400', bg: 'bg-stone-400/10', border: 'border-stone-500/30', desc: { he: 'השם הבינלאומי הלועזי "אלבניה" מגיע מכתביו של תלמי (Ptolemy), גיאוגרף יווני-רומאי בן המאה ה-2. הוא ציין שבט אילירי הררי וקדום בשם "אלבאנוי" שחי באזור מרכז המדינה של ימינו. השורש האינדו-אירופי "Alb" ייתכן ומשמעותו הגיאוגרפית היא "לבן" או "הר" (בדומה להרי ה"אלפים").', en: 'The international foreign name "Albania" comes from the writings of Ptolemy, a 2nd-century Greco-Roman geographer. He noted an ancient mountainous Illyrian tribe named "Albanoi" living in the modern-day central region of the country. The Indo-European root "Alb" likely geographically means "white" or "mountain" (similar to the "Alps").' } },
+                { text: { he: 'שצ\'יפריה (Shqipëria)', en: 'Shqipëria' }, color: 'text-red-400', bg: 'bg-red-400/10', border: 'border-red-500/30', desc: { he: 'זהו השם הלאומי והמקומי בו האלבנים קוראים לארצם בשפתם. התיאוריה האטימולוגית והעממית המקובלת ביותר היא שהשם נגזר מהמילה "Shqipe" או "Shqiponjë" שמשמעותה בשפה האלבנית היא "עיט" – בהשפעת סמלו המפורסם של הגיבור המיתולוגי סקנדרבג.', en: 'This is the national and local name by which Albanians call their country in their language. The most accepted etymological and folk theory is that the name is derived from the word "Shqipe" or "Shqiponjë", which in the Albanian language means "Eagle" – influenced by the famous symbol of the mythological hero Skanderbeg.' } }
               ],
-              synthesis: 'מילולית: "הנסיכות של סלע האור".'
+              synthesis: { he: 'מילולית: על פי אמונתם של המקומיים וגאוותם הלאומית, אלבניה היא פשוט "ארץ העיטים".', en: 'Literally: According to the belief of the locals and their national pride, Albania is simply the "Land of the Eagles".' }
             },
             figure: {
-              name: 'הנסיך פרנץ יוזף השני (Franz Joseph II)',
-              years: '1906 - 1989',
-              childhood: 'נולד באוסטריה כיורש של שושלת ליכטנשטיין. גדל בטירות מפוארות וקיבל חינוך של אצולה בוינה, כולל לימודי ייעור וחקלאות, מבלי לחשוב שייאלץ להתמודד עם קריסתה של אירופה הישנה.',
-              ideology: 'הישרדות דיפלומטית וניטרליות. הוא היה הנסיך הראשון שקבע את מושבו הקבוע בתוך הנסיכות הקטנה עצמה. הוא הבין שעל מנת שהמדינה הזעירה תשרוד את הטירוף הנאצי והסובייטי סביבה, עליה לשמור על פרופיל נמוך, ניטרליות קשוחה (בדומה לשווייץ) ומעבר לכלכלה מודרנית.',
-              achievements: 'הציל את ליכטנשטיין ממלחמת העולם השנייה כאשר שמר על ניטרליות מוחלטת (בכך נמנעה פלישה נאצית). תחת שלטונו, המדינה הזעירה והחקלאית הפכה לאחת המדינות העשירות בעולם עם תמ"ג לנפש דמיוני, במידה רבה בזכות הפיכתה למרכז בנקאות ופיננסים מהמובילים באירופה.'
+              name: { he: 'ג\'ורג\' קסטריוטי סקנדרבג (Skanderbeg)', en: 'Gjergj Kastrioti Skanderbeg' },
+              years: '1405 - 1468',
+              childhood: { 
+                he: 'נולד למשפחת אצולה אלבנית. כילד צעיר, הוא נלקח כבן ערובה על ידי הסולטאן העות\'מאני כחלק משיטת "מס הדם" האכזרית (הדוושירמה). הוא התחנך וגודל באסלאם בתוך חצר הסולטאן, אומן וחונך כאליטה צבאית, והפך למפקד וטקטיקן מזהיר בצבא העות\'מאני, שם הוענק לו התואר המכובד "איסקנדר ביי" (האדון אלכסנדר, על שם אלכסנדר מוקדון, בשל גבורתו).',
+                en: 'Born to an Albanian noble family. As a young child, he was taken hostage by the Ottoman Sultan as part of the cruel "Blood Tax" system (Devshirme). He was educated and raised in Islam within the Sultan\'s court, trained as military elite, and became a brilliant commander and tactician in the Ottoman army, where he was granted the honorable title "Iskender Bey" (Lord Alexander, after Alexander the Great, for his bravery).'
+              },
+              ideology: { 
+                he: 'לאומיות הררית, הגנה על המולדת האילירית מפני שעבוד, וחזרה עזה למקורות ולנצרות. למרות שחונך כלוחם עות\'מאני נאמן וזכה לתהילה, סקנדרבג המתין בסבלנות להזדמנות המתאימה לחזור לשורשיו. הוא בחר לערוק מצבא הסולטאן, חזר לאלבניה, המיר את דתו חזרה לנצרות והניף בגאון את דגל המרד האדום למען חירות עמו מול האימפריה החזקה בעולם.',
+                en: 'Mountainous nationalism, defense of the Illyrian homeland against subjugation, and a fierce return to roots and Christianity. Although raised as a loyal Ottoman warrior and gaining fame, Skanderbeg patiently waited for the right opportunity to return to his roots. He chose to defect from the Sultan\'s army, returned to Albania, converted back to Christianity, and proudly raised the red flag of rebellion for his people\'s freedom against the world\'s strongest empire.'
+              },
+              achievements: { 
+                he: 'נחשב לגיבור הלאומי האולטימטיבי והמיתולוגי של אלבניה. הוא הצליח במשימה הכמעט בלתי אפשרית לאחד את הנסיכויות ושבטי ההרים האלבניים המסוכסכים לכוח לוחם אחד ("בליגת לז\'ה" המפורסמת ב-1444). במשך למעלה מ-25 שנים הנהיג מלחמת גרילה גאונית בהרי אלבניה, שהדפה פעם אחר פעם את צבאותיה העצומים של האימפריה העות\'מאנית שניסו לכבוש את הבלקן. על עמידתו האיתנה זכה להערצה עמוקה של האפיפיור ומלכי אירופה שכינו אותו "מגן משיח והנצרות".',
+                en: 'Considered the ultimate and mythological national hero of Albania. He succeeded in the almost impossible task of uniting the feuding Albanian principalities and mountain tribes into a single fighting force (in the famous "League of Lezhë" in 1444). For over 25 years, he led an ingenious guerrilla war in the Albanian mountains, repeatedly repelling the massive armies of the Ottoman Empire trying to conquer the Balkans. For his steadfast stand, he won the deep admiration of the Pope and European kings who called him the "Defender of Christ and Christianity".'
+              }
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_liechtenstein_alpine.jpg?v=2',
-              title: 'הנסיכות בלב הרי האלפים',
-              desc: 'מפת איור עדינה המציגה את מיקומה הזעיר של ליכטנשטיין בעמק הריין העליון, כלואה כפנינה קטנה בין ענקיות ההרים של שווייץ ואוסטריה.'
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_albania_lezhe.jpg?t=1',
+              title: { he: 'הנסיכויות האלבניות (ליגת לז\'ה)', en: 'The Albanian Principalities (League of Lezhë)' },
+              desc: { 
+                he: 'מפה עתיקה המציגה את חופי הים האדריאטי ואת האזור ההררי, המבותר והקשה של חבל אלבניה, האזור הגיאוגרפי שבו הצליח הגיבור סקנדרבג לאחד את השבטים ב"ליגת לז\'ה" ולהדוף בגבורה את צבאות האימפריה העות\'מאנית.',
+                en: 'An ancient map showing the Adriatic coast and the rugged, difficult mountainous region of Albania, the geographical area where the hero Skanderbeg managed to unite the tribes in the "League of Lezhë" and heroically repel the armies of the Ottoman Empire.'
+              }
+            }
+          },
+          {
+            id: 'north_macedonia',
+            name: { he: 'צפון מקדוניה', en: 'North Macedonia' },
+            englishName: 'North Macedonia',
+            officialName: { he: 'רפובליקת צפון מקדוניה', en: 'Republic of North Macedonia' },
+            flagUrl: 'https://flagcdn.com/w640/mk.webp',
+            capital: {
+              name: { he: "סקופיה", en: "Skopje" },
+              englishName: "Skopje",
+              etymology: { 
+                he: "שם העיר סקופיה (Skopje) נגזר ישירות משמה של העיר הרומאית והדרדאנית העתיקה 'סקופי' (Scupi) שניצבה בקרבת מקום. המשמעות המדויקת של השם האילירי-דרדאני המקורי אבדה בזמן, אך היא נשמרה בגרסאות שונות על ידי השליטים הסלאבים, הביזנטים והעות'מאנים (שקראו לה איסקובּ – Üsküb) של העיר לאורך הדורות.",
+                en: "The name of the city Skopje is derived directly from the name of the ancient Roman and Dardanian city 'Scupi' that stood nearby. The exact meaning of the original Illyrian-Dardanian name is lost to time, but it was preserved in various versions by the Slavic, Byzantine, and Ottoman rulers (who called it Üsküb) of the city throughout the ages."
+              },
+              foundingYear: { he: "המאה ה-3 לפנה\"ס (כיישוב דרדאני)", en: "3rd Century BC (As a Dardanian settlement)" },
+              reason: { 
+                he: "סקופיה הוקמה וצמחה בשל הגיאוגרפיה המעולה שלה: היא יושבת בעמק רחב על גדות נהר הווארדאר (Vardar), המהווה את מסדרון התחבורה והסחר הצפון-דרומי המרכזי והחשוב ביותר בבלקן (המחבר את מרכז אירופה אל הים האגאי). מיקום זה הפך אותה למרכז מסחרי עוצמתי ועיר מחוז מרכזית תחת שלטון ביזנטי, סרבי ועות'מאני.",
+                en: "Skopje was founded and grew due to its excellent geography: it sits in a broad valley on the banks of the Vardar River, which constitutes the most important and central North-South transport and trade corridor in the Balkans (connecting Central Europe to the Aegean Sea). This location made it a powerful commercial center and a major provincial city under Byzantine, Serbian, and Ottoman rule."
+              }
+            },
+            areaNum: { he: '~25,713 קמ"ר', en: '~25,713 sq km' },
+            populationNum: '~1,800,000',
+            currency: { he: 'דינר מקדוני (MKD)', en: 'Macedonian Denar (MKD)' },
+            area: { 
+              he: 'כ-25,713 קמ"ר. מדינה ללא מוצא לים הממוקמת בליבו של הבלקן הדרומי. הגיאוגרפיה שלה יפהפייה ומאופיינת בעמקים צרים ופוריים המוקפים ברכסי הרים וגבעות מכל עבר, כאשר נהר הווארדאר הגדול חוצה ומפלס את דרכו בה מצפון לדרום. אגם אוכריד (Ohrid) העתיק והעמוק נמצא בדרום-מערב המדינה ומהווה אתר מורשת עולמית.',
+              en: 'Approx. 25,713 sq km. A landlocked country located in the heart of the southern Balkans. Its geography is beautiful and characterized by narrow, fertile valleys surrounded by mountain ranges and hills on all sides, with the large Vardar River crossing and carving its way through it from north to south. The ancient and deep Lake Ohrid is located in the southwest of the country and is a World Heritage site.'
+            },
+            demographics: {
+              mainNationName: { he: 'מקדונים סלאבים', en: 'Macedonian Slavs' },
+              mainNationPercent: { he: 'כ-58%', en: '~58%' },
+              description: { 
+                he: 'הרוב המורכב מאומה סלאבית-אורתודוקסית הדוברת שפה הקרובה מאוד לבולגרית (ובעבר אף נחשבה פוליטית כניב שלה). המאפיין הבולט בדמוגרפיה הוא קיומו של מיעוט אלבני-מוסלמי גדול ומשמעותי מאוד (כ-24%), המרוכז בעיקר בצפון-מערב המדינה סמוך לגבול אלבניה וקוסובו. החלוקה האתנית הזו מהווה מוקד למתיחות פוליטית פנימית עדינה ולעיתים נפיצה.',
+                en: 'The majority consists of a Slavic-Orthodox nation speaking a language very close to Bulgarian (and in the past politically considered a dialect of it). The prominent feature in the demographics is the existence of a very large and significant Albanian-Muslim minority (~24%), concentrated mainly in the northwest of the country near the border with Albania and Kosovo. This ethnic division constitutes a focal point for delicate and sometimes explosive internal political tension.'
+              }
+            },
+            modernHistory: { 
+              he: 'לאחר התפרקות יוגוסלביה המדממת ב-1991, הכריזה המדינה על עצמאותה ללא שפיכות דמים (המדינה היוגוסלבית היחידה שעשתה זאת בדרכי שלום). עם זאת, היא נתקלה מיד במשבר ובחרם דיפלומטי חריף מצד יוון, שמחתה בחריפות על שימוש בשם "מקדוניה" (שכן זהו שמו של חבל ארץ יווני וממלכת מוקדון העתיקה). סכסוך שמות זה עצר את השתלבותה באירופה למשך עשרות שנים, עד שנפתר בפשרה היסטורית ב-2018 ("הסכם פרספה"), שהביא לשינוי שמה הרשמי ל"צפון מקדוניה" וסלל את דרכה לנאט"ו.',
+              en: 'After the bloody breakup of Yugoslavia in 1991, the country declared its independence without bloodshed (the only Yugoslav state to do so peacefully). However, it immediately encountered a crisis and a severe diplomatic boycott from Greece, which protested vehemently against the use of the name "Macedonia" (as it is the name of a Greek region and the ancient Kingdom of Macedon). This naming dispute stalled its integration into Europe for decades, until it was resolved in a historical compromise in 2018 ("Prespa Agreement"), which led to changing its official name to "North Macedonia" and paved its way to NATO.'
+            },
+            foundingYears: { he: '1991 (עצמאות מיוגוסלביה)', en: '1991 (Independence from Yugoslavia)' },
+            flagSymbolism: { 
+              he: 'הדגל העדכני (שאומץ ב-1995 כפשרה) מציג "שמש חירות חדשה" זהובה בעלת שמונה קרניים מתרחבות, המקרינה לכל עבר על רקע אדום עז. הצבעים אדום וצהוב הם צבעים היסטוריים מסורתיים של המאבק הלאומי המקדוני וההטבעה ההרלדית של המדינה. השמש מייצגת את הולדת החירות ואת המילים הפותחות את ההמנון הלאומי: "היום מעל מקדוניה נולדת שמש חדשה של חירות". (הדגל שונה מהמקור בעקבות לחץ כבד וחרם יווני שהתנגד לשימוש בסמל "השמש של ורגינה" היווני העתיק).',
+              en: 'The current flag (adopted in 1995 as a compromise) displays a golden "new sun of liberty" with eight widening rays, radiating in all directions against a vivid red background. The colors red and yellow are traditional historical colors of the Macedonian national struggle and the country\'s heraldry. The sun represents the birth of liberty and the opening words of the national anthem: "Today over Macedonia, is being born a new sun of liberty". (The flag was changed from the original due to heavy Greek pressure and boycott opposing the use of the ancient Greek "Vergina Sun" symbol).'
+            },
+            nationalAnimal: {
+              name: { he: "שונר בלקני (Balkan Lynx)", en: "Balkan Lynx" },
+              reason: { 
+                he: "השונר הבלקני (בנוסף לאריה המופיע בסמלים לאומיים עתיקים) הוא חיה אייקונית ומושא לגאווה במקדוניה. זהו תת-מין נדיר ביותר ובסכנת הכחדה של השונר האירואסיאתי, החי באזורים ההרריים והפראיים של מערב צפון מקדוניה. הוא נחשב לסמל לאומי, מופיע על מטבע ה-5 דינר המקומי, ומסמל את יופיו הפראי והבלתי מבוית של הבלקן ואת מאמצי השימור של האומה על אוצרות הטבע הייחודיים לה.",
+                en: "The Balkan Lynx (in addition to the Lion appearing in ancient national emblems) is an iconic animal and object of pride in Macedonia. It is a highly rare and endangered subspecies of the Eurasian Lynx, living in the wild mountainous regions of western North Macedonia. It is considered a national symbol, features on the local 5 Denar coin, and symbolizes the wild, untamed beauty of the Balkans and the nation's conservation efforts of its unique natural treasures."
+              }
+            },
+            etymology: {
+              parts: [
+                { text: { he: 'מקדוניה (Macedonia)', en: 'Macedonia' }, color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-500/30', desc: { he: 'השם אומץ משמה של הממלכה והאזור ההיסטורי העתיק (מולדתם של פיליפוס ואלכסנדר הגדול). המקור הבלשני העתיק הוא המילה היוונית הקדומה "Makednos" (מקדנוי), שפירושה "אנשים גבוהים", "ארוכים" או "אנשי הרמות", מונח המתייחס כנראה למבנה הפיזי של השבטים ההרריים הקדומים או למקום מגוריהם הגבוה.', en: 'The name was adopted from the name of the ancient historical kingdom and region (the homeland of Philip and Alexander the Great). The ancient linguistic origin is the Old Greek word "Makednos", meaning "tall people", "long", or "highlanders", a term likely referring to the physical structure of the ancient mountain tribes or their high-altitude dwelling place.' } },
+                { text: { he: 'צפון (North)', en: 'North' }, color: 'text-gray-400', bg: 'bg-gray-400/10', border: 'border-gray-500/30', desc: { he: 'התוספת הגיאוגרפית המפורשת שנוספה רשמית לשם המדינה בשנת 2018. זוהי פשרה דיפלומטית היסטורית שסוכמה מול יוון, שנועדה להבדיל ולנתק דמוגרפית בין המדינה הסלאבית המודרנית לבין המחוז היווני העתיק בצפון יוון שנקרא גם הוא מקדוניה.', en: 'The explicit geographical addition officially added to the country\'s name in 2018. This is a historic diplomatic compromise agreed upon with Greece, intended to demographically distinguish and separate the modern Slavic state from the ancient Greek province in northern Greece also called Macedonia.' } }
+              ],
+              synthesis: { he: 'מילולית היסטורית: "החלק הצפוני של ארץ אנשי ההרים (האנשים הגבוהים)".', en: 'Historically literal: "The northern part of the land of the highlanders (the tall people)".' }
+            },
+            figure: {
+              name: { he: 'קירה גליגורוב (Kiro Gligorov)', en: 'Kiro Gligorov' },
+              years: '1917 - 2012',
+              childhood: { 
+                he: 'נולד בעיר שטיפ בתקופה היסטורית סוערת מאוד של מלחמות הבלקן. הוא גדל תוך כדי תהפוכות פוליטיות, למד משפטים באוניברסיטת בלגרד המרכזית, ושם הפך פעיל מעורב בתנועות הסטודנטים המרקסיסטיות והאנטי-פשיסטיות במהלך מלחמת העולם השנייה נגד הכיבוש.',
+                en: 'Born in the city of Štip during a highly turbulent historical period of the Balkan Wars. He grew up amidst political upheavals, studied law at the central University of Belgrade, and there became actively involved in Marxist and anti-fascist student movements during WWII against the occupation.'
+              },
+              ideology: { 
+                he: 'פרגמטיות דיפלומטית זהירה, פשרה, מתינות והימנעות מוחלטת ממאבקים לאומניים קיצוניים ושפיכות דמים הרסנית. בעוד שאר מנהיגי הרפובליקות ביוגוסלביה הובילו את עמיהם למלחמות אזרחים אכזריות ולטיהורים אתניים, גליגורוב האמין שניתן וצריך לפעול בזהירות עצומה כדי לתמרן פוליטית את מדינתו בין כוחו של צבא יוגוסלביה לבין הסכסוכים האתניים הרותחים באזור.',
+                en: 'Cautious diplomatic pragmatism, compromise, moderation, and total avoidance of extreme nationalistic struggles and destructive bloodshed. While other republic leaders in Yugoslavia led their peoples into brutal civil wars and ethnic cleansing, Gligorov believed that it was possible and necessary to act with immense caution to politically maneuver his country between the power of the Yugoslav army and the boiling ethnic conflicts in the region.'
+              },
+              achievements: { 
+                he: 'נחשב לאבי האומה של צפון מקדוניה. הוא כיהן כנשיא הראשון של מקדוניה העצמאית. הוא למעשה המנהיג היחיד בכל יוגוסלביה לשעבר שהצליח להוביל ולנתב את מדינתו לעצמאות מלאה באמצעות דיפלומטיה חכמה בלבד וללא ירייה אחת, תוך שהוא מצליח לחתום על הסכם נסיגה מסודר ושקט של הצבא היוגוסלבי משטח ארצו, ומציל את עמו מזוועות מלחמות הבלקן של שנות ה-90.',
+                en: 'Considered the father of the nation of North Macedonia. He served as the first President of independent Macedonia. He is effectively the only leader in all of the former Yugoslavia who managed to guide and steer his country to full independence through smart diplomacy alone and without a single shot fired, successfully signing an orderly and quiet withdrawal agreement for the Yugoslav army from his country\'s territory, saving his people from the horrors of the 1990s Balkan Wars.'
+              }
+            },
+            map: {
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_macedonia_ottoman.jpg?t=1',
+              title: { he: 'מקדוניה ומרחב הבלקן האמצעי', en: 'Macedonia and the Central Balkans Region' },
+              desc: { 
+                he: 'מפה היסטורית מהמאה ה-19 המראה את אזור מקדוניה הגיאוגרפית (לפני חלוקתו המודרנית הפוליטית בין המדינות השונות), אזור הררי ועמקים שהיווה צומת דרכים מסחרי וצבאי קריטי וחשוב באימפריה העות\'מאנית השוקעת.',
+                en: 'A historical map from the 19th century showing the geographical Macedonia region (before its modern political division among various states), a mountainous area with valleys that constituted a critical and important commercial and military crossroads in the declining Ottoman Empire.'
+              }
             }
           }
         ];
@@ -243,10 +546,10 @@
         // רכיבי התצוגה (UI) 
         // ==========================================
 
-        const CountryCard = ({ country, onModalOpen }) => {
+        const CountryCard = ({ country, onModalOpen, lang, uiStr }) => {
           const { 
-            FlagComponent, name, englishName, officialName, areaNum, populationNum, currency, area, demographics, 
-            modernHistory, foundingYears, etymology, flagSymbolism, figure, map 
+            flagUrl, name, englishName, officialName, capital, areaNum, populationNum, currency, area, demographics, 
+            modernHistory, foundingYears, etymology, flagSymbolism, nationalAnimal, figure, map 
           } = country;
 
           return (
@@ -255,42 +558,59 @@
               <div className="flex flex-col md:flex-row gap-6 p-6 md:p-8 border-b border-gray-800">
                 <div 
                   className="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center bg-gray-950 p-4 rounded-xl cursor-pointer group relative" 
-                  onClick={() => onModalOpen({type: 'flag', component: FlagComponent, title: `דגל ${name}`})}
-                  title="לחץ להגדלת הדגל"
+                  onClick={() => onModalOpen({url: flagUrl, title: `${name[lang]} Flag`})}
+                  title={uiStr.lClickEnlargeFlag}
                 >
-                  <div className="w-full max-h-40 shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105 overflow-hidden flex justify-center items-center">
-                    <div className="w-full h-32 md:h-40 relative">
-                       <FlagComponent />
-                    </div>
+                  <div className="w-full max-h-40 shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105 overflow-hidden flex justify-center items-center bg-black">
+                    <img 
+                      src={flagUrl} 
+                      alt={name[lang]}
+                      className="w-full h-32 md:h-40 object-cover opacity-95 group-hover:opacity-100 transition-opacity"
+                      onError={(e) => {
+                        e.target.onerror = null; 
+                        e.target.src = fallbackImg;
+                      }}
+                    />
                   </div>
                   <div className="absolute opacity-0 group-hover:opacity-100 bg-black/60 text-white text-sm px-3 py-1 rounded transition-opacity duration-300 pointer-events-none mt-32">
-                    לחץ להגדלה
+                    {uiStr.lClickEnlargeFlag}
                   </div>
                 </div>
                 
                 <div className="flex-grow flex flex-col justify-center">
-                  <h2 className="text-3xl font-bold text-white mb-2">{name} <span className="text-gray-500 text-lg ml-2 uppercase tracking-widest">{englishName}</span></h2>
-                  <h3 className="text-xl text-gray-400 mb-4">{officialName}</h3>
+                  <h2 className="text-3xl font-bold text-white mb-2">{name[lang]} <span className="text-gray-500 text-lg ms-2 uppercase tracking-widest">{englishName}</span></h2>
+                  <h3 className="text-xl text-gray-400 mb-4">{officialName[lang]}</h3>
+                  
+                  {/* לוח נתונים עליון - 6 פריטים סימטריים */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                      <span><strong className="text-white">שנות ייסוד:</strong> {foundingYears}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                      <span><strong className="text-white me-1">{uiStr.capital}</strong> {capital.name[lang]}</span>
                     </div>
+
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                      <span className="truncate" title={figure.name}><strong className="text-white">מנהיג:</strong> {figure.name.split('(')[0]}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+                      <span><strong className="text-white me-1">{uiStr.currency}</strong> {currency[lang]}</span>
                     </div>
+
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3h18v18H3zM12 8v8m-4-4h8"></path></svg>
-                      <span><strong className="text-white">שטח:</strong> {areaNum}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                      <span><strong className="text-white me-1">{uiStr.founding}</strong> {foundingYears[lang]}</span>
                     </div>
+
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                      <span><strong className="text-white">אוכלוסייה:</strong> {populationNum}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                      <span><strong className="text-white me-1">{uiStr.population}</strong> {populationNum}</span>
                     </div>
-                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg md:col-span-2">
-                      <svg className="w-5 h-5 ml-2 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
-                      <span><strong className="text-white">שם מטבע:</strong> {currency}</span>
+
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3h18v18H3zM12 8v8m-4-4h8"></path></svg>
+                      <span><strong className="text-white me-1">{uiStr.area}</strong> {areaNum[lang]}</span>
+                    </div>
+
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                      <span className="truncate" title={figure.name[lang]}><strong className="text-white me-1">{uiStr.leader}</strong> {figure.name[lang].split('(')[0]}</span>
                     </div>
                   </div>
                 </div>
@@ -300,82 +620,106 @@
                 
                 <section>
                     <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                        <i className="fa-solid fa-map-location-dot w-6 h-6 ml-2 text-sky-400 text-xl"></i>
-                        <h3 className="text-2xl font-bold text-white">רקע פיזי ואנושי</h3>
+                        <i className="fa-solid fa-map-location-dot w-6 h-6 me-2 text-sky-400 text-xl"></i>
+                        <h3 className="text-2xl font-bold text-white">{uiStr.sectionPhysical}</h3>
                     </div>
-                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 space-y-4">
-                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">שטח וטופוגרפיה:</strong> {area}</p>
-                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">דמוגרפיה ({demographics.mainNationName} - {demographics.mainNationPercent}):</strong> {demographics.description}</p>
-                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">היסטוריה מודרנית:</strong> {modernHistory}</p>
+                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 space-y-4 text-start">
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white me-1">{uiStr.lAreaTopo}</strong> {area[lang]}</p>
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white me-1">{uiStr.lDemographics} ({demographics.mainNationName[lang]} - {demographics.mainNationPercent[lang]}):</strong> {demographics.description[lang]}</p>
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white me-1">{uiStr.lModernHistory}</strong> {modernHistory[lang]}</p>
                     </div>
                 </section>
 
                 <section>
                     <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                        <svg className="w-6 h-6 ml-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
-                        <h3 className="text-2xl font-bold text-white">וקסלולוגיה</h3>
+                        <svg className="w-6 h-6 me-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                        <h3 className="text-2xl font-bold text-white">{uiStr.sectionEtymology}</h3>
                     </div>
-                    <p className="text-gray-300 leading-relaxed text-lg">{flagSymbolism}</p>
-                </section>
-                
-                <section>
-                    <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                        <svg className="w-6 h-6 ml-2 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                        <h3 className="text-2xl font-bold text-white">אטימולוגיה</h3>
-                    </div>
-                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800">
+                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 text-start">
                         <ul className="space-y-4">
                             {etymology.parts.map((part, index) => (
                                 <li key={index} className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4">
-                                    <span className={`font-bold min-w-[150px] md:text-lg flex-shrink-0 ${part.color} ${part.bg} border ${part.border} px-2 py-1 rounded-md`}>• {part.text}:</span>
-                                    <span className="text-gray-300 leading-relaxed text-lg">{part.desc}</span>
+                                    <span className={`font-bold min-w-[140px] md:text-lg flex-shrink-0 ${part.color} ${part.bg} border ${part.border} px-2 py-1 rounded-md`}>• {part.text[lang]}:</span>
+                                    <span className="text-gray-300 leading-relaxed text-lg">{part.desc[lang]}</span>
                                 </li>
                             ))}
                             <li className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4 mt-2 pt-4 border-t border-gray-800/50">
-                                <span className="font-bold text-amber-400 min-w-[150px] md:text-lg flex-shrink-0"><i className="fa-solid fa-quote-right ml-1"></i> משמעות השם:</span>
-                                <span className="text-gray-200 font-bold leading-relaxed text-lg">{etymology.synthesis}</span>
+                                <span className="font-bold text-amber-400 min-w-[140px] md:text-lg flex-shrink-0">
+                                  <i className="fa-solid fa-quote-right me-1"></i> {uiStr.lNameMeaning}
+                                </span>
+                                <span className="text-gray-200 font-bold leading-relaxed text-lg">{etymology.synthesis[lang]}</span>
+                            </li>
+                            
+                            <li className="flex flex-col md:flex-row md:items-start gap-2 md:gap-4 mt-6 pt-5 border-t border-gray-700/80">
+                                <span className="font-bold text-purple-400 min-w-[140px] md:text-lg flex-shrink-0 mt-1">
+                                    <i className="fa-solid fa-landmark-dome me-1"></i> {uiStr.lCapitalName}
+                                </span>
+                                <div className="space-y-3 w-full">
+                                    <strong className="text-white text-xl block border-b border-gray-800 pb-2">
+                                      {capital.name[lang]} <span className="text-gray-500 text-sm font-normal uppercase tracking-widest ms-1">({capital.englishName})</span>
+                                    </strong>
+                                    <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white font-medium me-1">{uiStr.lCapitalEty}</strong> {capital.etymology[lang]}</p>
+                                    <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white font-medium me-1">{uiStr.lCapitalFounding}</strong> {capital.foundingYear[lang]}</p>
+                                    <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white font-medium me-1">{uiStr.lCapitalReason}</strong> {capital.reason[lang]}</p>
+                                </div>
                             </li>
                         </ul>
                     </div>
                 </section>
 
-                <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gray-800/20 p-6 rounded-xl border border-gray-800/50">
+                <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 text-start">
                     <div>
-                        <div className="flex items-center mb-4 border-b border-gray-700 pb-2">
-                            <svg className="w-6 h-6 ml-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                            <h3 className="text-2xl font-bold text-white">פרופיל מנהיג מכונן</h3>
+                        <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg className="w-6 h-6 me-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                            <h3 className="text-2xl font-bold text-white">{uiStr.sectionSymbols}</h3>
                         </div>
-                        <h4 className="text-xl text-rose-300 font-bold mb-3">{figure.name} <span className="text-base text-gray-400">({figure.years})</span></h4>
-                        <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
-                            <div><strong className="text-white block mb-1">ילדות ורקע:</strong> {figure.childhood}</div>
-                            <div><strong className="text-white block mb-1">אידאולוגיה:</strong> {figure.ideology}</div>
-                            <div><strong className="text-white block mb-1">הישגים מרכזיים:</strong> {figure.achievements}</div>
+                        <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 h-full">
+                            <h4 className="text-lg font-bold text-white mb-2"><i className="fa-solid fa-flag text-green-400 me-2"></i> {uiStr.lFlagMeaning}</h4>
+                            <p className="text-gray-300 leading-relaxed text-lg mb-6 pb-6 border-b border-gray-800/70">{flagSymbolism[lang]}</p>
+                            
+                            <h4 className="text-lg font-bold text-white mb-2"><i className="fa-solid fa-paw text-orange-400 me-2"></i> {uiStr.lNationalAnimal} {nationalAnimal.name[lang]}</h4>
+                            <p className="text-gray-300 leading-relaxed text-lg">{nationalAnimal.reason[lang]}</p>
                         </div>
                     </div>
 
                     <div>
-                        <div className="flex items-center mb-4 border-b border-gray-700 pb-2">
-                            <svg className="w-6 h-6 ml-2 text-cyan-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"></path><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
-                            <h3 className="text-2xl font-bold text-white">קרטוגרפיה היסטורית</h3>
+                        <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg className="w-6 h-6 me-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                            <h3 className="text-2xl font-bold text-white">{uiStr.sectionLeader}</h3>
                         </div>
-                        <div className="flex flex-col cursor-pointer group rounded-xl overflow-hidden border border-gray-700 bg-gray-800/30 hover:border-gray-500 transition-all duration-300 shadow-lg" onClick={() => onModalOpen({type: 'image', url: map.url, title: map.title})}>
-                            <div className="relative h-48 md:h-56 w-full overflow-hidden bg-black">
-                                <img 
-                                  src={map.url} 
-                                  alt={map.title} 
-                                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                  onError={(e) => {
-                                    e.target.onerror = null; 
-                                    e.target.src = fallbackImg;
-                                  }}
-                                />
-                                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300"></div>
+                        <div className="bg-gray-800/20 rounded-xl p-5 border border-gray-800/50 h-full">
+                            <h4 className="text-xl text-rose-300 font-bold mb-3">{figure.name[lang]} <span className="text-base text-gray-400">({figure.years})</span></h4>
+                            <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
+                                <div><strong className="text-white block mb-1">{uiStr.lChildhood}</strong> {figure.childhood[lang]}</div>
+                                <div><strong className="text-white block mb-1">{uiStr.lIdeology}</strong> {figure.ideology[lang]}</div>
+                                <div><strong className="text-white block mb-1">{uiStr.lAchievements}</strong> {figure.achievements[lang]}</div>
                             </div>
-                            <div className="p-4 text-center border-t border-gray-700/50">
-                                <strong className="text-cyan-300 block mb-2 text-base">{map.title}</strong>
-                                <span className="text-gray-300 text-sm leading-relaxed block">{map.desc}</span>
-                                <span className="inline-block mt-3 text-gray-400 text-xs font-medium bg-gray-900/80 px-3 py-1.5 rounded-full border border-gray-700 transition-colors group-hover:text-cyan-300 group-hover:border-cyan-800/50">(לחץ להגדלת המפה)</span>
-                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                        <svg className="w-6 h-6 me-2 text-cyan-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"></path><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                        <h3 className="text-2xl font-bold text-white">{uiStr.sectionCartography}</h3>
+                    </div>
+                    <div className="flex flex-col cursor-pointer group rounded-xl overflow-hidden border border-gray-700 bg-gray-800/30 hover:border-gray-500 transition-all duration-300 shadow-lg" onClick={() => onModalOpen({url: map.url, title: map.title[lang]})}>
+                        <div className="relative h-64 md:h-80 w-full overflow-hidden bg-black">
+                            <img 
+                              src={map.url} 
+                              alt={map.title[lang]} 
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                              onError={(e) => {
+                                e.target.onerror = null; 
+                                e.target.src = fallbackImg;
+                              }}
+                            />
+                            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300"></div>
+                        </div>
+                        <div className="p-4 text-center border-t border-gray-700/50">
+                            <strong className="text-cyan-300 block mb-2 text-lg">{map.title[lang]}</strong>
+                            <span className="text-gray-300 text-base leading-relaxed block">{map.desc[lang]}</span>
+                            <span className="inline-block mt-3 text-gray-400 text-sm font-medium bg-gray-900/80 px-4 py-1.5 rounded-full border border-gray-700 transition-colors group-hover:text-cyan-300 group-hover:border-cyan-800/50">{uiStr.lClickEnlargeMap}</span>
                         </div>
                     </div>
                 </section>
@@ -397,7 +741,7 @@
                 <button 
                   onClick={onClose}
                   className="absolute -top-14 right-0 md:-right-14 text-gray-400 hover:text-white bg-gray-800/80 hover:bg-gray-700 rounded-full p-2 transition-colors z-50"
-                  aria-label="סגור חלון"
+                  aria-label="Close"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -405,48 +749,61 @@
                   </svg>
                 </button>
                 
-                {content.type === 'flag' ? (
-                  <div className="w-full max-w-4xl aspect-[3/2] bg-black shadow-2xl rounded-lg overflow-hidden border border-gray-700" onClick={e => e.stopPropagation()}>
-                    <content.component />
-                  </div>
-                ) : (
-                  <img 
-                    src={content.url} 
-                    alt={content.title} 
-                    className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-gray-700" 
-                    onClick={e => e.stopPropagation()}
-                    onError={(e) => {
-                      e.target.onerror = null; 
-                      e.target.src = fallbackImg;
-                    }}
-                  />
-                )}
+                <img 
+                  src={content.url} 
+                  alt={content.title} 
+                  className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-gray-700" 
+                  onClick={e => e.stopPropagation()}
+                  onError={(e) => {
+                    e.target.onerror = null; 
+                    e.target.src = fallbackImg;
+                  }}
+                />
               </div>
             </div>
           );
         };
 
         function App() {
+          const [lang, setLang] = useState('he');
           const [modalContent, setModalContent] = useState(null);
 
-          // סגירת החלון במקש אסקייפ
+          const uiStr = ui[lang];
+
+          // ניהול כיוון המסמך לפי שפה
+          React.useEffect(() => {
+            document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+            document.documentElement.lang = lang;
+          }, [lang]);
+
           React.useEffect(() => {
             const handleEsc = (e) => { if (e.key === 'Escape') setModalContent(null); };
             window.addEventListener('keydown', handleEsc);
             return () => window.removeEventListener('keydown', handleEsc);
           }, []);
 
-          // מניעת גלילה כאשר המודל פתוח
           React.useEffect(() => {
             document.body.style.overflow = modalContent ? 'hidden' : '';
           }, [modalContent]);
 
           return (
-            <div className="max-w-5xl mx-auto pt-4 md:pt-8">
-              <header className="mb-10 text-center">
-                  <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tight drop-shadow-lg">המדינות הגרמאניות</h1>
+            <div className="max-w-5xl mx-auto pt-4 md:pt-8 relative">
+              
+              {/* כפתור החלפת שפה */}
+              <div className="absolute top-0 right-4 md:right-8">
+                <button 
+                  onClick={() => setLang(lang === 'he' ? 'en' : 'he')}
+                  className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-full border border-gray-600 transition-colors shadow-lg font-medium text-sm"
+                >
+                  <i className="fa-solid fa-globe text-blue-400"></i>
+                  {uiStr.langBtn}
+                </button>
+              </div>
+
+              <header className="mb-10 text-center mt-12 md:mt-0">
+                  <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tight drop-shadow-lg">{uiStr.mainTitle}</h1>
                   <p className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-                     מרכז אירופה: מחקר וקסלולוגי, אטימולוגי, היסטורי וקרטוגרפי
+                     {uiStr.subTitle}
                   </p>
               </header>
 
@@ -456,6 +813,8 @@
                     key={country.id} 
                     country={country} 
                     onModalOpen={setModalContent} 
+                    lang={lang}
+                    uiStr={uiStr}
                   />
                 ))}
               </div>
@@ -463,15 +822,15 @@
               <footer className="mt-12 mb-8 pt-8 border-t border-gray-800 text-center text-gray-500 w-full max-w-6xl mx-auto px-4">
                   <div className="flex justify-center items-center gap-2 mb-4">
                       <svg className="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                      <h4 className="font-bold text-gray-400 text-lg">פרטי המחקר והפרויקט</h4>
+                      <h4 className="font-bold text-gray-400 text-lg">{uiStr.footerTitle}</h4>
                   </div>
-                  <div className="inline-block text-right bg-gray-900/50 p-6 rounded-xl border border-gray-800 w-full max-w-2xl">
+                  <div className="inline-block text-start bg-gray-900/50 p-6 rounded-xl border border-gray-800 w-full max-w-2xl">
                       <p className="text-gray-300 leading-loose">
-                          <strong className="text-white ml-2">שם ההוגה:</strong> רם<br />
-                          <strong className="text-white ml-2">שם הבונה/היצרן:</strong> ג'מיני (Gemini 3.1 Pro)<br />
-                          <strong className="text-white ml-2">סיבת ההמצאה/הבנייה:</strong> חקר המדינות הגרמאניות (הדוברות גרמנית) במרכז אירופה כחלק מ"אטלס האומות המלא".<br />
-                          <strong className="text-white ml-2">שנת הבנייה/היצירה:</strong> 2026<br />
-                          <strong className="text-white ml-2">מקורות וקרדיט:</strong> אטימולוגיה מקצועית. דגלי SVG וקטוריים פנימיים. מפות גיאוגרפיות קלאסיות מחשבון ה-GitHub של הפרויקט.
+                          <strong className="text-white me-2">{uiStr.fConcept}</strong> {uiStr.fConceptVal}<br />
+                          <strong className="text-white me-2">{uiStr.fBuilder}</strong> {uiStr.fBuilderVal}<br />
+                          <strong className="text-white me-2">{uiStr.fReason}</strong> {uiStr.fReasonVal}<br />
+                          <strong className="text-white me-2">{uiStr.fYear}</strong> {uiStr.fYearVal}<br />
+                          <strong className="text-white me-2">{uiStr.fCredits}</strong> {uiStr.fCreditsVal}
                       </p>
                   </div>
               </footer>
@@ -486,5 +845,3 @@
     </script>
 </body>
 </html>
-
-```
