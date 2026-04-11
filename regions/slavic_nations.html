@@ -1,11 +1,11 @@
-```html
 <!DOCTYPE html>
 <html lang="he" dir="rtl" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>אטלס האומות | המדינות הסלאביות</title>
+    <title>The Slavic Nations Project | המדינות הסלאביות</title>
     
+    <!-- טעינת ספריות העיצוב -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -20,317 +20,607 @@
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- טעינת React ו-Babel -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body class="min-h-screen bg-gray-950 text-gray-200 p-4 md:p-8 font-sans antialiased selection:bg-rose-500/30">
+    
     <div id="root"></div>
+
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useEffect } = React;
+
+        const fallbackImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400' viewBox='0 0 800 400'%3E%3Crect width='800' height='400' fill='%231e293b'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='26' fill='%2394a3b8'%3EHistorical Map%3C/text%3E%3C/svg%3E";
 
         // ==========================================
-        // תמונת גיבוי חכמה פנימית
+        // מילון ממשק משתמש (UI Dictionary)
         // ==========================================
-        const fallbackImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400' viewBox='0 0 800 400'%3E%3Crect width='800' height='400' fill='%231e293b'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='26' fill='%2394a3b8'%3Eתמונה חסרה - יש לעדכן את שם הקובץ%3C/text%3E%3C/svg%3E";
+        const ui = {
+          he: {
+            mainTitle: "המדינות הסלאביות",
+            subTitle: "מזרח ומרכז אירופה: מחקר וקסלולוגי, אטימולוגי, היסטורי וקרטוגרפי",
+            langBtn: "English",
+            capital: "עיר בירה:",
+            currency: "מטבע לאומי:",
+            founding: "שנת ייסוד:",
+            population: "אוכלוסייה:",
+            area: "שטח:",
+            leader: "מנהיג:",
+            sectionPhysical: "רקע פיזי ואנושי",
+            lAreaTopo: "שטח וטופוגרפיה:",
+            lDemographics: "דמוגרפיה",
+            lModernHistory: "היסטוריה מודרנית:",
+            sectionEtymology: "אטימולוגיה ושמות",
+            lNameMeaning: "משמעות השם:",
+            lCapitalName: "עיר הבירה:",
+            lCapitalEty: "אטימולוגיה:",
+            lCapitalFounding: "שנת ייסוד הבירה:",
+            lCapitalReason: "הסיבה לבחירתה:",
+            sectionSymbols: "סמלים וזהות לאומית",
+            lFlagMeaning: "משמעות צבעי הדגל:",
+            lNationalAnimal: "החיה הלאומית:",
+            sectionLeader: "פרופיל מנהיג מכונן",
+            lChildhood: "ילדות ורקע:",
+            lIdeology: "אידאולוגיה:",
+            lAchievements: "הישגים מרכזיים:",
+            sectionCartography: "קרטוגרפיה היסטורית",
+            lClickEnlargeMap: "(לחץ להגדלת המפה)",
+            lClickEnlargeFlag: "לחץ להגדלה",
+            footerTitle: "פרטי המחקר והפרויקט",
+            fConcept: "שם ההוגה:",
+            fBuilder: "שם הבונה/היצרן:",
+            fReason: "סיבת ההמצאה/הבנייה:",
+            fYear: "שנת הבנייה/היצירה:",
+            fCredits: "מקורות וקרדיט:",
+            fConceptVal: "רם",
+            fBuilderVal: "ג'מיני (Gemini 3.1 Pro)",
+            fReasonVal: "חקר המדינות הסלאביות במזרח ומרכז אירופה כחלק מ'אטלס האומות המלא'. המרה למבנה React וקטורי ודו-לשוני מתקדם.",
+            fYearVal: "2026",
+            fCreditsVal: "אטימולוגיה מהספרות ההיסטורית. מפות קרטוגרפיות קלאסיות מ-GitHub. תמונות דגלים באדיבות שרתי Flagpedia.net (API)."
+          },
+          en: {
+            mainTitle: "The Slavic Nations",
+            subTitle: "Eastern & Central Europe: Vexillological, Etymological, Historical, and Cartographic Research",
+            langBtn: "עברית",
+            capital: "Capital City:",
+            currency: "Currency:",
+            founding: "Founded:",
+            population: "Population:",
+            area: "Area:",
+            leader: "Leader:",
+            sectionPhysical: "Physical and Human Background",
+            lAreaTopo: "Area & Topography:",
+            lDemographics: "Demographics",
+            lModernHistory: "Modern History:",
+            sectionEtymology: "Etymology and Names",
+            lNameMeaning: "Name Meaning:",
+            lCapitalName: "Capital City:",
+            lCapitalEty: "Etymology:",
+            lCapitalFounding: "Founding Year:",
+            lCapitalReason: "Reason for Selection:",
+            sectionSymbols: "Symbols & National Identity",
+            lFlagMeaning: "Flag Symbolism:",
+            lNationalAnimal: "National Animal:",
+            sectionLeader: "Founding Leader Profile",
+            lChildhood: "Childhood & Background:",
+            lIdeology: "Ideology:",
+            lAchievements: "Major Achievements:",
+            sectionCartography: "Historical Cartography",
+            lClickEnlargeMap: "(Click to enlarge map)",
+            lClickEnlargeFlag: "Click to enlarge",
+            footerTitle: "Research and Project Details",
+            fConcept: "Concept by:",
+            fBuilder: "Builder/Generator:",
+            fReason: "Reason for Creation:",
+            fYear: "Year of Creation:",
+            fCredits: "Sources & Credits:",
+            fConceptVal: "Ram",
+            fBuilderVal: "Gemini (Gemini 3.1 Pro)",
+            fReasonVal: "Research of the Slavic Nations in Eastern and Central Europe as part of the 'Complete Nations Atlas'. Conversion to an advanced bilingual React structure.",
+            fYearVal: "2026",
+            fCreditsVal: "Etymology from historical literature. Classic cartographic maps from GitHub. Flag images courtesy of Flagpedia.net API."
+          }
+        };
 
         // ==========================================
-        // רכיבי ה-SVG של הדגלים
-        // ==========================================
-
-        const FlagRussia = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="66.6" fill="#FFFFFF"/>
-            <rect y="66.6" width="300" height="66.6" fill="#0039A6"/>
-            <rect y="133.2" width="300" height="66.6" fill="#D52B1E"/>
-          </svg>
-        );
-
-        const FlagUkraine = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="100" fill="#0057B7"/>
-            <rect y="100" width="300" height="100" fill="#FFDD00"/>
-          </svg>
-        );
-
-        const FlagPoland = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="100" fill="#FFFFFF"/>
-            <rect y="100" width="300" height="100" fill="#DC143C"/>
-          </svg>
-        );
-
-        const FlagCzechia = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="100" fill="#FFFFFF"/>
-            <rect y="100" width="300" height="100" fill="#D7141A"/>
-            <polygon points="0,0 150,100 0,200" fill="#11457E"/>
-          </svg>
-        );
-
-        const FlagSlovakia = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="66.6" fill="#FFFFFF"/>
-            <rect y="66.6" width="300" height="66.6" fill="#0B4EA2"/>
-            <rect y="133.2" width="300" height="66.6" fill="#EE1C25"/>
-            <g transform="translate(80, 100) scale(0.65)">
-              <path d="M-30,-40 C-30,-40 30,-40 30,-40 C30,-40 30,20 30,20 C30,45 0,60 0,60 C0,60 -30,45 -30,20 Z" fill="#EE1C25" stroke="#FFFFFF" strokeWidth="4"/>
-              <path d="M-30,20 C-30,45 0,60 0,60 C0,60 30,45 30,20 C15,30 -15,30 -30,20 Z" fill="#0B4EA2"/>
-              <path d="M-20,20 C-10,10 10,10 20,20 C10,10 -10,10 -20,20 Z" fill="#0B4EA2" transform="translate(0, 5)"/>
-              <path d="M-15,35 C-5,25 5,25 15,35 C5,25 -5,25 -15,35 Z" fill="#0B4EA2" transform="translate(0, 10)"/>
-              <path d="M-5,-30 L5,-30 L5,-15 L20,-15 L20,-5 L5,-5 L5,30 L-5,30 L-5,-5 L-20,-5 L-20,-15 L-5,-15 Z" fill="#FFFFFF"/>
-              <path d="M-10,-25 L10,-25 L10,-15 L-10,-15 Z" fill="#FFFFFF" transform="translate(0, -10)"/>
-            </g>
-          </svg>
-        );
-
-        const FlagBelarus = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="133.3" fill="#D52B1E"/>
-            <rect y="133.3" width="300" height="66.7" fill="#007A33"/>
-            <rect width="33" height="200" fill="#FFFFFF"/>
-            <g transform="translate(16.5, 0)" fill="#D52B1E">
-              {[...Array(10)].map((_, i) => (
-                <polygon key={i} points="0,-10 10,0 0,10 -10,0" transform={`translate(0, ${10 + i * 20})`} />
-              ))}
-              <polygon points="-5,0 5,0 0,10" transform="translate(0, 10)" />
-              <polygon points="-5,200 5,200 0,190" />
-            </g>
-          </svg>
-        );
-
-        // ==========================================
-        // מאגר הנתונים המלא - המדינות הסלאביות
+        // מאגר הנתונים המלא והמורחב (דו-לשוני) - המדינות הסלאביות
         // ==========================================
 
         const countriesData = [
           {
             id: 'russia',
-            name: 'רוסיה',
+            name: { he: 'רוסיה', en: 'Russia' },
             englishName: 'Russia',
-            officialName: 'הפדרציה הרוסית',
-            FlagComponent: FlagRussia,
-            areaNum: '~17,098,242 קמ"ר',
-            populationNum: '~144,000,000',
-            currency: 'רובל רוסי (RUB)',
-            area: 'כ-17,098,242 קמ"ר. המדינה הגדולה בעולם, המשתרעת על פני צפון אסיה ומזרח אירופה. הגיאוגרפיה כוללת את המישורים העצומים של סיביר, רכס הרי אורל (המהווה את הגבול בין אירופה לאסיה), יערות טייגה אדירים ואקלים ארקטי קיצוני בצפון.',
-            demographics: {
-              mainNationName: 'רוסים',
-              mainNationPercent: 'כ-80%',
-              description: 'אומה סלאבית-מזרחית המהווה את הקבוצה האתנית הגדולה ביותר באירופה. הרוב משתייך לכנסייה האורתודוקסית הרוסית. הפדרציה כוללת פסיפס אדיר של למעלה מ-190 מיעוטים אתניים, ביניהם טטרים, צ\'צ\'נים, בשקירים ועמי סיביר ילידים.'
+            officialName: { he: 'הפדרציה הרוסית', en: 'Russian Federation' },
+            flagUrl: 'https://flagcdn.com/w640/ru.webp',
+            capital: {
+              name: { he: "מוסקבה", en: "Moscow" },
+              englishName: "Moscow",
+              etymology: { 
+                he: "העיר נקראת על שם נהר מוסקבה (Moskva) הזורם דרכה. מקור שם הנהר עתיק ואינו סלאבי במקורו – בלשנים סבורים כי הוא נגזר משפות פינו-אוגריות ומשמעותו 'מים אפלים/עכורים', או משורש בלטי קדום שפירושו 'נהר מתפתל'.",
+                en: "The city is named after the Moskva River that flows through it. The river's name is ancient and non-Slavic in origin – linguists believe it derives from Finno-Ugric languages meaning 'dark/turbid waters', or from an ancient Baltic root meaning 'meandering river'."
+              },
+              foundingYear: { he: "1147 (אזכור ראשון בכתובים)", en: "1147 (First historical mention)" },
+              reason: { 
+                he: "מוסקבה נוסדה סביב בניית הקרמלין (מצודה) על גבעה אסטרטגית המשקיפה על נהר מוסקבה. מיקומה במרכז רוסיה האירופית, מוגנת יחסית על ידי יערות עבותים ממתקפות הטטרים במזרח, אפשר לנסיכי מוסקבה לצבור כוח ולרכז סביבם לאט ובבטחה את כלל האדמות והנסיכויות של רוס העתיקה, עד שהפכה לבירתה של האימפריה הרוסית המאוחדת.",
+                en: "Moscow was founded around the construction of the Kremlin (a fortress) on a strategic hill overlooking the Moskva River. Its location in central European Russia, relatively protected by dense forests from Tatar attacks from the east, allowed the Princes of Moscow to accumulate power and slowly but surely centralize all the lands and principalities of ancient Rus', until it became the capital of the unified Russian Empire."
+              }
             },
-            modernHistory: 'לאחר מאות שנות שלטון כאימפריה צארית אדירה, עברה רוסיה ב-1917 מהפכה קומוניסטית שהובילה להקמת ברית המועצות – מעצמת-על עולמית. קריסת ברית המועצות ב-1991 הולידה את הפדרציה הרוסית המודרנית. בשנות ה-2000, תחת ולדימיר פוטין, המדינה חזרה לאסרטיביות אימפריאלית ולעימותים מול המערב.',
-            foundingYears: '862 (רוס של קייב) | 1991 (הפדרציה המודרנית)',
-            flagSymbolism: 'הטריקולור הרוסי (אומץ במקור על ידי פיוטר הגדול כדגל צי סוחר בהשראת דגל הולנד). הלבן מסמל אצילות, טוהר וכנות; הכחול מסמל נאמנות, כנות וצניעות; והאדום מסמל אומץ, אהבה, ועוז רוח בקרב.',
+            areaNum: { he: '~17,098,242 קמ"ר', en: '~17,098,242 sq km' },
+            populationNum: '~144,000,000',
+            currency: { he: 'רובל רוסי (RUB)', en: 'Russian Ruble (RUB)' },
+            area: { 
+              he: 'כ-17,098,242 קמ"ר. המדינה הגדולה בעולם בשטחה, המשתרעת על פני צפון אסיה ומזרח אירופה (אחת עשרה אזורי זמן). הגיאוגרפיה כוללת את המישורים העצומים של סיביר, רכס הרי אורל (המהווה את הגבול בין אירופה לאסיה), יערות טייגה אדירים ואקלים ארקטי קיצוני בצפון.',
+              en: 'Approx. 17,098,242 sq km. The largest country in the world by area, spanning northern Asia and Eastern Europe (spanning eleven time zones). The geography includes the vast plains of Siberia, the Ural Mountains (forming the border between Europe and Asia), massive taiga forests, and extreme Arctic climates in the north.'
+            },
+            demographics: {
+              mainNationName: { he: 'רוסים', en: 'Russians' },
+              mainNationPercent: { he: 'כ-80%', en: '~80%' },
+              description: { 
+                he: 'אומה סלאבית-מזרחית המהווה את הקבוצה האתנית הגדולה ביותר באירופה. הרוב משתייך לכנסייה האורתודוקסית הרוסית. הפדרציה כוללת פסיפס אדיר של למעלה מ-190 מיעוטים אתניים שונים, ביניהם טטרים, צ\'צ\'נים, בשקירים, ועמי סיביר ילידים החיים ברפובליקות אוטונומיות.',
+                en: 'An East Slavic nation forming the largest ethnic group in Europe. The majority belongs to the Russian Orthodox Church. The Federation includes a massive mosaic of over 190 different ethnic minorities, including Tatars, Chechens, Bashkirs, and indigenous Siberian peoples living in autonomous republics.'
+              }
+            },
+            modernHistory: { 
+              he: 'לאחר מאות שנות שלטון כאימפריה צארית אדירה, עברה רוסיה ב-1917 מהפכה קומוניסטית רדיקלית שהובילה להקמת ברית המועצות – מעצמת-על עולמית. קריסת ברית המועצות ב-1991 הולידה את הפדרציה הרוסית המודרנית. בשנות ה-2000, תחת שלטונו הריכוזי של ולדימיר פוטין, המדינה חזרה לאסרטיביות אימפריאלית ולעימותים פוליטיים וצבאיים מול המערב.',
+              en: 'After centuries of rule as a mighty Tsarist empire, Russia underwent a radical communist revolution in 1917, leading to the establishment of the Soviet Union – a global superpower. The collapse of the Soviet Union in 1991 gave birth to the modern Russian Federation. In the 2000s, under the centralized rule of Vladimir Putin, the country returned to imperial assertiveness and political and military confrontations with the West.'
+            },
+            foundingYears: { he: '862 (רוס של קייב) | 1991 (הפדרציה המודרנית)', en: '862 (Kievan Rus) | 1991 (Modern Federation)' },
+            flagSymbolism: { 
+              he: 'הטריקולור הרוסי (אומץ במקור על ידי פיוטר הגדול כדגל של הצי הסוחר הרוסי, בהשראת דגל הולנד). הלבן (למעלה) מסמל אצילות, טוהר, כנות ושלמות; הכחול (במרכז) מסמל נאמנות, כנות, צניעות ואת המדונה (מרים הבתולה) הנחשבת למגינת רוסיה; והאדום (למטה) מסמל אומץ, אהבה, ועוז רוח בקרב.',
+              en: 'The Russian Tricolor (originally adopted by Peter the Great as the flag for the Russian merchant fleet, inspired by the Dutch flag). White (top) symbolizes nobility, purity, frankness, and perfection; Blue (center) symbolizes loyalty, honesty, chastity, and the Madonna (Virgin Mary) who is considered the protector of Russia; and Red (bottom) symbolizes courage, love, and valor in battle.'
+            },
+            nationalAnimal: {
+              name: { he: "דוב חום אירואסיאתי (Eurasian Brown Bear)", en: "Eurasian Brown Bear" },
+              reason: { 
+                he: "הדוב החום הוא החיה האייקונית המזוהה ביותר עם רוסיה בעולם. הדוב מסמל גודל פיזי עצום, כוח גולמי פראי, ואת השטחים המיוערים והעצומים של סיביר והטייגה הרוסית שבהם הוא שולט ללא עוררין. הדוב נטוע עמוק בפולקלור ובאגדות העם הסלאביות (הוא מכונה בחיבה 'מישה'), ומייצג את האופי הרוסי: נראה מנומנם ורגוע בחורף, אך עוצמתי ואכזרי כשמעירים ומתגרים בו.",
+                en: "The brown bear is the most iconic animal identified with Russia globally. The bear symbolizes immense physical size, raw wild power, and the vast forested expanses of Siberia and the Russian taiga where it reigns supreme. The bear is deeply rooted in Slavic folklore and fairy tales (affectionately called 'Misha'), and represents the Russian character: seemingly sleepy and calm in winter, but immensely powerful and ferocious when awakened and provoked."
+              }
+            },
             etymology: {
               parts: [
-                { text: 'רוס (Rus)', color: 'text-rose-400', bg: 'bg-rose-400/10', border: 'border-rose-500/30', desc: 'המונח ההיסטורי העתיק. מקורו במילה הנורדית העתיקה "Róþsmenn" (רוֹתְ\'סְמֶן), שפירושה "אלו שחותרים" (אנשי הסירות). השם שימש את השבטים הסלאביים לתיאור הוויקינגים הוורנגים שהגיעו מסקנדינביה, שטו בנהרות מזרח אירופה, וייסדו את המדינות הסלאביות הראשונות.' },
-                { text: 'איה (IA)', color: 'text-indigo-400', bg: 'bg-indigo-400/10', border: 'border-indigo-500/30', desc: 'סיומת לטינית-יוונית המציינת "ארץ" או טריטוריה.' }
+                { text: { he: 'רוס (Rus)', en: 'Rus' }, color: 'text-rose-400', bg: 'bg-rose-400/10', border: 'border-rose-500/30', desc: { he: 'המונח ההיסטורי העתיק. מקורו במילה הנורדית העתיקה "Róþsmenn" (רוֹתְ\'סְמֶן), שפירושה "אלו שחותרים" (אנשי הסירות). השם שימש את השבטים הסלאביים לתיאור הוויקינגים הוורנגים שהגיעו מסקנדינביה, שטו בנהרות מזרח אירופה, וייסדו את המדינות הסלאביות הראשונות.', en: 'The ancient historical term. Its origin is in the Old Norse word "Róþsmenn", meaning "the men who row" (boatmen). The name was used by the Slavic tribes to describe the Varangian Vikings who arrived from Scandinavia, navigated the rivers of Eastern Europe, and founded the first Slavic states.' } },
+                { text: { he: 'איה (IA)', en: 'IA' }, color: 'text-indigo-400', bg: 'bg-indigo-400/10', border: 'border-indigo-500/30', desc: { he: 'סיומת לטינית-יוונית נפוצה המציינת "ארץ" או "טריטוריה".', en: 'A common Latin-Greek suffix indicating "land" or "territory".' } }
               ],
-              synthesis: 'מילולית: "ארצם של הרוס" – המדינה שנבנתה על ידי, ונקראת על שם, חותרי הסירות הסקנדינבים הקדומים ששלטו בסלאבים.'
+              synthesis: { he: 'מילולית: "ארצם של הרוס" – המדינה שנבנתה על ידי, ונקראת על שם, חותרי הסירות הסקנדינבים הקדומים ששלטו בסלאבים.', en: 'Literally: "Land of the Rus" – the state built by, and named after, the ancient Scandinavian boat rowers who ruled over the Slavs.' }
             },
             figure: {
-              name: 'פיוטר הגדול (Peter the Great)',
+              name: { he: 'פיוטר הגדול (Peter the Great)', en: 'Peter the Great' },
               years: '1672 - 1725',
-              childhood: 'נולד במוסקבה אך גדל הרחק מחצר הקרמלין השמרנית, בסביבת "המושבה הגרמנית". שם נחשף לתרבות מערבית, לספינות, לטכנולוגיה ולאמנות המלחמה והמכניקה, שעיצבו את כל תפיסת עולמו.',
-              ideology: 'התמערבות (Westernization) כפויה, אבסולוטיזם רפורמטורי, ובניית אימפריה ימית. הוא שאף להוציא את רוסיה מ"החשכה של ימי הביניים" ולהפוך אותה למעצמה אירופאית מודרנית בכל מחיר, כולל גילוח זקני הבויארים (האצילים).',
-              achievements: 'הפך את רוסיה למעצמה אירופאית ואת הצארות ל"אימפריה הרוסית". הקים את הצי הרוסי הראשון, כבש גישה לים הבלטי משוודיה, וייסד את הבירה החדשה והמפוארת סנט פטרסבורג על ביצות כדי שתשמש כ"חלון לאירופה".'
+              childhood: { 
+                he: 'נולד במוסקבה אך גדל הרחק מהאווירה השמרנית של חצר הקרמלין, בסביבת "המושבה הגרמנית" של תושבים אירופאים. שם נחשף לתרבות מערבית, לספינות, לטכנולוגיה מתקדמת, לאמנות המלחמה ולמכניקה. חוויות ילדות אלו עיצבו את כל תפיסת עולמו כלפי הפער בין רוסיה למערב.',
+                en: 'Born in Moscow but grew up far from the conservative atmosphere of the Kremlin court, in the vicinity of the "German Quarter" inhabited by Europeans. There he was exposed to Western culture, ships, advanced technology, the art of war, and mechanics. These childhood experiences shaped his entire worldview regarding the gap between Russia and the West.'
+              },
+              ideology: { 
+                he: 'התמערבות (Westernization) כפויה, אבסולוטיזם רפורמטורי חסר פשרות, ובניית אימפריה ימית צבאית חזקה. הוא שאף להוציא את רוסיה מ"החשכה של ימי הביניים" ולהפוך אותה למעצמה אירופאית מודרנית בכל מחיר, כולל חקיקה שכפתה גילוח של זקני הבויארים האורתודוקסים (האצילים) כדי שייראו כמו אירופאים.',
+                en: 'Forced Westernization, uncompromising reformist absolutism, and building a strong military naval empire. He aspired to pull Russia out of the "darkness of the Middle Ages" and transform it into a modern European power at all costs, including legislation that forced the Orthodox Boyars (nobles) to shave their beards so they would look like Europeans.'
+              },
+              achievements: { 
+                he: 'הפך את רוסיה למעצמה אירופאית ואת הצארות ל"אימפריה הרוסית". הקים במו ידיו את הצי הרוסי המודרני הראשון, ניצח את שוודיה במלחמת הצפון הגדולה כדי לכבוש גישה אסטרטגית לים הבלטי, וייסד את הבירה החדשה והמפוארת סנט פטרסבורג על גבי ביצות, כדי שתשמש כ"חלון לאירופה".',
+                en: 'Transformed Russia into a European power and the Tsardom into the "Russian Empire". He single-handedly established the first modern Russian Navy, defeated Sweden in the Great Northern War to conquer strategic access to the Baltic Sea, and founded the magnificent new capital St. Petersburg on top of swamps, to serve as a "window to Europe".'
+              }
             },
             map: {
               url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_russia_empire.jpg?v=2',
-              title: 'האימפריה הרוסית בעת החדשה המוקדמת',
-              desc: 'מפה קרטוגרפית עתיקה מהמאה ה-18 המציגה את התרחבותה העצומה של רוסיה, ממוסקבה ועד סיביר והרי אורל. הסגנון הוא וינטג\' עם דיו קלאסי ושושנת רוחות.'
+              title: { he: 'האימפריה הרוסית בעת החדשה המוקדמת', en: 'The Russian Empire in the Early Modern Period' },
+              desc: { 
+                he: 'מפה קרטוגרפית עתיקה מהמאה ה-18 המציגה את התרחבותה העצומה של רוסיה, ממוסקבה ועד סיביר והרי אורל. הסגנון הוא וינטג\' עם דיו קלאסי ושושנת רוחות.',
+                en: 'An ancient cartographic map from the 18th century showing the massive expansion of Russia, from Moscow to Siberia and the Ural Mountains. The style is vintage with classic ink and a compass rose.'
+              }
             }
           },
           {
             id: 'ukraine',
-            name: 'אוקראינה',
+            name: { he: 'אוקראינה', en: 'Ukraine' },
             englishName: 'Ukraine',
-            officialName: 'אוקראינה',
-            FlagComponent: FlagUkraine,
-            areaNum: '~603,628 קמ"ר',
-            populationNum: '~38,000,000',
-            currency: 'הריבניה (UAH)',
-            area: 'כ-603,628 קמ"ר (המדינה הגדולה ביותר ששטחה בשלמותו באירופה). הגיאוגרפיה מאופיינת במישורי הערבה (הסטפה) העצומים והפוריים להפליא, ובנהר הדנייפר (Dnieper) האדיר שחוצה אותה מדרום לצפון.',
-            demographics: {
-              mainNationName: 'אוקראינים',
-              mainNationPercent: 'כ-77%',
-              description: 'אומה סלאבית-מזרחית ששורשיה המדיניים נעוצים ברוס של קייב. רוב האוכלוסייה משתייכת לכנסיות האורתודוקסיות (עם פיצול בין כנסיות לאומיות לאלו הקשורות למוסקבה) וישנו גם זרם קתולי-יווני במערב. המדינה חווה התלכדות לאומית עוצמתית עקב פלישת רוסיה.'
+            officialName: { he: 'אוקראינה', en: 'Ukraine' },
+            flagUrl: 'https://flagcdn.com/w640/ua.webp',
+            capital: {
+              name: { he: "קייב", en: "Kyiv" },
+              englishName: "Kyiv",
+              etymology: { 
+                he: "על פי הכרוניקות הסלאביות העתיקות, קייב נקראת על שמו של קִי (Kyi), הבכור מבין ארבעה אחים ואחיות אגדיים (קי, שצ'ק, חוריב ולִיבִּיד) אשר ייסדו את העיר. משמעות השם היא 'העיר של קי'.",
+                en: "According to ancient Slavic chronicles, Kyiv is named after Kyi, the eldest of four legendary siblings (Kyi, Shchek, Khoryv, and Lybid) who founded the city. The name means 'The city of Kyi'."
+              },
+              foundingYear: { he: "482 לספירה (על פי האגדה והמסורת)", en: "482 AD (According to legend and tradition)" },
+              reason: { 
+                he: "קייב הוקמה על הגדות הגבוהות והשולטות של נהר הדנייפר. מיקום גיאוגרפי זה הפך אותה לתחנת מעבר חיונית במסלול הסחר המפורסם 'מהוורנגים (הוויקינגים) ליוונים (הביזנטים)'. בזכות עושרה הכלכלי מנתיב סחר זה, היא התפתחה להיות המרכז הפוליטי, התרבותי והדתי של 'רוס של קייב', המדינה הסלאבית הגדולה הראשונה בימי הביניים.",
+                en: "Kyiv was established on the high, commanding banks of the Dnieper River. This geographical location made it a vital transit point on the famous trade route 'from the Varangians (Vikings) to the Greeks (Byzantines)'. Thanks to its economic wealth from this trade route, it developed to become the political, cultural, and religious center of 'Kievan Rus', the first great Slavic state in the Middle Ages."
+              }
             },
-            modernHistory: 'שנים רבות נקרעה בין פולין, רוסיה והאימפריה ההבסבורגית. לאחר הכיבוש הסובייטי, חוותה אוקראינה את ה"הולודומור" (הרעבה מתוכננת על ידי סטלין שהרגה מיליונים) ואת אסון צ\'רנוביל. היא זכתה בעצמאות ב-1991. מאז 2014, ובמיוחד מאז 2022, המדינה נמצאת במלחמת הישרדות דרמטית ועקובה מדם מול פלישה מלאה של הפדרציה הרוסית.',
-            foundingYears: '1917 (הרפובליקה העממית) | 1991',
-            flagSymbolism: 'הדגל, המורכב משני פסים אופקיים רחבים, הוא אחד מהסמלים הברורים ביותר בעולם הפקסילולוגיה: החצי העליון הכחול מסמל את השמיים הפתוחים והבהירים של המדינה, והחצי התחתון הצהוב מסמל את שדות החיטה הזהובים והאינסופיים שהקנו לאוקראינה את התואר "אסם התבואה של אירופה".',
+            areaNum: { he: '~603,628 קמ"ר', en: '~603,628 sq km' },
+            populationNum: '~38,000,000',
+            currency: { he: 'הריבניה (UAH)', en: 'Ukrainian Hryvnia (UAH)' },
+            area: { 
+              he: 'כ-603,628 קמ"ר (המדינה הגדולה ביותר ששטחה בשלמותו נמצא ביבשת אירופה). הגיאוגרפיה מאופיינת במישורי הערבה (הסטפה) העצומים והפוריים להפליא הידועים באדמה השחורה שלהם, ובנהר הדנייפר (Dnieper) האדיר שחוצה אותה מדרום לצפון.',
+              en: 'Approx. 603,628 sq km (the largest country whose territory lies entirely within the continent of Europe). The geography is characterized by the vast and incredibly fertile steppe plains known for their black soil, and the mighty Dnieper River that crosses it from north to south.'
+            },
+            demographics: {
+              mainNationName: { he: 'אוקראינים', en: 'Ukrainians' },
+              mainNationPercent: { he: 'כ-77%', en: '~77%' },
+              description: { 
+                he: 'אומה סלאבית-מזרחית חזקה ששורשיה המדיניים נעוצים ברוס של קייב. רוב האוכלוסייה משתייכת לכנסיות האורתודוקסיות וישנו גם זרם קתולי-יווני משמעותי במערב. המדינה (ובייחוד בעקבות פלישת רוסיה) חווה התלכדות לאומית ואזרחית עוצמתית חסרת תקדים סביב זהותה המערבית והעצמאית.',
+                en: 'A strong East Slavic nation whose state roots are anchored in Kievan Rus. Most of the population belongs to Orthodox churches, and there is also a significant Greek Catholic stream in the west. The country (especially following the Russian invasion) is experiencing an unprecedentedly powerful civic and national consolidation around its Western and independent identity.'
+              }
+            },
+            modernHistory: { 
+              he: 'שנים רבות נקרעה הטריטוריה בין פולין, רוסיה והאימפריה ההבסבורגית. לאחר הכיבוש הסובייטי, חוותה אוקראינה את ה"הולודומור" (הרעבה מתוכננת ואכזרית על ידי סטלין שהרגה מיליונים) ואת אסון הגרעין בצ\'רנוביל. היא זכתה בעצמאות מבריה"מ ב-1991. מאז 2014 (סיפוח קרים), ובמיוחד מאז 2022, המדינה נמצאת במלחמת הישרדות ועצמאות הירואית, דרמטית ועקובה מדם מול פלישה מלאה של הפדרציה הרוסית.',
+              en: 'For many years, the territory was torn between Poland, Russia, and the Habsburg Empire. After the Soviet occupation, Ukraine experienced the "Holodomor" (a cruel, planned starvation by Stalin that killed millions) and the Chernobyl nuclear disaster. It gained independence from the USSR in 1991. Since 2014 (annexation of Crimea), and especially since 2022, the country has been in a heroic, dramatic, and bloody war of survival and independence against a full-scale invasion by the Russian Federation.'
+            },
+            foundingYears: { he: '1917 (הרפובליקה העממית) | 1991 (עצמאות מבריה"מ)', en: '1917 (People\'s Republic) | 1991 (Independence from USSR)' },
+            flagSymbolism: { 
+              he: 'הדגל, המורכב משני פסים אופקיים רחבים, הוא אחד מהסמלים הוויזואליים והברורים ביותר בעולם הפקסילולוגיה (חקר הדגלים): החצי העליון הכחול מסמל את השמיים הפתוחים והבהירים של המדינה, והחצי התחתון הצהוב מסמל את שדות החיטה הזהובים והאינסופיים שהקנו לאוקראינה את התואר "אסם התבואה של אירופה".',
+              en: 'The flag, consisting of two broad horizontal stripes, is one of the clearest and most visual symbols in the world of vexillology: the top blue half symbolizes the open, clear skies of the country, and the bottom yellow half symbolizes the endless golden wheat fields that earned Ukraine the title "the breadbasket of Europe".'
+            },
+            nationalAnimal: {
+              name: { he: "זמיר מצוי (Common Nightingale)", en: "Common Nightingale" },
+              reason: { 
+                he: "הזמיר הופך את אוקראינה למדינה ייחודית הבוחרת בציפור שיר זעירה ועדינה כסמלה. הזמיר מסמל את המנגינות המתוקות, את התקווה באביב, ואת נשמתו החופשית, הפואטית והמוזיקלית של העם האוקראיני. הוא מוזכר באין ספור שירי עם, פולקלור, ופואמות לאומיות אוקראיניות (במיוחד ביצירותיו של המשורר הלאומי טאראס שבצ'נקו).",
+                en: "The nightingale makes Ukraine unique for choosing a tiny, delicate songbird as its symbol. The nightingale symbolizes sweet melodies, hope in spring, and the free, poetic, and musical soul of the Ukrainian people. It is mentioned in countless Ukrainian folk songs, folklore, and national poems (especially in the works of the national poet Taras Shevchenko)."
+              }
+            },
             etymology: {
               parts: [
-                { text: 'או (U)', color: 'text-teal-400', bg: 'bg-teal-400/10', border: 'border-teal-500/30', desc: 'תחילית סלאבית שמשמעותה "ליד", "ב-", או "בתוך".' },
-                { text: 'קראינה (Krai / Kraina)', color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-500/30', desc: 'מילה סלאבית עתיקה שמשמעותה המקורית הייתה "קצה", "גבול", או "ספר". במהלך ימי הביניים, האזור שמעבר לקייב נחשב לאזור הגבול בין המרחב הסלאבי המיושב לבין הערבות של שבטי הנוודים מהמזרח (כמו הטטרים).' }
+                { text: { he: 'או (U)', en: 'U' }, color: 'text-teal-400', bg: 'bg-teal-400/10', border: 'border-teal-500/30', desc: { he: 'תחילית סלאבית עתיקה שמשמעותה "ליד", "ב-", או "בתוך".', en: 'An ancient Slavic prefix meaning "near", "at", or "in".' } },
+                { text: { he: 'קראינה (Krai / Kraina)', en: 'Krai / Kraina' }, color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-500/30', desc: { he: 'מילה סלאבית עתיקה שמשמעותה המקורית הייתה "קצה", "גבול", או "ספר". במהלך ימי הביניים, האזור שמעבר לקייב נחשב לאזור הגבול בין המרחב הסלאבי המיושב (פולין/רוסיה) לבין הערבות המסוכנות של שבטי הנוודים מהמזרח (כמו הטטרים).', en: 'An ancient Slavic word whose original meaning was "edge", "border", or "march". During the Middle Ages, the region beyond Kyiv was considered the borderland between the settled Slavic expanse (Poland/Russia) and the dangerous steppes of nomadic tribes from the east (like the Tatars).' } }
               ],
-              synthesis: 'מילולית: "ארץ הספר" (או "הטריטוריה שבגבול"). כיום האוקראינים מעדיפים לפרש את השם כ"הארץ שלנו" או "מולדת" פנימית.'
+              synthesis: { he: 'מילולית היסטורית: "ארץ הספר" (או "הטריטוריה שבגבול"). כיום האוקראינים מעדיפים לפרש ולתרגם את השם באופן פנימי כ"הארץ שלנו" או "המולדת".', en: 'Historically literal: "The Borderland" (or "the territory at the edge"). Today, Ukrainians prefer to interpret and translate the name internally as "Our Land" or "The Homeland".' }
             },
             figure: {
-              name: 'בוגדן חמלניצקי (Bohdan Khmelnytsky)',
+              name: { he: 'בוגדן חמלניצקי (Bohdan Khmelnytsky)', en: 'Bohdan Khmelnytsky' },
               years: '1595 - 1657',
-              childhood: 'נולד באוקראינה למשפחה של אצולה זעירה אורתודוקסית תחת שלטון פולני-קתולי. קיבל חינוך קלאסי מעולה על ידי מסדר הישועים הקתולי, אך שמר על נאמנות עמוקה לזהותו האורתודוקסית הסלאבית.',
-              ideology: 'עצמאות ואוטונומיה צבאית ללוחמי הקוזאקים. הוא התקומם נגד הדיכוי הדתי (הקתולי), הפוליטי והכלכלי שהשיתה האצולה הפולנית הגבוהה על האיכרים האורתודוקסים והקוזאקים באוקראינה.',
-              achievements: 'הנהיג את "מרד חמלניצקי" האדיר (1648) שקרע את אוקראינה מהאיחוד הפולני-ליטאי. הקים את "ההטמאנות הקוזאקית" – ישות מדינית אוקראינית עצמאית, שנחשבת לאבן היסוד הראשונה של מדינה אוקראינית מודרנית (הגם שבסוף ימיו נאלץ לחתום על ברית בעייתית עם רוסיה).'
+              childhood: { 
+                he: 'נולד באוקראינה למשפחה של אצולה זעירה אורתודוקסית תחת שלטון פולני-קתולי הדוק. הוא קיבל חינוך קלאסי מעולה על ידי מסדר הישועים הקתולי, בו למד לטינית ואמנות רטוריקה, אך שמר על נאמנות עמוקה לזהותו האורתודוקסית הסלאבית ולאחיו הקוזאקים.',
+                en: 'Born in Ukraine to a family of minor Orthodox nobility under strict Polish-Catholic rule. He received an excellent classical education from the Catholic Jesuit order, where he learned Latin and the art of rhetoric, but maintained deep loyalty to his Slavic Orthodox identity and his Cossack brethren.'
+              },
+              ideology: { 
+                he: 'עצמאות ואוטונומיה צבאית ופוליטית ללוחמי הקוזאקים. הוא התקומם נגד הדיכוי הדתי (הקתולי), הפוליטי והכלכלי שהשיתה האצולה הפולנית הגבוהה על האיכרים האורתודוקסים והקוזאקים החופשיים ברחבי אוקראינה.',
+                en: 'Independence and military/political autonomy for the Cossack warriors. He rebelled against the religious (Catholic), political, and economic oppression imposed by the high Polish nobility upon the Orthodox peasants and free Cossacks across Ukraine.'
+              },
+              achievements: { 
+                he: 'הנהיג את "מרד חמלניצקי" האדיר ב-1648 שקרע והפריד את אוקראינה מהאיחוד הפולני-ליטאי. הקים את "ההטמאנות הקוזאקית" – ישות מדינית אוקראינית עצמאית וחזקה, שנחשבת לאבן היסוד הראשונה של מדינה אוקראינית לאומית מודרנית (הגם שבסוף ימיו, תחת לחץ צבאי, נאלץ לחתום על ברית בעייתית וגורלית עם רוסיה בהסכם פריאסלאב).',
+                en: 'Led the massive "Khmelnytsky Uprising" in 1648 which tore and separated Ukraine from the Polish-Lithuanian Commonwealth. He established the "Cossack Hetmanate" – an independent and strong Ukrainian political entity, considered the first cornerstone of a modern national Ukrainian state (though at the end of his life, under military pressure, he was forced to sign a problematic and fateful alliance with Russia in the Treaty of Pereyaslav).'
+              }
             },
             map: {
               url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_ukraine_kievan_rus.jpg?v=2',
-              title: 'אוקראינה ורוס של קייב',
-              desc: 'מפה היסטורית מהמאה ה-11 המציגה את מרחב רוס של קייב (Kievan Rus), עם התמקדות בנהר הדנייפר ובעיר הבירה קייב.'
+              title: { he: 'אוקראינה ורוס של קייב', en: 'Ukraine and Kievan Rus' },
+              desc: { 
+                he: 'מפה היסטורית מהמאה ה-11 המציגה את מרחב ההשפעה של אימפריית רוס של קייב (Kievan Rus), עם התמקדות בנהר הדנייפר ובעיר הבירה קייב, ערש התרבות הסלאבית המזרחית.',
+                en: 'A historical map from the 11th century showing the sphere of influence of the Kievan Rus empire, focusing on the Dnieper River and the capital Kyiv, the cradle of East Slavic culture.'
+              }
             }
           },
           {
             id: 'poland',
-            name: 'פולין',
+            name: { he: 'פולין', en: 'Poland' },
             englishName: 'Poland',
-            officialName: 'רפובליקת פולין',
-            FlagComponent: FlagPoland,
-            areaNum: '~312,696 קמ"ר',
-            populationNum: '~38,000,000',
-            currency: 'זלוטי פולני (PLN)',
-            area: 'כ-312,696 קמ"ר. מדינה מרכז-אירופאית עם יציאה לים הבלטי בצפון, מישורים חקלאיים עצומים וגבעות מיוערות במרכז, ושרשרת הרי הטאטרה (הקרפטים) המרהיבים בגבולה הדרומי.',
-            demographics: {
-              mainNationName: 'פולנים',
-              mainNationPercent: 'כ-98%',
-              description: 'אומה סלאבית-מערבית מההומוגניות ביותר באירופה, הן מבחינה אתנית והן מבחינה דתית (רוב מוחץ של קתולים אדוקים). לפני מלחמת העולם השנייה פולין הייתה מדינה רב-אתנית ועשירה תרבותית, והייתה המרכז הגדול בעולם של יהדות אירופה.'
+            officialName: { he: 'רפובליקת פולין', en: 'Republic of Poland' },
+            flagUrl: 'https://flagcdn.com/w640/pl.webp',
+            capital: {
+              name: { he: "ורשה", en: "Warsaw" },
+              englishName: "Warsaw",
+              etymology: { 
+                he: "מקור השם ורשה (Warszawa) נובע, ככל הנראה, מצורת השייכות של השם הסלאבי העתיק ורש (Warsz), כלומר 'העיר של ורש'. מסורת עממית פולנית ואגדה רומנטית מספרת כי העיר נקראת על שמם של דייג בשם וארס (Wars) ואשתו סאווה (Sawa), שאירחו בנדיבות נסיך אובד והוא הורה להקים עיר על שמם.",
+                en: "The name Warsaw (Warszawa) likely stems from the possessive form of the old Slavic name Warsz, meaning 'Warsz's city'. A Polish folk tradition and romantic legend tells that the city is named after a fisherman named Wars and his wife Sawa, who generously hosted a lost prince, and he ordered a city built in their name."
+              },
+              foundingYear: { he: "המאה ה-13 (הפכה לבירה ב-1596)", en: "13th Century (Became capital in 1596)" },
+              reason: { 
+                he: "ורשה הפכה לבירת האיחוד הפולני-ליטאי בהחלטתו של המלך זיגמונט השלישי ואזה. הסיבה המרכזית הייתה גיאוגרפית: ורשה הייתה ממוקמת במרכז הגיאוגרפי המדויק בין שתי הבירות הקודמות של האיחוד, קרקוב (בפולין בדרום) ווילנה (בליטא במזרח). בנוסף, היא הייתה קרובה יותר לים הבלטי, מה שהקל על המסחר ועל הגישה לשוודיה (מולדת המלך).",
+                en: "Warsaw became the capital of the Polish-Lithuanian Commonwealth by the decision of King Sigismund III Vasa. The main reason was geographical: Warsaw was located in the exact geographical center between the two previous capitals of the union, Krakow (in Poland to the south) and Vilnius (in Lithuania to the east). Additionally, it was closer to the Baltic Sea, which facilitated trade and access to Sweden (the King's homeland)."
+              }
             },
-            modernHistory: 'בימי הביניים, האיחוד הפולני-ליטאי היה המדינה הגדולה באירופה. בסוף המאה ה-18 פולין נמחקה מהמפה וחולקה על ידי רוסיה, פרוסיה ואוסטריה. היא חזרה לעצמאות ב-1918, אך נכבשה והוחרבה לחלוטין על ידי גרמניה הנאצית וברית המועצות במלחמת העולם השנייה (שעל אדמתה הוקמו מחנות ההשמדה). כיום פולין היא מעצמה אזורית כלכלית וצבאית חזקה ופרו-מערבית בלב האיחוד האירופי.',
-            foundingYears: '966 (התנצרות הממלכה) | 1918',
-            flagSymbolism: 'הדגל הלאומי מבוסס על צבעי הסמל ההיסטורי של פולין: הלבן (למעלה) מסמל את העיט הלבן המסורתי המייצג טוהר, תקווה ושלום, והאדום (למטה) מסמל את המגן האדום שעליו ניצב העיט, שמסמל את הדם שהקריבו דורות של פולנים למען המולדת.',
+            areaNum: { he: '~312,696 קמ"ר', en: '~312,696 sq km' },
+            populationNum: '~38,000,000',
+            currency: { he: 'זלוטי פולני (PLN)', en: 'Polish Zloty (PLN)' },
+            area: { 
+              he: 'כ-312,696 קמ"ר. מדינה גדולה במרכז אירופה עם יציאה לים הבלטי בצפון. הגיאוגרפיה מורכבת ממישורים חקלאיים עצומים השולטים על רוב המדינה, גבעות מיוערות במרכז, ושרשרת הרי הטאטרה ורכס הקרפטים המרהיבים המהווים את גבולה הדרומי הטבעי עם צ\'כיה וסלובקיה.',
+              en: 'Approx. 312,696 sq km. A large country in Central Europe with access to the Baltic Sea in the north. The geography consists of vast agricultural plains dominating most of the country, forested hills in the center, and the magnificent Tatra and Carpathian mountain ranges forming its natural southern border with Czechia and Slovakia.'
+            },
+            demographics: {
+              mainNationName: { he: 'פולנים', en: 'Poles' },
+              mainNationPercent: { he: 'כ-98%', en: '~98%' },
+              description: { 
+                he: 'אומה סלאבית-מערבית מההומוגניות ביותר באירופה, הן מבחינה אתנית והן מבחינה דתית (רוב מוחץ ודומיננטי של קתולים אדוקים). יש לזכור שלפני מלחמת העולם השנייה, פולין הייתה מדינה רב-אתנית וסובלנית, והיוותה את המרכז הגדול והחשוב ביותר בעולם של יהדות אירופה.',
+                en: 'A West Slavic nation that is one of the most homogeneous in Europe, both ethnically and religiously (an overwhelming and dominant majority of devout Roman Catholics). It should be remembered that before WWII, Poland was a multi-ethnic and tolerant country, serving as the largest and most important center in the world for European Jewry.'
+              }
+            },
+            modernHistory: { 
+              he: 'בימי הביניים, האיחוד הפולני-ליטאי היה המדינה הגדולה והסובלנית באירופה. אולם, בסוף המאה ה-18 פולין נמחקה מהמפה וחולקה באכזריות על ידי רוסיה, פרוסיה ואוסטריה. היא חזרה לעצמאותה ב-1918 (הרפובליקה השנייה), אך נכבשה והוחרבה לחלוטין על ידי גרמניה הנאצית וברית המועצות במלחמת העולם השנייה (שעל אדמתה הוקמו מחנות ההשמדה). לאחר עידן קומוניסטי תחת מסך הברזל, כיום פולין היא מעצמה אזורית כלכלית וצבאית חזקה ופרו-מערבית בלב האיחוד האירופי ונאט"ו.',
+              en: 'In the Middle Ages, the Polish-Lithuanian Commonwealth was the largest and most tolerant state in Europe. However, at the end of the 18th century, Poland was erased from the map and brutally partitioned by Russia, Prussia, and Austria. It regained independence in 1918 (the Second Republic), but was occupied and utterly destroyed by Nazi Germany and the USSR in WWII (on whose soil the extermination camps were built). After a communist era under the Iron Curtain, today Poland is a strong, pro-Western economic and military regional power in the heart of the EU and NATO.'
+            },
+            foundingYears: { he: '966 (התנצרות הממלכה) | 1918 (עצמאות מודרנית)', en: '966 (Baptism of Poland) | 1918 (Modern Independence)' },
+            flagSymbolism: { 
+              he: 'הדגל הלאומי מבוסס על צבעי הסמל ההיסטורי וההרלדי של פולין: הלבן (למעלה) מסמל את העיט הלבן המסורתי המייצג טוהר אידאולוגי, תקווה ושלום, והאדום (למטה) מסמל את המגן האדום שעליו ניצב העיט, צבע שמסמל את אש המאבק והדם שהקריבו דורות של פולנים למען עצמאות המולדת.',
+              en: 'The national flag is based on the colors of Poland\'s historical and heraldic coat of arms: White (top) symbolizes the traditional White Eagle representing ideological purity, hope, and peace; and Red (bottom) symbolizes the red shield on which the eagle stands, a color representing the fire of struggle and the blood sacrificed by generations of Poles for the homeland\'s independence.'
+            },
+            nationalAnimal: {
+              name: { he: "עיט לבן (White Eagle)", en: "White Eagle" },
+              reason: { 
+                he: "העיט הלבן הוא הסמל העתיק והמקודש של פולין. על פי האגדה המכוננת, לך (Lech), מייסדה המיתולוגי של האומה הפולנית, יצא למסע עם אחיו (רוס וצ'ך) וראה עיט לבן ומלכותי יושב בקינו על עץ, על רקע שמש אדומה שוקעת. המראה נסך בו השראה, והוא החליט להקים שם את בירתה הראשונה של פולין, 'גנייזנו' (שפירושה קן). העיט הלבן עם כתר זהב, על רקע מגן אדום, משמש כסמל הרשמי של המדינה ומוטבע על מטבעותיה ומוסדותיה.",
+                en: "The White Eagle is the ancient and sacred symbol of Poland. According to the founding legend, Lech, the mythological founder of the Polish nation, went on a journey with his brothers (Rus and Czech) and saw a magnificent white eagle sitting in its nest on a tree, against the backdrop of a red setting sun. The sight inspired him, and he decided to found the first capital of Poland there, 'Gniezno' (meaning nest). The crowned white eagle on a red shield serves as the official state emblem."
+              }
+            },
             etymology: {
               parts: [
-                { text: 'פולאנים (Polanie)', color: 'text-sky-400', bg: 'bg-sky-400/10', border: 'border-sky-500/30', desc: 'השם מגיע משמו של השבט הסלאבי-המערבי המרכזי שאיחד את האזור סביב המאה ה-8 וה-9, ה"פולאנים".' },
-                { text: 'שדה/מישור (Pole)', color: 'text-emerald-400', bg: 'bg-emerald-400/10', border: 'border-emerald-500/30', desc: 'שם השבט (Polanie) נגזר ישירות מהמילה הסלאבית העתיקה "Pole" שמשמעותה "שדה מבוער" או "מישור פתוח". השם מתאר בצורה מדויקת את הגיאוגרפיה של אגן הוויסלה והאודר שבו התיישבו.' }
+                { text: { he: 'פולאנים (Polanie)', en: 'Polanie (Polans)' }, color: 'text-sky-400', bg: 'bg-sky-400/10', border: 'border-sky-500/30', desc: { he: 'השם מגיע משמו של השבט הסלאבי-המערבי המרכזי והחזק שאיחד את האזור סביב המאה ה-8 וה-9, ה"פולאנים".', en: 'The name comes from the name of the central and powerful West Slavic tribe that united the region around the 8th and 9th centuries, the "Polanie".' } },
+                { text: { he: 'שדה/מישור (Pole)', en: 'Pole (Field/Plain)' }, color: 'text-emerald-400', bg: 'bg-emerald-400/10', border: 'border-emerald-500/30', desc: { he: 'שם השבט (Polanie) נגזר ישירות מהמילה הסלאבית העתיקה "Pole" שמשמעותה "שדה מבוער", "חלקה חקלאית" או "מישור פתוח". השם מתאר בצורה מושלמת את הגיאוגרפיה השטוחה של אגן נהרות הוויסלה והאודר שבו התיישבו ועיבדו את האדמה.', en: 'The tribe\'s name (Polanie) is derived directly from the Old Slavic word "Pole", meaning "cleared field", "agricultural plot", or "open plain". The name perfectly describes the flat geography of the Vistula and Oder river basins where they settled and cultivated the land.' } }
               ],
-              synthesis: 'מילולית: "אנשי השדות" או "יושבי המישורים".'
+              synthesis: { he: 'מילולית: "אנשי השדות" או "יושבי המישורים الفתוחים".', en: 'Literally: "People of the fields" or "Dwellers of the open plains".' }
             },
             figure: {
-              name: 'יוזף פילסודסקי (Józef Piłsudski)',
+              name: { he: 'יוזף פילסודסקי (Józef Piłsudski)', en: 'Józef Piłsudski' },
               years: '1867 - 1935',
-              childhood: 'נולד בליטא דאז (למשפחת אצולה פולנית שירדה מנכסיה תחת השלטון הרוסי הצארי). ספג בילדותו שנאה עמוקה לדיכוי הרוסי. נזרק מהאוניברסיטה ואף הוגלה לסיביר למשך חמש שנים בשל מעורבות במחתרת אנטי-צארית.',
-              ideology: 'תחילה אימץ סוציאליזם מהפכני, אך אידאולוגיית העל שלו הייתה עצמאות פולין מעל הכל. הוא הגה את רעיון ה"פרומיתאיזם" – ניסיון לפרק את האימפריה הרוסית על ידי תמיכה בתנועות לאומיות של עמים לא-רוסיים (אוקראינים, גיאורגים וכו\').',
-              achievements: 'אבי האומה הפולנית המודרנית. ב-1918 הוביל את הקמת הרפובליקה הפולנית השנייה לאחר 123 שנות מחיקה. הישגו ההיסטורי הגדול ביותר היה הניצחון המזהיר על הצבא האדום הקומוניסטי ב"נס על הוויסלה" ב-1920, שהציל את אירופה כולה מפלישה בולשביקית.'
+              childhood: { 
+                he: 'נולד בליטא דאז (למשפחת אצולה פולנית שירדה מנכסיה תחת השלטון הרוסי הצארי הקפדני). הוא ספג בילדותו מהוריו פטריוטיות לוהטת ושנאה עמוקה לדיכוי הרוסי ולמאמצי ה"רוסיפיקציה". הוא נזרק מהאוניברסיטה ואף הוגלה לסיביר הקפואה למשך חמש שנים בשל מעורבות לכאורה במחתרת אנטי-צארית.',
+                en: 'Born in then-Lithuania (to a Polish noble family that had lost its wealth under strict Tsarist Russian rule). In his childhood, he absorbed from his parents fiery patriotism and a deep hatred for Russian oppression and "Russification" efforts. He was expelled from university and even exiled to frozen Siberia for five years due to alleged involvement in an anti-Tsarist underground.'
+              },
+              ideology: { 
+                he: 'בתחילת דרכו אימץ סוציאליזם מהפכני, אך אידאולוגיית העל שלו הייתה עצמאות פולין מעל הכל. הוא הגה את רעיון ה"פרומיתאיזם" האסטרטגי – ניסיון לפרק ולהחליש את האימפריה הרוסית על ידי תמיכה פעילה בתנועות לאומיות ועצמאות של עמים לא-רוסיים (אוקראינים, גיאורגים, בלטים וכו\') היושבים בגבולותיה.',
+                en: 'Initially adopted revolutionary socialism, but his overarching ideology was the independence of Poland above all else. He conceived the strategic idea of "Prometheism" – an attempt to dismantle and weaken the Russian Empire by actively supporting the national movements and independence of non-Russian peoples (Ukrainians, Georgians, Baltics, etc.) living within its borders.'
+              },
+              achievements: { 
+                he: 'נחשב לאבי האומה הפולנית המודרנית והמשחרר שלה. ב-1918 הוביל צבאית ופוליטית את הקמת הרפובליקה הפולנית השנייה לאחר 123 שנות מחיקה מהמפה. הישגו ההיסטורי והצבאי הגדול ביותר היה הניצחון המזהיר נגד כל הסיכויים על הצבא האדום הקומוניסטי ב"נס על הוויסלה" (הקרב על ורשה) ב-1920, קרב שהציל לא רק את פולין, אלא את אירופה המערבית כולה מפלישה בולשביקית אדומה.',
+                en: 'Considered the father of the modern Polish nation and its liberator. In 1918, he militarily and politically led the establishment of the Second Polish Republic after 123 years of erasure from the map. His greatest historical and military achievement was the brilliant victory against all odds over the communist Red Army in the "Miracle on the Vistula" (Battle of Warsaw) in 1920, a battle that saved not only Poland but all of Western Europe from a red Bolshevik invasion.'
+              }
             },
             map: {
               url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_poland_commonwealth.jpg?v=2',
-              title: 'האיחוד הפולני-ליטאי במאה ה-17',
-              desc: 'מפת וינטג\' המציגה את אחת המדינות הגדולות באירופה של ימי הביניים – פולין וליטא – עם עיטורים עתיקים של קרטוגרפיה צבאית וערים מוקפות חומה.'
+              title: { he: 'האיחוד הפולני-ליטאי במאה ה-17', en: 'The Polish-Lithuanian Commonwealth - 17th Century' },
+              desc: { 
+                he: 'מפת וינטג\' עתיקה המציגה את אחת המדינות הגדולות, החזקות והדמוקרטיות ביותר באירופה של ימי הביניים והעת החדשה המוקדמת – רפובליקת שני העמים (פולין וליטא) – עם עיטורים של קרטוגרפיה צבאית וערים מוקפות חומה.',
+                en: 'An antique vintage map showing one of the largest, strongest, and most democratic states in Europe during the Middle Ages and early modern period – the Republic of Both Nations (Poland and Lithuania) – featuring decorations of military cartography and walled cities.'
+              }
             }
           },
           {
             id: 'czechia',
-            name: 'צ\'כיה',
+            name: { he: 'צ\'כיה', en: 'Czechia' },
             englishName: 'Czechia',
-            officialName: 'הרפובליקה הצ\'כית',
-            FlagComponent: FlagCzechia,
-            areaNum: '~78,871 קמ"ר',
-            populationNum: '~10,800,000',
-            currency: 'קורונה צ\'כית (CZK)',
-            area: 'כ-78,871 קמ"ר. מדינה ללא מוצא לים בליבה של מרכז אירופה. מוקפת כמעט לחלוטין ברכסי הרים (כמו הרי הקרקונושה) היוצרים מעין "קערה" גיאוגרפית המגינה על מישורי בוהמיה ומוראביה הפוריים.',
-            demographics: {
-              mainNationName: 'צ\'כים',
-              mainNationPercent: 'כ-65% (רבים אינם מצהירים)',
-              description: 'אומה סלאבית-מערבית. צ\'כיה ידועה בהיותה אחת המדינות האתאיסטיות והחילוניות ביותר בעולם (מורשת של מלחמות דת היסטוריות אכזריות והתנגדות לשלטון קתולי-הבסבורגי כפוי). היא מתאפיינת בתרבות שקטה, חשיבה רציונלית ותעשייה מתקדמת.'
+            officialName: { he: 'הרפובליקה הצ\'כית', en: 'Czech Republic' },
+            flagUrl: 'https://flagcdn.com/w640/cz.webp',
+            capital: {
+              name: { he: "פראג", en: "Prague" },
+              englishName: "Prague",
+              etymology: { 
+                he: "מקור השם פראג (Praha) נגזר מהמילה הסלאבית 'práh', שמשמעותה 'סף', 'מפתן' או 'מעבורת' (נקודת חצייה רדודה בנהר). השם מתייחס לנקודה הגיאוגרפית הספציפית שבה ניתן היה לחצות בבטחה את נהר הולטאבה המהיר.",
+                en: "The origin of the name Prague (Praha) is derived from the Slavic word 'práh', meaning 'threshold', 'sill', or 'ford' (a shallow river crossing point). The name refers to the specific geographical point where the fast-flowing Vltava River could be safely crossed."
+              },
+              foundingYear: { he: "המאה ה-8 עד ה-9 לספירה", en: "8th to 9th Century AD" },
+              reason: { 
+                he: "פראג התפתחה סביב טירת פראג (מצודה) שנבנתה על גבעה אסטרטגית שחלשה על נהר הולטאבה ועמקיו. השליטה על המעבר הרדוד בנהר אפשרה גביית מיסים ממסחר שעבר במרכז אירופה. ככל שהעיר שגשגה, היא הפכה למקום המושב הטבעי של מלכי בוהמיה, ומאוחר יותר אף שימשה כמושב האימפריה הרומית הקדושה תחת המלך קרל הרביעי שהפך אותה לפנינה גותית.",
+                en: "Prague developed around the Prague Castle (a fortress) built on a strategic hill overlooking the Vltava River and its valleys. Controlling the shallow river crossing allowed for tax collection from trade passing through Central Europe. As the city prospered, it became the natural seat of the Kings of Bohemia, and later even served as the seat of the Holy Roman Empire under King Charles IV, who turned it into a Gothic pearl."
+              }
             },
-            modernHistory: 'ממלכת בוהמיה הייתה בעבר מרכז האימפריה הרומית הקדושה. לאחר מאות שנות שליטה הבסבורגית-אוסטרית, הוקמה ב-1918 צ\'כוסלובקיה כדמוקרטיה תוססת. המדינה נבגדה על ידי המערב ונכבשה על ידי גרמניה הנאצית ב-1938 ("הסכם מינכן"). ב-1993 ("גט הקטיפה") התפצלה צ\'כוסלובקיה בדרכי שלום לצ\'כיה ולסלובקיה. כיום זו מדינה משגשגת ובטוחה.',
-            foundingYears: 'המאה ה-9 (בוהמיה) | 1993 (עצמאות צ\'כיה)',
-            flagSymbolism: 'הדגל (שהיה במקור דגלה של צ\'כוסלובקיה השלמה) מכיל משולש כחול ומשני פסים לבן ואדום. הלבן והאדום הם הצבעים ההיסטוריים של בוהמיה (ממלכת צ\'כיה). המשולש הכחול התווסף ב-1920 כדי להבדיל את הדגל מזה של פולין, והוא מסמל במקור את מוראביה וסלובקיה, ואת שוויון הזכויות של אזרחי המדינה.',
+            areaNum: { he: '~78,871 קמ"ר', en: '~78,871 sq km' },
+            populationNum: '~10,800,000',
+            currency: { he: 'קורונה צ\'כית (CZK)', en: 'Czech Koruna (CZK)' },
+            area: { 
+              he: 'כ-78,871 קמ"ר. מדינה ללא מוצא לים הממוקמת בליבה הפועם של מרכז אירופה. הגיאוגרפיה שלה ייחודית – היא מוקפת כמעט לחלוטין בשרשרת של רכסי הרים (כמו הרי הקרקונושה ושומאבה) היוצרים מעין "קערה" או אגן טבעי המגן על המישורים הפוריים של שני המחוזות ההיסטוריים: בוהמיה (במערב) ומוראביה (במזרח).',
+              en: 'Approx. 78,871 sq km. A landlocked country located in the beating heart of Central Europe. Its geography is unique – it is almost entirely surrounded by a chain of mountain ranges (like the Krkonoše and Šumava mountains) forming a sort of natural "bowl" or basin protecting the fertile plains of the two historical regions: Bohemia (in the west) and Moravia (in the east).'
+            },
+            demographics: {
+              mainNationName: { he: 'צ\'כים', en: 'Czechs' },
+              mainNationPercent: { he: 'כ-65% (רבים אינם מצהירים על מוצא)', en: '~65% (many do not declare ethnicity)' },
+              description: { 
+                he: 'אומה סלאבית-מערבית משכילה. צ\'כיה ידועה ומובחנת בכך שהיא אחת המדינות האתאיסטיות והחילוניות ביותר בעולם. זהו תוצר מורשת של מלחמות דת היסטוריות אכזריות (מלחמות ההוסיטים) והתנגדות עזה לשלטון קתולי-הבסבורגי שכפה עצמו עליהם. העם מתאפיין בתרבות שקטה, חשיבה רציונלית, אהבה לבירה, ותעשייה הנדסית מתקדמת.',
+                en: 'An educated West Slavic nation. Czechia is known and distinguished as one of the most atheistic and secular countries in the world. This is a legacy of brutal historical religious wars (the Hussite Wars) and fierce resistance to a forced Catholic-Habsburg rule. The people are characterized by a quiet culture, rational thinking, a love for beer, and advanced engineering industry.'
+              }
+            },
+            modernHistory: { 
+              he: 'ממלכת בוהמיה הייתה בעבר מרכז הכובד של האימפריה הרומית הקדושה. לאחר מאות שנות שליטה הבסבורגית-אוסטרית, הוקמה ב-1918 מדינת צ\'כוסלובקיה כדמוקרטיה תוססת. המדינה נבגדה קשות על ידי המערב ונכבשה על ידי גרמניה הנאצית ב-1938 במסגרת "הסכם מינכן" הידוע לשמצה. היא שוחררה ב-1945 רק כדי ליפול תחת מסך הברזל הסובייטי (שדיכא באכזריות את "האביב של פראג" ב-1968). ב-1993 ("גט הקטיפה") התפצלה צ\'כוסלובקיה בדרכי שלום לצ\'כיה ולסלובקיה. כיום זו מדינה משגשגת, מתוירת ובטוחה.',
+              en: 'The Kingdom of Bohemia was once the center of gravity of the Holy Roman Empire. After centuries of Habsburg-Austrian rule, the state of Czechoslovakia was founded in 1918 as a vibrant democracy. The country was heavily betrayed by the West and occupied by Nazi Germany in 1938 under the infamous "Munich Agreement". It was liberated in 1945 only to fall under the Soviet Iron Curtain (which brutally crushed the "Prague Spring" in 1968). In 1993 (the "Velvet Divorce"), Czechoslovakia peacefully split into Czechia and Slovakia. Today, it is a prosperous, highly visited, and safe country.'
+            },
+            foundingYears: { he: 'המאה ה-9 (ממלכת בוהמיה) | 1993 (עצמאות כצ\'כיה)', en: '9th Century (Kingdom of Bohemia) | 1993 (Independence as Czechia)' },
+            flagSymbolism: { 
+              he: 'הדגל (שהיה במקור דגלה של צ\'כוסלובקיה השלמה, וצ\'כיה אימצה אותו לאחר הפירוק) מכיל משולש כחול צדדי ושני פסים אופקיים בצבעי לבן ואדום. הלבן והאדום הם הצבעים ההיסטוריים והעתיקים של בוהמיה (ממלכת צ\'כיה המקורית). המשולש הכחול התווסף ב-1920 כדי להבדיל את הדגל מזה של פולין השכנה, והוא מסמל במקור את מחוזות מוראביה וסלובקיה, וכן את שוויון הזכויות של כלל אזרחי המדינה.',
+              en: 'The flag (which was originally the flag of a unified Czechoslovakia, adopted by Czechia after the split) contains a blue side triangle and two horizontal stripes in white and red. White and red are the historical and ancient colors of Bohemia (the original Kingdom of Czechia). The blue triangle was added in 1920 to distinguish the flag from neighboring Poland, originally symbolizing the regions of Moravia and Slovakia, as well as the equal rights of all state citizens.'
+            },
+            nationalAnimal: {
+              name: { he: "אריה כפול-זנב (Double-tailed Lion)", en: "Double-tailed Lion" },
+              reason: { 
+                he: "האריה הכסוף (או הלבן) כפול-הזנב העומד על שתי רגליו האחוריות הוא סמלה ההרלדי העתיק של בוהמיה מאז המאה ה-12. האריה מסמל אומץ, ריבונות, וכוח אריות של השליטים הבוהמיים. שני הזנבות נוספו ככל הנראה כאות הוקרה מהקיסר הרומי הקדוש ללוחמים הבוהמיים על תעוזתם בקרב, או כדי לסמל את האיחוד שבין ממלכת בוהמיה למחוז מוראביה תחת שלטון אחד.",
+                en: "The silver (or white) double-tailed lion standing rampant on its hind legs has been the ancient heraldic symbol of Bohemia since the 12th century. The lion symbolizes courage, sovereignty, and the leonine strength of the Bohemian rulers. The two tails were likely added as a mark of honor from the Holy Roman Emperor to the Bohemian warriors for their bravery in battle, or to symbolize the union of the Kingdom of Bohemia and the region of Moravia under one rule."
+              }
+            },
             etymology: {
               parts: [
-                { text: 'צ\'ך מיתולוגי (Praotec Čech)', color: 'text-violet-400', bg: 'bg-violet-400/10', border: 'border-violet-500/30', desc: 'על פי אגדות העם, "האב הקדמון צ\'ך" הוביל את השבטים הסלאביים לתוך האגן הגיאוגרפי של בוהמיה, והם קראו לעצמם על שמו. זוהי מסורת מקבילה לאגדה של האחים "לך" (פולין) ו"רוס" (רוסיה).' },
-                { text: 'שורש סלאבי קדום', color: 'text-pink-400', bg: 'bg-pink-400/10', border: 'border-pink-500/30', desc: 'בלשנים סבורים שהשם Čech הוא למעשה גזירה של שורש סלאבי עתיק (čelověk / čel-) שפירושו "אדם", "חבר בשבט" או "קרוב משפחה", כדרך של המקומיים לזהות "אחד משלנו".' }
+                { text: { he: 'צ\'ך המיתולוגי (Praotec Čech)', en: 'Mythological Čech (Praotec Čech)' }, color: 'text-violet-400', bg: 'bg-violet-400/10', border: 'border-violet-500/30', desc: { he: 'על פי אגדות העם, גיבור בשם "האב הקדמון צ\'ך" הוביל את השבטים הסלאביים הנודדים לתוך האגן הגיאוגרפי המוגן של בוהמיה (הר ז\'יפ), והם קראו לעצמם על שמו בוקרת תודה. זוהי מסורת פולקלוריסטית המקבילה לאגדת האחים "לך" (בפולין) ו"רוס" (ברוסיה).', en: 'According to folk legends, a hero named "Forefather Čech" led the wandering Slavic tribes into the protected geographical basin of Bohemia (Říp Mountain), and they named themselves after him in gratitude. This is a folkloric tradition parallel to the legend of the brothers "Lech" (in Poland) and "Rus" (in Russia).' } },
+                { text: { he: 'שורש סלאבי קדום', en: 'Ancient Slavic Root' }, color: 'text-pink-400', bg: 'bg-pink-400/10', border: 'border-pink-500/30', desc: { he: 'בלשנים סבורים שהשם Čech הוא למעשה גזירה של שורש סלאבי עתיק (čelověk / čel-) שפירושו "אדם", "חבר בשבט" או "קרוב משפחה", כדרך של המקומיים לזהות "אחד משלנו" אל מול הזרים (הגרמנים).', en: 'Linguists believe the name Čech is actually derived from an ancient Slavic root (čelověk / čel-) meaning "person", "member of the tribe", or "kinsman", as a way for locals to identify "one of our own" versus foreigners (Germans).' } }
               ],
-              synthesis: 'מילולית: "אנשי השבט שלנו" (או "ילדיו של האב צ\'ך").'
+              synthesis: { he: 'מילולית: "אנשי השבט שלנו" (או "ילדיו של האב המייסד צ\'ך").', en: 'Literally: "Members of our tribe" (or "children of the founding Forefather Čech").' }
             },
             figure: {
-              name: 'תומאש גריג מסריק (T.G. Masaryk)',
+              name: { he: 'תומאש גריג מסריק (T.G. Masaryk)', en: 'Tomáš Garrigue Masaryk' },
               years: '1850 - 1937',
-              childhood: 'נולד למשפחה ענייה (לאב סלובקי ולאם מוראבית) באזור מוראביה תחת שליטה אוסטרו-הונגרית. הוא הצטיין בלימודיו והפך לסוציולוג ופילוסוף בעל שם עולמי בווינה ובפראג, שתמיד חיפש את ה"אמת" מאחורי מיתוסים לאומיים.',
-              ideology: 'הומניזם עמוק, אמת אובייקטיבית ודמוקרטיה פלורליסטית (המוטו שלו: "האמת תנצח"). הוא התנגד ללאומנות קיצונית אלימה, אך פעל במרץ לניתוק העמים הצ\'כים והסלובקים מהאימפריה ההבסבורגית השוקעת.',
-              achievements: 'מייסדה העיקרי ונשיאה הראשון של צ\'כוסלובקיה ב-1918. מסריק בנה את אחת הדמוקרטיות היציבות והנאורות ביותר באירופה של בין שתי מלחמות העולם, והוא נערץ עד היום כ"אבי האומה הצ\'כית והסלובקית".'
+              childhood: { 
+                he: 'נולד למשפחה ענייה ממעמד הפועלים (לאב סלובקי ולאם מוראבית דוברת גרמנית) באזור מוראביה שהיה תחת שליטה אוסטרו-הונגרית. הוא נאבק בעוני, עבד כשוליית נפח, אך הצטיין בלימודיו והפך בבגרותו לסוציולוג ופילוסוף בעל שם עולמי באוניברסיטאות בווינה ובפראג, אדם שתמיד חיפש את ה"אמת" האובייקטיבית וסלד ממיתוסים לאומיים מזויפים.',
+                en: 'Born to a poor working-class family (to a Slovak father and a German-speaking Moravian mother) in the Moravia region under Austro-Hungarian rule. He struggled with poverty, worked as a blacksmith\'s apprentice, but excelled in his studies and grew to become a world-renowned sociologist and philosopher at universities in Vienna and Prague, a man who always sought the objective "truth" and despised fake national myths.'
+              },
+              ideology: { 
+                he: 'הומניזם עמוק, אמת אובייקטיבית ודמוקרטיה פלורליסטית חופשית (המוטו שטבע על דגל הנשיאות: "האמת תנצח"). הוא התנגד ללאומנות קיצונית, לאנטישמיות ולמרקסיזם אלים, אך פעל במרץ דיפלומטי ברחבי העולם (במיוחד בארה"ב אצל הנשיא וילסון) לניתוק ושחרור העמים הצ\'כים והסלובקים מהאימפריה ההבסבורגית השוקעת במלחמת העולם הראשונה.',
+                en: 'Deep humanism, objective truth, and free pluralistic democracy (the motto he coined on the presidential standard: "Truth prevails"). He opposed extreme nationalism, antisemitism, and violent Marxism, but worked with diplomatic vigor worldwide (especially in the US with President Wilson) to detach and liberate the Czech and Slovak peoples from the collapsing Habsburg Empire in WWI.'
+              },
+              achievements: { 
+                he: 'מייסדה העיקרי והראשון של צ\'כוסלובקיה כנשיאה המכהן מ-1918. מסריק בנה את אחת הדמוקרטיות היציבות, הכלכליות והנאורות ביותר באירופה בתקופה החשוכה של בין שתי מלחמות העולם. הוא היה מגדלור של הגינות פוליטית, והוא נערץ עד היום כאייקון מוסרי וכ-"אבי האומה הצ\'כית והסלובקית" (המכונה בחיבה "טטצ\'ק" - אבא).',
+                en: 'The principal founder and first President of Czechoslovakia serving from 1918. Masaryk built one of the most stable, prosperous, and enlightened democracies in Europe during the dark interwar period. He was a beacon of political decency, and is revered to this day as a moral icon and the "Father of the Czech and Slovak Nation" (affectionately called "Tatíček" - Daddy).'
+              }
             },
             map: {
               url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_czechia_bohemia.jpg?v=2',
-              title: 'ממלכת בוהמיה העתיקה',
-              desc: 'מפה יפהפייה מהמאה ה-16 המציגה את ממלכת בוהמיה מוקפת טבעת הרים גאומטרית מושלמת, במרכזה פראג, ומשורטטת בסגנון קרטוגרפיה מדיוולי ייחודי.'
+              title: { he: 'ממלכת בוהמיה העתיקה', en: 'Ancient Kingdom of Bohemia' },
+              desc: { 
+                he: 'מפה יפהפייה ונדירה מהמאה ה-16 המציגה את ממלכת בוהמיה מוקפת טבעת הרים גאומטרית מושלמת המגינה עליה מפני אויבים, במרכזה ממוקמת פראג, ומשורטטת בסגנון קרטוגרפיה מדיוולי (ימי הביניים) ייחודי ועשיר.',
+                en: 'A beautiful and rare map from the 16th century showing the Kingdom of Bohemia surrounded by a perfect geometric mountain ring protecting it from enemies, with Prague located in the center, drafted in a unique and rich medieval cartographic style.'
+              }
             }
           },
           {
             id: 'slovakia',
-            name: 'סלובקיה',
+            name: { he: 'סלובקיה', en: 'Slovakia' },
             englishName: 'Slovakia',
-            officialName: 'הרפובליקה הסלובקית',
-            FlagComponent: FlagSlovakia,
-            areaNum: '~49,035 קמ"ר',
-            populationNum: '~5,400,000',
-            currency: 'אירו (EUR)',
-            area: 'כ-49,035 קמ"ר. מדינה מרכז-אירופאית הררית וללא מוצא לים. מתאפיינת בנופים דרמטיים של הרי הטאטרה הגבוהים (חלק משרשרת הקרפטים) בצפון, ומישורי חקלאות ועמק נהר הדנובה בדרום.',
-            demographics: {
-              mainNationName: 'סלובקים',
-              mainNationPercent: 'כ-80%',
-              description: 'אומה סלאבית-מערבית, בעלת מסורת כפרית וקתולית חזקה יותר משכנתה הצ\'כית. ישנו מיעוט הונגרי משמעותי (כ-8.5%) בדרום המדינה, לאורך הגבול, וכן מיעוט של בני רומה.'
+            officialName: { he: 'הרפובליקה הסלובקית', en: 'Slovak Republic' },
+            flagUrl: 'https://flagcdn.com/w640/sk.webp',
+            capital: {
+              name: { he: "ברטיסלבה", en: "Bratislava" },
+              englishName: "Bratislava",
+              etymology: { 
+                he: "השם מודרני יחסית (הוענק רשמית ב-1919) ונגזר משמו של השליט המוראבי בן המאה ה-9, ברסלאב (Braslav), כלומר 'העיר של ברסלאב'. לפני כן, העיר נקראה לאורך מאות שנים בשם הגרמני פרסבורג (Pressburg) או בשם ההונגרי פוז'ון (Pozsony).",
+                en: "The name is relatively modern (officially adopted in 1919) and is derived from the name of the 9th-century Moravian ruler, Braslav, meaning 'Braslav's town'. Previously, the city was known for centuries by its German name Pressburg or its Hungarian name Pozsony."
+              },
+              foundingYear: { he: "907 לספירה (אזכור ראשון)", en: "907 AD (First written mention)" },
+              reason: { 
+                he: "ברטיסלבה הוקמה במיקום אסטרטגי מושלם: צומת דרכים בין נהר הדנובה לבין נתיב הסחר העתיק 'דרך הענבר'. מיקומה המבוצר (טירת ברטיסלבה המשקיפה על הדנובה) והקרוב למרכזי כוח אחרים, הפך אותה למרכז אזורי. באופן היסטורי מרתק, לאחר שבודה (בודפשט) נכבשה על ידי העות'מאנים, ברטיסלבה שימשה במשך כ-300 שנה כעיר ההכתרה וכבירתה החלופית של ממלכת הונגריה.",
+                en: "Bratislava was founded in a perfect strategic location: a crossroads between the Danube River and the ancient 'Amber Road' trade route. Its fortified position (Bratislava Castle overlooking the Danube) and proximity to other power centers made it a regional hub. Historically fascinating, after Buda (Budapest) was conquered by the Ottomans, Bratislava served for about 300 years as the coronation city and alternative capital of the Kingdom of Hungary."
+              }
             },
-            modernHistory: 'במשך קרוב לאלף שנים נשלטה סלובקיה על ידי ממלכת הונגריה. ב-1918 התאחדה עם הצ\'כים למדינת צ\'כוסלובקיה כדי להשתחרר מהשלטון ההונגרי-אוסטרי. במלחמת העולם השנייה הפכה למדינת בובות חסות של הנאצים. לאחר מהפכת הקטיפה (1989) ונפילת הקומוניזם, נפרדה מצ\'כיה ב-1993 והפכה לרפובליקה עצמאית המשלבת כיום כלכלה מתפתחת באיחוד האירופי.',
-            foundingYears: '1993 (עצמאות מצ\'כוסלובקיה)',
-            flagSymbolism: 'הדגל מכיל את צבעי הפאן-סלאביות (לבן, כחול, אדום) שהיו פופולריים באביב העמים ב-1848. השמאל מונח סמל המדינה: מגן אדום עליו צלב כפול לבן (מסמל את הנצרות האורתודוקסית והלטינית של האחים קירילוס ומתודיוס, מפיצי הכתב הסלאבי), הניצב על שלוש גבעות כחולות המייצגות את רכסי ההרים במדינה: טאטרה, פאטרה ומאטרה.',
+            areaNum: { he: '~49,035 קמ"ר', en: '~49,035 sq km' },
+            populationNum: '~5,400,000',
+            currency: { he: 'אירו (EUR)', en: 'Euro (EUR)' },
+            area: { 
+              he: 'כ-49,035 קמ"ר. מדינה מרכז-אירופאית הררית וללא מוצא לים. הגיאוגרפיה שלה מתאפיינת בנופים דרמטיים ופראיים של הרי הטאטרה הגבוהים והמושלגים (שהם למעשה החלק הגבוה ביותר בשרשרת הרי הקרפטים) בצפון, בעוד שבדרום המדינה ישנם מישורי חקלאות נרחבים סביב עמק נהר הדנובה.',
+              en: 'Approx. 49,035 sq km. A landlocked mountainous Central European country. Its geography is characterized by dramatic and wild landscapes of the high, snow-capped Tatra Mountains (which are actually the highest part of the Carpathian mountain range) in the north, while in the south of the country there are extensive agricultural plains around the Danube River valley.'
+            },
+            demographics: {
+              mainNationName: { he: 'סלובקים', en: 'Slovaks' },
+              mainNationPercent: { he: 'כ-80%', en: '~80%' },
+              description: { 
+                he: 'אומה סלאבית-מערבית הדוברת שפה קרובה מאוד לצ\'כית. בניגוד לשכנתה הצ\'כית האתאיסטית, החברה הסלובקית בעלת מסורת כפרית שורשית וקתולית חזקה ואדוקה בהרבה. ישנו מיעוט הונגרי גדול ומשמעותי (כ-8.5%) החי בעיקר בדרום המדינה לאורך הגבול עם הונגריה, וכן מיעוט משמעותי של בני רומה (צוענים).',
+                en: 'A West Slavic nation speaking a language very close to Czech. Unlike its atheistic Czech neighbor, Slovak society has a much stronger and more devout rural and Catholic tradition. There is a large and significant Hungarian minority (~8.5%) living mainly in the south of the country along the border with Hungary, as well as a significant Roma minority.'
+              }
+            },
+            modernHistory: { 
+              he: 'במשך קרוב לאלף שנים נשלטה האומה הסלובקית על ידי ממלכת הונגריה תחת דיכוי לשוני ותרבותי ("מדיאריזציה"). ב-1918 היא בחרה להתאחד פוליטית עם הצ\'כים למדינת צ\'כוסלובקיה כדי להשתחרר מעול השלטון ההונגרי-אוסטרי. במלחמת העולם השנייה, תחת לחץ גרמני, הפכה למדינת בובות פאשיסטית בחסות הנאצים. לאחר מהפכת הקטיפה (1989) ונפילת מסך הברזל הקומוניסטי, היא נפרדה מצ\'כיה בדרכי שלום ב-1993, וכיום היא רפובליקה עצמאית המשלבת כלכלה מתפתחת ותעשיית רכב ענפה כחברה באיחוד האירופי ונאט"ו.',
+              en: 'For nearly a thousand years, the Slovak nation was ruled by the Kingdom of Hungary under linguistic and cultural oppression ("Magyarization"). In 1918, it chose to politically unite with the Czechs into the state of Czechoslovakia to break free from the Austro-Hungarian yoke. During WWII, under German pressure, it became a fascist puppet state sponsored by the Nazis. After the Velvet Revolution (1989) and the fall of the communist Iron Curtain, it separated peacefully from Czechia in 1993, and today is an independent republic combining a developing economy and a massive automotive industry as an EU and NATO member.'
+            },
+            foundingYears: { he: '1993 (עצמאות מצ\'כוסלובקיה)', en: '1993 (Independence from Czechoslovakia)' },
+            flagSymbolism: { 
+              he: 'הדגל מכיל את צבעי הפאן-סלאביות הקלאסיים (פסים אופקיים בלבן, כחול, אדום) שהיו פופולריים בתנועות השחרור של אביב העמים ב-1848. בצד שמאל מונח סמל המדינה (כדי להבדילה מדגל רוסיה): מגן אדום עליו צלב כפול לבן (המסמל את הנצרות האורתודוקסית והלטינית שהביאו האחים הקדושים קירילוס ומתודיוס, מפיצי הכתב הסלאבי במוראביה), הניצב על שלוש גבעות כחולות המייצגות את שלושת רכסי ההרים הסמליים של המדינה: טאטרה, פאטרה ומאטרה.',
+              en: 'The flag contains the classic Pan-Slavic colors (horizontal stripes in white, blue, red) popular during the liberation movements of the 1848 Spring of Nations. On the left lies the state emblem (to distinguish it from the Russian flag): a red shield with a white double cross (symbolizing the Orthodox and Latin Christianity brought by the holy brothers Cyril and Methodius, spreaders of the Slavic script in Moravia), standing on three blue hills representing the country\'s three symbolic mountain ranges: Tatra, Fatra, and Mátra.'
+            },
+            nationalAnimal: {
+              name: { he: "דוב חום (Brown Bear)", en: "Brown Bear" },
+              reason: { 
+                he: "למרות שלא הוכרז רשמית בחוק, הדוב החום משמש כסמל פראי ובלתי רשמי של המדינה, ולעיתים גם יעל הטאטרה. הדוב החום שולט ביערות העבותים ובהרי הטאטרה הגבוהים והקשוחים של סלובקיה (שבה אוכלוסיית הדובים היא מהצפופות באירופה). הוא מסמל את הטבע הפראי, הבתולי וההררי של האומה הסלובקית, ואת יכולת ההישרדות של האיכרים הסלובקים מול איתני הטבע ומול שליטים זרים במשך דורות.",
+                en: "Although not officially declared by law, the Brown Bear serves as a wild and unofficial symbol of the country, sometimes alongside the Tatra Chamois. The brown bear reigns over the dense forests and the harsh, high Tatra Mountains of Slovakia (which boasts one of the densest bear populations in Europe). It symbolizes the wild, pristine, and mountainous nature of the Slovak nation, and the survival ability of Slovak peasants against the forces of nature and foreign rulers for generations."
+              }
+            },
             etymology: {
               parts: [
-                { text: 'סלובקים (Slovaks)', color: 'text-indigo-400', bg: 'bg-indigo-400/10', border: 'border-indigo-500/30', desc: 'השם "סלובקים" הוא למעשה פשוט שימור ישיר ועתיק של השם הכללי המקורי של הסלאבים הקדומים ("Slověni").' },
-                { text: 'סלובו (Slovo)', color: 'text-teal-400', bg: 'bg-teal-400/10', border: 'border-teal-500/30', desc: 'מקור השם נגזר מהמילה "Slovo", שמשמעותה בשפות הסלאביות העתיקות היא "מילה" או "שפה". תושבי האזור כינו את עצמם כ"אנשים שמדברים באותה שפה ומבינים אחד את השני", לעומת השבטים הגרמאניים ה"אילמים" ("Němec").' }
+                { text: { he: 'סלובקים (Slovaks)', en: 'Slovaks' }, color: 'text-indigo-400', bg: 'bg-indigo-400/10', border: 'border-indigo-500/30', desc: { he: 'השם "סלובקים" הוא למעשה פשוט שימור ישיר, אותנטי ועתיק של השם הכללי המקורי של כלל הסלאבים הקדומים ("Slověni").', en: 'The name "Slovaks" is actually just a direct, authentic, and ancient preservation of the original general name of all the early Slavs ("Slověni").' } },
+                { text: { he: 'סלובו (Slovo)', en: 'Slovo (Word)' }, color: 'text-teal-400', bg: 'bg-teal-400/10', border: 'border-teal-500/30', desc: { he: 'מקור השם נגזר מהמילה "Slovo", שמשמעותה בשפות הסלאביות העתיקות היא "מילה" או "שפה". תושבי האזור הסלאבי המשותף כינו את עצמם כ"אנשים שמדברים באותה שפה ומבינים אחד את השני", זאת כהנגדה לעמים השכנים הגרמאניים, אותם כינו "אילמים" ("Němec") משום שלא דיברו סלאבית.', en: 'The origin of the name is derived from the word "Slovo", which in ancient Slavic languages means "word" or "language". The inhabitants of the shared Slavic region called themselves "people who speak the same language and understand each other", in contrast to the neighboring Germanic peoples, whom they called "mute" ("Němec") because they did not speak Slavic.' } }
               ],
-              synthesis: 'מילולית: פשוט "האנשים הדוברים (את שפתנו)", שימור טהור של הגדרת הזהות הסלאבית המקורית.'
+              synthesis: { he: 'מילולית: פשוט "האנשים הדוברים (את שפתנו)", שימור טהור של הגדרת הזהות הסלאבית המקורית מימי קדם.', en: 'Literally: Simply "The people who speak (our language)", a pure preservation of the original Slavic identity definition from ancient times.' }
             },
             figure: {
-              name: 'מילאן רסטיסלאב שטפאניק (Milan R. Štefánik)',
+              name: { he: 'מילאן רסטיסלאב שטפאניק (Milan R. Štefánik)', en: 'Milan Rastislav Štefánik' },
               years: '1880 - 1919',
-              childhood: 'נולד למשפחה לותרנית בכפר קטן. יצא ללמוד מתמטיקה ואסטרונומיה בפראג, ומשם עבר לצרפת, שם הפך לאסטרונום נודע ואף הקים מצפי כוכבים ברחבי העולם (כולל טיפוס על המון בלאן לשם כך).',
-              ideology: 'פטריוטיות סלובקית וצ\'כוסלובקית משולבת בגלובליזציה. הוא האמין כי העם הסלובקי הקטן לא יוכל להשיג עצמאות ללא תמיכה כבירה ממעצמות המערב (במיוחד צרפת) וללא ברית אחים עם הצ\'כים.',
-              achievements: 'גנרל בצבא הצרפתי ודיפלומט מחונן. הוא פעל ללא לאות ברחבי העולם כדי לשכנע את מנהיגי ההסכמה (ארה"ב, צרפת, רוסיה) להכיר במדינה הצ\'כוסלובקית העתידית. נהרג בהתרסקות מטוס טראגית בדרכו חזרה למולדת המשוחררת, והפך לקדוש מעונה של האומה הסלובקית.'
+              childhood: { 
+                he: 'נולד למשפחה לותרנית (אביו היה כומר) בכפר קטן בסלובקיה שהייתה תחת שלטון הונגרי נוקשה המדכא את השפה הסלובקית. למרות זאת, הוא הצטיין במדעים ויצא ללמוד מתמטיקה ואסטרונומיה בפראג, ומשם עבר לצרפת, שם הפך לאזרח צרפתי, לאסטרונום עולמי נודע ואף הקים מצפי כוכבים יוקרתיים ברחבי העולם (כולל משלחת לטיפוס על המון בלאן לשם כך).',
+                en: 'Born to a Lutheran family (his father was a pastor) in a small village in Slovakia under strict Hungarian rule suppressing the Slovak language. Nevertheless, he excelled in science and went to study mathematics and astronomy in Prague, and from there moved to France, where he became a French citizen, a world-renowned astronomer, and even established prestigious observatories around the world (including an expedition to climb Mont Blanc for this purpose).'
+              },
+              ideology: { 
+                he: 'פטריוטיות סלובקית וצ\'כוסלובקית עמוקה המשולבת בחזון מערבי וגלובליזציה. בניגוד למנהיגים פרובינציאליים, הוא האמין כי העם הסלובקי הקטן לא יוכל מעולם להשיג עצמאות ללא תמיכה כבירה מצד מעצמות המערב (במיוחד צרפת שבה היה מקושר היטב) וללא ברית אחים פוליטית הדוקה עם הצ\'כים.',
+                en: 'Deep Slovak and Czechoslovak patriotism combined with a Western vision and globalization. Unlike provincial leaders, he believed that the small Slovak nation could never achieve independence without immense support from Western powers (especially France, where he was well-connected) and without a tight political fraternal alliance with the Czechs.'
+              },
+              achievements: { 
+                he: 'גנרל מוערך בצבא הצרפתי במלחמת העולם הראשונה, פוליטיקאי, שר מלחמה, ודיפלומט מחונן. יחד עם מסריק, הוא פעל ללא לאות ברחבי העולם (רוסיה, ארה"ב, צרפת, איטליה) כדי להקים לגיונות צבא צ\'כוסלובקיים ולשכנע את מנהיגי מעצמות ההסכמה להכיר במדינה הצ\'כוסלובקית העתידית. נהרג באופן טראגי בהתרסקות מטוס מסתורית בדרכו חזרה למולדתו המשוחררת שזה עתה קמה, והפך לקדוש מעונה מיתולוגי של האומה הסלובקית.',
+                en: 'An esteemed general in the French army during WWI, politician, Minister of War, and gifted diplomat. Alongside Masaryk, he worked tirelessly worldwide (Russia, US, France, Italy) to form Czechoslovak military legions and convince Allied leaders to recognize the future Czechoslovak state. Killed tragically in a mysterious plane crash on his way back to his newly liberated homeland, becoming a mythological martyr of the Slovak nation.'
+              }
             },
             map: {
               url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_slovakia_tatra.jpg?v=2',
-              title: 'הרי הטאטרה ומוראביה הגדולה',
-              desc: 'מפת וינטג\' המתמקדת בטופוגרפיה הדרמטית של רכס הרי הטאטרה, שהיה הלב הפועם של הזהות הסלובקית בתוך אזור פאנוניה.'
+              title: { he: 'הרי הטאטרה ומוראביה הגדולה', en: 'Tatra Mountains and Great Moravia' },
+              desc: { 
+                he: 'מפת וינטג\' המתמקדת בטופוגרפיה הדרמטית של רכס הרי הטאטרה ונהר הדנובה, אזור שהיה הלב הפועם של הזהות והשפה הסלובקית בתוך מרחבי הונגריה ואגן פאנוניה.',
+                en: 'A vintage map focusing on the dramatic topography of the Tatra Mountains range and the Danube River, an area that was the beating heart of Slovak identity and language within the expanses of Hungary and the Pannonian Basin.'
+              }
             }
           },
           {
             id: 'belarus',
-            name: 'בלארוס',
+            name: { he: 'בלארוס', en: 'Belarus' },
             englishName: 'Belarus',
-            officialName: 'רפובליקת בלארוס',
-            FlagComponent: FlagBelarus,
-            areaNum: '~207,595 קמ"ר',
-            populationNum: '~9,200,000',
-            currency: 'רובל בלארוסי (BYN)',
-            area: 'כ-207,595 קמ"ר. מדינה ללא מוצא לים הממוקמת במזרח אירופה. הגיאוגרפיה שלה מישורית מאוד ומתאפיינת בכמויות עצומות של אגמים (מעל 10,000), ביצות כבול, ויערות עבותים (כמו יער בְּיַאלוֹבְיֶיזָ\'ה העתיק) המכסים כ-40% משטחה.',
-            demographics: {
-              mainNationName: 'בלארוסים',
-              mainNationPercent: 'כ-84%',
-              description: 'אומה סלאבית-מזרחית הדומה מבחינה תרבותית ולשונית לרוסים ולאוקראינים. הרוב משתייך לכנסייה האורתודוקסית, לצד מיעוט קתולי במערב. המדינה מתאפיינת בהשפעה תרבותית ופוליטית רוסית כבדה, והשפה הרוסית דומיננטית בה יותר מהשפה הבלארוסית המקורית.'
+            officialName: { he: 'רפובליקת בלארוס', en: 'Republic of Belarus' },
+            flagUrl: 'https://flagcdn.com/w640/by.webp',
+            capital: {
+              name: { he: "מינסק", en: "Minsk" },
+              englishName: "Minsk",
+              etymology: { 
+                he: "מקור השם מינסק (במקור מֶנְסְק - Mensk) קשור לשמו של נהר המנקה הקטן (Menka) שעל גדותיו נוסד היישוב המקורי, והוא בעל שורש סלאבי שמשמעותו 'נהר קטן' או 'רדוד'. אגדת עם בלארוסית רומנטית מספרת כי העיר הוקמה על ידי טוחן ענק וכוחני בשם 'מנֶסְק' שטילף אבנים במקום קמח בטחנת הרוח שלו בנהר הסוויסלץ'.",
+                en: "The origin of the name Minsk (originally Mensk) is linked to the name of the small Menka River, on whose banks the original settlement was founded, having a Slavic root meaning 'small river' or 'shallow'. A romantic Belarusian folk legend tells that the city was founded by a giant and powerful miller named 'Menesk' who milled stones instead of flour in his windmill on the Svislach River."
+              },
+              foundingYear: { he: "1067 (אזכור ראשון בקרב הנהר נמיגה)", en: "1067 (First mention at the Battle on the Nemiga River)" },
+              reason: { 
+                he: "מינסק הוקמה במיקום אסטרטגי על מפגש הנהרות סוויסלץ' ונמיגה. הנהרות סיפקו הגנה טבעית ליישוב הקדום ולטירה שהוקמה בו, וחיברו את העיר לנתיבי סחר פנימיים חשובים. בשל מיקומה הגאוגרפי המרכזי והמדויק בתוך הטריטוריות הבלארוסיות ההיסטוריות, היא משכה אליה מסחר והפכה לבירת נסיכות מינסק, ומאוחר יותר לבירה הטבעית של האומה כולה למרות שהוחרבה כליל במלחמות רבות.",
+                en: "Minsk was established in a strategic location at the confluence of the Svislach and Niamiha rivers. The rivers provided natural defense for the ancient settlement and the castle built there, connecting the city to important internal trade routes. Due to its central and exact geographical location within the historical Belarusian territories, it attracted trade and became the capital of the Principality of Minsk, and later the natural capital of the entire nation despite being completely destroyed in many wars."
+              }
             },
-            modernHistory: 'הייתה חלק מדוכסות פולוצק, האיחוד הפולני-ליטאי והאימפריה הרוסית. במלחמת העולם השנייה איבדה המדינה כרבע מאוכלוסייתה תחת הכיבוש הנאצי, שיישר כליל את רוב עריה. היא זכתה בעצמאות לאחר קריסת ברית המועצות ב-1991. מאז 1994 שולט בה ביד ברזל הנשיא אלכסנדר לוקשנקו, המכונה "הדיקטטור האחרון של אירופה", תוך שמירה על ברית צבאית וכלכלית הדוקה עם רוסיה.',
-            foundingYears: '1918 (רפובליקה ראשונה) | 1991 (עצמאות)',
-            flagSymbolism: 'הדגל (שנבחר על ידי הנשיא לוקשנקו כדי להזכיר את הדגל הסובייטי) מורכב מאדום וירוק. האדום מסמל את עברה המפואר של המדינה ואת שפיכות הדמים בהגנה עליה; הירוק מסמל את היערות והטבע השופע ואת התקווה לעתיד. בצד שמאל מופיע דפוס ויזואלי מסורתי באדום-לבן ("רושניק" - רקמה עממית), המייצג את המורשת התרבותית והחקלאית הקדומה.',
+            areaNum: { he: '~207,595 קמ"ר', en: '~207,595 sq km' },
+            populationNum: '~9,200,000',
+            currency: { he: 'רובל בלארוסי (BYN)', en: 'Belarusian Ruble (BYN)' },
+            area: { 
+              he: 'כ-207,595 קמ"ר. מדינה ללא מוצא לים הממוקמת במזרח אירופה. הגיאוגרפיה שלה מישורית מאוד ומתאפיינת בכמויות עצומות של אגמים (מעל 10,000), אזורי ביצות נרחבים בדרום (ביצות פולסיה), ויערות עבותים ועתיקים (כמו יער בְּיַאלוֹבְיֶיזָ\'ה המפורסם והראשוני) המכסים כ-40% משטחה הכולל של המדינה.',
+              en: 'Approx. 207,595 sq km. A landlocked country located in Eastern Europe. Its geography is very flat and characterized by a massive number of lakes (over 10,000), extensive marshlands in the south (Polesie marshes), and dense, ancient forests (like the famous primeval Białowieża Forest) covering about 40% of the country\'s total area.'
+            },
+            demographics: {
+              mainNationName: { he: 'בלארוסים', en: 'Belarusians' },
+              mainNationPercent: { he: 'כ-84%', en: '~84%' },
+              description: { 
+                he: 'אומה סלאבית-מזרחית הדומה מאוד מבחינה תרבותית, אטנית ולשונית לרוסים ולאוקראינים השכנים. הרוב משתייך לכנסייה האורתודוקסית, לצד מיעוט קתולי משמעותי במערב המדינה (השפעה פולנית היסטורית). המדינה מתאפיינת כיום בהשפעה תרבותית ופוליטית רוסית כבדה, והשפה הרוסית דומיננטית ושגורה ברחובות הרבה יותר מהשפה הבלארוסית המקורית.',
+                en: 'An East Slavic nation very similar culturally, ethnically, and linguistically to neighboring Russians and Ukrainians. The majority belongs to the Orthodox Church, alongside a significant Catholic minority in the west of the country (historical Polish influence). The country is currently characterized by heavy Russian cultural and political influence, and the Russian language is much more dominant and commonly spoken in the streets than the original Belarusian language.'
+              }
+            },
+            modernHistory: { 
+              he: 'השטח היה בעבר חלק מנסיכות פולוצק, האיחוד הפולני-ליטאי והאימפריה הרוסית. במלחמת העולם השנייה (העימות המכריע בחזית המזרחית), איבדה המדינה כרבע מכלל אוכלוסייתה תחת הכיבוש וההשמדה הנאצית, שיישר כליל והחריב את רוב עריה. היא זכתה בעצמאות רק לאחר קריסת ברית המועצות ב-1991. מאז 1994 שולט בה ביד מברזל הנשיא אלכסנדר לוקשנקו, המכונה במערב "הדיקטטור האחרון של אירופה", אשר מדכא אופוזיציה תוך שמירה מכוונת על ברית צבאית וכלכלית הדוקה ותלותית עם רוסיה.',
+              en: 'The territory was formerly part of the Principality of Polotsk, the Polish-Lithuanian Commonwealth, and the Russian Empire. During WWII (the decisive conflict on the Eastern Front), the country lost about a quarter of its entire population under Nazi occupation and extermination, which completely leveled and destroyed most of its cities. It gained independence only after the collapse of the USSR in 1991. Since 1994, it has been ruled with an iron fist by President Alexander Lukashenko, dubbed in the West as "Europe\'s last dictator", who suppresses opposition while intentionally maintaining a tight and dependent military and economic alliance with Russia.'
+            },
+            foundingYears: { he: '1918 (רפובליקה עממית ראשונה) | 1991 (עצמאות מבריה"מ)', en: '1918 (First People\'s Republic) | 1991 (Independence from USSR)' },
+            flagSymbolism: { 
+              he: 'הדגל (שנבחר והוחזר על ידי הנשיא לוקשנקו במיוחד כדי להזכיר את הדגל הסובייטי הישן של הרפובליקה) מורכב מפס אדום וירוק. האדום מסמל את עברה המפואר של המדינה ואת שפיכות הדמים ההירואית בהגנה עליה במלחמות; הירוק מסמל את היערות והטבע השופע ואת התקווה לעתיד. בצד שמאל מופיע דפוס ויזואלי מסורתי באדום-לבן (המכונה "רושניק" - רקמה עממית בלארוסית אותנטית), המייצג את המורשת התרבותית, הרוחנית והחקלאית הקדומה של העם.',
+              en: 'The flag (chosen and reinstated by President Lukashenko specifically to evoke the old Soviet flag of the republic) consists of a red and green stripe. Red symbolizes the country\'s glorious past and the heroic bloodshed in defending it in wars; green symbolizes the forests, lush nature, and hope for the future. On the left appears a traditional visual pattern in red and white (known as "Rushnyk" - authentic Belarusian folk embroidery), representing the ancient cultural, spiritual, and agricultural heritage of the people.'
+            },
+            nationalAnimal: {
+              name: { he: "ביזון אירופאי / זובּר (European Bison / Wisent)", en: "European Bison / Wisent" },
+              reason: { 
+                he: "הביזון האירופאי (המכונה 'זובּר' - Zubr) הוא החיה היבשתית הכבדה והגדולה ביותר באירופה, והוא מזוהה לחלוטין עם בלארוס. עדרים פראיים וחופשיים של חיה קדומה ומפוארת זו עדיין משוטטים בעומק יער ביאלובייז'ה שעל הגבול הפולני-בלארוסי. הזובר מסמל עוצמה אדירה, התמדה הישרדותית (הוא ניצל מהכחדה ודאית), ואת הטבע העתיק, הפראי והבלתי נגוע של יערות המדינה.",
+                en: "The European Bison (known as the 'Zubr') is the heaviest and largest land animal in Europe, and is completely identified with Belarus. Free-roaming wild herds of this ancient and magnificent animal still wander deep within the Białowieża Forest on the Polish-Belarusian border. The Zubr symbolizes immense power, survival perseverance (it was saved from certain extinction), and the ancient, wild, and untouched nature of the country's forests."
+              }
+            },
             etymology: {
               parts: [
-                { text: 'ביילה (Bela)', color: 'text-stone-300', bg: 'bg-stone-300/10', border: 'border-stone-500/30', desc: 'המילה הסלאבית ל"לבן". הצבע "לבן" שימש בעבר בכינויים מונגוליים/טטריים לציון כיוון מערב או לציון מעמד מיוחד.' },
-                { text: 'רוס (Rus)', color: 'text-rose-400', bg: 'bg-rose-400/10', border: 'border-rose-500/30', desc: 'המונח ההיסטורי לשטחי המדינה של ימי הביניים (רוס של קייב / רותניה).' },
-                { text: 'תיאוריות משמעות', color: 'text-emerald-400', bg: 'bg-emerald-400/10', border: 'border-emerald-500/30', desc: 'ההיסטוריונים מציעים שני פירושים ל"לבנה": 1) השטח החופשי – שטח רוסי שלא נכבש על ידי הטטרים ולכן נותר "טהור/לבן". 2) צבע הלבוש – המקומיים נהגו ללבוש בגדי פשתן לבנים מסורתיים שבלטו לעין.' }
+                { text: { he: 'ביילה (Bela)', en: 'Bela (White)' }, color: 'text-stone-300', bg: 'bg-stone-300/10', border: 'border-stone-500/30', desc: { he: 'המילה הסלאבית ל"לבן". הצבע "לבן" שימש בעבר בכינויים ובמסורת הגיאוגרפית הטטרית/מונגולית לציון כיוון מערב, או לציון מעמד מיוחד של חירות וטוהר.', en: 'The Slavic word for "white". The color "white" was used in the past in Tatar/Mongol geographical traditions and designations to indicate the direction west, or to indicate a special status of freedom and purity.' } },
+                { text: { he: 'רוס (Rus)', en: 'Rus' }, color: 'text-rose-400', bg: 'bg-rose-400/10', border: 'border-rose-500/30', desc: { he: 'המונח ההיסטורי לשטחי המדינה ולשבטים הסלאביים-מזרחיים של ימי הביניים (רוס של קייב / רותניה).', en: 'The historical term for the state territories and the East Slavic tribes of the Middle Ages (Kievan Rus / Ruthenia).' } },
+                { text: { he: 'תיאוריות משמעות', en: 'Meaning Theories' }, color: 'text-emerald-400', bg: 'bg-emerald-400/10', border: 'border-emerald-500/30', desc: { he: 'ההיסטוריונים מציעים שני פירושים מובילים למונח "לבנה": 1) השטח החופשי – שטח רוסי שלא נכבש מעולם על ידי אורדת הזהב (הטטרים) ולכן נותר "טהור/לבן" ומשוחרר מתשלום מס. 2) צבע הלבוש – תושבי האזור המקומיים נהגו ללבוש באופן מסורתי בגדי פשתן לבנים בוהקים שבלטו לעין.', en: 'Historians offer two leading interpretations for the term "White": 1) The free territory – Russian territory that was never conquered by the Golden Horde (Tatars) and therefore remained "pure/white" and exempt from paying tribute. 2) Clothing color – The local inhabitants traditionally wore bright white linen clothing that stood out.' } }
               ],
-              synthesis: 'מילולית: "רוסיה הלבנה" (ארץ הרוסים החופשיים מעול, או לובשי הפשתן הלבן).'
+              synthesis: { he: 'מילולית: "רוסיה הלבנה" (ארץ הרוסים החופשיים מעול הזרים, או מולדתם של לובשי הפשתן הלבן).', en: 'Literally: "White Russia" (The land of the Rus free from foreign yoke, or the homeland of the white linen wearers).' }
             },
             figure: {
-              name: 'וססלאב מפּוֹלוֹצְק (Vseslav the Sorcerer)',
+              name: { he: 'וססלאב מפּוֹלוֹצְק (Vseslav the Sorcerer)', en: 'Vseslav of Polotsk (The Sorcerer)' },
               years: '1029 - 1101',
-              childhood: 'נסיך פולוצק (העיר העתיקה ביותר בבלארוס). נולד, על פי האגדה, עם "כובע שפיר" (קרום מי השפיר על ראשו) שנחשב לסימן קסום. לאורך חייו נפוצו מיתוסים שהוא מכשף המסוגל לשנות צורה לזאב ולרוץ ממרחקים.',
-              ideology: 'אוטונומיה אזורית ופטריוטיות מקומית. הוא נאבק לשמור על עצמאותה של נסיכות פולוצק (בלארוס הקדומה) מול השליטה המרכזית של קייב (אוקראינה) ונובגורוד (רוסיה), והחזיק באמונות בעלות ניחוח פגאני במקביל לנצרותו.',
-              achievements: 'שליטה הגדול ביותר של נסיכות פולוצק שבתקופתו הגיעה לשיא חוסנה הכלכלי והתרבותי. בנה את קתדרלת סופיה הקדושה בפולוצק. הוא נחשב למיתוס מכונן של תחושת הזהות הלאומית המובחנת של בלארוס בימי הביניים.'
+              childhood: { 
+                he: 'נסיך פולוצק (העיר העתיקה וההיסטורית ביותר בבלארוס). נולד, על פי האגדה והכרוניקות העתיקות, עם "כובע שפיר" (קרום מי השפיר מכסה את ראשו) – דבר שנחשב באותם ימים לסימן קסום מובהק. לאורך חייו נפוצו מיתוסים פגאניים בקרב העם שהוא למעשה מכשף המסוגל לשנות את צורתו לזאב ולרוץ ממרחקים אדירים בלילה.',
+                en: 'Prince of Polotsk (the oldest and most historical city in Belarus). Born, according to legend and ancient chronicles, with a "caul" (amniotic membrane covering his head) – which was considered in those days a distinct magical sign. Throughout his life, pagan myths spread among the people that he was actually a sorcerer capable of shapeshifting into a wolf and running immense distances at night.'
+              },
+              ideology: { 
+                he: 'אוטונומיה אזורית ופטריוטיות מקומית שורשית. בניגוד לשליטים אחרים, הוא נאבק בעקשנות לשמור על עצמאותה וכוחה של נסיכות פולוצק (שהיוותה את ליבת בלארוס הקדומה) מול ניסיונות השליטה והכיבוש של המרכזים החזקים בקייב (אוקראינה) ונובגורוד (רוסיה), והחזיק באמונות בעלות ניחוח פגאני במקביל לנצרותו הרשמית.',
+                en: 'Regional autonomy and deep-rooted local patriotism. Unlike other rulers, he stubbornly fought to maintain the independence and power of the Principality of Polotsk (which formed the core of ancient Belarus) against control and conquest attempts by the strong centers in Kyiv (Ukraine) and Novgorod (Russia), and held beliefs with a pagan flavor alongside his official Christianity.'
+              },
+              achievements: { 
+                he: 'השליט הגדול והמפורסם ביותר של נסיכות פולוצק, שבתקופתו הגיעה לשיא חוסנה הכלכלי, הצבאי והתרבותי. הוא בנה את קתדרלת סופיה הקדושה והמפוארת בפולוצק (כמשקל נגד לקתדרלות בקייב). הוא נחשב למיתוס מכונן של תחושת הזהות הלאומית המובחנת והייחודית של בלארוס בימי הביניים, טרם ספיחתה לאימפריות השכנות.',
+                en: 'The greatest and most famous ruler of the Principality of Polotsk, which during his time reached the peak of its economic, military, and cultural strength. He built the magnificent Saint Sophia Cathedral in Polotsk (as a counterweight to the cathedrals in Kyiv). He is considered a founding myth of Belarus\' distinct and unique sense of national identity in the Middle Ages, prior to its assimilation into neighboring empires.'
+              }
             },
             map: {
               url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_belarus_ruthenia.jpg?v=2',
-              title: 'מפת רותניה והיערות העתיקים',
-              desc: 'מפה היסטורית מהמאה ה-16 המתארת את אזור רותניה (בלארוס של ימינו), תוך הדגשה קרטוגרפית אמנותית של יערות הבר העצומים, נהרותיה ושמות הערים העתיקות של הנסיכות.'
+              title: { he: 'מפת רותניה והיערות העתיקים', en: 'Map of Ruthenia and the Ancient Forests' },
+              desc: { 
+                he: 'מפה היסטורית עתיקה מהמאה ה-16 המתארת את אזור רותניה (בלארוס של ימינו), תוך הדגשה קרטוגרפית אמנותית של יערות הבר העצומים, נהרותיה השופעים ושמות הערים והנסיכויות העתיקות של האזור לפני התיעוש המודרני.',
+                en: 'An ancient historical map from the 16th century depicting the Ruthenia region (modern-day Belarus), with artistic cartographic emphasis on the massive wild forests, its abundant rivers, and the names of the ancient cities and principalities of the region before modern industrialization.'
+              }
             }
           }
         ];
@@ -339,10 +629,10 @@
         // רכיבי התצוגה (UI) 
         // ==========================================
 
-        const CountryCard = ({ country, onModalOpen }) => {
+        const CountryCard = ({ country, onModalOpen, lang, uiStr }) => {
           const { 
-            FlagComponent, name, englishName, officialName, areaNum, populationNum, currency, area, demographics, 
-            modernHistory, foundingYears, etymology, flagSymbolism, figure, map 
+            flagUrl, name, englishName, officialName, capital, areaNum, populationNum, currency, area, demographics, 
+            modernHistory, foundingYears, etymology, flagSymbolism, nationalAnimal, figure, map 
           } = country;
 
           return (
@@ -351,42 +641,59 @@
               <div className="flex flex-col md:flex-row gap-6 p-6 md:p-8 border-b border-gray-800">
                 <div 
                   className="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center bg-gray-950 p-4 rounded-xl cursor-pointer group relative" 
-                  onClick={() => onModalOpen({type: 'flag', component: FlagComponent, title: `דגל ${name}`})}
-                  title="לחץ להגדלת הדגל"
+                  onClick={() => onModalOpen({url: flagUrl, title: `${name[lang]} Flag`})}
+                  title={uiStr.lClickEnlargeFlag}
                 >
-                  <div className="w-full max-h-40 shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105 overflow-hidden flex justify-center items-center">
-                    <div className="w-full h-32 md:h-40 relative">
-                       <FlagComponent />
-                    </div>
+                  <div className="w-full max-h-40 shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105 overflow-hidden flex justify-center items-center bg-black">
+                    <img 
+                      src={flagUrl} 
+                      alt={name[lang]}
+                      className="w-full h-32 md:h-40 object-cover opacity-95 group-hover:opacity-100 transition-opacity"
+                      onError={(e) => {
+                        e.target.onerror = null; 
+                        e.target.src = fallbackImg;
+                      }}
+                    />
                   </div>
                   <div className="absolute opacity-0 group-hover:opacity-100 bg-black/60 text-white text-sm px-3 py-1 rounded transition-opacity duration-300 pointer-events-none mt-32">
-                    לחץ להגדלה
+                    {uiStr.lClickEnlargeFlag}
                   </div>
                 </div>
                 
                 <div className="flex-grow flex flex-col justify-center">
-                  <h2 className="text-3xl font-bold text-white mb-2">{name} <span className="text-gray-500 text-lg ml-2 uppercase tracking-widest">{englishName}</span></h2>
-                  <h3 className="text-xl text-gray-400 mb-4">{officialName}</h3>
+                  <h2 className="text-3xl font-bold text-white mb-2">{name[lang]} <span className="text-gray-500 text-lg ms-2 uppercase tracking-widest">{englishName}</span></h2>
+                  <h3 className="text-xl text-gray-400 mb-4">{officialName[lang]}</h3>
+                  
+                  {/* לוח נתונים עליון - 6 פריטים סימטריים */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                      <span><strong className="text-white">שנות ייסוד:</strong> {foundingYears}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                      <span><strong className="text-white me-1">{uiStr.capital}</strong> {capital.name[lang]}</span>
                     </div>
+
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                      <span className="truncate" title={figure.name}><strong className="text-white">מנהיג:</strong> {figure.name.split('(')[0]}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+                      <span><strong className="text-white me-1">{uiStr.currency}</strong> {currency[lang]}</span>
                     </div>
+
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3h18v18H3zM12 8v8m-4-4h8"></path></svg>
-                      <span><strong className="text-white">שטח:</strong> {areaNum}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                      <span><strong className="text-white me-1">{uiStr.founding}</strong> {foundingYears[lang]}</span>
                     </div>
+
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                      <span><strong className="text-white">אוכלוסייה:</strong> {populationNum}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                      <span><strong className="text-white me-1">{uiStr.population}</strong> {populationNum}</span>
                     </div>
-                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg md:col-span-2">
-                      <svg className="w-5 h-5 ml-2 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
-                      <span><strong className="text-white">שם מטבע:</strong> {currency}</span>
+
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3h18v18H3zM12 8v8m-4-4h8"></path></svg>
+                      <span><strong className="text-white me-1">{uiStr.area}</strong> {areaNum[lang]}</span>
+                    </div>
+
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                      <span className="truncate" title={figure.name[lang]}><strong className="text-white me-1">{uiStr.leader}</strong> {figure.name[lang].split('(')[0]}</span>
                     </div>
                   </div>
                 </div>
@@ -396,82 +703,106 @@
                 
                 <section>
                     <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                        <i className="fa-solid fa-map-location-dot w-6 h-6 ml-2 text-sky-400 text-xl"></i>
-                        <h3 className="text-2xl font-bold text-white">רקע פיזי ואנושי</h3>
+                        <i className="fa-solid fa-map-location-dot w-6 h-6 me-2 text-sky-400 text-xl"></i>
+                        <h3 className="text-2xl font-bold text-white">{uiStr.sectionPhysical}</h3>
                     </div>
-                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 space-y-4">
-                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">שטח וטופוגרפיה:</strong> {area}</p>
-                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">דמוגרפיה ({demographics.mainNationName} - {demographics.mainNationPercent}):</strong> {demographics.description}</p>
-                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">היסטוריה מודרנית:</strong> {modernHistory}</p>
+                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 space-y-4 text-start">
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white me-1">{uiStr.lAreaTopo}</strong> {area[lang]}</p>
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white me-1">{uiStr.lDemographics} ({demographics.mainNationName[lang]} - {demographics.mainNationPercent[lang]}):</strong> {demographics.description[lang]}</p>
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white me-1">{uiStr.lModernHistory}</strong> {modernHistory[lang]}</p>
                     </div>
                 </section>
 
                 <section>
                     <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                        <svg className="w-6 h-6 ml-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
-                        <h3 className="text-2xl font-bold text-white">וקסלולוגיה</h3>
+                        <svg className="w-6 h-6 me-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                        <h3 className="text-2xl font-bold text-white">{uiStr.sectionEtymology}</h3>
                     </div>
-                    <p className="text-gray-300 leading-relaxed text-lg">{flagSymbolism}</p>
-                </section>
-                
-                <section>
-                    <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                        <svg className="w-6 h-6 ml-2 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                        <h3 className="text-2xl font-bold text-white">אטימולוגיה</h3>
-                    </div>
-                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800">
+                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 text-start">
                         <ul className="space-y-4">
                             {etymology.parts.map((part, index) => (
                                 <li key={index} className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4">
-                                    <span className={`font-bold min-w-[150px] md:text-lg flex-shrink-0 ${part.color} ${part.bg} border ${part.border} px-2 py-1 rounded-md`}>• {part.text}:</span>
-                                    <span className="text-gray-300 leading-relaxed text-lg">{part.desc}</span>
+                                    <span className={`font-bold min-w-[140px] md:text-lg flex-shrink-0 ${part.color} ${part.bg} border ${part.border} px-2 py-1 rounded-md`}>• {part.text[lang]}:</span>
+                                    <span className="text-gray-300 leading-relaxed text-lg">{part.desc[lang]}</span>
                                 </li>
                             ))}
                             <li className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4 mt-2 pt-4 border-t border-gray-800/50">
-                                <span className="font-bold text-amber-400 min-w-[150px] md:text-lg flex-shrink-0"><i className="fa-solid fa-quote-right ml-1"></i> משמעות השם:</span>
-                                <span className="text-gray-200 font-bold leading-relaxed text-lg">{etymology.synthesis}</span>
+                                <span className="font-bold text-amber-400 min-w-[140px] md:text-lg flex-shrink-0">
+                                  <i className="fa-solid fa-quote-right me-1"></i> {uiStr.lNameMeaning}
+                                </span>
+                                <span className="text-gray-200 font-bold leading-relaxed text-lg">{etymology.synthesis[lang]}</span>
+                            </li>
+                            
+                            <li className="flex flex-col md:flex-row md:items-start gap-2 md:gap-4 mt-6 pt-5 border-t border-gray-700/80">
+                                <span className="font-bold text-purple-400 min-w-[140px] md:text-lg flex-shrink-0 mt-1">
+                                    <i className="fa-solid fa-landmark-dome me-1"></i> {uiStr.lCapitalName}
+                                </span>
+                                <div className="space-y-3 w-full">
+                                    <strong className="text-white text-xl block border-b border-gray-800 pb-2">
+                                      {capital.name[lang]} <span className="text-gray-500 text-sm font-normal uppercase tracking-widest ms-1">({capital.englishName})</span>
+                                    </strong>
+                                    <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white font-medium me-1">{uiStr.lCapitalEty}</strong> {capital.etymology[lang]}</p>
+                                    <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white font-medium me-1">{uiStr.lCapitalFounding}</strong> {capital.foundingYear[lang]}</p>
+                                    <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white font-medium me-1">{uiStr.lCapitalReason}</strong> {capital.reason[lang]}</p>
+                                </div>
                             </li>
                         </ul>
                     </div>
                 </section>
 
-                <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gray-800/20 p-6 rounded-xl border border-gray-800/50">
+                <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 text-start">
                     <div>
-                        <div className="flex items-center mb-4 border-b border-gray-700 pb-2">
-                            <svg className="w-6 h-6 ml-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                            <h3 className="text-2xl font-bold text-white">פרופיל מנהיג מכונן</h3>
+                        <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg className="w-6 h-6 me-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                            <h3 className="text-2xl font-bold text-white">{uiStr.sectionSymbols}</h3>
                         </div>
-                        <h4 className="text-xl text-rose-300 font-bold mb-3">{figure.name} <span className="text-base text-gray-400">({figure.years})</span></h4>
-                        <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
-                            <div><strong className="text-white block mb-1">ילדות ורקע:</strong> {figure.childhood}</div>
-                            <div><strong className="text-white block mb-1">אידאולוגיה:</strong> {figure.ideology}</div>
-                            <div><strong className="text-white block mb-1">הישגים מרכזיים:</strong> {figure.achievements}</div>
+                        <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 h-full">
+                            <h4 className="text-lg font-bold text-white mb-2"><i className="fa-solid fa-flag text-green-400 me-2"></i> {uiStr.lFlagMeaning}</h4>
+                            <p className="text-gray-300 leading-relaxed text-lg mb-6 pb-6 border-b border-gray-800/70">{flagSymbolism[lang]}</p>
+                            
+                            <h4 className="text-lg font-bold text-white mb-2"><i className="fa-solid fa-paw text-orange-400 me-2"></i> {uiStr.lNationalAnimal} {nationalAnimal.name[lang]}</h4>
+                            <p className="text-gray-300 leading-relaxed text-lg">{nationalAnimal.reason[lang]}</p>
                         </div>
                     </div>
 
                     <div>
-                        <div className="flex items-center mb-4 border-b border-gray-700 pb-2">
-                            <svg className="w-6 h-6 ml-2 text-cyan-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"></path><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
-                            <h3 className="text-2xl font-bold text-white">קרטוגרפיה היסטורית</h3>
+                        <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg className="w-6 h-6 me-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                            <h3 className="text-2xl font-bold text-white">{uiStr.sectionLeader}</h3>
                         </div>
-                        <div className="flex flex-col cursor-pointer group rounded-xl overflow-hidden border border-gray-700 bg-gray-800/30 hover:border-gray-500 transition-all duration-300 shadow-lg" onClick={() => onModalOpen({type: 'image', url: map.url, title: map.title})}>
-                            <div className="relative h-48 md:h-56 w-full overflow-hidden bg-black">
-                                <img 
-                                  src={map.url} 
-                                  alt={map.title} 
-                                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                  onError={(e) => {
-                                    e.target.onerror = null; 
-                                    e.target.src = fallbackImg;
-                                  }}
-                                />
-                                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300"></div>
+                        <div className="bg-gray-800/20 rounded-xl p-5 border border-gray-800/50 h-full">
+                            <h4 className="text-xl text-rose-300 font-bold mb-3">{figure.name[lang]} <span className="text-base text-gray-400">({figure.years})</span></h4>
+                            <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
+                                <div><strong className="text-white block mb-1">{uiStr.lChildhood}</strong> {figure.childhood[lang]}</div>
+                                <div><strong className="text-white block mb-1">{uiStr.lIdeology}</strong> {figure.ideology[lang]}</div>
+                                <div><strong className="text-white block mb-1">{uiStr.lAchievements}</strong> {figure.achievements[lang]}</div>
                             </div>
-                            <div className="p-4 text-center border-t border-gray-700/50">
-                                <strong className="text-cyan-300 block mb-2 text-base">{map.title}</strong>
-                                <span className="text-gray-300 text-sm leading-relaxed block">{map.desc}</span>
-                                <span className="inline-block mt-3 text-gray-400 text-xs font-medium bg-gray-900/80 px-3 py-1.5 rounded-full border border-gray-700 transition-colors group-hover:text-cyan-300 group-hover:border-cyan-800/50">(לחץ להגדלת המפה)</span>
-                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                        <svg className="w-6 h-6 me-2 text-cyan-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"></path><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                        <h3 className="text-2xl font-bold text-white">{uiStr.sectionCartography}</h3>
+                    </div>
+                    <div className="flex flex-col cursor-pointer group rounded-xl overflow-hidden border border-gray-700 bg-gray-800/30 hover:border-gray-500 transition-all duration-300 shadow-lg" onClick={() => onModalOpen({url: map.url, title: map.title[lang]})}>
+                        <div className="relative h-64 md:h-80 w-full overflow-hidden bg-black">
+                            <img 
+                              src={map.url} 
+                              alt={map.title[lang]} 
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                              onError={(e) => {
+                                e.target.onerror = null; 
+                                e.target.src = fallbackImg;
+                              }}
+                            />
+                            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300"></div>
+                        </div>
+                        <div className="p-4 text-center border-t border-gray-700/50">
+                            <strong className="text-cyan-300 block mb-2 text-lg">{map.title[lang]}</strong>
+                            <span className="text-gray-300 text-base leading-relaxed block">{map.desc[lang]}</span>
+                            <span className="inline-block mt-3 text-gray-400 text-sm font-medium bg-gray-900/80 px-4 py-1.5 rounded-full border border-gray-700 transition-colors group-hover:text-cyan-300 group-hover:border-cyan-800/50">{uiStr.lClickEnlargeMap}</span>
                         </div>
                     </div>
                 </section>
@@ -493,7 +824,7 @@
                 <button 
                   onClick={onClose}
                   className="absolute -top-14 right-0 md:-right-14 text-gray-400 hover:text-white bg-gray-800/80 hover:bg-gray-700 rounded-full p-2 transition-colors z-50"
-                  aria-label="סגור חלון"
+                  aria-label="Close"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -501,48 +832,61 @@
                   </svg>
                 </button>
                 
-                {content.type === 'flag' ? (
-                  <div className="w-full max-w-4xl aspect-[3/2] bg-black shadow-2xl rounded-lg overflow-hidden border border-gray-700" onClick={e => e.stopPropagation()}>
-                    <content.component />
-                  </div>
-                ) : (
-                  <img 
-                    src={content.url} 
-                    alt={content.title} 
-                    className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-gray-700" 
-                    onClick={e => e.stopPropagation()}
-                    onError={(e) => {
-                      e.target.onerror = null; 
-                      e.target.src = fallbackImg;
-                    }}
-                  />
-                )}
+                <img 
+                  src={content.url} 
+                  alt={content.title} 
+                  className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-gray-700" 
+                  onClick={e => e.stopPropagation()}
+                  onError={(e) => {
+                    e.target.onerror = null; 
+                    e.target.src = fallbackImg;
+                  }}
+                />
               </div>
             </div>
           );
         };
 
         function App() {
+          const [lang, setLang] = useState('he');
           const [modalContent, setModalContent] = useState(null);
 
-          // סגירת החלון במקש אסקייפ
+          const uiStr = ui[lang];
+
+          // ניהול כיוון המסמך לפי שפה
+          React.useEffect(() => {
+            document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+            document.documentElement.lang = lang;
+          }, [lang]);
+
           React.useEffect(() => {
             const handleEsc = (e) => { if (e.key === 'Escape') setModalContent(null); };
             window.addEventListener('keydown', handleEsc);
             return () => window.removeEventListener('keydown', handleEsc);
           }, []);
 
-          // מניעת גלילה כאשר המודל פתוח
           React.useEffect(() => {
             document.body.style.overflow = modalContent ? 'hidden' : '';
           }, [modalContent]);
 
           return (
-            <div className="max-w-5xl mx-auto pt-4 md:pt-8">
-              <header className="mb-10 text-center">
-                  <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tight drop-shadow-lg">המדינות הסלאביות</h1>
+            <div className="max-w-5xl mx-auto pt-4 md:pt-8 relative">
+              
+              {/* כפתור החלפת שפה */}
+              <div className="absolute top-0 right-4 md:right-8">
+                <button 
+                  onClick={() => setLang(lang === 'he' ? 'en' : 'he')}
+                  className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-full border border-gray-600 transition-colors shadow-lg font-medium text-sm"
+                >
+                  <i className="fa-solid fa-globe text-blue-400"></i>
+                  {uiStr.langBtn}
+                </button>
+              </div>
+
+              <header className="mb-10 text-center mt-12 md:mt-0">
+                  <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tight drop-shadow-lg">{uiStr.mainTitle}</h1>
                   <p className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-                     מזרח ומרכז אירופה: מחקר וקסלולוגי, אטימולוגי, היסטורי וקרטוגרפי
+                     {uiStr.subTitle}
                   </p>
               </header>
 
@@ -552,6 +896,8 @@
                     key={country.id} 
                     country={country} 
                     onModalOpen={setModalContent} 
+                    lang={lang}
+                    uiStr={uiStr}
                   />
                 ))}
               </div>
@@ -559,15 +905,15 @@
               <footer className="mt-12 mb-8 pt-8 border-t border-gray-800 text-center text-gray-500 w-full max-w-6xl mx-auto px-4">
                   <div className="flex justify-center items-center gap-2 mb-4">
                       <svg className="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                      <h4 className="font-bold text-gray-400 text-lg">פרטי המחקר והפרויקט</h4>
+                      <h4 className="font-bold text-gray-400 text-lg">{uiStr.footerTitle}</h4>
                   </div>
-                  <div className="inline-block text-right bg-gray-900/50 p-6 rounded-xl border border-gray-800 w-full max-w-2xl">
+                  <div className="inline-block text-start bg-gray-900/50 p-6 rounded-xl border border-gray-800 w-full max-w-2xl">
                       <p className="text-gray-300 leading-loose">
-                          <strong className="text-white ml-2">שם ההוגה:</strong> רם<br />
-                          <strong className="text-white ml-2">שם הבונה/היצרן:</strong> ג'מיני (Gemini 3.1 Pro)<br />
-                          <strong className="text-white ml-2">סיבת ההמצאה/הבנייה:</strong> חקר המדינות הסלאביות במזרח ומרכז אירופה כחלק מ"אטלס האומות המלא".<br />
-                          <strong className="text-white ml-2">שנת הבנייה/היצירה:</strong> 2026<br />
-                          <strong className="text-white ml-2">מקורות וקרדיט:</strong> אטימולוגיה מקצועית. דגלי SVG וקטוריים פנימיים. מפות גיאוגרפיות קלאסיות מחשבון ה-GitHub של הפרויקט.
+                          <strong className="text-white me-2">{uiStr.fConcept}</strong> {uiStr.fConceptVal}<br />
+                          <strong className="text-white me-2">{uiStr.fBuilder}</strong> {uiStr.fBuilderVal}<br />
+                          <strong className="text-white me-2">{uiStr.fReason}</strong> {uiStr.fReasonVal}<br />
+                          <strong className="text-white me-2">{uiStr.fYear}</strong> {uiStr.fYearVal}<br />
+                          <strong className="text-white me-2">{uiStr.fCredits}</strong> {uiStr.fCreditsVal}
                       </p>
                   </div>
               </footer>
@@ -582,5 +928,3 @@
     </script>
 </body>
 </html>
-
-```
