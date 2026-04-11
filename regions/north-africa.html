@@ -1,9 +1,10 @@
+```html
 <!DOCTYPE html>
 <html lang="he" dir="rtl" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Stan Project | צפון אפריקה (המגרב)</title>
+    <title>The North Africa Project | צפון אפריקה (המגרב)</title>
     
     <!-- טעינת ספריות העיצוב -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -26,349 +27,616 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="min-h-screen bg-gray-950 text-gray-200 p-4 md:p-8 font-sans antialiased selection:bg-purple-500/30">
+<body class="min-h-screen bg-gray-950 text-gray-200 p-4 md:p-8 font-sans antialiased selection:bg-blue-500/30">
     
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useEffect } = React;
 
         // ==========================================
-        // רכיבי התמונות של הדגלים (PNG מרחוק)
+        // מילון ממשק משתמש (UI Dictionary)
         // ==========================================
-
-        const FlagAlgeria = () => (
-          <img 
-            src="https://i.postimg.cc/XGT2frxd/algeria.png" 
-            alt="דגל אלג'יריה" 
-            className="w-full h-full object-cover rounded-md border border-gray-700/50" 
-          />
-        );
-
-        const FlagLibya = () => (
-          <img 
-            src="https://i.postimg.cc/tZLr3sD6/libya.png" 
-            alt="דגל לוב" 
-            className="w-full h-full object-cover rounded-md border border-gray-700/50" 
-          />
-        );
-
-        const FlagMorocco = () => (
-          <img 
-            src="https://i.postimg.cc/k6kjQ2w8/morocco.png" 
-            alt="דגל מרוקו" 
-            className="w-full h-full object-cover rounded-md border border-gray-700/50" 
-          />
-        );
-
-        const FlagTunisia = () => (
-          <img 
-            src="https://i.postimg.cc/9RvxdD1y/tunisia.png" 
-            alt="דגל תוניסיה" 
-            className="w-full h-full object-cover rounded-md border border-gray-700/50" 
-          />
-        );
+        const ui = {
+          he: {
+            mainTitle: "דגלי צפון אפריקה (המגרב)",
+            subTitle: "מחקר וקסלולוגי, אטימולוגי, היסטורי וקרטוגרפי",
+            langBtn: "English",
+            capital: "עיר בירה:",
+            currency: "מטבע לאומי:",
+            founding: "שנת ייסוד:",
+            population: "אוכלוסייה:",
+            area: "שטח:",
+            leader: "מנהיג:",
+            sectionPhysical: "רקע פיזי ואנושי",
+            lAreaTopo: "שטח וטופוגרפיה:",
+            lDemographics: "דמוגרפיה",
+            lModernHistory: "היסטוריה מודרנית:",
+            sectionEtymology: "אטימולוגיה ושמות",
+            lNameMeaning: "משמעות השם:",
+            lCapitalName: "עיר הבירה:",
+            lCapitalEty: "אטימולוגיה:",
+            lCapitalFounding: "שנת ייסוד הבירה:",
+            lCapitalReason: "הסיבה לבחירתה:",
+            sectionSymbols: "סמלים וזהות לאומית",
+            lFlagMeaning: "משמעות צבעי הדגל:",
+            lNationalAnimal: "החיה הלאומית:",
+            sectionLeader: "פרופיל מנהיג מכונן",
+            lChildhood: "ילדות ורקע:",
+            lIdeology: "אידאולוגיה:",
+            lAchievements: "הישגים מרכזיים:",
+            sectionCartography: "קרטוגרפיה היסטורית",
+            lClickEnlargeMap: "(לחץ להגדלת המפה)",
+            lClickEnlargeFlag: "לחץ להגדלה",
+            footerTitle: "פרטי המחקר והפרויקט",
+            fConcept: "שם ההוגה:",
+            fBuilder: "שם הבונה/היצרן:",
+            fReason: "סיבת ההמצאה/הבנייה:",
+            fYear: "שנת הבנייה/היצירה:",
+            fCredits: "מקורות וקרדיט:",
+            fConceptVal: "רם",
+            fBuilderVal: "ג'מיני (Gemini 3.1 Pro)",
+            fReasonVal: "המרת מחקר צפון אפריקה (המגרב) למבנה React וקטורי מדויק בשילוב מפות היסטוריות ייעודיות ותרגום דו-לשוני מלא (עברית/אנגלית).",
+            fYearVal: "2026",
+            fCreditsVal: "אטימולוגיה מהספרות ההיסטורית. מפות קרטוגרפיות וקובצי דגלים באדיבות פרויקט אטלס האומות ב-GitHub."
+          },
+          en: {
+            mainTitle: "Flags of North Africa (The Maghreb)",
+            subTitle: "Vexillological, Etymological, Historical, and Cartographic Research",
+            langBtn: "עברית",
+            capital: "Capital City:",
+            currency: "Currency:",
+            founding: "Founded:",
+            population: "Population:",
+            area: "Area:",
+            leader: "Leader:",
+            sectionPhysical: "Physical and Human Background",
+            lAreaTopo: "Area & Topography:",
+            lDemographics: "Demographics",
+            lModernHistory: "Modern History:",
+            sectionEtymology: "Etymology and Names",
+            lNameMeaning: "Name Meaning:",
+            lCapitalName: "Capital City:",
+            lCapitalEty: "Etymology:",
+            lCapitalFounding: "Founding Year:",
+            lCapitalReason: "Reason for Selection:",
+            sectionSymbols: "Symbols & National Identity",
+            lFlagMeaning: "Flag Symbolism:",
+            lNationalAnimal: "National Animal:",
+            sectionLeader: "Founding Leader Profile",
+            lChildhood: "Childhood & Background:",
+            lIdeology: "Ideology:",
+            lAchievements: "Major Achievements:",
+            sectionCartography: "Historical Cartography",
+            lClickEnlargeMap: "(Click to enlarge map)",
+            lClickEnlargeFlag: "Click to enlarge",
+            footerTitle: "Research and Project Details",
+            fConcept: "Concept by:",
+            fBuilder: "Builder/Generator:",
+            fReason: "Reason for Creation:",
+            fYear: "Year of Creation:",
+            fCredits: "Sources & Credits:",
+            fConceptVal: "Ram",
+            fBuilderVal: "Gemini (Gemini 3.1 Pro)",
+            fReasonVal: "Conversion of the North Africa research into a precise React structure with historical maps and full bilingual translation (Heb/Eng).",
+            fYearVal: "2026",
+            fCreditsVal: "Etymology from historical literature. Cartographic maps and flag files courtesy of the Nations Atlas project on GitHub."
+          }
+        };
 
         // ==========================================
-        // מאגר הנתונים המלא והמורחב - צפון אפריקה (ללא השמטות)
+        // מאגר הנתונים המלא והמורחב (דו-לשוני) - צפון אפריקה
         // ==========================================
 
         const countriesData = [
           {
             id: "algeria",
-            name: "אלג'יריה",
+            name: { he: "אלג'יריה", en: "Algeria" },
             englishName: "Algeria",
-            officialName: "הרפובליקה האלג'יראית הדמוקרטית העממית",
-            FlagComponent: FlagAlgeria,
-            areaNum: "~2,381,741 קמ\"ר",
-            populationNum: "~45,400,000",
-            currency: "דינר אלג'יראי (DZD)",
-            area: "כ-2,381,741 קמ\"ר. המדינה הגדולה ביותר בשטחה ביבשת אפריקה (לאחר פיצול סודאן ב-2011). רובה המכריע, מעל ל-80%, מכוסה על ידי מדבר סהרה העצום. החיים מרוכזים כמעט בלעדית לאורך רצועת החוף הצפונית בים התיכון (הטל) ובהרי האטלס הפוריים.",
-            demographics: {
-              mainNationName: "ערבים-ברברים",
-              mainNationPercent: "כ-99%",
-              description: "אוכלוסיית אלג'יריה הומוגנית מאוד מבחינה דתית ואתנית, ומורכבת ברובה המוחלט ממוסלמים סונים ממוצא ערבי-ברברי (אמזיגי). המורשת והשפה הברברית נשמרות בחלקים שונים של המדינה וזוכות לתחייה לאומית, במיוחד באזור הקביליה ההררי ובקרב שבטי הטוארג בסהרה."
+            officialName: { he: "הרפובליקה האלג'יראית הדמוקרטית העממית", en: "People's Democratic Republic of Algeria" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/algeria.webp",
+            capital: {
+              name: { he: "אלג'יר", en: "Algiers" },
+              englishName: "Algiers",
+              etymology: { 
+                he: "שם העיר זהה לשמה הערבי המקורי של המדינה - \"אל-גְ'זַאאִ'ר\" (Al-Jaza'ir). פירוש המילה המדויק בערבית הוא \"האיים\". השם \"ג'זאא'ר בני מזע'אנה\" ניתן לעיר במאה העשירית על ידי המייסדים הברברים. \"האיים\" מתייחס לארבעה איים קטנים וסלעיים שהיו ממוקמים מול חופי עיר הבירה העתיקה, אשר שולבו מאוחר יותר ליבשת אחת (חצי אי) בעקבות תהליכי פיתוח ובניית נמל ימי בשנת 1525.",
+                en: "The city's name is identical to the original Arabic name of the country - 'Al-Jaza'ir'. The exact meaning in Arabic is 'The Islands'. The name 'Jazā'ir Banī Mazghanna' was given to the city in the 10th century by its Berber founders. 'The Islands' refers to four small, rocky islands formerly located off the city's ancient coast, which were later joined to the mainland to form a peninsula during the construction of the seaport in 1525."
+              },
+              foundingYear: { he: "944 לספירה (על ידי בולוגין אבן זירי הברברי)", en: "944 AD (by the Berber ruler Buluggin ibn Ziri)" },
+              reason: { 
+                he: "אלג'יר נבחרה וצמחה כבירה בשל מיקומה האסטרטגי על הים התיכון, אשר סיפק נמל טבעי מוגן על ידי איים קטנים. היא אפשרה לשליטיה (מימי הברברים ועד לאימפריה העות'מאנית) לשלוט בנתיבי הסחר הימיים, ושימשה כבסיס צבאי מבוצר ובלתי חדיר לפעילות הקורסארים (שודדי ים בחסות השלטון) שהטילו אימה על ציי אירופה במשך מאות שנים.",
+                en: "Algiers was chosen and grew as a capital due to its strategic location on the Mediterranean Sea, providing a natural harbor protected by small islands. It allowed its rulers (from the Berbers to the Ottoman Empire) to control maritime trade routes, and served as a heavily fortified and impenetrable military base for the Corsairs (state-sponsored pirates) who terrorized European fleets for centuries."
+              }
             },
-            modernHistory: "אלג'יריה חוותה את אחת מתקופות הקולוניאליזם האכזריות ביותר. לאחר למעלה מ-130 שנות שלטון צרפתי אינטנסיבי שראה באלג'יריה \"חלק בלתי נפרד מצרפת\" (קולוניית מתיישבים), המדינה השיגה את עצמאותה ב-1962, בעקבות מלחמת העצמאות האלג'יראית – מאבק שחרור עקוב מדם שגבה את חייהם של למעלה ממיליון שהידים.",
-            foundingYears: "1962 (עצמאות מצרפת)",
-            flagSymbolism: "הדגל אומץ רשמית עם העצמאות ומורכב משני חצאים שווים: ירוק (בצד התורן) ולבן. הירוק מסמל את דת האסלאם והתקווה, הלבן מסמל טוהר, שלום ואת תנועת ההתנגדות הלאומית. במרכז נמצאים הסהר והכוכב המחומש האדומים, שמסמלים את הדם הרב של השהידים שנשפך במלחמת העצמאות וכן את הקשר ההיסטורי והתרבותי לאומה המוסלמית.",
+            areaNum: { he: "~2,381,741 קמ\"ר", en: "~2,381,741 sq km" },
+            populationNum: "~45,400,000",
+            currency: { he: "דינר אלג'יראי (DZD)", en: "Algerian Dinar (DZD)" },
+            area: { 
+              he: "כ-2,381,741 קמ\"ר. המדינה הגדולה ביותר בשטחה ביבשת אפריקה (לאחר פיצול סודאן ב-2011). רובה המכריע, מעל ל-80%, מכוסה על ידי מדבר סהרה העצום. החיים מרוכזים כמעט בלעדית לאורך רצועת החוף הצפונית בים התיכון (הטל) ובהרי האטלס הפוריים.",
+              en: "Approx. 2,381,741 sq km. The largest country by land area in the continent of Africa (following the partition of Sudan in 2011). The vast majority of it, over 80%, is covered by the immense Sahara Desert. Life is concentrated almost exclusively along the northern Mediterranean coastal strip (the Tell) and the fertile Atlas Mountains."
+            },
+            demographics: {
+              mainNationName: { he: "ערבים-ברברים", en: "Arab-Berbers" },
+              mainNationPercent: { he: "כ-99%", en: "~99%" },
+              description: { 
+                he: "אוכלוסיית אלג'יריה הומוגנית מאוד מבחינה דתית ואתנית, ומורכבת ברובה המוחלט ממוסלמים סונים ממוצא ערבי-ברברי (אמזיגי). המורשת והשפה הברברית נשמרות בחלקים שונים של המדינה וזוכות לתחייה לאומית, במיוחד באזור הקביליה ההררי ובקרב שבטי הטוארג בסהרה.",
+                en: "Algeria's population is very homogeneous religiously and ethnically, overwhelmingly composed of Sunni Muslims of Arab-Berber (Amazigh) descent. The Berber heritage and language are preserved in various parts of the country and are experiencing a national revival, especially in the mountainous Kabylia region and among the Tuareg tribes in the Sahara."
+              }
+            },
+            modernHistory: { 
+              he: "אלג'יריה חוותה את אחת מתקופות הקולוניאליזם האכזריות ביותר. לאחר למעלה מ-130 שנות שלטון צרפתי אינטנסיבי שראה באלג'יריה 'חלק בלתי נפרד מצרפת' (קולוניית מתיישבים), המדינה השיגה את עצמאותה ב-1962, בעקבות מלחמת העצמאות האלג'יראית – מאבק שחרור עקוב מדם שגבה את חייהם של למעלה ממיליון שהידים.",
+              en: "Algeria experienced one of the most brutal periods of colonialism. After more than 130 years of intensive French rule that considered Algeria an 'integral part of France' (a settler colony), the country gained its independence in 1962, following the Algerian War of Independence – a bloody liberation struggle that claimed the lives of over a million martyrs."
+            },
+            foundingYears: { he: "1962 (עצמאות מצרפת)", en: "1962 (Independence from France)" },
+            flagSymbolism: { 
+              he: "הדגל אומץ רשמית עם העצמאות ומורכב משני חצאים שווים: ירוק (בצד התורן) ולבן. הירוק מסמל את דת האסלאם והתקווה, הלבן מסמל טוהר, שלום ואת תנועת ההתנגדות הלאומית. במרכז נמצאים הסהר והכוכב המחומש האדומים, שמסמלים את הדם הרב של השהידים שנשפך במלחמת העצמאות וכן את הקשר ההיסטורי והתרבותי לאומה המוסלמית.",
+              en: "The flag was officially adopted with independence and consists of two equal halves: green (on the hoist side) and white. Green symbolizes the religion of Islam and hope, white symbolizes purity, peace, and the national resistance movement. In the center are the red crescent and five-pointed star, symbolizing the abundant blood of the martyrs shed in the War of Independence as well as the historical and cultural connection to the Muslim nation."
+            },
+            nationalAnimal: {
+              name: { he: "שועל פנק (Fennec Fox)", en: "Fennec Fox" },
+              reason: { 
+                he: "שועל הפנק, הניחן באוזניים גדולות במיוחד המשמשות לפליטת חום ולשמיעה מחודדת בלילה, הוא יליד מדבר סהרה המכסה את רוב אלג'יריה. הוא מסמל עבור האלג'יראים חכמה, זריזות, ויכולת הסתגלות והישרדות בתנאי האקלים הקשים והאכזריים ביותר. אהבת האומה לחיה זו כה גדולה, שנבחרת הכדורגל הלאומית של אלג'יריה מכונה בגאווה 'שועלי הפנק' (Les Fennecs).",
+                en: "The Fennec Fox, gifted with unusually large ears used to dissipate heat and for sharp night hearing, is native to the Sahara Desert that covers most of Algeria. For Algerians, it symbolizes wisdom, agility, and the ability to adapt and survive in the harshest and most cruel climate conditions. The nation's love for this animal is so great that the Algerian national football team is proudly nicknamed 'The Fennec Foxes' (Les Fennecs)."
+              }
+            },
             etymology: {
               parts: [
-                { text: "אל-גְ'זַאאִ'ר (Al-Jaza'ir)", color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: "שמה הערבי המקורי של המדינה ושל עיר הבירה (אלג'יר). פירוש המילה המדויק בערבית הוא \"האיים\"." },
-                { text: "ג'זאא'ר בני מזע'אנה", color: "text-indigo-400", bg: "bg-indigo-400/10", border: "border-indigo-500/30", desc: "השם המלא שניתן לעיר במאה העשירית על ידי המייסדים הברברים. \"האיים\" מתייחס לארבעה איים קטנים וסלעיים שהיו ממוקמים מול חופי עיר הבירה העתיקה, אשר שולבו מאוחר יותר ליבשת אחת (חצי אי) בעקבות תהליכי פיתוח ובניית נמל ימי בשנת 1525." }
+                { text: { he: "אל-גְ'זַאאִ'ר (Al-Jaza'ir)", en: "Al-Jaza'ir" }, color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: { he: "שמה הערבי המקורי של המדינה ושל עיר הבירה (אלג'יר). פירוש המילה המדויק בערבית הוא 'האיים'.", en: "The original Arabic name of the country and the capital city (Algiers). The exact meaning of the word in Arabic is 'The Islands'." } },
+                { text: { he: "ג'זאא'ר בני מזע'אנה", en: "Jaza'ir Bani Mazghanna" }, color: "text-indigo-400", bg: "bg-indigo-400/10", border: "border-indigo-500/30", desc: { he: "השם המלא שניתן לעיר במאה העשירית על ידי המייסדים הברברים. 'האיים' מתייחס לארבעה איים קטנים וסלעיים שהיו ממוקמים מול חופי עיר הבירה העתיקה, אשר שולבו מאוחר יותר ליבשת אחת (חצי אי) בעקבות תהליכי פיתוח ובניית נמל ימי בשנת 1525.", en: "The full name given to the city in the 10th century by its Berber founders. 'The Islands' refers to four small, rocky islands formerly located off the city's ancient coast, which were later joined to the mainland to form a peninsula during the construction of the seaport in 1525." } }
               ],
-              synthesis: "קרויה על שם עיר הבירה אלג'יר (שמשמעותה \"האיים\" המקוריים בחופה), שם שהורחב על ידי השלטון הצרפתי לשם \"אלג'יריה\" כדי לתאר את כל הטריטוריה המדינית העצומה."
+              synthesis: { he: "קרויה על שם עיר הבירה אלג'יר (שמשמעותה 'האיים' המקוריים בחופה), שם שהורחב על ידי השלטון הצרפתי לשם 'אלג'יריה' כדי לתאר את כל הטריטוריה המדינית העצומה.", en: "Named after the capital city Algiers (meaning the original 'Islands' on its coast), a name expanded by French rule to 'Algeria' to describe the entire vast political territory." }
             },
             figure: {
-              name: "אחמד בן בלה",
+              name: { he: "אחמד בן בלה", en: "Ahmed Ben Bella" },
               years: "1916 - 2012",
-              childhood: "נולד בעיירה מע'ניה שבמערב אלג'יריה, קרוב לגבול המרוקאי, למשפחת איכרים סופית צנועה. התנדב ושירת בהצטיינות מרובה בצבא הצרפתי במהלך מלחמת העולם השנייה (הוא אף עוטר בצלב המלחמה הצרפתי על גבורתו בקרב מונטה קסינו), אך חוויותיו במלחמה והאפליה שחווה פקחו את עיניו והפכו אותו לאחר שחרורו למתנגד חריף ופעיל נגד הקולוניאליזם.",
-              ideology: "דגל בסוציאליזם ערבי-אלג'יראי (התאמת המרקסיזם למציאות האסלאמית), אנטי-אימפריאליזם מובהק ופאן-ערביות נלהבת. הוא ראה באלג'יריה המשוחררת מגדלור של שחרור לאומי עבור יבשת אפריקה והעולם השלישי כולו, ופעל באינטנסיביות לחיזוק הקשר ההדוק עם ברית המועצות ועם מצרים של גמאל עבד אל-נאצר.",
-              achievements: "היה מראשי ה-FLN (החזית לשחרור לאומי) והאדריכלים של מרד 1954. נלכד ונכלא על ידי הצרפתים לשנים רבות לאחר שמטוסו יורט ב-1956. מהכלא הפך לסמל המאבק הבינלאומי לעצמאות. עם סיום המלחמה ב-1962 שוחרר והפך לנשיאה הראשון של הרפובליקה האלג'יראית, תפקיד בו כיהן עד שהודח בהפיכה צבאית ב-1965."
+              childhood: { 
+                he: "נולד בעיירה מע'ניה שבמערב אלג'יריה, קרוב לגבול המרוקאי, למשפחת איכרים סופית צנועה. התנדב ושירת בהצטיינות מרובה בצבא הצרפתי במהלך מלחמת העולם השנייה (הוא אף עוטר בצלב המלחמה הצרפתי על גבורתו בקרב מונטה קסינו), אך חוויותיו במלחמה והאפליה שחווה פקחו את עיניו והפכו אותו לאחר שחרורו למתנגד חריף ופעיל נגד הקולוניאליזם.",
+                en: "Born in the town of Maghnia in western Algeria, near the Moroccan border, to a modest Sufi peasant family. He volunteered and served with great distinction in the French army during World War II (he was even decorated with the Croix de Guerre for his bravery in the Battle of Monte Cassino), but his experiences in the war and the discrimination he faced opened his eyes, turning him after his discharge into a fierce and active opponent of colonialism."
+              },
+              ideology: { 
+                he: "דגל בסוציאליזם ערבי-אלג'יראי (התאמת המרקסיזם למציאות האסלאמית), אנטי-אימפריאליזם מובהק ופאן-ערביות נלהבת. הוא ראה באלג'יריה המשוחררת מגדלור של שחרור לאומי עבור יבשת אפריקה והעולם השלישי כולו, ופעל באינטנסיביות לחיזוק הקשר ההדוק עם ברית המועצות ועם מצרים של גמאל עבד אל-נאצר.",
+                en: "Advocated for Algerian-Arab socialism (adapting Marxism to Islamic reality), distinct anti-imperialism, and passionate Pan-Arabism. He saw liberated Algeria as a beacon of national liberation for the African continent and the entire Third World, and worked intensively to strengthen close ties with the Soviet Union and Gamal Abdel Nasser's Egypt."
+              },
+              achievements: { 
+                he: "היה מראשי ה-FLN (החזית לשחרור לאומי) והאדריכלים של מרד 1954. נלכד ונכלא על ידי הצרפתים לשנים רבות לאחר שמטוסו יורט ב-1956. מהכלא הפך לסמל המאבק הבינלאומי לעצמאות. עם סיום המלחמה ב-1962 שוחרר והפך לנשיאה הראשון של הרפובליקה האלג'יראית, תפקיד בו כיהן עד שהודח בהפיכה צבאית ב-1965.",
+                en: "He was a leader of the FLN (National Liberation Front) and an architect of the 1954 rebellion. He was captured and imprisoned by the French for many years after his plane was intercepted in 1956. From prison, he became a symbol of the international struggle for independence. With the end of the war in 1962, he was released and became the first President of the Algerian Republic, a role he held until overthrown in a military coup in 1965."
+              }
             },
             map: {
               url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_algeria_barbary.jpg",
-              title: "מפת החוף הברברי ואלג'יריה - המאה ה-16",
-              desc: "מפה עתיקה המציגה את אזור המגרב ומיקומה האסטרטגי של עיר הנמל החשובה אלג'יר בים התיכון, בתקופה שבה נודעה כמוקד של קורסארים ברברים וכוח ימי טרם הכיבוש הצרפתי של המאה ה-19."
+              title: { he: "מפת החוף הברברי ואלג'יריה - המאה ה-16", en: "Map of the Barbary Coast and Algeria - 16th Century" },
+              desc: { 
+                he: "מפה עתיקה המציגה את אזור המגרב ומיקומה האסטרטגי של עיר הנמל החשובה אלג'יר בים התיכון, בתקופה שבה נודעה כמוקד של קורסארים ברברים וכוח ימי טרם הכיבוש הצרפתי של המאה ה-19.",
+                en: "An ancient map showing the Maghreb region and the strategic location of the important port city of Algiers on the Mediterranean Sea, during the period when it was known as a hub of Barbary corsairs and a naval power prior to the French conquest of the 19th century."
+              }
             }
           },
           {
             id: "libya",
-            name: "לוב",
+            name: { he: "לוב", en: "Libya" },
             englishName: "Libya",
-            officialName: "מדינת לוב",
-            FlagComponent: FlagLibya,
-            areaNum: "~1,759,540 קמ\"ר",
-            populationNum: "~7,000,000",
-            currency: "דינר לובי (LYD)",
-            area: "כ-1,759,540 קמ\"ר. המדינה הרביעית בגודלה באפריקה. ממוקמת אסטרטגית על חופי הים התיכון הארוכים, כשרובה המכריע (כ-90%) הוא מדבר צחיח וקשה המהווה חלק ממדבר סהרה העצום. החיים, הכלכלה והחקלאות מרוכזים כמעט באופן מוחלט במישור החוף בצפון ובמספר מועט של נאות מדבר.",
-            demographics: {
-              mainNationName: "ערבים-ברברים",
-              mainNationPercent: "כ-97%",
-              description: "למרות שאוכלוסיית לוב נראית הומוגנית מבחינה דתית (סונים) ולשונית (דוברי ערבית), היא מחולקת שבטית באופן עמוק וחריף. המבנה החברתי מבוסס על נאמנות שבטית לשלושת חבלי הארץ ההיסטוריים שהרכיבו את המדינה: טריפוליטניה (במערב), קירנאיקה (במזרח) ופזאן (בדרום המדברי). שסע זה משחק תפקיד מכריע ומערער בפוליטיקה המקומית עד עצם היום הזה."
+            officialName: { he: "מדינת לוב", en: "State of Libya" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/libya.webp",
+            capital: {
+              name: { he: "טריפולי", en: "Tripoli" },
+              englishName: "Tripoli",
+              etymology: { 
+                he: "מקור השם טריפולי הוא מהשפה היוונית העתיקה: 'טריה' (שלוש) ו-'פוליס' (עיר), כלומר 'שלוש הערים' (Tripolis). השם מתייחס לאיחוד ההיסטורי של שלוש ערים פיניקיות עתיקות ומשגשגות ששכנו לאורך החוף במערב לוב: אוֹעָה (Oea, שעליה בנויה טריפולי המודרנית), סברתה, ולפטיס מגנה. עם הזמן, שמה של הפרובינציה כולה הפך לשמה של העיר המרכזית ששרדה.",
+                en: "The origin of the name Tripoli comes from Ancient Greek: 'Tria' (three) and 'Polis' (city), meaning 'The Three Cities' (Tripolis). The name refers to the historical union of three ancient and prosperous Phoenician cities situated along the coast of western Libya: Oea (upon which modern Tripoli is built), Sabratha, and Leptis Magna. Over time, the name of the entire province became the name of the central surviving city."
+              },
+              foundingYear: { he: "המאה ה-7 לפנה\"ס (על ידי הפיניקים תחת השם אוֹעָה)", en: "7th Century BC (by the Phoenicians under the name Oea)" },
+              reason: { 
+                he: "טריפולי הוקמה בשל מיקומה כנמל ים טבעי ובטוח לחופי הים התיכון. הפיניקים, אומני הסחר הימי, השתמשו בה כתחנת סחר חיונית להחלפת סחורות ממרכז אפריקה (שהגיעו דרך שיירות שחצו את הסהרה). לאורך ההיסטוריה, השליטה בהבטחת נמל ימי עמוק אל מול פנים יבשת מדברי לחלוטין, הפכה את טריפולי למרכז הפוליטי, הכלכלי, והדמוגרפי של אזור טריפוליטניה ולוב כולה.",
+                en: "Tripoli was established due to its location as a natural and safe seaport on the Mediterranean coast. The Phoenicians, masters of maritime trade, used it as a vital trading post to exchange goods from central Africa (which arrived via caravans crossing the Sahara). Throughout history, control over ensuring a deep seaport facing an entirely desert interior made Tripoli the political, economic, and demographic center of the Tripolitania region and all of Libya."
+              }
             },
-            modernHistory: "לוב העבירה שנות כיבוש איטלקי אכזרי (שהחל ב-1911) בו נטבחה אוכלוסייה רבה. הכיבוש הסתיים במלחמת העולם השנייה עם תבוסת כוחות הציר. לוב הכריזה על עצמאותה ב-1951 כממלכה פדרלית תחת שלטון המלך אידריס הראשון. ב-1969, המלך הודח בהפיכה צבאית שקטה בראשות מועמר קדאפי צעיר, שהקים דיקטטורה ייחודית (\"הג'מאהיריה\") ושלט במדינה במשך כארבעה עשורים עד שהודח ונרצח במלחמת האזרחים של 2011.",
-            foundingYears: "1951 (הקמת הממלכה)",
-            flagSymbolism: "הדגל המקורי של הממלכה מ-1951 אומץ מחדש כסמל המדינה לאחר הפלת משטר קדאפי ב-2011 (אז הדגל היה ירוק חלק). האדום (הפס העליון) מסמל את חבל פזאן ואת דם ההרוגים; השחור (הפס האמצעי הכפול) ובו הסהר והכוכב הלבנים, הוא דגלו המקורי של מסדר הסנוסים ההיסטורי המסמל את קירנאיקה ואת דת האסלאם; והירוק (הפס התחתון) מסמל את חבל טריפוליטניה ואת שגשוגה העתידי של הארץ.",
+            areaNum: { he: "~1,759,540 קמ\"ר", en: "~1,759,540 sq km" },
+            populationNum: "~7,000,000",
+            currency: { he: "דינר לובי (LYD)", en: "Libyan Dinar (LYD)" },
+            area: { 
+              he: "כ-1,759,540 קמ\"ר. המדינה הרביעית בגודלה באפריקה. ממוקמת אסטרטגית על חופי הים התיכון הארוכים, כשרובה המכריע (כ-90%) הוא מדבר צחיח וקשה המהווה חלק ממדבר סהרה העצום. החיים, הכלכלה והחקלאות מרוכזים כמעט באופן מוחלט במישור החוף בצפון ובמספר מועט של נאות מדבר.",
+              en: "Approx. 1,759,540 sq km. The fourth-largest country in Africa. Strategically located on the long Mediterranean coasts, with the vast majority (about 90%) being harsh, arid desert forming part of the immense Sahara Desert. Life, economy, and agriculture are concentrated almost entirely in the northern coastal plain and a few oases."
+            },
+            demographics: {
+              mainNationName: { he: "ערבים-ברברים", en: "Arab-Berbers" },
+              mainNationPercent: { he: "כ-97%", en: "~97%" },
+              description: { 
+                he: "למרות שאוכלוסיית לוב נראית הומוגנית מבחינה דתית (סונים) ולשונית (דוברי ערבית), היא מחולקת שבטית באופן עמוק וחריף. המבנה החברתי מבוסס על נאמנות שבטית לשלושת חבלי הארץ ההיסטוריים שהרכיבו את המדינה: טריפוליטניה (במערב), קירנאיקה (במזרח) ופזאן (בדרום המדברי). שסע זה משחק תפקיד מכריע ומערער בפוליטיקה המקומית עד עצם היום הזה.",
+                en: "Although Libya's population appears homogeneous religiously (Sunni) and linguistically (Arabic-speaking), it is deeply and sharply divided tribally. The social structure is based on tribal loyalty to the three historical regions that made up the country: Tripolitania (in the west), Cyrenaica (in the east), and Fezzan (in the desert south). This rift plays a decisive and destabilizing role in local politics to this very day."
+              }
+            },
+            modernHistory: { 
+              he: "לוב העבירה שנות כיבוש איטלקי אכזרי (שהחל ב-1911) בו נטבחה אוכלוסייה רבה. הכיבוש הסתיים במלחמת העולם השנייה עם תבוסת כוחות הציר. לוב הכריזה על עצמאותה ב-1951 כממלכה פדרלית תחת שלטון המלך אידריס הראשון. ב-1969, המלך הודח בהפיכה צבאית שקטה בראשות מועמר קדאפי צעיר, שהקים דיקטטורה ייחודית ('הג'מאהיריה') ושלט במדינה במשך כארבעה עשורים עד שהודח ונרצח במלחמת האזרחים של 2011.",
+              en: "Libya endured years of brutal Italian occupation (starting in 1911) in which a large population was massacred. The occupation ended in World War II with the defeat of the Axis powers. Libya declared its independence in 1951 as a federal kingdom under the rule of King Idris I. In 1969, the King was overthrown in a quiet military coup led by a young Muammar Gaddafi, who established a unique dictatorship (the 'Jamahiriya') and ruled the country for about four decades until he was ousted and killed in the 2011 civil war."
+            },
+            foundingYears: { he: "1951 (הקמת הממלכה)", en: "1951 (Establishment of the Kingdom)" },
+            flagSymbolism: { 
+              he: "הדגל המקורי של הממלכה מ-1951 אומץ מחדש כסמל המדינה לאחר הפלת משטר קדאפי ב-2011 (אז הדגל היה ירוק חלק). האדום (הפס העליון) מסמל את חבל פזאן ואת דם ההרוגים; השחור (הפס האמצעי הכפול) ובו הסהר והכוכב הלבנים, הוא דגלו המקורי של מסדר הסנוסים ההיסטורי המסמל את קירנאיקה ואת דת האסלאם; והירוק (הפס התחתון) מסמל את חבל טריפוליטניה ואת שגשוגה העתידי של הארץ.",
+              en: "The original flag of the Kingdom from 1951 was readopted as the national symbol after the fall of the Gaddafi regime in 2011 (when the flag was solid green). The red (top stripe) symbolizes the Fezzan region and the blood of the fallen; the black (double middle stripe) with the white crescent and star is the original flag of the historical Senussi order, symbolizing Cyrenaica and the religion of Islam; and the green (bottom stripe) symbolizes the Tripolitania region and the country's future prosperity."
+            },
+            nationalAnimal: {
+              name: { he: "העיט הערבי (Arabian Eagle / Hawk of Quraish)", en: "Arabian Eagle / Hawk of Quraish" },
+              reason: { 
+                he: "העיט מסמל בתרבות הערבית כוח, ריבונות, גבורה וחזון אסטרטגי. 'נץ קורייש' הוא סמל הרלדי המופיע על סמלה הרשמי של לוב ומשמש לאיחוד לאומי בקרב מדינות פאן-ערביות. בחירת העופות הדורסים מסמלת את החיבור ההדוק של לוב לעולם הערבי ולמורשת השבטית, כמו גם את רוח הלחימה והשליטה על המרחב המדברי הפתוח.",
+                en: "The eagle symbolizes power, sovereignty, bravery, and strategic vision in Arab culture. The 'Hawk of Quraish' is a heraldic emblem appearing on Libya's official coat of arms, used for national unity among Pan-Arab states. The choice of birds of prey symbolizes Libya's deep connection to the Arab world and tribal heritage, as well as the fighting spirit and dominance over the open desert expanse."
+              }
+            },
             etymology: {
               parts: [
-                { text: "שבט הליבו (Libu)", color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: "מקור השם עתיק במיוחד. בתבליטים ובטקסטים במצרית עתיקה, הופיע השם \"ליבו\" (Libu או Ribu) שהתייחס במפורש לאחד השבטים הברבריים-נוודים המרכזיים והחזקים שחיו ממערב לנהר הנילוס, באזור קירנאיקה של היום." },
-                { text: "ההרחבה היוונית (Λιβύη)", color: "text-indigo-400", bg: "bg-indigo-400/10", border: "border-indigo-500/30", desc: "היוונים הקדמונים אימצו את השם המצרי, הפכו אותו ל-\"Libya\", אך החלו להשתמש בו במושג רחב וכוללני כדי לתאר את כל יבשת אפריקה המוכרת להם בימי קדם (כל מה שהיה ממערב למצרים ולנהר הנילוס)." }
+                { text: { he: "שבט הליבו (Libu)", en: "The Libu Tribe" }, color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: { he: "מקור השם עתיק במיוחד. בתבליטים ובטקסטים במצרית עתיקה, הופיע השם 'ליבו' (Libu או Ribu) שהתייחס במפורש לאחד השבטים הברבריים-נוודים המרכזיים והחזקים שחיו ממערב לנהר הנילוס, באזור קירנאיקה של היום.", en: "The origin of the name is exceptionally ancient. In ancient Egyptian reliefs and texts, the name 'Libu' (or Ribu) appeared, explicitly referring to one of the central and powerful nomadic Berber tribes living west of the Nile River, in today's Cyrenaica region." } },
+                { text: { he: "ההרחבה היוונית (Λιβύη)", en: "The Greek Expansion (Λιβύη)" }, color: "text-indigo-400", bg: "bg-indigo-400/10", border: "border-indigo-500/30", desc: { he: "היוונים הקדמונים אימצו את השם המצרי, הפכו אותו ל-'Libya', אך החלו להשתמש בו במושג רחב וכוללני כדי לתאר את כל יבשת אפריקה המוכרת להם בימי קדם (כל מה שהיה ממערב למצרים ולנהר הנילוס).", en: "The ancient Greeks adopted the Egyptian name, turned it into 'Libya', but began using it as a broad and inclusive term to describe the entire African continent known to them in antiquity (everything west of Egypt and the Nile River)." } }
               ],
-              synthesis: "השם הקדום (השבטי) בו השתמשו המצרים והיוונים לתיאור אפריקה ושבטיה המערביים, שחזר לשימוש בטריטוריה הגיאוגרפית המקורית במאה ה-20 לאחר הקולוניאליזם."
+              synthesis: { he: "השם הקדום (השבטי) בו השתמשו המצרים והיוונים לתיאור אפריקה ושבטיה המערביים, שחזר לשימוש בטריטוריה הגיאוגרפית המקורית במאה ה-20 לאחר הקולוניאליזם.", en: "The ancient (tribal) name used by Egyptians and Greeks to describe Africa and its western tribes, which returned to use in the original geographical territory in the 20th century after colonialism." }
             },
             figure: {
-              name: "המלך אידריס הראשון",
+              name: { he: "המלך אידריס הראשון", en: "King Idris I" },
               years: "1889 - 1983",
-              childhood: "נולד בנווה המדבר אל-ג'ע'בוב (במזרח לוב של ימינו). נכדו של מוחמד אבן עלי א-סנוסי, מייסד המסדר הסנוסי המפורסם. התחנך בחינוך דתי-איסלאמי-סופי קפדני והפך למנהיג הרוחני הבלתי מעורער של המסדר בגיל צעיר יחסית.",
-              ideology: "השקפת עולמו שילבה שמרנות סופית-אסלאמית הדוקה, תמיכה במונרכיה חוקתית מתונה המכבדת את המסורת השבטית, פרו-מערביות (הוא טיפח בריתות חזקות והעניק בסיסים צבאיים לבריטניה וארה\"ב), והתנגדות לאומית נחרצת ובלתי מתפשרת לקולוניאליזם האיטלקי שדיכא את עמו.",
-              achievements: "הוביל את ההתנגדות מול האיטלקים בעת שהייתו הארוכה במקום גלותו במצרים, שם אסף כוחות וכרת ברית עם הבריטים במלחמת העולם השנייה. ב-1951, עם הכרזת העצמאות של לוב, הוכתר למלכה הראשון (והיחיד) של המדינה. הוא איחד את שלושת המחוזות למדינה עצמאית ושלט בה ביציבות יחסית עד שהודח בהפיכה הצבאית ב-1969 ויצא לגלות."
+              childhood: { 
+                he: "נולד בנווה המדבר אל-ג'ע'בוב (במזרח לוב של ימינו). נכדו של מוחמד אבן עלי א-סנוסי, מייסד המסדר הסנוסי המפורסם. התחנך בחינוך דתי-איסלאמי-סופי קפדני והפך למנהיג הרוחני הבלתי מעורער של המסדר בגיל צעיר יחסית.",
+                en: "Born in the oasis of Al-Jaghbub (in modern-day eastern Libya). Grandson of Muhammad ibn Ali as-Senussi, founder of the famous Senussi order. He received a strict Sufi-Islamic religious education and became the undisputed spiritual leader of the order at a relatively young age."
+              },
+              ideology: { 
+                he: "השקפת עולמו שילבה שמרנות סופית-אסלאמית הדוקה, תמיכה במונרכיה חוקתית מתונה המכבדת את המסורת השבטית, פרו-מערביות (הוא טיפח בריתות חזקות והעניק בסיסים צבאיים לבריטניה וארה\"ב), והתנגדות לאומית נחרצת ובלתי מתפשרת לקולוניאליזם האיטלקי שדיכא את עמו.",
+                en: "His worldview combined strict Sufi-Islamic conservatism, support for a moderate constitutional monarchy respecting tribal tradition, pro-Westernism (he cultivated strong alliances and granted military bases to Britain and the US), and resolute, uncompromising national opposition to the Italian colonialism that oppressed his people."
+              },
+              achievements: { 
+                he: "הוביל את ההתנגדות מול האיטלקים בעת שהייתו הארוכה במקום גלותו במצרים, שם אסף כוחות וכרת ברית עם הבריטים במלחמת העולם השנייה. ב-1951, עם הכרזת העצמאות של לוב, הוכתר למלכה הראשון (והיחיד) של המדינה. הוא איחד את שלושת המחוזות למדינה עצמאית ושלט בה ביציבות יחסית עד שהודח בהפיכה הצבאית ב-1969 ויצא לגלות.",
+                en: "He led the resistance against the Italians during his long stay in exile in Egypt, where he gathered forces and allied with the British in World War II. In 1951, with the declaration of Libya's independence, he was crowned the first (and only) King of the country. He united the three provinces into an independent state and ruled it with relative stability until overthrown in a military coup in 1969 and went into exile."
+              }
             },
             map: {
               url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_libya_africa.jpg",
-              title: "מפת אפריקה ולוב - המאה ה-16",
-              desc: "מפה קרטוגרפית המציגה את יבשת אפריקה ואת אזור לוב המוכר היסטורית כממלכת שבט הליבו (Libu), השבט אשר בסופו של דבר העניק את השם ליבשת כולה בעת העתיקה בעיני היוונים."
+              title: { he: "מפת אפריקה ולוב - המאה ה-16", en: "Map of Africa and Libya - 16th Century" },
+              desc: { 
+                he: "מפה קרטוגרפית המציגה את יבשת אפריקה ואת אזור לוב המוכר היסטורית כממלכת שבט הליבו (Libu), השבט אשר בסופו של דבר העניק את השם ליבשת כולה בעת העתיקה בעיני היוונים.",
+                en: "A cartographic map showing the African continent and the region of Libya historically known as the kingdom of the Libu tribe, the tribe that ultimately gave its name to the entire continent in antiquity in the eyes of the Greeks."
+              }
             }
           },
           {
             id: "morocco",
-            name: "מרוקו",
+            name: { he: "מרוקו", en: "Morocco" },
             englishName: "Morocco",
-            officialName: "ממלכת מרוקו",
-            FlagComponent: FlagMorocco,
-            areaNum: "~710,850 קמ\"ר (כולל סהרה)",
-            populationNum: "~38,000,000",
-            currency: "דירהם מרוקאי (MAD)",
-            area: "כ-710,850 קמ\"ר (כולל טריטוריית סהרה המערבית). מדינה בעלת מיקום אסטרטגי עצום, עם חופים ארוכים ויפים על האוקיינוס האטלנטי והים התיכון. החופים מופרדים מהפנים המדברי על ידי רכסי הרי האטלס הגבוהים והמושלגים המהווים את עמוד השדרה הגיאוגרפי והאקלימי של המדינה.",
-            demographics: {
-              mainNationName: "ערבים-ברברים",
-              mainNationPercent: "כ-99%",
-              description: "תמהיל חברתי ותרבותי ייחודי המשלב תרבות ערבית-מוסלמית ענפה שהגיעה מן המזרח, עם מורשת אמזיגית (ברברית) עתיקה ושורשית ששפותיה עדיין שגורות בפי מיליונים. למרוקו גם היסטוריה מפוארת ועתיקת יומין של חיים יהודיים עשירים (מאז גירוש ספרד ואף לפניו), שהיוותה חלק בלתי נפרד ממרקם החיים עד לעלייה הגדולה לישראל במאה ה-20."
+            officialName: { he: "ממלכת מרוקו", en: "Kingdom of Morocco" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/morocco.webp",
+            capital: {
+              name: { he: "רבאט", en: "Rabat" },
+              englishName: "Rabat",
+              etymology: { 
+                he: "השם רבאט מגיע מהמילה הערבית 'ריבאט' (Ribāṭ), שמשמעותה 'מנזר מבוצר', מחנה צבאי, או עמדת משמר גבול. השם המלא המקורי היה 'ריבאט אל-פַתְח' (Ribat al-Fath), שפירושו 'מעוז הניצחון'. השם הוענק לה לאחר שהחליף שלטון צבאי השתמש בה כבסיס יציאה לפלישות צבאיות מוצלחות מעבר לים, אל חצי האי האיברי (אל-אנדלוס).",
+                en: "The name Rabat comes from the Arabic word 'Ribat' (Ribāṭ), meaning 'fortified monastery', military camp, or border guard post. The full original name was 'Ribat al-Fath', which means 'Stronghold of Victory'. The name was given to it after a military ruler used it as a staging base for successful military invasions overseas, into the Iberian Peninsula (Al-Andalus)."
+              },
+              foundingYear: { he: "1146 (על ידי הח'ליף עבד אל-מואמין משושלת אל-מוואחידון)", en: "1146 (by the Almohad Caliph Abd al-Mu'min)" },
+              reason: { 
+                he: "רבאט הוקמה במיקום אסטרטגי בשפך נהר אבו רגרג אל האוקיינוס האטלנטי. היא הוקמה במקור כמעוז צבאי (ריבאט) במטרה לאסוף ולרכז כוחות צבאיים של האימפריה לקראת חציית מצר גיברלטר וכיבוש ספרד. במהלך תקופת החסות הצרפתית (1912), הוחלט להעביר אליה את הבירה מפאס המסורתית כדי להרחיק את השלטון מהאזורים ההרריים המורדים, ולנצל את הגישה הנוחה והפתוחה שלה לים, והיא נותרה הבירה גם לאחר העצמאות.",
+                en: "Rabat was founded in a strategic location at the mouth of the Bou Regreg river leading into the Atlantic Ocean. It was originally established as a military stronghold (Ribat) in order to gather and assemble imperial military forces prior to crossing the Strait of Gibraltar and conquering Spain. During the French protectorate period (1912), it was decided to move the capital to it from the traditional Fez to distance the administration from rebellious mountainous regions, and to utilize its convenient and open access to the sea, and it remained the capital even after independence."
+              }
             },
-            modernHistory: "ייחודה ההיסטורי של מרוקו הוא בכך שמעולם לא נכבשה לחלוטין על ידי האימפריה העות'מאנית. היא שמרה על עצמאותה עד תחילת המאה ה-20, אז נשלטה תחת הסכמי חסות (פרוטקטורט) קולוניאליים של צרפת וספרד. לאחר מאבק עממי ודיפלומטי, היא השיגה את העצמאות המלאה שלה ב-1956, וחזרה להיות מונרכיה ריבונית תחת השושלת העלאווית, אשר קיימת ושולטת ברציפות עד היום.",
-            foundingYears: "1956 (עצמאות מספרד וצרפת)",
-            flagSymbolism: "הדגל הלאומי מבוסס על מסורת עתיקה. רקע אדום חזק המסמל את קדושת השושלת העלאווית השולטת (המתייחסת לצאצאי הנביא מוחמד), וכן ערכים של אומץ, כוח, וגבורה. במרכז מופיע פנטגרם (כוכב חומש) בצבע ירוק (צבע האסלאם), המוכר היסטורית כ\"חותם שלמה\". הכוכב המקושר לחוכמה, מייצג את הקשר הנצחי שבין אלוהים לאומה, ואת חמשת עמודי האסלאם עליהם נשענת המדינה.",
+            areaNum: { he: "~710,850 קמ\"ר (כולל סהרה)", en: "~710,850 sq km (including Sahara)" },
+            populationNum: "~38,000,000",
+            currency: { he: "דירהם מרוקאי (MAD)", en: "Moroccan Dirham (MAD)" },
+            area: { 
+              he: "כ-710,850 קמ\"ר (כולל טריטוריית סהרה המערבית). מדינה בעלת מיקום אסטרטגי עצום, עם חופים ארוכים ויפים על האוקיינוס האטלנטי והים התיכון. החופים מופרדים מהפנים המדברי על ידי רכסי הרי האטלס הגבוהים והמושלגים המהווים את עמוד השדרה הגיאוגרפי והאקלימי של המדינה.",
+              en: "Approx. 710,850 sq km (including the Western Sahara territory). A country with a tremendously strategic location, featuring long, beautiful coasts on the Atlantic Ocean and the Mediterranean Sea. The coasts are separated from the desert interior by the high, snow-capped Atlas mountain ranges that form the geographical and climatic spine of the country."
+            },
+            demographics: {
+              mainNationName: { he: "ערבים-ברברים", en: "Arab-Berbers" },
+              mainNationPercent: { he: "כ-99%", en: "~99%" },
+              description: { 
+                he: "תמהיל חברתי ותרבותי ייחודי המשלב תרבות ערבית-מוסלמית ענפה שהגיעה מן המזרח, עם מורשת אמזיגית (ברברית) עתיקה ושורשית ששפותיה עדיין שגורות בפי מיליונים. למרוקו גם היסטוריה מפוארת ועתיקת יומין של חיים יהודיים עשירים (מאז גירוש ספרד ואף לפניו), שהיוותה חלק בלתי נפרד ממרקם החיים עד לעלייה הגדולה לישראל במאה ה-20.",
+                en: "A unique social and cultural blend combining an extensive Arab-Muslim culture arriving from the East, with an ancient and deeply rooted Amazigh (Berber) heritage whose languages are still spoken by millions. Morocco also has a glorious and ancient history of rich Jewish life (since the expulsion from Spain and even prior), which was an integral part of the fabric of life until the great migration to Israel in the 20th century."
+              }
+            },
+            modernHistory: { 
+              he: "ייחודה ההיסטורי של מרוקו הוא בכך שמעולם לא נכבשה לחלוטין על ידי האימפריה העות'מאנית. היא שמרה על עצמאותה עד תחילת המאה ה-20, אז נשלטה תחת הסכמי חסות (פרוטקטורט) קולוניאליים של צרפת וספרד. לאחר מאבק עממי ודיפלומטי, היא השיגה את העצמאות המלאה שלה ב-1956, וחזרה להיות מונרכיה ריבונית תחת השושלת העלאווית, אשר קיימת ושולטת ברציפות עד היום.",
+              en: "Morocco's historical uniqueness is that it was never fully conquered by the Ottoman Empire. It maintained its independence until the early 20th century, when it was ruled under colonial protectorate agreements by France and Spain. Following a popular and diplomatic struggle, it achieved full independence in 1956, returning to being a sovereign monarchy under the Alaouite dynasty, which exists and rules continuously to this day."
+            },
+            foundingYears: { he: "1956 (עצמאות מספרד וצרפת)", en: "1956 (Independence from Spain and France)" },
+            flagSymbolism: { 
+              he: "הדגל הלאומי מבוסס על מסורת עתיקה. רקע אדום חזק המסמל את קדושת השושלת העלאווית השולטת (המתייחסת לצאצאי הנביא מוחמד), וכן ערכים של אומץ, כוח, וגבורה. במרכז מופיע פנטגרם (כוכב חומש) בצבע ירוק (צבע האסלאם), המוכר היסטורית כ'חותם שלמה'. הכוכב המקושר לחוכמה, מייצג את הקשר הנצחי שבין אלוהים לאומה, ואת חמשת עמודי האסלאם עליהם נשענת המדינה.",
+              en: "The national flag is based on ancient tradition. A strong red background symbolizes the sanctity of the ruling Alaouite dynasty (tracing descent to Prophet Muhammad), as well as values of courage, strength, and bravery. In the center appears a pentagram (five-pointed star) in green (the color of Islam), historically known as the 'Seal of Solomon'. The star, associated with wisdom, represents the eternal bond between God and the nation, and the Five Pillars of Islam upon which the country rests."
+            },
+            nationalAnimal: {
+              name: { he: "אריה ברברי / אריה אטלס (Barbary Lion)", en: "Barbary Lion / Atlas Lion" },
+              reason: { 
+                he: "האריה הברברי, תת-מין ענק ומפואר של אריה שפעל בעבר בהרי האטלס אך כיום נחשב לנכחד בטבע, הוא הסמל העוצמתי ביותר של מרוקו. הוא מסמל מלכותיות, אומץ ללא חת, וחיבור של העם לשורשיו הפראיים וההיסטוריים. שני אריות ברבריים תומכים בשלט האצולה (סמל המדינה) המלכותי של מרוקו, ואף נבחרת הכדורגל הלאומית המוכרת מתגאה בכינוי 'אריות האטלס'.",
+                en: "The Barbary Lion, a massive and magnificent subspecies of lion that once roamed the Atlas Mountains but is now considered extinct in the wild, is the most powerful symbol of Morocco. It symbolizes royalty, fearless courage, and the people's connection to their wild, historical roots. Two Barbary lions support the royal coat of arms of Morocco, and even the renowned national football team boasts the nickname 'Atlas Lions'."
+              }
+            },
             etymology: {
               parts: [
-                { text: "אל-מַעְ'רִב (Al-Maghrib)", color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: "שמה הרשמי בערבית. פירושו המילולי הוא \"המערב\" או \"מקום שקיעת השמש\". בעבר הרחוק נקראה המדינה \"אל-מע'רב אל-אקצא\" (המערב הקיצון), שכן היא היוותה את הגבול המערבי ביותר הידוע בעולם האסלאמי והגשר לאירופה." },
-                { text: "מרוקו - ממרקש", color: "text-indigo-400", bg: "bg-indigo-400/10", border: "border-indigo-500/30", desc: "השם הלועזי של המדינה (Morocco) נוצר משיבוש הדרגתי בשפות הפורטוגזית והספרדית של שם עיר הבירה ההיסטורית – מרקש. מקור השם מרקש עצמו הוא בשפה הברברית העתיקה: \"Amur n Akush\", שמשמעותו העמוקה והפיוטית היא \"ארץ האל\" או \"האדמה המוגנת על ידי האל\"." }
+                { text: { he: "אל-מַעְ'רִב (Al-Maghrib)", en: "Al-Maghrib" }, color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: { he: "שמה הרשמי בערבית. פירושו המילולי הוא 'המערב' או 'מקום שקיעת השמש'. בעבר הרחוק נקראה המדינה 'אל-מע'רב אל-אקצא' (המערב הקיצון), שכן היא היוותה את הגבול המערבי ביותר הידוע בעולם האסלאמי והגשר לאירופה.", en: "Its official name in Arabic. Its literal meaning is 'The West' or 'Place of sunset'. In the distant past, the country was called 'Al-Maghrib al-Aqsa' (The Extreme West), as it constituted the westernmost known border in the Islamic world and the bridge to Europe." } },
+                { text: { he: "מרוקו - ממרקש", en: "Morocco - From Marrakech" }, color: "text-indigo-400", bg: "bg-indigo-400/10", border: "border-indigo-500/30", desc: { he: "השם הלועזי של המדינה (Morocco) נוצר משיבוש הדרגתי בשפות הפורטוגזית והספרדית של שם עיר הבירה ההיסטורית – מרקש. מקור השם מרקש עצמו הוא בשפה הברברית העתיקה: 'Amur n Akush', שמשמעותו העמוקה והפיוטית היא 'ארץ האל' או 'האדמה המוגנת על ידי האל'.", en: "The foreign name of the country (Morocco) was formed from a gradual corruption in Portuguese and Spanish of the name of the historical capital city – Marrakech. The origin of the name Marrakech itself is in the ancient Berber language: 'Amur n Akush', whose deep and poetic meaning is 'Land of God' or 'The Land protected by God'." } }
               ],
-              synthesis: "בערבית משמעות שמה היא \"המערב הקיצון\" של העולם המוסלמי, ובלועזית השם הוא שיבוש של עיר הבירה מרקש שפירושה בברברית \"ארץ האל\"."
+              synthesis: { he: "בערבית משמעות שמה היא 'המערב הקיצון' של העולם המוסלמי, ובלועזית השם הוא שיבוש של עיר הבירה מרקש שפירושה בברברית 'ארץ האל'.", en: "In Arabic, its name means 'The Extreme West' of the Muslim world, and in foreign languages, the name is a corruption of the capital city Marrakech, meaning 'Land of God' in Berber." }
             },
             figure: {
-              name: "המלך מוחמד החמישי",
+              name: { he: "המלך מוחמד החמישי", en: "King Mohammed V" },
               years: "1909 - 1961",
-              childhood: "נולד בעיר פאס כבנו הצעיר של הסולטאן יוסף. הצרפתים (שרצו שליט בובה) בחרו בו במפתיע לרשת את אביו בשנת 1927 מתוך הנחה מוטעית שיהיה נוח להשפעה וקל לשליטה בשל גילו הצעיר (18) ומזגו העדין והשקט. הוא הוכיח להם שהם טעו לחלוטין.",
-              ideology: "האמין בלאומיות מרוקאית חזקה תחת כתר מלוכני, מודרניזציה זהירה לצד שמירה אדוקה על מסורת אסלאמית. הוא התאפיין בסובלנות דתית יוצאת דופן ביחס לתקופתו ולסביבתו, ובלט מאוד כשהעניק חסות והגנה אקטיבית על חיי יהודי מרוקו בתקופת שלטון ממשלת וישי משתפת הפעולה עם הנאצים, בסירובו להחיל עליהם חוקים אנטישמיים מחמירים.",
-              achievements: "הפך לסמל החי והנושם של ההתנגדות המרוקאית לקולוניאליזם הצרפתי. בשל סירובו לשתף פעולה, הוגלה על ידי הצרפתים למדגסקר ב-1953 (צעד שדווקא איחד את העם והצית מרד גלוי). הוא הוחזר כמנצח ב-1955, הוביל את מרוקו לעצמאות רשמית ב-1956, ושינה את תוארו ההיסטורי מסולטאן ל\"מלך\" לציון המעבר המובהק לעידן מדיני מודרני."
+              childhood: { 
+                he: "נולד בעיר פאס כבנו הצעיר של הסולטאן יוסף. הצרפתים (שרצו שליט בובה) בחרו בו במפתיע לרשת את אביו בשנת 1927 מתוך הנחה מוטעית שיהיה נוח להשפעה וקל לשליטה בשל גילו הצעיר (18) ומזגו העדין והשקט. הוא הוכיח להם שהם טעו לחלוטין.",
+                en: "Born in the city of Fez as the youngest son of Sultan Yusef. The French (who wanted a puppet ruler) unexpectedly chose him to succeed his father in 1927, operating under the mistaken assumption that he would be pliable to influence and easy to control due to his young age (18) and gentle, quiet temperament. He proved them entirely wrong."
+              },
+              ideology: { 
+                he: "האמין בלאומיות מרוקאית חזקה תחת כתר מלוכני, מודרניזציה זהירה לצד שמירה אדוקה על מסורת אסלאמית. הוא התאפיין בסובלנות דתית יוצאת דופן ביחס לתקופתו ולסביבתו, ובלט מאוד כשהעניק חסות והגנה אקטיבית על חיי יהודי מרוקו בתקופת שלטון ממשלת וישי משתפת הפעולה עם הנאצים, בסירובו להחיל עליהם חוקים אנטישמיים מחמירים.",
+                en: "Believed in strong Moroccan nationalism under a monarchical crown, cautious modernization alongside strict preservation of Islamic tradition. He was characterized by exceptional religious tolerance relative to his time and surroundings, standing out prominently when he granted active protection and patronage to the lives of Moroccan Jews during the Vichy regime collaborating with the Nazis, refusing to apply harsh antisemitic laws to them."
+              },
+              achievements: { 
+                he: "הפך לסמל החי והנושם של ההתנגדות המרוקאית לקולוניאליזם הצרפתי. בשל סירובו לשתף פעולה, הוגלה על ידי הצרפתים למדגסקר ב-1953 (צעד שדווקא איחד את העם והצית מרד גלוי). הוא הוחזר כמנצח ב-1955, הוביל את מרוקו לעצמאות רשמית ב-1956, ושינה את תוארו ההיסטורי מסולטאן ל'מלך' לציון המעבר המובהק לעידן מדיני מודרני.",
+                en: "He became the living, breathing symbol of the Moroccan resistance to French colonialism. Due to his refusal to cooperate, he was exiled by the French to Madagascar in 1953 (a move that actually united the people and ignited open rebellion). He was returned as a victor in 1955, led Morocco to official independence in 1956, and changed his historical title from Sultan to 'King' to mark the distinct transition to a modern political era."
+              }
             },
             map: {
               url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_morocco_1570.jpg",
-              title: "מפת מרוקו ופאס - המאה ה-16",
-              desc: "מפה היסטורית מרתקת המציגה את הממלכות העתיקות של מרוקו ופאס (Marocchi & Fessae), שהיוו את גרעין הכוח של הממלכה העלאווית טרם איחודה המלא."
+              title: { he: "מפת מרוקו ופאס - המאה ה-16", en: "Map of Morocco and Fez - 16th Century" },
+              desc: { 
+                he: "מפה היסטורית מרתקת המציגה את הממלכות העתיקות של מרוקו ופאס (Marocchi & Fessae), שהיוו את גרעין הכוח של הממלכה העלאווית טרם איחודה המלא.",
+                en: "A fascinating historical map showing the ancient kingdoms of Morocco and Fez (Marocchi & Fessae), which formed the core power of the Alaouite Kingdom prior to its full unification."
+              }
             }
           },
           {
             id: "tunisia",
-            name: "תוניסיה",
+            name: { he: "תוניסיה", en: "Tunisia" },
             englishName: "Tunisia",
-            officialName: "הרפובליקה התוניסאית",
-            FlagComponent: FlagTunisia,
-            areaNum: "~163,610 קמ\"ר",
-            populationNum: "~12,500,000",
-            currency: "דינר תוניסאי (TND)",
-            area: "כ-163,610 קמ\"ר. המדינה הקטנה ביותר בשטחה מבין מדינות צפון אפריקה. היא נהנית מגאוגרפיה מגוונת מאוד: מצפון רצועת חוף ים-תיכונית פורייה וגבעית המכונה \"אל-תל\", במרכז מישור החוף הרחב (אל-סאהל) המפורסם במטעי הזיתים שלו, ובדרום השטח הופך למדברי וצחיח המהווה את פתח הסהרה. חולשת על מיצר אסטרטגי בים התיכון לכיוון סיציליה.",
-            demographics: {
-              mainNationName: "ערבים-ברברים",
-              mainNationPercent: "כ-98%",
-              description: "חברה מיוחדת בעלת הטרוגניות פוליטית ופתיחות תרבותית רבה בהשוואה לשאר המרחב הערבי, אך יחד עם זאת היא הומוגנית כמעט לחלוטין מבחינה אתנית ודתית (אסלאם סוני). המורשת הברברית בהחלט קיימת, אך היא נטמעה בזהות הערבית המקומית באופן מלא יותר מאשר אצל שכנותיה אלג'יריה ומרוקו."
+            officialName: { he: "הרפובליקה התוניסאית", en: "Tunisian Republic" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/tunisia.webp",
+            capital: {
+              name: { he: "תוניס", en: "Tunis" },
+              englishName: "Tunis",
+              etymology: { 
+                he: "שם העיר הוא למעשה המקור לשמה של המדינה כולה. חוקרי לשון קושרים את השם הקדום 'תוניס' לשורש הברברי 'ת-נ-ס' (Tns) שמשמעותו המילולית היא 'לשכב', 'לחנות' או 'להקים מחנה'. משמעות זו התאימה היטב לעיר, ששימשה בעת העתיקה כחניון מנוחה בטוח לפני ההגעה לעיר קרתגו. תיאוריה אחרת קושרת את השם לאלה 'תנית' מקרתגו.",
+                en: "The city's name is actually the origin for the name of the entire country. Linguists link the ancient name 'Tunis' to the Berber root 'Tns', which literally means 'to lie down', 'to encamp', or 'to set up camp'. This meaning fit the city well, as it served in antiquity as a safe resting camp before reaching the city of Carthage. Another theory connects the name to the Goddess 'Tanit' of Carthage."
+              },
+              foundingYear: { he: "האלף השני לפנה\"ס (מוקדמת יותר מקרתגו, תועדה מחדש על ידי הברברים)", en: "2nd Millennium BC (Older than Carthage, re-documented by Berbers)" },
+              reason: { 
+                he: "תוניס הוקמה בזכות המיקום המושלם שלה: היא שוכנת בקצה מפרץ תוניס ומוגנת על ידי מערכת של לגונות רדודות ('אגם תוניס'). מערכת טבעית זו העניקה לה הגנה חסרת תקדים מפני ציי אויב בים הפתוח, ובמקביל אפשרה לה גישה נוחה למסחר ימי בים התיכון. לאחר חורבן קרתגו האדירה הסמוכה אליה על ידי הרומאים, תוניס צמחה בטבעיות כמחליפתה האסטרטגית, המנהלית והכלכלית של האזור.",
+                en: "Tunis was founded due to its perfect location: it sits at the end of the Gulf of Tunis and is protected by a system of shallow lagoons ('Lake of Tunis'). This natural system provided it with unprecedented protection from enemy fleets in the open sea, while simultaneously allowing convenient access to maritime trade in the Mediterranean. After the destruction of nearby mighty Carthage by the Romans, Tunis naturally grew as the strategic, administrative, and economic replacement for the region."
+              }
             },
-            modernHistory: "לאחר תקופת חסות צרפתית (פרוטקטורט) שהחלה ב-1881, תוניסיה השיגה עצמאות שקטה יחסית וללא מלחמה ארוכה ב-1956, בהנהגתו הדומיננטית של חביב בורגיבה. המדינה עברה תהליכי מודרניזציה חילוניים אגרסיביים. בשנת 2011, תוניסיה הציתה הלכה למעשה את מהפכות \"האביב הערבי\" (מהפכת היסמין) והפכה לדמוקרטיה היחידה במרחב ששרדה והצליחה לבסס תהליכי מעבר חוקתיים ומורכבים.",
-            foundingYears: "1956 (עצמאות מצרפת)",
-            flagSymbolism: "עיצובו הושפע עמוקות מהדגל של האימפריה העות'מאנית כסמל למורשת המוסלמית האזורית. הצבע האדום השולט מסמל את דם המגינים והקדושים שנפלו בקרבות נגד פלישות חיצוניות ובהגנה על המולדת; המעגל הלבן במרכז מסמל שלום טהור ואחדות לאומית; והסהר והכוכב האדומים שבתוכו הם סמלי האסלאם המסורתיים.",
+            areaNum: { he: "~163,610 קמ\"ר", en: "~163,610 sq km" },
+            populationNum: "~12,500,000",
+            currency: { he: "דינר תוניסאי (TND)", en: "Tunisian Dinar (TND)" },
+            area: { 
+              he: "כ-163,610 קמ\"ר. המדינה הקטנה ביותר בשטחה מבין מדינות צפון אפריקה. היא נהנית מגאוגרפיה מגוונת מאוד: מצפון רצועת חוף ים-תיכונית פורייה וגבעית המכונה 'אל-תל', במרכז מישור החוף הרחב (אל-סאהל) המפורסם במטעי הזיתים שלו, ובדרום השטח הופך למדברי וצחיח המהווה את פתח הסהרה. חולשת על מיצר אסטרטגי בים התיכון לכיוון סיציליה.",
+              en: "Approx. 163,610 sq km. The smallest country by land area among the North African countries. It enjoys a very diverse geography: in the north, a fertile, hilly Mediterranean coastal strip known as the 'Tell', in the center, the broad coastal plain (the Sahel) famous for its olive groves, and in the south, the terrain becomes desert and arid, forming the gateway to the Sahara. Commands a strategic strait in the Mediterranean towards Sicily."
+            },
+            demographics: {
+              mainNationName: { he: "ערבים-ברברים", en: "Arab-Berbers" },
+              mainNationPercent: { he: "כ-98%", en: "~98%" },
+              description: { 
+                he: "חברה מיוחדת בעלת הטרוגניות פוליטית ופתיחות תרבותית רבה בהשוואה לשאר המרחב הערבי, אך יחד עם זאת היא הומוגנית כמעט לחלוטין מבחינה אתנית ודתית (אסלאם סוני). המורשת הברברית בהחלט קיימת, אך היא נטמעה בזהות הערבית המקומית באופן מלא יותר מאשר אצל שכנותיה אלג'יריה ומרוקו.",
+                en: "A unique society with significant political heterogeneity and cultural openness compared to the rest of the Arab sphere, yet it is almost entirely homogeneous ethnically and religiously (Sunni Islam). The Berber heritage certainly exists, but it has assimilated into the local Arab identity more completely than in its neighbors Algeria and Morocco."
+              }
+            },
+            modernHistory: { 
+              he: "לאחר תקופת חסות צרפתית (פרוטקטורט) שהחלה ב-1881, תוניסיה השיגה עצמאות שקטה יחסית וללא מלחמה ארוכה ב-1956, בהנהגתו הדומיננטית של חביב בורגיבה. המדינה עברה תהליכי מודרניזציה חילוניים אגרסיביים. בשנת 2011, תוניסיה הציתה הלכה למעשה את מהפכות 'האביב הערבי' (מהפכת היסמין) והפכה לדמוקרטיה היחידה במרחב ששרדה והצליחה לבסס תהליכי מעבר חוקתיים ומורכבים.",
+              en: "Following a French protectorate period that began in 1881, Tunisia achieved relatively peaceful independence without a long war in 1956, under the dominant leadership of Habib Bourguiba. The country underwent aggressive secular modernization processes. In 2011, Tunisia effectively ignited the 'Arab Spring' revolutions (the Jasmine Revolution) and became the only democracy in the region that survived and successfully established complex constitutional transitional processes."
+            },
+            foundingYears: { he: "1956 (עצמאות מצרפת)", en: "1956 (Independence from France)" },
+            flagSymbolism: { 
+              he: "עיצובו הושפע עמוקות מהדגל של האימפריה העות'מאנית כסמל למורשת המוסלמית האזורית. הצבע האדום השולט מסמל את דם המגינים והקדושים שנפלו בקרבות נגד פלישות חיצוניות ובהגנה על המולדת; המעגל הלבן במרכז מסמל שלום טהור ואחדות לאומית; והסהר והכוכב האדומים שבתוכו הם סמלי האסלאם המסורתיים.",
+              en: "Its design was deeply influenced by the flag of the Ottoman Empire as a symbol of the regional Muslim heritage. The dominant red color symbolizes the blood of the defenders and martyrs who fell in battles against external invasions and in defense of the homeland; the white circle in the center symbolizes pure peace and national unity; and the red crescent and star within it are the traditional symbols of Islam."
+            },
+            nationalAnimal: {
+              name: { he: "גמל חד-דבשתי (Dromedary Camel)", en: "Dromedary Camel" },
+              reason: { 
+                he: "הגמל החד-דבשתי משמש כסמל לאומי עמוק לאורך הדרום התוניסאי המדברי. הגמל אפשר את קיומם של השבטים הנוודים לאורך אלפי שנים, וכן שימש כמוביל הסחורות הראשי (נתיבי שיירות הסהרה) שחיבר את חופי תוניסיה בים התיכון עם מרכז אפריקה. עד היום, פסטיבלים בינלאומיים לתרבות המדבר נערכים בדרום תוניסיה (כמו בדוז) ובהם מרוצי גמלים מהווים גאווה לאומית.",
+                en: "The dromedary camel serves as a deep national symbol throughout the desert-like southern Tunisia. The camel enabled the existence of nomadic tribes for thousands of years, and also served as the primary goods carrier (the Saharan caravan routes) connecting Tunisia's Mediterranean coasts with Central Africa. To this day, international desert culture festivals are held in southern Tunisia (like in Douz), where camel racing forms a point of national pride."
+              }
+            },
             etymology: {
               parts: [
-                { text: "תוניס (Tunis)", color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: "שם המדינה נגזר ישירות ופשוט משמה של עיר הבירה העתיקה שלה, תוניס. השם הלטיני-אירופאי (Tunisia) נוצר כאשר תוספה הסיומת המקובלת \"יה\" (-ia) לתיאור טריטוריה." },
-                { text: "שורש ברברי ופוני", color: "text-indigo-400", bg: "bg-indigo-400/10", border: "border-indigo-500/30", desc: "חוקרי לשון קושרים את השם הקדום תוניס לשורש הברברי \"ת-נ-ס\" (Tns) שמשמעותו המילולית היא \"לשכב\", \"לחנות\" או \"להקים מחנה\" - זאת משום שהעיר שימשה כחניון מנוחה חשוב לפני ההגעה לעיר קרתגו. תיאוריה היסטורית נוספת ואהובה קושרת את השם לאלה הפונית הקדומה של קרתגו – תנית (Tanit), אלת הירח והפריון לה סגדו המקומיים." }
+                { text: { he: "תוניס (Tunis)", en: "Tunis" }, color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-500/30", desc: { he: "שם המדינה נגזר ישירות ופשוט משמה של עיר הבירה העתיקה שלה, תוניס. השם הלטיני-אירופאי (Tunisia) נוצר כאשר תוספה הסיומת המקובלת 'יה' (-ia) לתיאור טריטוריה.", en: "The country's name is derived directly and simply from the name of its ancient capital city, Tunis. The Latin-European name (Tunisia) was formed when the standard suffix 'ia' (-ia) was added to describe a territory." } },
+                { text: { he: "שורש ברברי ופוני", en: "Berber and Punic Root" }, color: "text-indigo-400", bg: "bg-indigo-400/10", border: "border-indigo-500/30", desc: { he: "חוקרי לשון קושרים את השם הקדום תוניס לשורש הברברי 'ת-נ-ס' (Tns) שמשמעותו המילולית היא 'לשכב', 'לחנות' או 'להקים מחנה' - זאת משום שהעיר שימשה כחניון מנוחה חשוב לפני ההגעה לעיר קרתגו. תיאוריה היסטורית נוספת ואהובה קושרת את השם לאלה הפונית הקדומה של קרתגו – תנית (Tanit), אלת הירח והפריון לה סגדו המקומיים.", en: "Linguists link the ancient name Tunis to the Berber root 'Tns', which literally means 'to lie down', 'to encamp', or 'to set up camp' - this is because the city served as an important resting camp before reaching the city of Carthage. Another popular historical theory connects the name to the ancient Punic goddess of Carthage – Tanit, the goddess of the moon and fertility worshipped by locals." } }
               ],
-              synthesis: "מילולית: \"מקום החניה/המנוחה\" בשפה הברברית העתיקה, או לחילופין ארצה של האלה תנית מקרתגו העתיקה שהייתה מרכז הסחר של הים התיכון."
+              synthesis: { he: "מילולית: 'מקום החניה/המנוחה' בשפה הברברית העתיקה, או לחילופין ארצה של האלה תנית מקרתגו העתיקה שהייתה מרכז הסחר של הים התיכון.", en: "Literally: 'The place of encampment/rest' in the ancient Berber language, or alternatively the land of the Goddess Tanit of ancient Carthage which was the center of Mediterranean trade." }
             },
             figure: {
-              name: "חביב בורגיבה",
+              name: { he: "חביב בורגיבה", en: "Habib Bourguiba" },
               years: "1903 - 2000",
-              childhood: "נולד בעיר החוף מונסתיר למשפחה צנועה ממעמד הביניים, השמיני מבין שמונה אחים. למרות דלות האמצעים של משפחתו, הוא בלט בכישרונו השכלי ונשלח ללמוד בבית הספר התיכון היוקרתי \"סאדיקי\" בתוניס. מאוחר יותר הפליג ולמד משפטים ומדעי המדינה באוניברסיטת סורבון בפריז, שם ספג עמוקות את ערכי הרפובליקה, החילוניות והנאורות הצרפתית.",
-              ideology: "הגה פילוסופיה שלטונית שזכתה לשם \"בורגיביזם\" – היא שילבה לאומיות תוניסאית גאה ועצמאית, חילוניות נחרצת ששאפה להפריד את הדת מהמדינה (על בסיס המודל הצרפתי), מודרניזציה אגרסיבית ברוח המערב, ופרגמטיות פוליטית קיצונית שדגלה בצעדים מדורגים ודיפלומטיה חכמה לקראת המטרה במקום אלימות ועימות חזיתי.",
-              achievements: "האדריכל ואבי האומה התוניסאית המודרנית. הקים את מפלגת ה\"נאו-דסתור\" והוביל את המאבק הדיפלומטי והעממי לעצמאות. ב-1956 הפך לנשיא הרפובליקה הראשון. הישגו החברתי העצום והשנוי במחלוקת במרחב היה חקיקת \"קוד המעמד האישי\" באותה שנה, שאסר מפורשות על פוליגמיה (ריבוי נשים), ביטל בתי דין דתיים, והעניק לנשות תוניסיה שוויון זכויות מלא (השכלה, גירושין, עבודה) חסר כל תקדים בעולם הערבי. כיהן כנשיא כל יכול במשך 31 שנים ברציפות."
+              childhood: { 
+                he: "נולד בעיר החוף מונסתיר למשפחה צנועה ממעמד הביניים, השמיני מבין שמונה אחים. למרות דלות האמצעים של משפחתו, הוא בלט בכישרונו השכלי ונשלח ללמוד בבית הספר התיכון היוקרתי 'סאדיקי' בתוניס. מאוחר יותר הפליג ולמד משפטים ומדעי המדינה באוניברסיטת סורבון בפריז, שם ספג עמוקות את ערכי הרפובליקה, החילוניות והנאורות הצרפתית.",
+                en: "Born in the coastal city of Monastir to a modest middle-class family, the eighth of eight siblings. Despite his family's meager means, he stood out for his intellectual talent and was sent to study at the prestigious 'Sadiki' high school in Tunis. Later he sailed to study law and political science at the Sorbonne University in Paris, where he deeply absorbed the values of the republic, secularism, and the French Enlightenment."
+              },
+              ideology: { 
+                he: "הגה פילוסופיה שלטונית שזכתה לשם 'בורגיביזם' – היא שילבה לאומיות תוניסאית גאה ועצמאית, חילוניות נחרצת ששאפה להפריד את הדת מהמדינה (על בסיס המודל הצרפתי), מודרניזציה אגרסיבית ברוח המערב, ופרגמטיות פוליטית קיצונית שדגלה בצעדים מדורגים ודיפלומטיה חכמה לקראת המטרה במקום אלימות ועימות חזיתי.",
+                en: "Conceived a governing philosophy that became known as 'Bourguibism' – it combined proud and independent Tunisian nationalism, resolute secularism striving to separate religion from state (based on the French model), aggressive modernization in the spirit of the West, and extreme political pragmatism advocating gradual steps and smart diplomacy towards the goal instead of violence and frontal confrontation."
+              },
+              achievements: { 
+                he: "האדריכל ואבי האומה התוניסאית המודרנית. הקים את מפלגת ה'נאו-דסתור' והוביל את המאבק הדיפלומטי והעממי לעצמאות. ב-1956 הפך לנשיא הרפובליקה הראשון. הישגו החברתי העצום והשנוי במחלוקת במרחב היה חקיקת 'קוד המעמד האישי' באותה שנה, שאסר מפורשות על פוליגמיה (ריבוי נשים), ביטל בתי דין דתיים, והעניק לנשות תוניסיה שוויון זכויות מלא (השכלה, גירושין, עבודה) חסר כל תקדים בעולם הערבי. כיהן כנשיא כל יכול במשך 31 שנים ברציפות.",
+                en: "The architect and father of the modern Tunisian nation. He founded the 'Neo Destour' party and led the diplomatic and popular struggle for independence. In 1956 he became the first President of the Republic. His immense and controversial social achievement in the region was the enactment of the 'Code of Personal Status' that same year, which explicitly banned polygamy, abolished religious courts, and granted Tunisian women full equal rights (education, divorce, employment) unprecedented in the Arab world. He served as an all-powerful president for 31 consecutive years."
+              }
             },
             map: {
               url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_tunisia_carthage.jpg",
-              title: "מפת האימפריה הקרתגית - המאה ה-16",
-              desc: "מפה צבעונית המציגה את שיא התפשטותה של אימפריית קרתגו העתיקה (שמרכזה היה בתוניסיה של ימינו), אשר שלטה ביד רמה בסחר בכל אזור הים התיכון טרם עליית הכוח של רומא."
+              title: { he: "מפת האימפריה הקרתגית - המאה ה-16", en: "Map of the Carthaginian Empire - 16th Century" },
+              desc: { 
+                he: "מפה צבעונית המציגה את שיא התפשטותה של אימפריית קרתגו העתיקה (שמרכזה היה בתוניסיה של ימינו), אשר שלטה ביד רמה בסחר בכל אזור הים התיכון טרם עליית הכוח של רומא.",
+                en: "A colorful map showing the peak expansion of the ancient Carthaginian Empire (centered in modern-day Tunisia), which firmly controlled trade throughout the Mediterranean region before the rise of Roman power."
+              }
             }
           }
         ];
 
         // ==========================================
-        // רכיבי התצוגה (UI) ללא הניווט העליון
+        // רכיבי התצוגה (UI) 
         // ==========================================
 
-        const CountryCard = ({ country, onModalOpen }) => {
+        const CountryCard = ({ country, onModalOpen, lang, uiStr }) => {
           const { 
-            FlagComponent, name, englishName, officialName, areaNum, populationNum, currency, area, demographics, 
-            modernHistory, foundingYears, etymology, flagSymbolism, figure, map 
+            flagUrl, name, englishName, officialName, capital, areaNum, populationNum, currency, area, demographics, 
+            modernHistory, foundingYears, etymology, flagSymbolism, nationalAnimal, figure, map 
           } = country;
 
           return (
             <article className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl transition-all hover:border-gray-700">
               
-              {/* כותרת, דגל ונתונים קצרים */}
               <div className="flex flex-col md:flex-row gap-6 p-6 md:p-8 border-b border-gray-800">
                 <div 
                   className="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center bg-gray-950 p-4 rounded-xl cursor-pointer group relative" 
-                  onClick={() => onModalOpen({type: 'flag', component: FlagComponent, title: `דגל ${name}`})}
-                  title="לחץ להגדלת הדגל"
+                  onClick={() => onModalOpen({url: flagUrl, title: `${name[lang]}`})}
+                  title={uiStr.lClickEnlargeFlag}
                 >
-                  <div className="w-full max-h-40 shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105 overflow-hidden flex justify-center items-center">
-                    <div className="w-full h-32 md:h-40 relative">
-                       <FlagComponent />
-                    </div>
+                  <div className="w-full max-h-40 shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105 overflow-hidden flex justify-center items-center bg-black">
+                    <img 
+                      src={flagUrl} 
+                      alt={name[lang]}
+                      className="w-full h-32 md:h-40 object-cover opacity-95 group-hover:opacity-100 transition-opacity"
+                      onError={(e) => {
+                        e.target.onerror = null; 
+                        e.target.src = 'https://placehold.co/300x200/1e293b/a3a8b8?text=Flag+Loading...';
+                      }}
+                    />
                   </div>
                   <div className="absolute opacity-0 group-hover:opacity-100 bg-black/60 text-white text-sm px-3 py-1 rounded transition-opacity duration-300 pointer-events-none mt-32">
-                    לחץ להגדלה
+                    {uiStr.lClickEnlargeFlag}
                   </div>
                 </div>
                 
                 <div className="flex-grow flex flex-col justify-center">
-                  <h2 className="text-3xl font-bold text-white mb-2">{name} <span className="text-gray-500 text-lg ml-2 uppercase tracking-widest">{englishName}</span></h2>
-                  <h3 className="text-xl text-gray-400 mb-4">{officialName}</h3>
+                  <h2 className="text-3xl font-bold text-white mb-2">{name[lang]} <span className="text-gray-500 text-lg ms-2 uppercase tracking-widest">{englishName}</span></h2>
+                  <h3 className="text-xl text-gray-400 mb-4">{officialName[lang]}</h3>
+                  
+                  {/* לוח נתונים עליון - 6 פריטים סימטריים */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                      <span><strong className="text-white">שנת ייסוד:</strong> {foundingYears}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                      <span><strong className="text-white me-1">{uiStr.capital}</strong> {capital.name[lang]}</span>
                     </div>
+
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                      <span className="truncate" title={figure.name}><strong className="text-white">מנהיג:</strong> {figure.name.split('(')[0]}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+                      <span><strong className="text-white me-1">{uiStr.currency}</strong> {currency[lang]}</span>
                     </div>
+
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3h18v18H3zM12 8v8m-4-4h8"></path></svg>
-                      <span><strong className="text-white">שטח:</strong> {areaNum}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                      <span><strong className="text-white me-1">{uiStr.founding}</strong> {foundingYears[lang]}</span>
                     </div>
+
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                      <span><strong className="text-white">אוכלוסייה:</strong> {populationNum}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                      <span><strong className="text-white me-1">{uiStr.population}</strong> {populationNum}</span>
                     </div>
-                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg md:col-span-2">
-                      <svg className="w-5 h-5 ml-2 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
-                      <span><strong className="text-white">שם מטבע:</strong> {currency}</span>
+
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3h18v18H3zM12 8v8m-4-4h8"></path></svg>
+                      <span><strong className="text-white me-1">{uiStr.area}</strong> {areaNum[lang]}</span>
+                    </div>
+
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                      <span className="truncate" title={figure.name[lang]}><strong className="text-white me-1">{uiStr.leader}</strong> {figure.name[lang].split('(')[0]}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* גוף המחקר */}
               <div className="p-6 md:p-8 space-y-10">
                 
                 <section>
                     <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                        <i className="fa-solid fa-map-location-dot w-6 h-6 ml-2 text-sky-400 text-xl"></i>
-                        <h3 className="text-2xl font-bold text-white">רקע פיזי ואנושי</h3>
+                        <i className="fa-solid fa-map-location-dot w-6 h-6 me-2 text-sky-400 text-xl"></i>
+                        <h3 className="text-2xl font-bold text-white">{uiStr.sectionPhysical}</h3>
                     </div>
-                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 space-y-4">
-                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">שטח וטופוגרפיה:</strong> {area}</p>
-                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">דמוגרפיה ({demographics.mainNationName} - {demographics.mainNationPercent}):</strong> {demographics.description}</p>
-                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">היסטוריה מודרנית:</strong> {modernHistory}</p>
+                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 space-y-4 text-start">
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white me-1">{uiStr.lAreaTopo}</strong> {area[lang]}</p>
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white me-1">{uiStr.lDemographics} ({demographics.mainNationName[lang]} - {demographics.mainNationPercent[lang]}):</strong> {demographics.description[lang]}</p>
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white me-1">{uiStr.lModernHistory}</strong> {modernHistory[lang]}</p>
                     </div>
                 </section>
 
                 <section>
                     <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                        <svg className="w-6 h-6 ml-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
-                        <h3 className="text-2xl font-bold text-white">וקסלולוגיה</h3>
+                        <svg className="w-6 h-6 me-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                        <h3 className="text-2xl font-bold text-white">{uiStr.sectionEtymology}</h3>
                     </div>
-                    <p className="text-gray-300 leading-relaxed text-lg">{flagSymbolism}</p>
-                </section>
-                
-                <section>
-                    <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                        <svg className="w-6 h-6 ml-2 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                        <h3 className="text-2xl font-bold text-white">אטימולוגיה</h3>
-                    </div>
-                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800">
+                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 text-start">
                         <ul className="space-y-4">
-                            {etymology.parts.map((part, idx) => (
-                                <li key={idx} className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4">
-                                    <span className={`font-bold min-w-[140px] md:text-lg flex-shrink-0 ${part.color} ${part.bg} border ${part.border} px-2 py-1 rounded-md`}>• {part.text}:</span>
-                                    <span className="text-gray-300 leading-relaxed text-lg">{part.desc}</span>
+                            {etymology.parts.map((part, index) => (
+                                <li key={index} className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4">
+                                    <span className={`font-bold min-w-[140px] md:text-lg flex-shrink-0 ${part.color} ${part.bg} border ${part.border} px-2 py-1 rounded-md`}>• {part.text[lang]}:</span>
+                                    <span className="text-gray-300 leading-relaxed text-lg">{part.desc[lang]}</span>
                                 </li>
                             ))}
                             <li className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4 mt-2 pt-4 border-t border-gray-800/50">
-                                <span className="font-bold text-amber-400 min-w-[140px] md:text-lg flex-shrink-0"><i className="fa-solid fa-quote-right ml-1"></i> משמעות השם:</span>
-                                <span className="text-gray-200 font-bold leading-relaxed text-lg">{etymology.synthesis}</span>
+                                <span className="font-bold text-amber-400 min-w-[140px] md:text-lg flex-shrink-0">
+                                  <i className="fa-solid fa-quote-right me-1"></i> {uiStr.lNameMeaning}
+                                </span>
+                                <span className="text-gray-200 font-bold leading-relaxed text-lg">{etymology.synthesis[lang]}</span>
+                            </li>
+                            
+                            <li className="flex flex-col md:flex-row md:items-start gap-2 md:gap-4 mt-6 pt-5 border-t border-gray-700/80">
+                                <span className="font-bold text-purple-400 min-w-[140px] md:text-lg flex-shrink-0 mt-1">
+                                    <i className="fa-solid fa-landmark-dome me-1"></i> {uiStr.lCapitalName}
+                                </span>
+                                <div className="space-y-3 w-full">
+                                    <strong className="text-white text-xl block border-b border-gray-800 pb-2">
+                                      {capital.name[lang]} <span className="text-gray-500 text-sm font-normal uppercase tracking-widest ms-1">({capital.englishName})</span>
+                                    </strong>
+                                    <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white font-medium me-1">{uiStr.lCapitalEty}</strong> {capital.etymology[lang]}</p>
+                                    <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white font-medium me-1">{uiStr.lCapitalFounding}</strong> {capital.foundingYear[lang]}</p>
+                                    <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white font-medium me-1">{uiStr.lCapitalReason}</strong> {capital.reason[lang]}</p>
+                                </div>
                             </li>
                         </ul>
                     </div>
                 </section>
 
-                <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gray-800/20 p-6 rounded-xl border border-gray-800/50">
-                    {/* פרופיל מנהיג */}
+                <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 text-start">
                     <div>
-                        <div className="flex items-center mb-4 border-b border-gray-700 pb-2">
-                            <svg className="w-6 h-6 ml-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                            <h3 className="text-2xl font-bold text-white">פרופיל מנהיג מכונן</h3>
+                        <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg className="w-6 h-6 me-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                            <h3 className="text-2xl font-bold text-white">{uiStr.sectionSymbols}</h3>
                         </div>
-                        <h4 className="text-xl text-rose-300 font-bold mb-3">{figure.name} <span className="text-base text-gray-400">({figure.years})</span></h4>
-                        <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
-                            <div><strong className="text-white block mb-1">ילדות ורקע:</strong> {figure.childhood}</div>
-                            <div><strong className="text-white block mb-1">אידאולוגיה:</strong> {figure.ideology}</div>
-                            <div><strong className="text-white block mb-1">הישגים מרכזיים:</strong> {figure.achievements}</div>
+                        <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 h-full">
+                            <h4 className="text-lg font-bold text-white mb-2"><i className="fa-solid fa-flag text-green-400 me-2"></i> {uiStr.lFlagMeaning}</h4>
+                            <p className="text-gray-300 leading-relaxed text-lg mb-6 pb-6 border-b border-gray-800/70">{flagSymbolism[lang]}</p>
+                            
+                            <h4 className="text-lg font-bold text-white mb-2"><i className="fa-solid fa-paw text-orange-400 me-2"></i> {uiStr.lNationalAnimal} {nationalAnimal.name[lang]}</h4>
+                            <p className="text-gray-300 leading-relaxed text-lg">{nationalAnimal.reason[lang]}</p>
                         </div>
                     </div>
 
-                    {/* קרטוגרפיה היסטורית */}
                     <div>
-                        <div className="flex items-center mb-4 border-b border-gray-700 pb-2">
-                            <svg className="w-6 h-6 ml-2 text-cyan-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"></path><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
-                            <h3 className="text-2xl font-bold text-white">קרטוגרפיה היסטורית</h3>
+                        <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg className="w-6 h-6 me-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                            <h3 className="text-2xl font-bold text-white">{uiStr.sectionLeader}</h3>
                         </div>
-                        <div className="flex flex-col cursor-pointer group rounded-xl overflow-hidden border border-gray-700 bg-gray-800/30 hover:border-gray-500 transition-all duration-300 shadow-lg" onClick={() => onModalOpen({type: 'image', url: map.url, title: map.title})}>
-                            <div className="relative h-48 md:h-56 w-full overflow-hidden bg-black">
-                                <img 
-                                  src={map.url} 
-                                  alt={map.title} 
-                                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                  onError={(e) => {
-                                    e.target.onerror = null; 
-                                    e.target.src = "https://placehold.co/800x400/1e293b/a3a8b8?text=Historical+Map";
-                                  }}
-                                />
-                                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300"></div>
+                        <div className="bg-gray-800/20 rounded-xl p-5 border border-gray-800/50 h-full">
+                            <h4 className="text-xl text-rose-300 font-bold mb-3">{figure.name[lang]} <span className="text-base text-gray-400">({figure.years})</span></h4>
+                            <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
+                                <div><strong className="text-white block mb-1">{uiStr.lChildhood}</strong> {figure.childhood[lang]}</div>
+                                <div><strong className="text-white block mb-1">{uiStr.lIdeology}</strong> {figure.ideology[lang]}</div>
+                                <div><strong className="text-white block mb-1">{uiStr.lAchievements}</strong> {figure.achievements[lang]}</div>
                             </div>
-                            <div className="p-4 text-center border-t border-gray-700/50">
-                                <strong className="text-cyan-300 block mb-2 text-base">{map.title}</strong>
-                                <span className="text-gray-300 text-sm leading-relaxed block">{map.desc}</span>
-                                <span className="inline-block mt-3 text-gray-400 text-xs font-medium bg-gray-900/80 px-3 py-1.5 rounded-full border border-gray-700 transition-colors group-hover:text-cyan-300 group-hover:border-cyan-800/50">(לחץ להגדלת המפה)</span>
-                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                        <svg className="w-6 h-6 me-2 text-cyan-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"></path><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                        <h3 className="text-2xl font-bold text-white">{uiStr.sectionCartography}</h3>
+                    </div>
+                    <div className="flex flex-col cursor-pointer group rounded-xl overflow-hidden border border-gray-700 bg-gray-800/30 hover:border-gray-500 transition-all duration-300 shadow-lg" onClick={() => onModalOpen({url: map.url, title: map.title[lang]})}>
+                        <div className="relative h-64 md:h-80 w-full overflow-hidden bg-black">
+                            <img 
+                              src={map.url} 
+                              alt={map.title[lang]} 
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                              onError={(e) => {
+                                e.target.onerror = null; 
+                                e.target.src = 'https://placehold.co/800x400/1e293b/a3a8b8?text=Historical+Map';
+                              }}
+                            />
+                            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300"></div>
+                        </div>
+                        <div className="p-4 text-center border-t border-gray-700/50">
+                            <strong className="text-cyan-300 block mb-2 text-lg">{map.title[lang]}</strong>
+                            <span className="text-gray-300 text-base leading-relaxed block">{map.desc[lang]}</span>
+                            <span className="inline-block mt-3 text-gray-400 text-sm font-medium bg-gray-900/80 px-4 py-1.5 rounded-full border border-gray-700 transition-colors group-hover:text-cyan-300 group-hover:border-cyan-800/50">{uiStr.lClickEnlargeMap}</span>
                         </div>
                     </div>
                 </section>
@@ -390,7 +658,7 @@
                 <button 
                   onClick={onClose}
                   className="absolute -top-14 right-0 md:-right-14 text-gray-400 hover:text-white bg-gray-800/80 hover:bg-gray-700 rounded-full p-2 transition-colors z-50"
-                  aria-label="סגור חלון"
+                  aria-label="Close"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -398,47 +666,60 @@
                   </svg>
                 </button>
                 
-                {content.type === 'flag' ? (
-                  <div className="w-full max-w-4xl aspect-[3/2] bg-black shadow-2xl rounded-lg overflow-hidden border border-gray-700" onClick={e => e.stopPropagation()}>
-                    <content.component />
-                  </div>
-                ) : (
-                  <img 
-                    src={content.url} 
-                    alt={content.title} 
-                    className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-gray-700" 
-                    onClick={e => e.stopPropagation()}
-                    onError={(e) => {
-                      e.target.onerror = null; 
-                      e.target.src = "https://placehold.co/800x400/1e293b/a3a8b8?text=Historical+Map";
-                    }}
-                  />
-                )}
+                <img 
+                  src={content.url} 
+                  alt={content.title} 
+                  className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-gray-700" 
+                  onClick={e => e.stopPropagation()}
+                  onError={(e) => {
+                    e.target.onerror = null; 
+                    e.target.src = 'https://placehold.co/800x400/1e293b/a3a8b8?text=Image+Not+Found';
+                  }}
+                />
               </div>
             </div>
           );
         };
 
         function App() {
+          const [lang, setLang] = useState('he');
           const [modalContent, setModalContent] = useState(null);
 
-          // סגירת החלון במקש אסקייפ
+          const uiStr = ui[lang];
+
+          // ניהול כיוון המסמך לפי שפה
+          React.useEffect(() => {
+            document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+            document.documentElement.lang = lang;
+          }, [lang]);
+
           React.useEffect(() => {
             const handleEsc = (e) => { if (e.key === "Escape") setModalContent(null); };
-            window.addEventListener("keydown", handleEsc);
-            return () => window.removeEventListener("keydown", handleEsc);
+            window.addEventListener('keydown', handleEsc);
+            return () => window.removeEventListener('keydown', handleEsc);
           }, []);
 
-          // מניעת גלילה כאשר המודל פתוח
           React.useEffect(() => {
-            document.body.style.overflow = modalContent ? "hidden" : "";
+            document.body.style.overflow = modalContent ? 'hidden' : '';
           }, [modalContent]);
 
           return (
-            <div className="max-w-5xl mx-auto pt-4 md:pt-8">
-              <header className="mb-10 text-center">
-                  <h1 className="text-3xl md:text-5xl font-bold text-white mb-3">דגלי צפון אפריקה</h1>
-                  <p className="text-gray-400 text-lg">מחקר וקסלולוגי, אטימולוגי, היסטורי וקרטוגרפי</p>
+            <div className="max-w-5xl mx-auto pt-4 md:pt-8 relative">
+              
+              {/* כפתור החלפת שפה */}
+              <div className="absolute top-0 right-4 md:right-8">
+                <button 
+                  onClick={() => setLang(lang === 'he' ? 'en' : 'he')}
+                  className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-full border border-gray-600 transition-colors shadow-lg font-medium text-sm"
+                >
+                  <i className="fa-solid fa-globe text-blue-400"></i>
+                  {uiStr.langBtn}
+                </button>
+              </div>
+
+              <header className="mb-10 text-center mt-12 md:mt-0">
+                  <h1 className="text-3xl md:text-5xl font-bold text-white mb-3">{uiStr.mainTitle}</h1>
+                  <p className="text-gray-400 text-lg">{uiStr.subTitle}</p>
               </header>
 
               <div className="space-y-12">
@@ -447,6 +728,8 @@
                     key={country.id} 
                     country={country} 
                     onModalOpen={setModalContent} 
+                    lang={lang}
+                    uiStr={uiStr}
                   />
                 ))}
               </div>
@@ -454,15 +737,15 @@
               <footer className="mt-12 mb-8 pt-8 border-t border-gray-800 text-center text-gray-500 w-full max-w-6xl mx-auto px-4">
                   <div className="flex justify-center items-center gap-2 mb-4">
                       <svg className="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                      <h4 className="font-bold text-gray-400 text-lg">פרטי המחקר והפרויקט</h4>
+                      <h4 className="font-bold text-gray-400 text-lg">{uiStr.footerTitle}</h4>
                   </div>
-                  <div className="inline-block text-right bg-gray-900/50 p-6 rounded-xl border border-gray-800 w-full max-w-2xl">
+                  <div className="inline-block text-start bg-gray-900/50 p-6 rounded-xl border border-gray-800 w-full max-w-2xl">
                       <p className="text-gray-300 leading-loose">
-                          <strong className="text-white ml-2">שם ההוגה:</strong> רם<br />
-                          <strong className="text-white ml-2">שם הבונה/היצרן:</strong> ג'מיני (Gemini 3.1 Pro)<br />
-                          <strong className="text-white ml-2">סיבת ההמצאה/הבנייה:</strong> המרת מחקר צפון אפריקה (המגרב) למבנה React עשיר, מפורט ומדויק.<br />
-                          <strong className="text-white ml-2">שנת הבנייה/היצירה:</strong> 2026<br />
-                          <strong className="text-white ml-2">מקורות וקרדיט:</strong> אטימולוגיה מהספרות המקצועית. תמונות דגלים מ-Postimg. מפות היסטוריות מ-GitHub אישי.
+                          <strong className="text-white me-2">{uiStr.fConcept}</strong> {uiStr.fConceptVal}<br />
+                          <strong className="text-white me-2">{uiStr.fBuilder}</strong> {uiStr.fBuilderVal}<br />
+                          <strong className="text-white me-2">{uiStr.fReason}</strong> {uiStr.fReasonVal}<br />
+                          <strong className="text-white me-2">{uiStr.fYear}</strong> {uiStr.fYearVal}<br />
+                          <strong className="text-white me-2">{uiStr.fCredits}</strong> {uiStr.fCreditsVal}
                       </p>
                   </div>
               </footer>
@@ -472,10 +755,10 @@
           );
         }
 
-        const root = ReactDOM.createRoot(document.getElementById("root"));
+        const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
 </body>
 </html>
 
-
+```
