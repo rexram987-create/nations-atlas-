@@ -1,11 +1,11 @@
-```html
 <!DOCTYPE html>
 <html lang="he" dir="rtl" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>אטלס האומות | המדינות הבלטיות</title>
+    <title>The Baltic States Project | המדינות הבלטיות</title>
     
+    <!-- טעינת ספריות העיצוב -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -13,180 +13,378 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ["system-ui", "-apple-system", "Segoe UI", "Roboto", "Helvetica", "Arial", "sans-serif"],
+                        sans: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- טעינת React ו-Babel -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body class="min-h-screen bg-gray-950 text-gray-200 p-4 md:p-8 font-sans antialiased selection:bg-blue-500/30">
+    
     <div id="root"></div>
+
     <script type="text/babel">
         const { useState, useEffect } = React;
 
         // ==========================================
-        // רכיבי ה-SVG של הדגלים
+        // מילון ממשק משתמש (UI Dictionary)
         // ==========================================
-
-        const FlagEstonia = () => (
-          <svg viewBox="0 0 300 200" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="66.66" fill="#0072CE" />
-            <rect y="66.66" width="300" height="66.66" fill="#000000" />
-            <rect y="133.32" width="300" height="66.66" fill="#FFFFFF" />
-          </svg>
-        );
-
-        const FlagLatvia = () => (
-          <svg viewBox="0 0 300 150" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="60" fill="#9E3039" />
-            <rect y="60" width="300" height="30" fill="#FFFFFF" />
-            <rect y="90" width="300" height="60" fill="#9E3039" />
-          </svg>
-        );
-
-        const FlagLithuania = () => (
-          <svg viewBox="0 0 300 180" className="w-full h-full object-cover rounded-md border border-gray-700/50" preserveAspectRatio="none">
-            <rect width="300" height="60" fill="#FDB913" />
-            <rect y="60" width="300" height="60" fill="#006A44" />
-            <rect y="120" width="300" height="60" fill="#C1272D" />
-          </svg>
-        );
+        const ui = {
+          he: {
+            mainTitle: "דגלי המדינות הבלטיות",
+            subTitle: "מחקר וקסלולוגי, אטימולוגי, היסטורי וקרטוגרפי",
+            langBtn: "English",
+            capital: "עיר בירה:",
+            currency: "מטבע לאומי:",
+            founding: "שנת ייסוד:",
+            population: "אוכלוסייה:",
+            area: "שטח:",
+            leader: "מנהיג:",
+            sectionPhysical: "רקע פיזי ואנושי",
+            lAreaTopo: "שטח וטופוגרפיה:",
+            lDemographics: "דמוגרפיה",
+            lModernHistory: "היסטוריה מודרנית:",
+            sectionEtymology: "אטימולוגיה ושמות",
+            lNameMeaning: "משמעות השם:",
+            lCapitalName: "עיר הבירה:",
+            lCapitalEty: "אטימולוגיה:",
+            lCapitalFounding: "שנת ייסוד הבירה:",
+            lCapitalReason: "הסיבה לבחירתה:",
+            sectionSymbols: "סמלים וזהות לאומית",
+            lFlagMeaning: "משמעות צבעי הדגל:",
+            lNationalAnimal: "החיה הלאומית:",
+            sectionLeader: "פרופיל מנהיג מכונן",
+            lChildhood: "ילדות ורקע:",
+            lIdeology: "אידאולוגיה:",
+            lAchievements: "הישגים מרכזיים:",
+            sectionCartography: "קרטוגרפיה היסטורית",
+            lClickEnlargeMap: "(לחץ להגדלת המפה)",
+            lClickEnlargeFlag: "לחץ להגדלה",
+            footerTitle: "פרטי המחקר והפרויקט",
+            fConcept: "שם ההוגה:",
+            fBuilder: "שם הבונה/היצרן:",
+            fReason: "סיבת ההמצאה/הבנייה:",
+            fYear: "שנת הבנייה/היצירה:",
+            fCredits: "מקורות וקרדיט:",
+            fConceptVal: "רם",
+            fBuilderVal: "ג'מיני (Gemini 3.1 Pro)",
+            fReasonVal: "חקר המדינות הבלטיות עבור 'אטלס האומות המלא' – אזור המהווה גשר היסטורי ותרבותי בין מזרח ומערב אירופה. המרה למבנה React וקטורי.",
+            fYearVal: "2026",
+            fCreditsVal: "אטימולוגיה מהספרות ההיסטורית. מפות קרטוגרפיות באדיבות פרויקט אטלס האומות ב-GitHub. קובצי דגלים באדיבות Flagpedia.net."
+          },
+          en: {
+            mainTitle: "Flags of the Baltic States",
+            subTitle: "Vexillological, Etymological, Historical, and Cartographic Research",
+            langBtn: "עברית",
+            capital: "Capital City:",
+            currency: "Currency:",
+            founding: "Founded:",
+            population: "Population:",
+            area: "Area:",
+            leader: "Leader:",
+            sectionPhysical: "Physical and Human Background",
+            lAreaTopo: "Area & Topography:",
+            lDemographics: "Demographics",
+            lModernHistory: "Modern History:",
+            sectionEtymology: "Etymology and Names",
+            lNameMeaning: "Name Meaning:",
+            lCapitalName: "Capital City:",
+            lCapitalEty: "Etymology:",
+            lCapitalFounding: "Founding Year:",
+            lCapitalReason: "Reason for Selection:",
+            sectionSymbols: "Symbols & National Identity",
+            lFlagMeaning: "Flag Symbolism:",
+            lNationalAnimal: "National Animal:",
+            sectionLeader: "Founding Leader Profile",
+            lChildhood: "Childhood & Background:",
+            lIdeology: "Ideology:",
+            lAchievements: "Major Achievements:",
+            sectionCartography: "Historical Cartography",
+            lClickEnlargeMap: "(Click to enlarge map)",
+            lClickEnlargeFlag: "Click to enlarge",
+            footerTitle: "Research and Project Details",
+            fConcept: "Concept by:",
+            fBuilder: "Builder/Generator:",
+            fReason: "Reason for Creation:",
+            fYear: "Year of Creation:",
+            fCredits: "Sources & Credits:",
+            fConceptVal: "Ram",
+            fBuilderVal: "Gemini (Gemini 3.1 Pro)",
+            fReasonVal: "Researching the Baltic States for the 'Complete Nations Atlas' – a region forming a historical and cultural bridge between Eastern and Western Europe. Conversion to a React structure.",
+            fYearVal: "2026",
+            fCreditsVal: "Etymology from historical literature. Cartographic maps courtesy of the Nations Atlas project on GitHub. Flag files courtesy of Flagpedia.net."
+          }
+        };
 
         // ==========================================
-        // מאגר הנתונים המלא - המדינות הבלטיות
+        // מאגר הנתונים המלא והמורחב (דו-לשוני) - המדינות הבלטיות
         // ==========================================
 
         const countriesData = [
           {
             id: "estonia",
-            name: "אסטוניה",
+            name: { he: "אסטוניה", en: "Estonia" },
             englishName: "Estonia",
-            officialName: "רפובליקת אסטוניה",
-            FlagComponent: FlagEstonia,
-            areaNum: "~45,227 קמ\"ר",
-            populationNum: "~1,365,000",
-            currency: "אירו (EUR)",
-            area: "כ-45,227 קמ\"ר. המדינה הצפונית והקטנה ביותר מבין המדינות הבלטיות. בעלת קו חוף ארוך ומפורץ על הים הבלטי ומפרץ פינלנד, וכוללת למעלה מ-2,200 איים. הנוף מישורי ברובו, משובץ ביערות עבותים (כמחצית משטח המדינה), אגמים וביצות כבול.",
-            demographics: {
-              mainNationName: "אסטונים",
-              mainNationPercent: "כ-69%",
-              description: "האסטונים הם עם פינו-אוגרי (קרובים לשונית ותרבותית לפינים, ולא ללטבים או לליטאים הבלטים). מבחינה דתית, אסטוניה היא אחת המדינות החילוניות בעולם, עם מורשת היסטורית של נצרות לותרנית. קיים מיעוט רוסי משמעותי (כ-23%), בעיקר בבירה טאלין ובמזרח המדינה."
+            officialName: { he: "רפובליקת אסטוניה", en: "Republic of Estonia" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/estonia.webp",
+            capital: {
+              name: { he: "טאלין", en: "Tallinn" },
+              englishName: "Tallinn",
+              etymology: { 
+                he: "השם טאלין נגזר ככל הנראה מהביטוי האסטוני 'Taani-linn' שפירושו המילולי הוא 'העיר הדנית' או 'הטירה הדנית'. השם הוענק לעיר לאחר שהמלך ולדמר השני מדנמרק כבש את האזור בשנת 1219 והקים בה מבצר. לפני כן, שמה ההיסטורי והגרמני של העיר היה 'רבאלי' (Reval).",
+                en: "The name Tallinn is likely derived from the Estonian phrase 'Taani-linn', literally meaning 'Danish town' or 'Danish castle'. The name was given to the city after King Valdemar II of Denmark conquered the area in 1219 and built a fortress there. Prior to this, the city's historical and German name was 'Reval'."
+              },
+              foundingYear: { he: "1154 לספירה (מוזכרת לראשונה במפת אל-אדריסי)", en: "1154 AD (first mentioned in Al-Idrisi's map)" },
+              reason: { 
+                he: "טאלין נוסדה וצמחה כעיר בירה בזכות מיקומה הגאוגרפי יוצא הדופן על חופי מפרץ פינלנד. היא סיפקה נמל טבעי, עמוק ומוגן היטב מפני סערות הים הבלטי, מה שהפך אותה באופן טבעי לצומת דרכים מסחרי חיוני בברית ערי ההנזה (Hanseatic League), המקשרת בין מערב אירופה וסקנדינביה לבין האימפריה הרוסית הרחבה במזרח.",
+                en: "Tallinn was founded and grew as a capital due to its exceptional geographical location on the shores of the Gulf of Finland. It provided a natural, deep, and well-protected harbor against Baltic Sea storms, naturally making it a vital commercial crossroads in the Hanseatic League, connecting Western Europe and Scandinavia with the vast Russian Empire to the east."
+              }
             },
-            modernHistory: "לאחר מאות שנות שלטון זר (גרמני, דני, שוודי ורוסי), אסטוניה זכתה בעצמאותה ב-1918. היא נכבשה שוב על ידי ברית המועצות ב-1940 במהלך מלחמת העולם השנייה. לאחר \"מהפכת השירה\" הבלתי אלימה, חידשה את עצמאותה ב-1991. מאז, הפכה לאחת המדינות המובילות בעולם בטכנולוגיה וממשל אלקטרוני (e-Estonia), והצטרפה לאיחוד האירופי ולנאט\"ו.",
-            foundingYears: "1918 (רפובליקה ראשונה) | 1991",
-            flagSymbolism: "דגל טריקולור שנוצר במקור על ידי סטודנטים אסטונים ב-1881. הכחול מסמל את השמיים, הים, האגמים והנאמנות לעקרונות הלאומיים; השחור מסמל את אדמת המולדת ואת העבר החשוך של דיכוי על ידי שלטון זר; הלבן מסמל את השלג, הטוהר, העבודה הקשה והשאיפה לעתיד מואר וחופשי.",
+            areaNum: { he: "~45,227 קמ\"ר", en: "~45,227 sq km" },
+            populationNum: "~1,365,000",
+            currency: { he: "אירו (EUR)", en: "Euro (EUR)" },
+            area: { 
+              he: "כ-45,227 קמ\"ר. המדינה הצפונית והקטנה ביותר מבין המדינות הבלטיות. בעלת קו חוף ארוך ומפורץ על הים הבלטי ומפרץ פינלנד, וכוללת למעלה מ-2,200 איים טבעיים (הגדול שבהם הוא סארמאה). הנוף מישורי ברובו, משובץ ביערות עבותים (כמחצית משטח המדינה), אגמים רבים וביצות כבול עתיקות.",
+              en: "Approx. 45,227 sq km. The northernmost and smallest of the Baltic states. It has a long, indented coastline on the Baltic Sea and Gulf of Finland, including over 2,200 natural islands (the largest being Saaremaa). The landscape is mostly flat, dotted with dense forests (covering about half the country), numerous lakes, and ancient peat bogs."
+            },
+            demographics: {
+              mainNationName: { he: "אסטונים", en: "Estonians" },
+              mainNationPercent: { he: "כ-69%", en: "~69%" },
+              description: { 
+                he: "האסטונים הם עם פינו-אוגרי (קרובים לשונית, גנטית ותרבותית לפינים מעבר למפרץ, ולא ללטבים או לליטאים הבלטים). מבחינה דתית, אסטוניה היא אחת המדינות החילוניות ביותר בעולם כיום, אך בעלת מורשת היסטורית ואדריכלית של נצרות לותרנית. קיים מיעוט רוסי משמעותי (כ-23%), המתרכז בעיקר בבירה טאלין ובאזורי התעשייה במזרח המדינה סמוך לגבול הרוסי.",
+                en: "Estonians are a Finno-Ugric people (linguistically, genetically, and culturally close to the Finns across the gulf, not to the Baltic Latvians or Lithuanians). Religiously, Estonia is currently one of the most secular countries in the world, yet possesses a historical and architectural heritage of Lutheran Christianity. There is a significant Russian minority (~23%), concentrated mainly in the capital Tallinn and industrial areas in the east near the Russian border."
+              }
+            },
+            modernHistory: { 
+              he: "לאחר מאות שנות שלטון ושיעבוד על ידי אימפריות זרות (מסדרים גרמניים, דנים, שוודים ורוסים), אסטוניה זכתה בעצמאותה הראשונה ב-1918. היא נכבשה וסופחה שוב באכזריות על ידי ברית המועצות ב-1940 במהלך מלחמת העולם השנייה (כולל כיבוש נאצי קצר). לאחר 'מהפכת השירה' הבלתי אלימה שסחפה את המוני העם, היא חידשה את עצמאותה ב-1991. מאז, הפכה לאחת המדינות המובילות בעולם בחדשנות, הייטק וממשל אלקטרוני (e-Estonia), והצטרפה לאיחוד האירופי ולנאט\"ו.",
+              en: "After centuries of rule and subjugation by foreign empires (Germanic orders, Danes, Swedes, and Russians), Estonia gained its first independence in 1918. It was brutally occupied and annexed again by the USSR in 1940 during WWII (including a brief Nazi occupation). Following the non-violent 'Singing Revolution' that swept the masses, it restored its independence in 1991. Since then, it has become a global leader in innovation, high-tech, and e-government (e-Estonia), joining the EU and NATO."
+            },
+            foundingYears: { he: "1918 (רפובליקה ראשונה) | 1991 (חידוש עצמאות)", en: "1918 (First Republic) | 1991 (Restoration of Independence)" },
+            flagSymbolism: { 
+              he: "דגל טריקולור ייחודי שנוצר במקור על ידי אגודת הסטודנטים האסטונים באוניברסיטת טרטו בשנת 1881. הצבע הכחול מסמל את השמיים הנקיים, את הים הבלטי, את האגמים הרבים, ואת הנאמנות לעקרונות הלאומיים; הצבע השחור מסמל את אדמת המולדת, את הז'קט השחור המסורתי של האיכר האסטוני, ואת העבר החשוך של דיכוי על ידי שלטון זר; הצבע הלבן מסמל את השלג המכסה את הארץ בחורף, את הטוהר, את העבודה הקשה, ואת השאיפה לעתיד מואר וחופשי.",
+              en: "A unique tricolor flag originally created by the Estonian Students' Society at the University of Tartu in 1881. The blue color symbolizes the clear skies, the Baltic Sea, the numerous lakes, and loyalty to national ideas; the black color symbolizes the soil of the homeland, the traditional black jacket of the Estonian peasant, and the dark past of foreign oppression; the white color symbolizes the winter snow covering the land, purity, hard work, and the aspiration for a bright, free future."
+            },
+            nationalAnimal: {
+              name: { he: "זאב אפור (Grey Wolf)", en: "Grey Wolf" },
+              reason: { 
+                he: "הזאב האפור הוכרז רשמית כחיה הלאומית של אסטוניה בשנת 2018. הזאב, החי ביערות העבותים של המדינה, מסמל חוסן טבעי, הישרדות חסרת פשרות ונאמנות למשפחה וללהקה. תכונות אלו מקבילות בעיני האסטונים לאופיו של העם שלהם, שהצליח לשמור על שפתו, תרבותו העתיקה וזהותו הלאומית בתוך היערות העמוקים, חרף מאות רבות של שנות כיבוש, מלחמות ודיכוי מצד אימפריות שכנות אדירות.",
+                en: "The Grey Wolf was officially declared the national animal of Estonia in 2018. The wolf, living in the country's dense forests, symbolizes natural resilience, uncompromising survival, and loyalty to family and the pack. In the eyes of Estonians, these traits parallel the character of their own people, who managed to preserve their language, ancient culture, and national identity deep within the forests, despite many centuries of occupation, wars, and oppression by mighty neighboring empires."
+              }
+            },
             etymology: {
               parts: [
-                { text: "מקור עתיק (Aesti)", color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: "התיעוד הראשון מופיע בכתביו של ההיסטוריון הרומאי טקיטוס (בספרו \"גרמאניה\" משנת 98 לספירה), שכינה את השבטים היושבים לחופי הים הבלטי בשם 'Aesti' (אאיסטי)." },
-                { text: "משמעות גיאוגרפית", color: "text-cyan-400", bg: "bg-cyan-400/10", border: "border-cyan-500/30", desc: "מקור השם הרומאי נגזר ככל הנראה מהשורש הגרמאני 'Ost' (מזרח) - כלומר \"אנשי המזרח\", או לחלופין משורש הודו-אירופי עתיק שמשמעותו \"מים\" או \"ים\"." },
-                { text: "אימוץ לאומי (Eesti)", color: "text-indigo-400", bg: "bg-indigo-400/10", border: "border-indigo-500/30", desc: "העמים הפינו-אוגרים המקומיים לא קראו לעצמם כך במקור (הם קראו לעצמם Maarahvas - 'אנשי האדמה'). רק במאה ה-19, עם תחילת ההתעוררות הלאומית, הם אימצו את השם Eesti כהגדרה העצמית הרשמית שלהם." }
+                { text: { he: "מקור עתיק (Aesti)", en: "Ancient Origin (Aesti)" }, color: "text-blue-400", bg: "bg-blue-400/10", border: "border-blue-500/30", desc: { he: "התיעוד הראשון מופיע בכתביו של ההיסטוריון הרומאי טקיטוס (בספרו 'גרמאניה' משנת 98 לספירה), שכינה את השבטים היושבים לחופי הים הבלטי בשם 'Aesti' (אאיסטי).", en: "The first documentation appears in the writings of the Roman historian Tacitus (in his book 'Germania' from 98 AD), who called the tribes living on the shores of the Baltic Sea 'Aesti'." } },
+                { text: { he: "משמעות גיאוגרפית", en: "Geographical Meaning" }, color: "text-cyan-400", bg: "bg-cyan-400/10", border: "border-cyan-500/30", desc: { he: "מקור השם הרומאי נגזר ככל הנראה מהשורש הגרמאני 'Ost' (מזרח) - כלומר 'אנשי המזרח', או לחלופין משורש הודו-אירופי עתיק שמשמעותו 'מים' או 'ים'.", en: "The origin of the Roman name is likely derived from the Germanic root 'Ost' (East) - meaning 'Easterners', or alternatively from an ancient Indo-European root meaning 'water' or 'sea'." } },
+                { text: { he: "אימוץ לאומי (Eesti)", en: "National Adoption (Eesti)" }, color: "text-indigo-400", bg: "bg-indigo-400/10", border: "border-indigo-500/30", desc: { he: "העמים הפינו-אוגרים המקומיים לא קראו לעצמם כך במקור (הם קראו לעצמם Maarahvas - 'אנשי האדמה'). רק במאה ה-19, עם תחילת ההתעוררות הלאומית, הם אימצו את השם Eesti כהגדרה העצמית הרשמית שלהם.", en: "The local Finno-Ugric peoples did not originally call themselves this (they called themselves Maarahvas - 'people of the land'). Only in the 19th century, with the beginning of national awakening, did they adopt the name Eesti as their official self-definition." } }
               ],
-              synthesis: "התגלגלות של מונח רומאי (\"אנשי המזרח/המים\") שאומץ על ידי המקומיים כסמל להתעוררות לאומית."
+              synthesis: { he: "התגלגלות של מונח רומאי ('אנשי המזרח/המים') שאומץ על ידי המקומיים כסמל להתעוררות לאומית.", en: "An evolution of a Roman term ('Easterners/People of the Water') adopted by the locals as a symbol of national awakening." }
             },
             figure: {
-              name: "לנארט מרי (Lennart Meri)",
+              name: { he: "לנארט מרי", en: "Lennart Meri" },
               years: "1929 - 2006",
-              childhood: "נולד בטאלין לאב שהיה דיפלומט. בילדותו נדד בירות אירופה. עם הכיבוש הסובייטי, משפחתו גורשה לסיביר לחיים של עבודת כפייה והישרדות. לאחר שחזר לאסטוניה, למד היסטוריה, הפך לסופר, חוקר עמים פינו-אוגריים ובמאי קולנוע תיעודי תחת עינה הפקוחה של הצנזורה הסובייטית.",
-              ideology: "הומניזם עמוק, דמוקרטיה ליברלית ושילוב תרבותי. מרי האמין שהזהות האסטונית טמונה בשילוב של מורשתה הפינו-אוגרית הייחודית יחד עם שייכותה הטבעית וההיסטורית לתרבות אירופה והמערב. הוא פעל בנחישות לעקור את המורשת הסובייטית מהממסד.",
-              achievements: "הנשיא הראשון של אסטוניה לאחר חידוש העצמאות (כיהן 1992-2001). כאב המייסד של אסטוניה המודרנית, הוא הניח את היסודות למדיניות החוץ המערבית שלה, ניהל משא ומתן נחוש ליציאת אחרון החיילים הרוסים משטחה, ודחף אותה לחדשנות טכנולוגית ולשקיפות שלטונית."
+              childhood: { 
+                he: "נולד בטאלין לאב שהיה דיפלומט. בילדותו נדד בין בירות אירופה. עם הכיבוש הסובייטי, משפחתו גורשה לסיביר לחיים של עבודת כפייה והישרדות. לאחר שחזר לאסטוניה, למד היסטוריה, הפך לסופר, חוקר של עמים פינו-אוגריים ובמאי קולנוע תיעודי תחת עינה הפקוחה של הצנזורה הסובייטית.",
+                en: "Born in Tallinn to a diplomat father. In his childhood, he wandered between European capitals. With the Soviet occupation, his family was deported to Siberia to a life of forced labor and survival. After returning to Estonia, he studied history, became a writer, a researcher of Finno-Ugric peoples, and a documentary filmmaker under the watchful eye of Soviet censorship."
+              },
+              ideology: { 
+                he: "הומניזם עמוק, דמוקרטיה ליברלית ושילוב תרבותי. מרי האמין שהזהות האסטונית האותנטית טמונה בשילוב של מורשתה הפינו-אוגרית הייחודית יחד עם שייכותה הטבעית, ההיסטורית והפוליטית לתרבות אירופה ולעולם המערבי החופשי. הוא פעל בנחישות לעקור את המורשת הסובייטית מכל מוסדות הממסד.",
+                en: "Deep humanism, liberal democracy, and cultural integration. Meri believed that authentic Estonian identity lay in the combination of its unique Finno-Ugric heritage alongside its natural, historical, and political belonging to European culture and the free Western world. He worked resolutely to uproot the Soviet legacy from all institutional bodies."
+              },
+              achievements: { 
+                he: "הנשיא הראשון של אסטוניה לאחר חידוש העצמאות (כיהן בין השנים 1992-2001). כאב המייסד של אסטוניה המודרנית והחופשית, הוא הניח את היסודות האיתנים למדיניות החוץ המערבית שלה, ניהל משא ומתן קשוח ונחוש ליציאת אחרון החיילים הרוסים משטחה, ודחף אותה לאימוץ חדשנות טכנולוגית ולשקיפות שלטונית.",
+                en: "The first President of Estonia after the restoration of independence (served 1992-2001). As the founding father of modern, free Estonia, he laid the solid foundations for its Western foreign policy, negotiated toughly and resolutely for the departure of the last Russian soldiers from its territory, and pushed it to adopt technological innovation and government transparency."
+              }
             },
             map: {
               url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_estonia_livonia.jpg",
-              title: "אסטוניה וליבוניה במאה ה-16",
-              desc: "מפה היסטורית המציגה את האזור בתקופת מסדר האבירים הליבוני, טרם חלוקתו לאסטוניה ולטביה המודרניות."
+              title: { he: "אסטוניה וליבוניה במאה ה-16", en: "Estonia and Livonia - 16th Century" },
+              desc: { 
+                he: "מפה היסטורית המציגה את האזור בתקופת מסדר האבירים הליבוני (הטווטוני), טרם חלוקתו המודרנית לאסטוניה ולטביה, ומשקפת את השפעת האימפריות הגרמאניות על חופי הים הבלטי.",
+                en: "A historical map showing the region during the period of the Livonian (Teutonic) Order of Knights, before its modern division into Estonia and Latvia, reflecting the influence of Germanic empires on the Baltic Sea coasts."
+              }
             }
           },
           {
             id: "latvia",
-            name: "לטביה",
+            name: { he: "לטביה", en: "Latvia" },
             englishName: "Latvia",
-            officialName: "רפובליקת לטביה",
-            FlagComponent: FlagLatvia,
-            areaNum: "~64,589 קמ\"ר",
-            populationNum: "~1,870,000",
-            currency: "אירו (EUR)",
-            area: "כ-64,589 קמ\"ר. שוכנת במרכז המדינות הבלטיות. טופוגרפיה המאופיינת במישורים גליים נמוכים, המכוסים ביערות צפופים, רשת ענפה של נהרות (הגדול שבהם הוא נהר הדאוגבה - Daugava) ואלפי אגמים קרחוניים. חופיה המערביים פונים לים הבלטי ולמפרץ ריגה.",
-            demographics: {
-              mainNationName: "לטבים",
-              mainNationPercent: "כ-63%",
-              description: "הלטבים הם עם בלטי (קבוצה אתנית-לשונית הודו-אירופית, הקרובה רק לליטאים). מבחינה היסטורית הם התחלקו בין השפעות לותרניות במערב וקתוליות במזרח. בדומה לאסטוניה, ישנו מיעוט רוסי גדול (כ-24%), תוצאה של הגירה יזומה בתקופה הסובייטית."
+            officialName: { he: "רפובליקת לטביה", en: "Republic of Latvia" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/latvia.webp",
+            capital: {
+              name: { he: "ריגה", en: "Riga" },
+              englishName: "Riga",
+              etymology: { 
+                he: "מקור השם ריגה נגזר ככל הנראה מהמילה הליבונית העתיקה 'Ringa', שפירושה 'לולאה' או 'פיתול'. השם מתייחס לצורתו הגיאוגרפית הטבעית של פיתול נהר הדאוגבה, אשר יצר מעגן טבעי ובטוח עבור ספינות סוחר מוקדמות וסירות דיג באזור.",
+                en: "The origin of the name Riga is likely derived from the ancient Livonian word 'Ringa', meaning 'loop' or 'bend'. The name refers to the natural geographical shape of the bend in the Daugava River, which created a safe natural harbor for early merchant ships and fishing boats in the area."
+              },
+              foundingYear: { he: "1201 לספירה (על ידי הבישוף אלברט מברמן)", en: "1201 AD (by Bishop Albert of Bremen)" },
+              reason: { 
+                he: "ריגה הוקמה במכוון על ידי צלבנים גרמנים (האחים למסדר החרב) בנקודה אסטרטגית קריטית: שפך נהר הדאוגבה למפרץ ריגה. נהר זה היה עורק התחבורה והמסחר המרכזי שחיבר את הים הבלטי עם עומק יבשת רוסיה והאימפריה הביזנטית. השליטה בנקודה זו אפשרה למייסדיה לשלוט בסחר האזורי ולשמש כמרכז הפצת הנצרות לשבטים הבלטיים הפגאניים.",
+                en: "Riga was intentionally founded by German crusaders (the Livonian Brothers of the Sword) at a critical strategic point: the mouth of the Daugava River into the Gulf of Riga. This river was the main transport and trade artery connecting the Baltic Sea with deep continental Russia and the Byzantine Empire. Controlling this point allowed its founders to dominate regional trade and serve as a center for spreading Christianity to the pagan Baltic tribes."
+              }
             },
-            modernHistory: "ההיסטוריה הלטבית רוויה בשליטת מעצמות זרות – גרמנים בלטים, פולנים, שוודים ורוסים. העצמאות הראשונה הוכרזה ב-1918. ב-1940 סופחה לברית המועצות, נכבשה על ידי גרמניה הנאצית (שם הושמדה קהילת יהודי לטביה המפוארת), ונכבשה שוב על ידי הסובייטים. חידשה את עצמאותה באוגוסט 1991. כיום חברה בנאט\"ו ובאיחוד האירופי.",
-            foundingYears: "1918 (רפובליקה ראשונה) | 1991",
-            flagSymbolism: "אחד הדגלים הלאומיים העתיקים בעולם (מוזכר בכרוניקות מהמאה ה-13). הצבע האדום-בורדו (הידוע כ\"אדום לטבי\") מסמל את הדם שהזדה בקרבות על החירות והעצמאות של המולדת. הפס הלבן במרכז מסמל את הזכות, הצדק, האמת, והכבוד של האזרחים החופשיים.",
+            areaNum: { he: "~64,589 קמ\"ר", en: "~64,589 sq km" },
+            populationNum: "~1,870,000",
+            currency: { he: "אירו (EUR)", en: "Euro (EUR)" },
+            area: { 
+              he: "כ-64,589 קמ\"ר. לטביה שוכנת בדיוק במרכז המדינות הבלטיות, כשהיא גובלת באסטוניה מצפון ובליטא מדרום. הטופוגרפיה שלה מאופיינת במישורים גליים נמוכים, המכוסים ביערות אורן ולבנה צפופים, רשת ענפה של נהרות (הגדול והחשוב שבהם הוא נהר הדאוגבה) ואלפי אגמים קרחוניים. חופיה המערביים החוליים פונים לים הבלטי ולמפרץ ריגה.",
+              en: "Approx. 64,589 sq km. Latvia is situated exactly in the center of the Baltic states, bordering Estonia to the north and Lithuania to the south. Its topography is characterized by low undulating plains, covered in dense pine and birch forests, a vast network of rivers (the largest and most important being the Daugava), and thousands of glacial lakes. Its sandy western coasts face the Baltic Sea and the Gulf of Riga."
+            },
+            demographics: {
+              mainNationName: { he: "לטבים", en: "Latvians" },
+              mainNationPercent: { he: "כ-63%", en: "~63%" },
+              description: { 
+                he: "הלטבים הם עם בלטי (קבוצה אתנית-לשונית הודו-אירופית ייחודית, הקרובה גנטית ולשונית רק לליטאים השכנים). מבחינה היסטורית ודתית, העם התחלק בין השפעות לותרניות חזקות במערב ובמרכז, להשפעות קתוליות במזרח הארץ. בדומה לאסטוניה, ישנו מיעוט דוברי רוסית גדול מאוד (כ-24%), תוצאה של הגירה יזומה וניסיונות רוסיפיקציה בתקופה הסובייטית ארוכת השנים.",
+                en: "Latvians are a Baltic people (a unique Indo-European ethno-linguistic group, genetically and linguistically close only to neighboring Lithuanians). Historically and religiously, the people were divided between strong Lutheran influences in the west and center, and Catholic influences in the east. Similar to Estonia, there is a very large Russian-speaking minority (~24%), a result of forced immigration and Russification attempts during the long Soviet era."
+              }
+            },
+            modernHistory: { 
+              he: "ההיסטוריה הלטבית רוויה בשליטה ומאבקי כוח של מעצמות זרות – אבירים גרמנים בלטים, פולנים, שוודים ורוסים. העצמאות הראשונה הוכרזה ב-1918. ב-1940 המדינה סופחה באלימות לברית המועצות, לאחר מכן נכבשה על ידי גרמניה הנאצית (כיבוש בו הושמדה קהילת יהודי לטביה המפוארת בשואה), ונכבשה שוב על ידי הסובייטים שהטילו משטר אימה. לטביה חידשה את עצמאותה באוגוסט 1991, וכיום היא דמוקרטיה תוססת החברה בנאט\"ו ובאיחוד האירופי.",
+              en: "Latvian history is saturated with the rule and power struggles of foreign empires – Baltic German knights, Poles, Swedes, and Russians. The first independence was declared in 1918. In 1940, the country was violently annexed by the Soviet Union, then occupied by Nazi Germany (an occupation in which the glorious Latvian Jewish community was annihilated in the Holocaust), and occupied again by the Soviets who imposed a reign of terror. Latvia restored its independence in August 1991, and today is a vibrant democracy, a member of NATO and the EU."
+            },
+            foundingYears: { he: "1918 (רפובליקה ראשונה) | 1991 (חידוש עצמאות)", en: "1918 (First Republic) | 1991 (Restoration of Independence)" },
+            flagSymbolism: { 
+              he: "דגל לטביה נחשב לאחד הדגלים הלאומיים העתיקים בעולם (מוזכר בכתובים ובכרוניקות היסטוריות כבר מהמאה ה-13). הצבע האדום-בורדו הכהה והייחודי (הידוע כ'אדום לטבי') מסמל על פי המסורת את הדם של לוחם לטבי פצוע ואת הדם שהזדה העם בקרבות הרבים על החירות והעצמאות של המולדת. הפס הלבן במרכז מסמל את הזכות, הצדק, האמת, והכבוד של האזרחים הלטבים החופשיים.",
+              en: "The Latvian flag is considered one of the oldest national flags in the world (mentioned in writings and historical chronicles as early as the 13th century). The unique dark red-maroon color (known as 'Latvian Red') traditionally symbolizes the blood of a wounded Latvian warrior and the blood shed by the people in numerous battles for the homeland's freedom and independence. The white stripe in the center symbolizes the rights, justice, truth, and honor of free Latvian citizens."
+            },
+            nationalAnimal: {
+              name: { he: "נחליאלי לבן (White Wagtail)", en: "White Wagtail" },
+              reason: { 
+                he: "ציפור הנחליאלי הלבן (מכונה בלטבית 'Baltais Cielava') היא סמל מובהק ופואטי של לטביה שהוכרז כציפור הלאומית ב-1960. היא מוזכרת לעיתים תכופות בשירי העם הלטביים העתיקים והמסורתיים (ה'דיינות' - Dainas). הנחליאלי הפעלתן והחרוץ מסמל עבור הלטבים חריצות, זריזות, חיי משפחה, ואת התעוררות הטבע באביב לאחר חורף קשה – תהליך המקביל סמלית להתעוררות הלאומית של העם הלטבי לחופש ולחיים חדשים.",
+                en: "The White Wagtail bird (called 'Baltais cielava' in Latvian) is a distinct and poetic symbol of Latvia, declared the national bird in 1960. It is frequently mentioned in the ancient and traditional Latvian folk songs (the 'Dainas'). The active and industrious wagtail symbolizes to Latvians diligence, agility, family life, and the awakening of nature in spring after a harsh winter – a process symbolically parallel to the national awakening of the Latvian people to freedom and a new life."
+              }
+            },
             etymology: {
               parts: [
-                { text: "שבט הלטגלים (Latgalians)", color: "text-rose-400", bg: "bg-rose-400/10", border: "border-rose-500/30", desc: "השם נגזר משמו של אחד מארבעת השבטים הבלטיים העתיקים שאכלסו את האזור – הלטגלים, שהיו השבט הגדול והדומיננטי ביותר מבין השבטים שהתמזגו ליצירת העם הלטבי." },
-                { text: "אנשי הנהר (Lete/Latuva)", color: "text-teal-400", bg: "bg-teal-400/10", border: "border-teal-500/30", desc: "מקור השם של שבט הלטגלים עצמו מגיע כנראה מהשורש הבלטי העתיק 'Lete' או 'Latuva', שפירושו זרם, נהר או מקווה מים, המאפיינים את הגיאוגרפיה של האזור." }
+                { text: { he: "שבט הלטגלים (Latgalians)", en: "Latgalians Tribe" }, color: "text-rose-400", bg: "bg-rose-400/10", border: "border-rose-500/30", desc: { he: "השם נגזר משמו של אחד מארבעת השבטים הבלטיים העתיקים שאכלסו את האזור – הלטגלים, שהיו השבט הגדול, החזק והדומיננטי ביותר מבין השבטים הפגאניים שהתמזגו ליצירת העם הלטבי.", en: "The name is derived from the name of one of the four ancient Baltic tribes that populated the area – the Latgalians, who were the largest, strongest, and most dominant among the pagan tribes that merged to form the Latvian nation." } },
+                { text: { he: "אנשי הנהר (Lete/Latuva)", en: "River People (Lete/Latuva)" }, color: "text-teal-400", bg: "bg-teal-400/10", border: "border-teal-500/30", desc: { he: "מקור השם של שבט הלטגלים עצמו מגיע כנראה מהשורש הבלטי העתיק 'Lete' או 'Latuva', שפירושו המילולי הוא זרם, נהר או מקווה מים, המאפיינים את הגיאוגרפיה הנהרית העשירה של האזור.", en: "The origin of the Latgalian tribe's name itself likely comes from the ancient Baltic root 'Lete' or 'Latuva', literally meaning stream, river, or body of water, characterizing the region's rich riverine geography." } }
               ],
-              synthesis: "מילולית: \"ארצם של הלטגלים\" - השבט ששמו מתפרש כ\"אנשי הנהרות\"."
+              synthesis: { he: "מילולית: 'ארצם של הלטגלים' - השבט העתיק ששמו מתפרש כ'אנשי הנהרות והזרמים'.", en: "Literally: 'Land of the Latgalians' - the ancient tribe whose name translates to 'People of the Rivers and Streams'." }
             },
             figure: {
-              name: "קרליס אולמניס (Kārlis Ulmanis)",
+              name: { he: "קרליס אולמניס", en: "Kārlis Ulmanis" },
               years: "1877 - 1942",
-              childhood: "נולד למשפחת איכרים מבוססת בלטביה שהייתה תחת שלטון רוסי. גילה עניין רב בחקלאות מודרנית, נדד לגרמניה ולארה\"ב כדי ללמוד באוניברסיטאות מובילות, ושב ללטביה כאגרונום ופעיל פוליטי נלהב לזכויות האיכרים.",
-              ideology: "לאומיות לטבית המבוססת על עצמאות כלכלית ואגררית (חקלאית). סיסמתו הייתה \"לטביה ללטבים\". בראשית דרכו היה דמוקרט, אך בעקבות אי היציבות הפוליטית בשנות ה-30, הפך למנהיג סמכותני, שלט כרודן מתון, ביטל את הפרלמנט וריכז את הכוח בידיו.",
-              achievements: "היה ממנסחי הכרזת העצמאות של לטביה ב-1918 וראש הממשלה הראשון שלה. הנהיג את המדינה במהלך מלחמת העצמאות הלטבית. למרות הדיקטטורה שהנהיג בשנות ה-30, הוא זכור כמי שחיזק את הכלכלה הלטבית. עם הפלישה הסובייטית ב-1940 הוא סירב להימלט, נעצר, ומת בכלא הסובייטי, מה שהפך אותו למרטיר לאומי."
+              childhood: { 
+                he: "נולד למשפחת איכרים מבוססת בלטביה שהייתה תחת שליטה של האימפריה הרוסית. כבר בנעוריו גילה עניין רב בחקלאות מודרנית ובפיתוח טכנולוגי. הוא נדד לגרמניה ולארצות הברית כדי ללמוד באוניברסיטאות מובילות, ושב למולדתו כאגרונום מומחה, כיזם וכפעיל פוליטי נלהב הנלחם לזכויות האיכרים המקומיים.",
+                en: "Born to a prosperous peasant family in Latvia, which was under the control of the Russian Empire. In his youth, he showed great interest in modern agriculture and technological development. He traveled to Germany and the United States to study at leading universities, returning to his homeland as an expert agronomist, entrepreneur, and passionate political activist fighting for the rights of local peasants."
+              },
+              ideology: { 
+                he: "לאומיות לטבית המבוססת על עצמאות כלכלית ואגררית (חקלאית) חזקה. סיסמתו הפופולרית הייתה 'לטביה ללטבים'. בראשית דרכו הפוליטית היה דמוקרט נלהב, אך בעקבות אי היציבות הפוליטית החריפה והקיטוב בשנות ה-30, הפך למנהיג סמכותני, שלט כרודן מתון, ביטל את הפרלמנט (הסאימה) וריכז את כל כוח השלטון בידיו.",
+                en: "Latvian nationalism based on strong economic and agrarian (agricultural) independence. His popular slogan was 'Latvia for Latvians'. In his early political career, he was a passionate democrat, but following severe political instability and polarization in the 1930s, he became an authoritarian leader, ruled as a moderate dictator, dissolved the parliament (Saeima), and centralized all governing power in his hands."
+              },
+              achievements: { 
+                he: "היה ממנסחי הכרזת העצמאות ההיסטורית של לטביה ב-1918 וראש הממשלה הראשון שלה. הנהיג באומץ את המדינה במהלך מלחמת העצמאות הלטבית מול צבאות רוסים וגרמנים. למרות הדיקטטורה שהנהיג בשנות ה-30, הוא זכור בקרב רבים כמי שייצב וחיזק את הכלכלה. עם הפלישה הסובייטית ב-1940 הוא סירב להימלט לגלות, נעצר על ידי ה-NKVD, ומת בכלא הסובייטי, מה שהפך אותו למרטיר לאומי מובהק.",
+                en: "He was a co-drafter of Latvia's historic declaration of independence in 1918 and its first Prime Minister. He courageously led the country during the Latvian War of Independence against Russian and German armies. Despite the dictatorship he instated in the 1930s, he is remembered by many as having stabilized and strengthened the economy. With the Soviet invasion in 1940, he refused to flee into exile, was arrested by the NKVD, and died in a Soviet prison, making him a distinct national martyr."
+              }
             },
             map: {
               url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_latvia_duchy_courland.jpg",
-              title: "דוכסות קורלנד וסמיגליה",
-              desc: "מפה של דוכסות קורלנד (חלק מלטביה של ימינו), שבימי הביניים הייתה מעצמה ימית קטנה ואף החזיקה מושבות באמריקה ובאפריקה."
+              title: { he: "דוכסות קורלנד וסמיגליה - המאה ה-17", en: "Duchy of Courland and Semigallia - 17th Century" },
+              desc: { 
+                he: "מפה היסטורית של דוכסות קורלנד (המכסה חלק משמעותי מלטביה של ימינו), שבימי הביניים ובראשית העת החדשה תפקדה כמעצמה ימית קטנה אך שאפתנית, ואף החזיקה מושבות אימפריאליות באמריקה (טובגו) ובאפריקה (גמביה).",
+                en: "A historical map of the Duchy of Courland (covering a significant part of modern-day Latvia), which in the Middle Ages and early modern period functioned as a small but ambitious naval power, even holding imperial colonies in the Americas (Tobago) and Africa (Gambia)."
+              }
             }
           },
           {
             id: "lithuania",
-            name: "ליטא",
+            name: { he: "ליטא", en: "Lithuania" },
             englishName: "Lithuania",
-            officialName: "רפובליקת ליטא",
-            FlagComponent: FlagLithuania,
-            areaNum: "~65,300 קמ\"ר",
-            populationNum: "~2,800,000",
-            currency: "אירו (EUR)",
-            area: "כ-65,300 קמ\"ר. המדינה הגדולה והמאוכלסת ביותר באזור הבלטי, והדרומית מביניהן. הטופוגרפיה שלה מורכבת ממישורים ירוקים, יערות עבותים, ומעל 3,000 אגמים קטנים. יש לה רצועת חוף קצרה מאוד של כ-90 ק\"מ בלבד על הים הבלטי.",
-            demographics: {
-              mainNationName: "ליטאים",
-              mainNationPercent: "כ-84%",
-              description: "עם בלטי (קרוב ללטבים) הדובר ליטאית – שפה הנחשבת לשפה ההודו-אירופית החיה הקרובה ביותר לסנסקריט העתיקה. בשונה מאסטוניה ולטביה, הליטאים הם ברובם המוחלט נוצרים קתולים אדוקים (תוצאה של האיחוד ההיסטורי עם פולין). ישנם מיעוטים פולנים ורוסים."
+            officialName: { he: "רפובליקת ליטא", en: "Republic of Lithuania" },
+            flagUrl: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/lithuania.webp",
+            capital: {
+              name: { he: "וילנה", en: "Vilnius" },
+              englishName: "Vilnius",
+              etymology: { 
+                he: "וילנה (Vilnius) נקראת על שם נהר הווילניה (Vilnia) הזורם בקרבתה ונשפך אל נהר הנריס. שם הנהר עצמו נגזר מהמילה הליטאית העתיקה 'vilnis', שמשמעותה 'גל' או 'נחשול מים', מה שמתאר את זרימתו הפתלתלה והגלית דרך הגבעות של האזור.",
+                en: "Vilnius is named after the Vilnia River that flows near it and empties into the Neris River. The river's name itself is derived from the ancient Lithuanian word 'vilnis', meaning 'wave' or 'surge of water', which describes its meandering, wavy flow through the region's hills."
+              },
+              foundingYear: { he: "1323 לספירה (מוזכרת במכתבי הדוכס גדימינאס)", en: "1323 AD (mentioned in Grand Duke Gediminas' letters)" },
+              reason: { 
+                he: "וילנה נבחרה לבירת הדוכסות הגדולה של ליטא בעיקר מסיבות של הגנה צבאית ואסטרטגיה. בניגוד לערי חוף (כמו טאלין או ריגה), וילנה שוכנת עמוק בתוך היבשת ומוקפת בגבעות תלולות ויערות. מיקום זה הקשה מאוד על מסדרי האבירים הטווטונים (שערכו מסעי צלב נגד הליטאים הפגאנים) לתקוף את העיר, והעניק לדוכסים הליטאים מעוז בטוח ונסתר לניהול האימפריה ההולכת וגדלה שלהם.",
+                en: "Vilnius was chosen as the capital of the Grand Duchy of Lithuania primarily for reasons of military defense and strategy. Unlike coastal cities (like Tallinn or Riga), Vilnius is situated deep inland and surrounded by steep hills and forests. This location made it very difficult for the Teutonic Knights (who launched crusades against the pagan Lithuanians) to attack the city, granting the Lithuanian Dukes a safe, hidden stronghold to manage their growing empire."
+              }
             },
-            modernHistory: "ליטא הייתה בעברה מעצמה אדירה (הדוכסות הגדולה של ליטא) ששלטה על שטחים עצומים במזרח אירופה יחד עם פולין. לאחר שנמחקה מהמפה על ידי רוסיה, הכריזה עצמאות ב-1918. נכבשה על ידי הסובייטים, הנאצים (שהשמידו את 'ירושלים דליטא' ורוב יהדות ליטא), ושוב הסובייטים. ב-1990 הייתה לרפובליקה הסובייטית הראשונה שהכריזה על התנתקות וחידוש העצמאות.",
-            foundingYears: "1918 (רפובליקה ראשונה) | 1990",
-            flagSymbolism: "דגל טריקולור שאומץ ב-1918. הצהוב מסמל את השמש, שדות החיטה, האור והשגשוג; הירוק מסמל את הטבע, היערות, האגמים והתקווה הלאומית; האדום מסמל את הדם שניגר, האומץ, וגבורתם של אלו שנלחמו עבור חירותה של ליטא.",
+            areaNum: { he: "~65,300 קמ\"ר", en: "~65,300 sq km" },
+            populationNum: "~2,800,000",
+            currency: { he: "אירו (EUR)", en: "Euro (EUR)" },
+            area: { 
+              he: "כ-65,300 קמ\"ר. המדינה הגדולה והמאוכלסת ביותר באזור הבלטי, והדרומית מביניהן. הטופוגרפיה שלה שופעת ומורכבת ממישורים ירוקים ורחבי ידיים, יערות עבותים המכסים כשליש משטחה, רשת של נהרות (נהר הניימן הוא הארוך שבהם), ולמעלה מ-3,000 אגמים קטנים במזרחה. יש לה רצועת חוף קצרה וצרה מאוד של כ-90 ק\"מ בלבד על הים הבלטי.",
+              en: "Approx. 65,300 sq km. The largest and most populous state in the Baltic region, and the southernmost among them. Its topography is lush and composed of broad, green plains, dense forests covering about a third of its area, a network of rivers (the Nemunas being the longest), and over 3,000 small lakes in the east. It has a very short and narrow coastline of only about 90 km on the Baltic Sea."
+            },
+            demographics: {
+              mainNationName: { he: "ליטאים", en: "Lithuanians" },
+              mainNationPercent: { he: "כ-84%", en: "~84%" },
+              description: { 
+                he: "עם בלטי (קרוב ללטבים) הדובר ליטאית – שפה עתיקה ומרתקת הנחשבת לשפה ההודו-אירופית החיה הקרובה ביותר לסנסקריט ההודית העתיקה. בשונה משכנותיה, אסטוניה ולטביה, הליטאים הם ברובם המוחלט נוצרים קתולים אדוקים ושמרנים (תוצאה ישירה של האיחוד ההיסטורי ארוך השנים עם פולין). ישנם מיעוטים פולנים ורוסים במדינה.",
+                en: "A Baltic people (close to Latvians) speaking Lithuanian – an ancient and fascinating language considered the closest living Indo-European language to ancient Indian Sanskrit. Unlike its neighbors, Estonia and Latvia, Lithuanians are overwhelmingly devout and conservative Roman Catholics (a direct result of the long-standing historical union with Poland). There are Polish and Russian minorities in the country."
+              }
+            },
+            modernHistory: { 
+              he: "ליטא הייתה בעברה מעצמה צבאית ופוליטית אדירה (הדוכסות הגדולה של ליטא) ששלטה על שטחים עצומים במזרח אירופה יחד עם פולין. לאחר שנמחקה לחלוטין מהמפה בעקבות חלוקות פולין, הכריזה על עצמאותה מחדש ב-1918. במהלך מלחמת העולם השנייה נכבשה על ידי הסובייטים, ולאחר מכן על ידי הנאצים (בכיבוש זה הושמדה כמעט כליל 'ירושלים דליטא' ורוב יהדות ליטא המפוארת), ושוב נכבשה על ידי הסובייטים ל-50 שנה. ב-1990 הייתה לרפובליקה הסובייטית הראשונה שהעיזה להכריז על התנתקות וחידוש העצמאות.",
+              en: "Lithuania was once a mighty military and political power (the Grand Duchy of Lithuania) that controlled vast territories in Eastern Europe alongside Poland. After being completely erased from the map following the partitions of Poland, it re-declared independence in 1918. During WWII, it was occupied by the Soviets, then by the Nazis (during which 'Jerusalem of Lithuania' and most of its glorious Jewry were almost entirely annihilated), and occupied again by the Soviets for 50 years. In 1990, it became the first Soviet republic brave enough to declare secession and restored independence."
+            },
+            foundingYears: { he: "1918 (רפובליקה ראשונה) | 1990 (התנתקות מבריה\"מ)", en: "1918 (First Republic) | 1990 (Secession from USSR)" },
+            flagSymbolism: { 
+              he: "דגל טריקולור שאומץ ב-1918 כסמל לתחייה לאומית. הצבע הצהוב מסמל את השמש המאירה, את שדות החיטה המזהיבים של המדינה, ואת האור, השגשוג והאופטימיות; הצבע הירוק מסמל את הטבע, היערות השופעים, האגמים והתקווה הלאומית לעתיד; הצבע האדום מסמל את הדם הרב שניגר, את האומץ, וגבורתם של אלו שנלחמו והקריבו חייהם עבור חירותה של ליטא לאורך מאות שנים.",
+              en: "A tricolor flag adopted in 1918 as a symbol of national revival. The yellow color symbolizes the shining sun, the country's golden wheat fields, and light, prosperity, and optimism; the green color symbolizes nature, the lush forests, lakes, and the national hope for the future; the red color symbolizes the abundant blood shed, the courage, and the bravery of those who fought and sacrificed their lives for Lithuania's freedom over centuries."
+            },
+            nationalAnimal: {
+              name: { he: "חסידה לבנה (White Stork)", en: "White Stork" },
+              reason: { 
+                he: "החסידה הלבנה, המקננת ברחבי ליטא, הוכרזה כציפור הלאומית בשנת 1973. הליטאים רואים בחסידה סמל טהור לשלום, הרמוניה בטבע, שפע אקולוגי וחיי משפחתיות נאמנים. לפי האמונה העממית והפולקלור המקומי, בית שחסידה בוחרת לקנן על גגו יזכה למזל טוב וברכה לדורות. ליטא מתגאה באחת מאוכלוסיות החסידות הלבנות הצפופות ביותר באירופה, מה שהופך אותן לחלק בלתי נפרד מהנוף הכפרי.",
+                en: "The White Stork, nesting throughout Lithuania, was declared the national bird in 1973. Lithuanians view the stork as a pure symbol of peace, harmony in nature, ecological abundance, and loyal family life. According to local folklore and popular belief, a house where a stork chooses to nest on its roof will be blessed with good luck and prosperity for generations. Lithuania boasts one of the densest populations of white storks in Europe, making them an integral part of the rural landscape."
+              }
+            },
             etymology: {
               parts: [
-                { text: "מקור הידרונימי (Lietauka)", color: "text-emerald-400", bg: "bg-emerald-400/10", border: "border-emerald-500/30", desc: "סברה מחקרית מובילה היא שהשם 'Lietuva' נגזר משמו של נהר קטן בשם 'לייטאוקה' (Lietauka), יובל של נהר הנריס. שבטים שחיו על גדות הנהר נקראו על שמו, והשם התרחב לכלל המדינה." },
-                { text: "מקור אקלימי (Lieti / Lietus)", color: "text-amber-400", bg: "bg-amber-400/10", border: "border-amber-500/30", desc: "גישה אטימולוגית נוספת קושרת את השם למילה הליטאית 'Lietus' שפירושה \"גשם\", או לפועל 'Lieti' שמשמעותו \"לשפוך\". אזור הבלטי מאופיין במשקעים רבים, ולכן השם מתאר את 'הארץ הגשומה'." }
+                { text: { he: "מקור הידרונימי (Lietauka)", en: "Hydronymic Origin (Lietauka)" }, color: "text-emerald-400", bg: "bg-emerald-400/10", border: "border-emerald-500/30", desc: { he: "סברה מחקרית מובילה היא שהשם 'Lietuva' נגזר משמו של נהר קטן בשם 'לייטאוקה' (Lietauka), יובל של נהר הנריס. שבטים שחיו על גדות הנהר נקראו על שמו, והשם התרחב היסטורית לכלל המדינה.", en: "A leading scholarly theory is that the name 'Lietuva' is derived from the name of a small river called 'Lietauka', a tributary of the Neris River. Tribes living on the banks of the river were named after it, and the name historically expanded to the entire country." } },
+                { text: { he: "מקור אקלימי (Lieti / Lietus)", en: "Climatic Origin (Lieti / Lietus)" }, color: "text-amber-400", bg: "bg-amber-400/10", border: "border-amber-500/30", desc: { he: "גישה אטימולוגית נוספת ופופולרית קושרת את השם למילה הליטאית 'Lietus' שפירושה 'גשם', או לפועל 'Lieti' שמשמעותו 'לשפוך'. אזור הבלטי מאופיין במשקעים רבים, ולכן השם מתאר למעשה את 'הארץ הגשומה'.", en: "Another popular etymological approach connects the name to the Lithuanian word 'Lietus', meaning 'rain', or the verb 'Lieti', meaning 'to pour'. The Baltic region is characterized by heavy precipitation, so the name essentially describes the 'rainy land'." } }
               ],
-              synthesis: "או 'הארץ שעל גדות נהר הלייטאוקה' או, באופן פיוטי יותר - 'ארץ הגשמים'."
+              synthesis: { he: "משמעות השם היא או 'הארץ שעל גדות נהר הלייטאוקה' או, באופן פיוטי וגיאוגרפי יותר - 'ארץ הגשמים'.", en: "The meaning of the name is either 'The land on the banks of the Lietauka River' or, more poetically and geographically - 'Land of Rains'." }
             },
             figure: {
-              name: "ויטאוטאס הגדול (Vytautas the Great)",
+              name: { he: "ויטאוטאס הגדול", en: "Vytautas the Great" },
               years: "1350 - 1430",
-              childhood: "נולד בטירת טרקאי ההיסטורית לשושלת גדימינאס, דוכסי ליטא. גדל בסביבה פגאנית (ליטא הייתה המדינה הפגאנית האחרונה באירופה) בתוך תככים משפחתיים פנימיים אלימים ומלחמות בלתי פוסקות מול מסדר האבירים הטווטונים שרצו לנצר את האזור.",
-              ideology: "התפשטות אימפריאלית והגמוניה במזרח אירופה, לצד פרגמטיות דתית. ויטאוטאס הפך לנוצרי ממניעים פוליטיים כדי לחזק בריתות, אך דגל בסובלנות דתית נדירה לתקופתו. הוא הזמין יהודים, קראים ומוסלמים טטרים להתיישב בדוכסות שלו ולהעשיר את כלכלתה וצִבְאָהּ.",
-              achievements: "תחת הנהגתו כדוכס הגדול, ליטא הגיעה לשיא התפשטותה הטריטוריאלית - מהים הבלטי בצפון ועד לים השחור בדרום (כולל שטחי בלארוס ואוקראינה של ימינו). ב-1410 הוביל את צבאו יחד עם פולין לניצחון היסטורי בקרב גרונוולד נגד האבירים הטווטונים, ניצחון שעיצב את גבולות אירופה."
+              childhood: { 
+                he: "נולד בטירת טרקאי ההיסטורית לשושלת גדימינאס, דוכסי ליטא. הוא גדל בסביבה פגאנית לחלוטין (ליטא הייתה המדינה הפגאנית האחרונה באירופה שלא קיבלה את הנצרות) בתוך תככים משפחתיים פנימיים אלימים, איומי התנקשות, ומלחמות קיום בלתי פוסקות מול מסדר האבירים הטווטונים שרצו לנצר את האזור בכוח החרב.",
+                en: "Born in the historic Trakai Castle to the Gediminas dynasty, Dukes of Lithuania. He grew up in an entirely pagan environment (Lithuania was the last pagan state in Europe to reject Christianity) amidst violent internal family intrigues, assassination threats, and constant wars of survival against the Teutonic Knights who wanted to Christianize the region by the sword."
+              },
+              ideology: { 
+                he: "התפשטות אימפריאלית והגמוניה במזרח אירופה, לצד פרגמטיות וסובלנות דתית נדירה לזמנו. ויטאוטאס הפך לנוצרי בעיקר ממניעים פוליטיים ואסטרטגיים כדי לחזק בריתות אירופאיות ולבלום את הטווטונים. הוא דגל בפתיחות יוצאת דופן כשהזמין יהודים, קראים, ומוסלמים טטרים להתיישב בחופשיות בדוכסות שלו ולהעשיר את כלכלתה, המסחר, וצִבְאָהּ.",
+                en: "Imperial expansion and hegemony in Eastern Europe, alongside pragmatism and religious tolerance rare for his time. Vytautas became Christian primarily out of political and strategic motives to strengthen European alliances and halt the Teutonic Knights. He advocated exceptional openness, inviting Jews, Karaites, and Tatar Muslims to settle freely in his duchy to enrich its economy, trade, and military."
+              },
+              achievements: { 
+                he: "תחת הנהגתו כדוכס הגדול, ליטא הגיעה לשיא התפשטותה ועוצמתה הטריטוריאלית - היא השתרעה מהים הבלטי בצפון ועד לים השחור בדרום (כולל שטחי בלארוס ואוקראינה המודרניות). בשנת 1410 הוביל את צבאו יחד עם צבא פולין לניצחון היסטורי, מוחץ ומכריע בקרב גרונוולד (טננברג) נגד האבירים הטווטונים, ניצחון שבלם את ההתפשטות הגרמנית ועיצב מחדש את גבולות אירופה.",
+                en: "Under his leadership as Grand Duke, Lithuania reached the peak of its expansion and territorial power - stretching from the Baltic Sea in the north to the Black Sea in the south (including territories of modern Belarus and Ukraine). In 1410, he led his army alongside the Polish army to a historic, crushing, and decisive victory in the Battle of Grunwald (Tannenberg) against the Teutonic Knights, a victory that halted German expansion and redrew the borders of Europe."
+              }
             },
             map: {
               url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_lithuania_grand_duchy.jpg",
-              title: "הדוכסות הגדולה של ליטא",
-              desc: "מפה של ליטא בשיא כוחה במאה ה-15, הממחישה את עוצמתה הגיאופוליטית שהשתרעה מהים הבלטי ועד הים השחור."
+              title: { he: "הדוכסות הגדולה של ליטא - המאה ה-15", en: "Grand Duchy of Lithuania - 15th Century" },
+              desc: { 
+                he: "מפה היסטורית של ליטא בשיא כוחה במאה ה-15, הממחישה את עוצמתה הגיאופוליטית האדירה של מעצמה שהשתרעה על פני חצי יבשת, מהים הבלטי ועד חופי הים השחור.",
+                en: "A historical map of Lithuania at the peak of its power in the 15th century, illustrating the tremendous geopolitical might of a superpower that spanned across half a continent, from the Baltic Sea to the shores of the Black Sea."
+              }
             }
           }
         ];
 
         // ==========================================
-        // רכיבי התצוגה (UI)
+        // רכיבי התצוגה (UI) 
         // ==========================================
 
-        const CountryCard = ({ country, onModalOpen }) => {
+        const CountryCard = ({ country, onModalOpen, lang, uiStr }) => {
           const { 
-            FlagComponent, name, englishName, officialName, areaNum, populationNum, currency, area, demographics, 
-            modernHistory, foundingYears, etymology, flagSymbolism, figure, map 
+            flagUrl, name, englishName, officialName, capital, areaNum, populationNum, currency, area, demographics, 
+            modernHistory, foundingYears, etymology, flagSymbolism, nationalAnimal, figure, map 
           } = country;
 
           return (
@@ -195,42 +393,59 @@
               <div className="flex flex-col md:flex-row gap-6 p-6 md:p-8 border-b border-gray-800">
                 <div 
                   className="w-full md:w-1/3 flex-shrink-0 flex items-center justify-center bg-gray-950 p-4 rounded-xl cursor-pointer group relative" 
-                  onClick={() => onModalOpen({type: 'flag', component: FlagComponent, title: `דגל ${name}`})}
-                  title="לחץ להגדלת הדגל"
+                  onClick={() => onModalOpen({url: flagUrl, title: `${name[lang]}`})}
+                  title={uiStr.lClickEnlargeFlag}
                 >
-                  <div className="w-full max-h-40 shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105 overflow-hidden flex justify-center items-center">
-                    <div className="w-full h-32 md:h-40 relative">
-                       <FlagComponent />
-                    </div>
+                  <div className="w-full max-h-40 shadow-sm rounded border border-gray-800 transition-transform duration-300 group-hover:scale-105 overflow-hidden flex justify-center items-center bg-black">
+                    <img 
+                      src={flagUrl} 
+                      alt={name[lang]}
+                      className="w-full h-32 md:h-40 object-cover opacity-95 group-hover:opacity-100 transition-opacity"
+                      onError={(e) => {
+                        e.target.onerror = null; 
+                        e.target.src = 'https://placehold.co/300x200/1e293b/a3a8b8?text=Flag+Loading...';
+                      }}
+                    />
                   </div>
                   <div className="absolute opacity-0 group-hover:opacity-100 bg-black/60 text-white text-sm px-3 py-1 rounded transition-opacity duration-300 pointer-events-none mt-32">
-                    לחץ להגדלה
+                    {uiStr.lClickEnlargeFlag}
                   </div>
                 </div>
                 
                 <div className="flex-grow flex flex-col justify-center">
-                  <h2 className="text-3xl font-bold text-white mb-2">{name} <span className="text-gray-500 text-lg ml-2 uppercase tracking-widest">{englishName}</span></h2>
-                  <h3 className="text-xl text-gray-400 mb-4">{officialName}</h3>
+                  <h2 className="text-3xl font-bold text-white mb-2">{name[lang]} <span className="text-gray-500 text-lg ms-2 uppercase tracking-widest">{englishName}</span></h2>
+                  <h3 className="text-xl text-gray-400 mb-4">{officialName[lang]}</h3>
+                  
+                  {/* לוח נתונים עליון - 6 פריטים סימטריים */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                      <span><strong className="text-white">שנות ייסוד:</strong> {foundingYears}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                      <span><strong className="text-white me-1">{uiStr.capital}</strong> {capital.name[lang]}</span>
                     </div>
+
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                      <span className="truncate" title={figure.name}><strong className="text-white">מנהיג:</strong> {figure.name.split('(')[0]}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+                      <span><strong className="text-white me-1">{uiStr.currency}</strong> {currency[lang]}</span>
                     </div>
+
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3h18v18H3zM12 8v8m-4-4h8"></path></svg>
-                      <span><strong className="text-white">שטח:</strong> {areaNum}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                      <span><strong className="text-white me-1">{uiStr.founding}</strong> {foundingYears[lang]}</span>
                     </div>
+
                     <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
-                      <svg className="w-5 h-5 ml-2 text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                      <span><strong className="text-white">אוכלוסייה:</strong> {populationNum}</span>
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                      <span><strong className="text-white me-1">{uiStr.population}</strong> {populationNum}</span>
                     </div>
-                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg md:col-span-2">
-                      <svg className="w-5 h-5 ml-2 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
-                      <span><strong className="text-white">שם מטבע:</strong> {currency}</span>
+
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3h18v18H3zM12 8v8m-4-4h8"></path></svg>
+                      <span><strong className="text-white me-1">{uiStr.area}</strong> {areaNum[lang]}</span>
+                    </div>
+
+                    <div className="flex items-center text-gray-300 bg-gray-800/50 px-4 py-2 rounded-lg">
+                      <svg className="w-5 h-5 me-2 flex-shrink-0 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                      <span className="truncate" title={figure.name[lang]}><strong className="text-white me-1">{uiStr.leader}</strong> {figure.name[lang].split('(')[0]}</span>
                     </div>
                   </div>
                 </div>
@@ -240,82 +455,106 @@
                 
                 <section>
                     <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                        <i className="fa-solid fa-map-location-dot w-6 h-6 ml-2 text-sky-400 text-xl"></i>
-                        <h3 className="text-2xl font-bold text-white">רקע פיזי ואנושי</h3>
+                        <i className="fa-solid fa-map-location-dot w-6 h-6 me-2 text-sky-400 text-xl"></i>
+                        <h3 className="text-2xl font-bold text-white">{uiStr.sectionPhysical}</h3>
                     </div>
-                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 space-y-4">
-                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">שטח וטופוגרפיה:</strong> {area}</p>
-                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">דמוגרפיה ({demographics.mainNationName} - {demographics.mainNationPercent}):</strong> {demographics.description}</p>
-                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white">היסטוריה מודרנית:</strong> {modernHistory}</p>
+                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 space-y-4 text-start">
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white me-1">{uiStr.lAreaTopo}</strong> {area[lang]}</p>
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white me-1">{uiStr.lDemographics} ({demographics.mainNationName[lang]} - {demographics.mainNationPercent[lang]}):</strong> {demographics.description[lang]}</p>
+                        <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white me-1">{uiStr.lModernHistory}</strong> {modernHistory[lang]}</p>
                     </div>
                 </section>
 
                 <section>
                     <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                        <svg className="w-6 h-6 ml-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
-                        <h3 className="text-2xl font-bold text-white">וקסלולוגיה</h3>
+                        <svg className="w-6 h-6 me-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                        <h3 className="text-2xl font-bold text-white">{uiStr.sectionEtymology}</h3>
                     </div>
-                    <p className="text-gray-300 leading-relaxed text-lg">{flagSymbolism}</p>
-                </section>
-                
-                <section>
-                    <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
-                        <svg className="w-6 h-6 ml-2 text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                        <h3 className="text-2xl font-bold text-white">אטימולוגיה</h3>
-                    </div>
-                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800">
+                    <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 text-start">
                         <ul className="space-y-4">
-                            {etymology.parts.map((part, idx) => (
-                                <li key={idx} className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4">
-                                    <span className={`font-bold min-w-[150px] md:text-lg flex-shrink-0 ${part.color} ${part.bg} border ${part.border} px-2 py-1 rounded-md`}>• {part.text}:</span>
-                                    <span className="text-gray-300 leading-relaxed text-lg">{part.desc}</span>
+                            {etymology.parts.map((part, index) => (
+                                <li key={index} className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4">
+                                    <span className={`font-bold min-w-[140px] md:text-lg flex-shrink-0 ${part.color} ${part.bg} border ${part.border} px-2 py-1 rounded-md`}>• {part.text[lang]}:</span>
+                                    <span className="text-gray-300 leading-relaxed text-lg">{part.desc[lang]}</span>
                                 </li>
                             ))}
                             <li className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4 mt-2 pt-4 border-t border-gray-800/50">
-                                <span className="font-bold text-amber-400 min-w-[150px] md:text-lg flex-shrink-0"><i className="fa-solid fa-quote-right ml-1"></i> משמעות השם:</span>
-                                <span className="text-gray-200 font-bold leading-relaxed text-lg">{etymology.synthesis}</span>
+                                <span className="font-bold text-amber-400 min-w-[140px] md:text-lg flex-shrink-0">
+                                  <i className="fa-solid fa-quote-right me-1"></i> {uiStr.lNameMeaning}
+                                </span>
+                                <span className="text-gray-200 font-bold leading-relaxed text-lg">{etymology.synthesis[lang]}</span>
+                            </li>
+                            
+                            <li className="flex flex-col md:flex-row md:items-start gap-2 md:gap-4 mt-6 pt-5 border-t border-gray-700/80">
+                                <span className="font-bold text-purple-400 min-w-[140px] md:text-lg flex-shrink-0 mt-1">
+                                    <i className="fa-solid fa-landmark-dome me-1"></i> {uiStr.lCapitalName}
+                                </span>
+                                <div className="space-y-3 w-full">
+                                    <strong className="text-white text-xl block border-b border-gray-800 pb-2">
+                                      {capital.name[lang]} <span className="text-gray-500 text-sm font-normal uppercase tracking-widest ms-1">({capital.englishName})</span>
+                                    </strong>
+                                    <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white font-medium me-1">{uiStr.lCapitalEty}</strong> {capital.etymology[lang]}</p>
+                                    <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white font-medium me-1">{uiStr.lCapitalFounding}</strong> {capital.foundingYear[lang]}</p>
+                                    <p className="text-gray-300 leading-relaxed text-lg"><strong className="text-white font-medium me-1">{uiStr.lCapitalReason}</strong> {capital.reason[lang]}</p>
+                                </div>
                             </li>
                         </ul>
                     </div>
                 </section>
 
-                <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gray-800/20 p-6 rounded-xl border border-gray-800/50">
+                <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 text-start">
                     <div>
-                        <div className="flex items-center mb-4 border-b border-gray-700 pb-2">
-                            <svg className="w-6 h-6 ml-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                            <h3 className="text-2xl font-bold text-white">פרופיל מנהיג מכונן</h3>
+                        <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg className="w-6 h-6 me-2 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                            <h3 className="text-2xl font-bold text-white">{uiStr.sectionSymbols}</h3>
                         </div>
-                        <h4 className="text-xl text-rose-300 font-bold mb-3">{figure.name} <span className="text-base text-gray-400">({figure.years})</span></h4>
-                        <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
-                            <div><strong className="text-white block mb-1">ילדות ורקע:</strong> {figure.childhood}</div>
-                            <div><strong className="text-white block mb-1">אידאולוגיה:</strong> {figure.ideology}</div>
-                            <div><strong className="text-white block mb-1">הישגים מרכזיים:</strong> {figure.achievements}</div>
+                        <div className="bg-gray-950/50 rounded-xl p-5 border border-gray-800 h-full">
+                            <h4 className="text-lg font-bold text-white mb-2"><i className="fa-solid fa-flag text-green-400 me-2"></i> {uiStr.lFlagMeaning}</h4>
+                            <p className="text-gray-300 leading-relaxed text-lg mb-6 pb-6 border-b border-gray-800/70">{flagSymbolism[lang]}</p>
+                            
+                            <h4 className="text-lg font-bold text-white mb-2"><i className="fa-solid fa-paw text-orange-400 me-2"></i> {uiStr.lNationalAnimal} {nationalAnimal.name[lang]}</h4>
+                            <p className="text-gray-300 leading-relaxed text-lg">{nationalAnimal.reason[lang]}</p>
                         </div>
                     </div>
 
                     <div>
-                        <div className="flex items-center mb-4 border-b border-gray-700 pb-2">
-                            <svg className="w-6 h-6 ml-2 text-cyan-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"></path><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
-                            <h3 className="text-2xl font-bold text-white">קרטוגרפיה היסטורית</h3>
+                        <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                            <svg className="w-6 h-6 me-2 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                            <h3 className="text-2xl font-bold text-white">{uiStr.sectionLeader}</h3>
                         </div>
-                        <div className="flex flex-col cursor-pointer group rounded-xl overflow-hidden border border-gray-700 bg-gray-800/30 hover:border-gray-500 transition-all duration-300 shadow-lg" onClick={() => onModalOpen({type: 'image', url: map.url, title: map.title})}>
-                            <div className="relative h-48 md:h-56 w-full overflow-hidden bg-black">
-                                <img 
-                                  src={map.url} 
-                                  alt={map.title} 
-                                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                  onError={(e) => {
-                                    e.target.onerror = null; 
-                                    e.target.src = "https://placehold.co/800x400/1e293b/a3a8b8?text=Historical+Map";
-                                  }}
-                                />
-                                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300"></div>
+                        <div className="bg-gray-800/20 rounded-xl p-5 border border-gray-800/50 h-full">
+                            <h4 className="text-xl text-rose-300 font-bold mb-3">{figure.name[lang]} <span className="text-base text-gray-400">({figure.years})</span></h4>
+                            <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
+                                <div><strong className="text-white block mb-1">{uiStr.lChildhood}</strong> {figure.childhood[lang]}</div>
+                                <div><strong className="text-white block mb-1">{uiStr.lIdeology}</strong> {figure.ideology[lang]}</div>
+                                <div><strong className="text-white block mb-1">{uiStr.lAchievements}</strong> {figure.achievements[lang]}</div>
                             </div>
-                            <div className="p-4 text-center border-t border-gray-700/50">
-                                <strong className="text-cyan-300 block mb-2 text-base">{map.title}</strong>
-                                <span className="text-gray-300 text-sm leading-relaxed block">{map.desc}</span>
-                                <span className="inline-block mt-3 text-gray-400 text-xs font-medium bg-gray-900/80 px-3 py-1.5 rounded-full border border-gray-700 transition-colors group-hover:text-cyan-300 group-hover:border-cyan-800/50">(לחץ להגדלת המפה)</span>
-                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div className="flex items-center mb-4 border-b border-gray-800 pb-2">
+                        <svg className="w-6 h-6 me-2 text-cyan-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"></path><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                        <h3 className="text-2xl font-bold text-white">{uiStr.sectionCartography}</h3>
+                    </div>
+                    <div className="flex flex-col cursor-pointer group rounded-xl overflow-hidden border border-gray-700 bg-gray-800/30 hover:border-gray-500 transition-all duration-300 shadow-lg" onClick={() => onModalOpen({url: map.url, title: map.title[lang]})}>
+                        <div className="relative h-64 md:h-80 w-full overflow-hidden bg-black">
+                            <img 
+                              src={map.url} 
+                              alt={map.title[lang]} 
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                              onError={(e) => {
+                                e.target.onerror = null; 
+                                e.target.src = 'https://placehold.co/800x400/1e293b/a3a8b8?text=Historical+Map';
+                              }}
+                            />
+                            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300"></div>
+                        </div>
+                        <div className="p-4 text-center border-t border-gray-700/50">
+                            <strong className="text-cyan-300 block mb-2 text-lg">{map.title[lang]}</strong>
+                            <span className="text-gray-300 text-base leading-relaxed block">{map.desc[lang]}</span>
+                            <span className="inline-block mt-3 text-gray-400 text-sm font-medium bg-gray-900/80 px-4 py-1.5 rounded-full border border-gray-700 transition-colors group-hover:text-cyan-300 group-hover:border-cyan-800/50">{uiStr.lClickEnlargeMap}</span>
                         </div>
                     </div>
                 </section>
@@ -337,7 +576,7 @@
                 <button 
                   onClick={onClose}
                   className="absolute -top-14 right-0 md:-right-14 text-gray-400 hover:text-white bg-gray-800/80 hover:bg-gray-700 rounded-full p-2 transition-colors z-50"
-                  aria-label="סגור חלון"
+                  aria-label="Close"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -345,45 +584,60 @@
                   </svg>
                 </button>
                 
-                {content.type === 'flag' ? (
-                  <div className="w-full max-w-4xl aspect-[3/2] bg-black shadow-2xl rounded-lg overflow-hidden border border-gray-700" onClick={e => e.stopPropagation()}>
-                    <content.component />
-                  </div>
-                ) : (
-                  <img 
-                    src={content.url} 
-                    alt={content.title} 
-                    className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-gray-700" 
-                    onClick={e => e.stopPropagation()}
-                    onError={(e) => {
-                      e.target.onerror = null; 
-                      e.target.src = "https://placehold.co/800x400/1e293b/a3a8b8?text=Historical+Map";
-                    }}
-                  />
-                )}
+                <img 
+                  src={content.url} 
+                  alt={content.title} 
+                  className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-gray-700" 
+                  onClick={e => e.stopPropagation()}
+                  onError={(e) => {
+                    e.target.onerror = null; 
+                    e.target.src = 'https://placehold.co/800x400/1e293b/a3a8b8?text=Image+Not+Found';
+                  }}
+                />
               </div>
             </div>
           );
         };
 
         function App() {
+          const [lang, setLang] = useState('he');
           const [modalContent, setModalContent] = useState(null);
 
-          useEffect(() => {
+          const uiStr = ui[lang];
+
+          // ניהול כיוון המסמך לפי שפה
+          React.useEffect(() => {
+            document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+            document.documentElement.lang = lang;
+          }, [lang]);
+
+          React.useEffect(() => {
             const handleEsc = (e) => { if (e.key === "Escape") setModalContent(null); };
-            window.addEventListener("keydown", handleEsc);
-            return () => window.removeEventListener("keydown", handleEsc);
+            window.addEventListener('keydown', handleEsc);
+            return () => window.removeEventListener('keydown', handleEsc);
           }, []);
 
-          useEffect(() => {
-            document.body.style.overflow = modalContent ? "hidden" : "";
+          React.useEffect(() => {
+            document.body.style.overflow = modalContent ? 'hidden' : '';
           }, [modalContent]);
 
           return (
-            <div className="max-w-5xl mx-auto pt-4 md:pt-8">
-              <header className="mb-10 text-center">
-                  <h1 className="text-3xl md:text-5xl font-bold text-white mb-3">המדינות הבלטיות</h1>
-                  <p className="text-gray-400 text-lg">מחקר וקסלולוגי, אטימולוגי, היסטורי וקרטוגרפי</p>
+            <div className="max-w-5xl mx-auto pt-4 md:pt-8 relative">
+              
+              {/* כפתור החלפת שפה */}
+              <div className="absolute top-0 right-4 md:right-8">
+                <button 
+                  onClick={() => setLang(lang === 'he' ? 'en' : 'he')}
+                  className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-full border border-gray-600 transition-colors shadow-lg font-medium text-sm"
+                >
+                  <i className="fa-solid fa-globe text-blue-400"></i>
+                  {uiStr.langBtn}
+                </button>
+              </div>
+
+              <header className="mb-10 text-center mt-12 md:mt-0">
+                  <h1 className="text-3xl md:text-5xl font-bold text-white mb-3">{uiStr.mainTitle}</h1>
+                  <p className="text-gray-400 text-lg">{uiStr.subTitle}</p>
               </header>
 
               <div className="space-y-12">
@@ -392,6 +646,8 @@
                     key={country.id} 
                     country={country} 
                     onModalOpen={setModalContent} 
+                    lang={lang}
+                    uiStr={uiStr}
                   />
                 ))}
               </div>
@@ -399,15 +655,15 @@
               <footer className="mt-12 mb-8 pt-8 border-t border-gray-800 text-center text-gray-500 w-full max-w-6xl mx-auto px-4">
                   <div className="flex justify-center items-center gap-2 mb-4">
                       <svg className="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                      <h4 className="font-bold text-gray-400 text-lg">פרטי המחקר והפרויקט</h4>
+                      <h4 className="font-bold text-gray-400 text-lg">{uiStr.footerTitle}</h4>
                   </div>
-                  <div className="inline-block text-right bg-gray-900/50 p-6 rounded-xl border border-gray-800 w-full max-w-2xl">
+                  <div className="inline-block text-start bg-gray-900/50 p-6 rounded-xl border border-gray-800 w-full max-w-2xl">
                       <p className="text-gray-300 leading-loose">
-                          <strong className="text-white ml-2">שם ההוגה:</strong> רם<br />
-                          <strong className="text-white ml-2">שם הבונה/היצרן:</strong> ג'מיני (Gemini 3.1 Pro)<br />
-                          <strong className="text-white ml-2">סיבת ההמצאה/הבנייה:</strong> חקר המדינות הבלטיות עבור "אטלס האומות המלא" – אזור המהווה גשר היסטורי ותרבותי בין מזרח ומערב אירופה.<br />
-                          <strong className="text-white ml-2">שנת הבנייה/היצירה:</strong> 2026<br />
-                          <strong className="text-white ml-2">מקורות וקרדיט:</strong> אטימולוגיה מקצועית, סמלי SVG וקטוריים פנימיים, ומפות היסטוריות נבחרות (מוכנות להתממשקות דרך GitHub).
+                          <strong className="text-white me-2">{uiStr.fConcept}</strong> {uiStr.fConceptVal}<br />
+                          <strong className="text-white me-2">{uiStr.fBuilder}</strong> {uiStr.fBuilderVal}<br />
+                          <strong className="text-white me-2">{uiStr.fReason}</strong> {uiStr.fReasonVal}<br />
+                          <strong className="text-white me-2">{uiStr.fYear}</strong> {uiStr.fYearVal}<br />
+                          <strong className="text-white me-2">{uiStr.fCredits}</strong> {uiStr.fCreditsVal}
                       </p>
                   </div>
               </footer>
@@ -417,10 +673,8 @@
           );
         }
 
-        const root = ReactDOM.createRoot(document.getElementById("root"));
+        const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
 </body>
 </html>
-
-```
