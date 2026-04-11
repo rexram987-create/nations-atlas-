@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Balkan Project | הבלקן המזרחי והדרומי</title>
+    <title>The Germanic Nations Project | המדינות הגרמאניות</title>
     
     <!-- טעינת ספריות העיצוב -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -26,22 +26,22 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="min-h-screen bg-gray-950 text-gray-200 p-4 md:p-8 font-sans antialiased selection:bg-rose-500/30">
+<body class="min-h-screen bg-gray-950 text-gray-200 p-4 md:p-8 font-sans antialiased selection:bg-teal-500/30">
     
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        const fallbackImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400' viewBox='0 0 800 400'%3E%3Crect width='800' height='400' fill='%231e293b'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='26' fill='%2394a3b8'%3EHistorical Map%3C/text%3E%3C/svg%3E";
+        const fallbackImg = "https://placehold.co/800x400/ef4444/ffffff?text=Error:+Check+Exact+Filename+in+GitHub";
 
         // ==========================================
         // מילון ממשק משתמש (UI Dictionary)
         // ==========================================
         const ui = {
           he: {
-            mainTitle: "הבלקן המזרחי והדרומי",
-            subTitle: "צומת האימפריות: מחקר וקסלולוגי, אטימולוגי, היסטורי וקרטוגרפי",
+            mainTitle: "המדינות הגרמאניות",
+            subTitle: "מרכז אירופה והאלפים: מחקר וקסלולוגי, אטימולוגי, היסטורי וקרטוגרפי",
             langBtn: "English",
             capital: "עיר בירה:",
             currency: "מטבע לאומי:",
@@ -77,13 +77,13 @@
             fCredits: "מקורות וקרדיט:",
             fConceptVal: "רם",
             fBuilderVal: "ג'מיני (Gemini 3.1 Pro)",
-            fReasonVal: "המשך פרויקט 'אטלס האומות המלא' – חקר הבלקן המזרחי והדרומי. המרה למבנה React וקטורי ודו-לשוני מתקדם.",
+            fReasonVal: "חקר המדינות הגרמאניות במרכז אירופה כחלק מ'אטלס האומות המלא'. בניית מאגר מידע חדש והמרה למבנה React וקטורי ודו-לשוני מתקדם.",
             fYearVal: "2026",
             fCreditsVal: "אטימולוגיה מהספרות ההיסטורית. מפות קרטוגרפיות קלאסיות מ-GitHub. תמונות דגלים באדיבות שרתי Flagpedia.net (API)."
           },
           en: {
-            mainTitle: "Eastern & Southern Balkans",
-            subTitle: "Crossroads of Empires: Vexillological, Etymological, Historical, and Cartographic Research",
+            mainTitle: "The Germanic Nations",
+            subTitle: "Central Europe & The Alps: Vexillological, Etymological, Historical & Cartographic Research",
             langBtn: "עברית",
             capital: "Capital City:",
             currency: "Currency:",
@@ -119,424 +119,342 @@
             fCredits: "Sources & Credits:",
             fConceptVal: "Ram",
             fBuilderVal: "Gemini (Gemini 3.1 Pro)",
-            fReasonVal: "Continuation of the 'Complete Nations Atlas' project – researching the Eastern and Southern Balkans. Conversion to an advanced bilingual React structure.",
+            fReasonVal: "Researching the Germanic Nations in Central Europe for the 'Complete Nations Atlas'. Creating a new database and conversion to an advanced bilingual React structure.",
             fYearVal: "2026",
             fCreditsVal: "Etymology from historical literature. Classic cartographic maps from GitHub. Flag images courtesy of Flagpedia.net API."
           }
         };
 
         // ==========================================
-        // מאגר הנתונים המלא והמורחב (דו-לשוני) - הבלקן המזרחי והדרומי
+        // מאגר הנתונים המלא והמורחב (דו-לשוני) - המדינות הגרמאניות
         // ==========================================
 
         const countriesData = [
           {
-            id: 'romania',
-            name: { he: 'רומניה', en: 'Romania' },
-            englishName: 'Romania',
-            officialName: { he: 'רומניה', en: 'Romania' },
-            flagUrl: 'https://flagcdn.com/w640/ro.webp',
+            id: 'germany',
+            name: { he: 'גרמניה', en: 'Germany' },
+            englishName: 'Germany',
+            officialName: { he: 'הרפובליקה הפדרלית של גרמניה', en: 'Federal Republic of Germany' },
+            flagUrl: 'https://flagcdn.com/w640/de.webp',
             capital: {
-              name: { he: "בוקרשט", en: "Bucharest" },
-              englishName: "Bucharest",
+              name: { he: "ברלין", en: "Berlin" },
+              englishName: "Berlin",
               etymology: { 
-                he: "על פי האגדה והמסורת העממית, העיר נקראת על שמו של רועה צאן בשם בוקור (Bucur). בשפה הרומנית, המילה 'bucurie' משמעותה 'שמחה' או 'אושר', ולכן בוקרשט מכונה לעיתים קרובות 'עיר השמחה'.",
-                en: "According to legend and folk tradition, the city is named after a shepherd named Bucur. In the Romanian language, the word 'bucurie' means 'joy' or 'gladness', which is why Bucharest is often called the 'City of Joy'."
+                he: "בניגוד לסמל העיר (דוב - Bär בגרמנית), מקור השם ברלין אינו בגרמנית אלא קשור לשורש הסלאבי העתיק 'berl-' שמשמעותו 'ביצה' או 'אדמת בוץ'. העיר נוסדה על ידי שבטים סלאבים באזור הביצתי של גדות נהר השפרה.",
+                en: "Contrary to the city's emblem (a bear - Bär in German), the origin of the name Berlin is not German but related to the old Slavic root 'berl-' meaning 'swamp' or 'marshland'. The city was founded by Slavic tribes in the marshy area along the banks of the Spree river."
               },
-              foundingYear: { he: "1459 (אזכור ראשון בכתובים)", en: "1459 (First written mention)" },
+              foundingYear: { he: "1237 (אזכור ראשון בכתובים)", en: "1237 (First written mention)" },
               reason: { 
-                he: "בוקרשט הוזכרה לראשונה במסמך על ידי ולאד המשפד (דראקולה). היא הפכה בהדרגה לבירת נסיכות ולאכיה משום שמיקומה במישור איפשר הגנה טובה יותר וגישה נוחה יותר לנתיבי המסחר, הרחק מגבולות האימפריה העות'מאנית שאיימו על הבירה הקודמת טרגובישטה. עם איחוד הנסיכויות, נבחרה באופן טבעי לבירת האומה כולה.",
-                en: "Bucharest was first mentioned in a document by Vlad the Impaler (Dracula). It gradually became the capital of the Principality of Wallachia because its location on the plain allowed better defense and access to trade routes, further from the Ottoman borders that threatened the previous capital, Târgoviște. With the unification of the principalities, it naturally became the capital of the entire nation."
+                he: "ברלין התפתחה כצומת מסחר חשוב על נהר השפרה. היא נבחרה לבירה על ידי שושלת הוהנצולרן, שהפכה אותה למרכז הכוח של ממלכת פרוסיה. בזכות העוצמה הפרוסית הצבאית, ברלין הפכה טבעית לבירת האימפריה הגרמנית המאוחדת ב-1871. לאחר נפילת חומת ברלין ב-1989, היא חזרה להיות בירת גרמניה המאוחדת (במקום בון) כסמל לאיחוד העם.",
+                en: "Berlin developed as an important trade junction on the Spree river. It was chosen as the capital by the Hohenzollern dynasty, which turned it into the power center of the Kingdom of Prussia. Thanks to Prussian military might, Berlin naturally became the capital of the unified German Empire in 1871. After the fall of the Berlin Wall in 1989, it returned to being the capital of a reunified Germany (instead of Bonn) as a symbol of the people's unification."
               }
             },
-            areaNum: { he: '~238,397 קמ"ר', en: '~238,397 sq km' },
-            populationNum: '~19,000,000',
-            currency: { he: 'לאו רומני (RON)', en: 'Romanian Leu (RON)' },
-            area: { 
-              he: 'כ-238,397 קמ"ר. המדינה הגדולה ביותר בחצי האי הבלקני/מזרח אירופה. הגיאוגרפיה שלה שופעת ומגוונת, נשלטת במרכזה על ידי הרי הקרפטים המעוגלים המקיפים את רמת טרנסילבניה, וממישורי חקלאות עצומים של מחוז ולאכיה (בדרום) הנחתכים על ידי נהר הדנובה האדיר הנשפך מזרחה אל הים השחור.',
-              en: 'Approx. 238,397 sq km. The largest country in the Balkan Peninsula/Eastern Europe. Its geography is lush and diverse, dominated in the center by the sweeping Carpathian Mountains encircling the Transylvanian Plateau, and vast agricultural plains in the Wallachia region (in the south) cut by the mighty Danube River flowing east into the Black Sea.'
-            },
-            demographics: {
-              mainNationName: { he: 'רומנים', en: 'Romanians' },
-              mainNationPercent: { he: 'כ-89%', en: '~89%' },
-              description: { 
-                he: 'אומה ממוצא וזהות רומאנית-לטינית הנטועה בלב מרחב סלאבי ברובו. הרוב המוחלט של התושבים משתייך לכנסייה האורתודוקסית הרומנית. ישנו מיעוט הונגרי היסטורי גדול (כ-6%) המרוכז בעיקר בחבל טרנסילבניה (זכר לשלטון האימפריה האוסטרו-הונגרית), וכן קהילת רומה (צוענים) משמעותית.',
-                en: 'A nation of Romance-Latin origin and identity rooted in a predominantly Slavic region. The vast majority of the inhabitants belong to the Romanian Orthodox Church. There is a large historical Hungarian minority (~6%) concentrated mainly in the Transylvania region (a legacy of the Austro-Hungarian Empire), as well as a significant Roma community.'
-              }
-            },
-            modernHistory: { 
-              he: 'רומניה המודרנית נוצרה מאיחוד נסיכויות ולאכיה ומולדביה ב-1859. היא זכתה בעצמאות מוחלטת מהאימפריה העות\'מאנית ב-1877. לאחר מלחמת העולם השנייה היא נפלה תחת שלטון קומוניסטי מבודד, פרנואידי ואכזרי במיוחד בהנהגת הדיקטטור ניקולאה צ\'אושסקו. משטר זה הסתיים במהפכה עממית עקובה מדם ב-1989. כיום היא רפובליקה דמוקרטית שצומחת במהירות, החברה באיחוד האירופי ובנאט"ו.',
-              en: 'Modern Romania was formed from the unification of the principalities of Wallachia and Moldavia in 1859. It gained full independence from the Ottoman Empire in 1877. After WWII, it fell under a particularly isolated, paranoid, and cruel communist regime led by dictator Nicolae Ceaușescu. This regime ended in a bloody popular revolution in 1989. Today, it is a rapidly growing democratic republic, a member of the EU and NATO.'
-            },
-            foundingYears: { he: '1859 (איחוד הנסיכויות) | 1877 (עצמאות)', en: '1859 (Unification) | 1877 (Independence)' },
-            flagSymbolism: { 
-              he: 'דגל טריקולור אנכי המורכב מכחול, צהוב ואדום. הצבעים נשאבו מסמלי הנסיכויות ההיסטוריות שהרכיבו את המדינה. הכחול (השואב את השראתו ממולדביה) מסמל את השמיים, החירות והעצמאות; הצהוב מסמל את תבואת השדות, העושר, המינרלים והצדק; והאדום (מוולאכיה) מסמל את האחווה הלאומית ואת הדם שנשפך בקרבות המרים.',
-              en: 'A vertical tricolor flag composed of blue, yellow, and red. The colors were drawn from the symbols of the historical principalities that formed the country. Blue (drawing inspiration from Moldavia) symbolizes the sky, liberty, and independence; yellow symbolizes the harvest of the fields, wealth, minerals, and justice; and red (from Wallachia) symbolizes national fraternity and the blood shed in bitter battles.'
-            },
-            nationalAnimal: {
-              name: { he: "שונר אירואסיאתי (Eurasian Lynx)", en: "Eurasian Lynx" },
-              reason: { 
-                he: "השונר האירואסיאתי הוא חתול הבר הגדול ביותר באירופה ונחשב לסמל לאומי לא רשמי (לצד הדוב החום) המייצג את הטבע של רומניה. הוא חי ושגשג ביערות העבותים והבתוליים של הרי הקרפטים הרומניים, המכילים את אוכלוסיית הטורפים הגדולה באירופה. השונר מסמל פראיות, מסתוריות, חופש והגנה על גבולות הטבע של האומה.",
-                en: "The Eurasian Lynx is the largest wildcat in Europe and is considered an unofficial national symbol (alongside the Brown Bear) representing Romania's nature. It lives and thrives in the dense and pristine forests of the Romanian Carpathian Mountains, which host the largest predator population in Europe. The lynx symbolizes wildness, mystery, freedom, and the defense of the nation's natural borders."
-              }
-            },
-            etymology: {
-              parts: [
-                { text: { he: 'רומאנוס (Romanus)', en: 'Romanus' }, color: 'text-rose-400', bg: 'bg-rose-400/10', border: 'border-rose-500/30', desc: { he: 'המקור הוא המילה הלטינית "Romanus" שפירושה "רומאי" או "אזרח רומא". תושבי האזור, ילידי פרובינקיית דאקיה הרומית העתיקה שכבש הקיסר טריאנוס, שימרו את זהותם הלטינית ואת שפתם הרומאנית כגאווה לאומית לאורך אלף שנות ימי הביניים מול פלישות מתמידות של שבטים נוודים סלאבים, הונים וגרמאנים.', en: 'The origin is the Latin word "Romanus" meaning "Roman" or "citizen of Rome". The inhabitants of the region, natives of the former ancient Roman province of Dacia conquered by Emperor Trajan, preserved their Latin identity and Romance language as a matter of national pride throughout the thousand years of the Middle Ages against constant invasions by nomadic Slavic, Hunnic, and Germanic tribes.' } },
-                { text: { he: 'סיומת איה (IA)', en: 'Suffix IA' }, color: 'text-indigo-400', bg: 'bg-indigo-400/10', border: 'border-indigo-500/30', desc: { he: 'הסיומת הלטינית/יוונית הקלאסית והנפוצה המציינת אזור גיאוגרפי או "ארץ".', en: 'The common classical Latin/Greek suffix indicating a geographical area or "land".' } }
-              ],
-              synthesis: { he: 'מילולית: "ארצם של הרומאים" (יורשי השפה והזהות הלטינית במזרח אירופה).', en: 'Literally: "Land of the Romans" (the inheritors of Latin language and identity in Eastern Europe).' }
-            },
-            figure: {
-              name: { he: 'מיכאי האמיץ (Mihai Viteazul)', en: 'Michael the Brave (Mihai Viteazul)' },
-              years: '1558 - 1601',
-              childhood: { 
-                he: 'נולד למשפחת אצולה נמוכה בחבל ולאכיה. בצעירותו בנה את עושרו ואת רשת הקשרים שלו כסוחר סוסים ותכשיטים בין-לאומי מצליח שנדד ברחבי הבלקן והאימפריה העות\'מאנית. מסעותיו אפשרו לו ללמוד שפות רבות ולרכוש הבנה מעמיקה של הפוליטיקה האזורית המורכבת.',
-                en: 'Born to a minor noble family in Wallachia. In his youth, he built his wealth and network as a successful international horse and jewelry merchant traveling across the Balkans and the Ottoman Empire. His travels allowed him to learn multiple languages and acquire a deep understanding of the complex regional politics.'
-              },
-              ideology: { 
-                he: 'עצמאות נוצרית ולאומית, שחרור מוחלט מהיטל המיסים הכבד והמשפיל של השלטון העות\'מאני, ואיחוד כוחות פוליטי וצבאי של הנסיכויות הרומניות כדי לעמוד בפני איומי מעצמות האזור שרצו לבלוע אותן – האימפריה העות\'מאנית, ההבסבורגים והאיחוד הפולני-ליטאי.',
-                en: 'Christian and national independence, complete liberation from the heavy and humiliating tax tribute of Ottoman rule, and political and military unification of the Romanian principalities to withstand the threats of regional powers seeking to absorb them – the Ottoman Empire, the Habsburgs, and the Polish-Lithuanian Commonwealth.'
-              },
-              achievements: { 
-                he: 'נחשב לגיבור לאומי עליון. הוא השליט ההיסטורי הראשון (בשנת 1600) שהצליח במבצע צבאי אדיר לאחד תחת שלטונו האישי את כל שלוש הנסיכויות הרומניות – ולאכיה, מולדביה וטרנסילבניה. למרות שהאיחוד שרד רק זמן קצר מאוד עד להירצחו כתוצאה מבגידה פוליטית, רגע זה הפך למיתוס המכונן ולאידיאל העליון של הלאומיות הרומנית המודרנית.',
-                en: 'Considered a supreme national hero. He is the first historical ruler (in the year 1600) who managed through a massive military operation to unite all three Romanian principalities – Wallachia, Moldavia, and Transylvania – under his personal rule. Although the union lasted only a very short time until his assassination due to political betrayal, this moment became the founding myth and supreme ideal of modern Romanian nationalism.'
-              }
-            },
-            map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_romania_wallachia.jpg?t=1',
-              title: { he: 'הנסיכויות הרומניות ההיסטוריות', en: 'Historical Romanian Principalities' },
-              desc: { 
-                he: 'מפה קרטוגרפית מרשימה מהמאה ה-18 המציגה את הנסיכויות העתיקות של ולאכיה ומולדביה, תוך פירוט הגיאוגרפיה, תוואי נהר הדנובה והרי הקרפטים, שעיצבו והגנו על גבולותיהן הטבעיים.',
-                en: 'An impressive cartographic map from the 18th century showing the ancient principalities of Wallachia and Moldavia, detailing the geography, the course of the Danube River, and the Carpathian Mountains that shaped and protected their natural borders.'
-              }
-            }
-          },
-          {
-            id: 'bulgaria',
-            name: { he: 'בולגריה', en: 'Bulgaria' },
-            englishName: 'Bulgaria',
-            officialName: { he: 'רפובליקת בולגריה', en: 'Republic of Bulgaria' },
-            flagUrl: 'https://flagcdn.com/w640/bg.webp',
-            capital: {
-              name: { he: "סופיה", en: "Sofia" },
-              englishName: "Sofia",
-              etymology: { 
-                he: "העיר נקראת על שמה של 'כנסיית סופיה הקדושה' (Hagia Sophia) העתיקה השוכנת במרכזה. ביוונית, המילה 'סופיה' (σοφία) משמעותה 'חוכמה', והיא מתייחסת ל'חוכמה הקדושה' של האלוהים במסורת הנוצרית האורתודוקסית. לפני כן, שמה העתיק של העיר היה 'סרדיקה' (Serdica) על שם השבטים התראקים שחיו בה.",
-                en: "The city is named after the ancient 'Saint Sophia Church' (Hagia Sophia) located in its center. In Greek, the word 'sophia' (σοφία) means 'wisdom', referring to the 'Holy Wisdom' of God in the Orthodox Christian tradition. Previously, the ancient name of the city was 'Serdica', named after the Thracian tribes who lived there."
-              },
-              foundingYear: { he: "המאה ה-8 לפנה\"ס (מוזכרת כסופיה במאה ה-14)", en: "8th century BC (Mentioned as Sofia in the 14th century)" },
-              reason: { 
-                he: "סופיה הוקמה בזכות המעיינות התרמיים החמים שמשכו אליהם מתיישבים קדומים (תראקים ורומאים). לאחר שחרור בולגריה מהאימפריה העות'מאנית ב-1878, סופיה נבחרה לבירה בשל מיקומה הגיאוגרפי והאסטרטגי בדיוק במרכז ההיסטורי של חצי האי הבלקני. היא היוותה צומת דרכים מסחרי המחבר את מערב אירופה עם איסטנבול והמזרח התיכון.",
-                en: "Sofia was founded thanks to the hot thermal springs that attracted ancient settlers (Thracians and Romans). After Bulgaria's liberation from the Ottoman Empire in 1878, Sofia was chosen as the capital due to its geographical and strategic location exactly in the historical center of the Balkan Peninsula. It served as a commercial crossroads connecting Western Europe with Istanbul and the Middle East."
-              }
-            },
-            areaNum: { he: '~110,994 קמ"ר', en: '~110,994 sq km' },
-            populationNum: '~6,400,000',
-            currency: { he: 'לב בולגרי (BGN)', en: 'Bulgarian Lev (BGN)' },
-            area: { 
-              he: 'כ-110,994 קמ"ר. המדינה ממוקמת במזרח הבלקן. הגיאוגרפיה שלה נחצית לרוחבה (ממערב למזרח) על ידי שרשרת הרי הבלקן התלולים. בצפונה היא גובלת בנהר הדנובה (הגבול עם רומניה), בדרום מתנשאים רכסי הרי הרודופי, ובמזרח ישנה רצועת חוף יפהפייה ותיירותית לאורך הים השחור.',
-              en: 'Approx. 110,994 sq km. The country is located in the eastern Balkans. Its geography is crossed horizontally (from west to east) by the steep Balkan Mountains range. In the north it borders the Danube River (the border with Romania), in the south the Rhodope Mountains rise, and in the east there is a beautiful, touristic coastline along the Black Sea.'
-            },
-            demographics: {
-              mainNationName: { he: 'בולגרים', en: 'Bulgarians' },
-              mainNationPercent: { he: 'כ-84%', en: '~84%' },
-              description: { 
-                he: 'אומה סלאבית-אורתודוקסית גאה בעלת זהות תרבותית, נוצרית ושפתית עתיקה ועמוקה, שהשפיעה על כל המרחב הסלאבי. קיים במדינה מיעוט טורקי-מוסלמי משמעותי מאוד (כ-8%), שהוא שריד דמוגרפי למאות שנות שלטון עות\'מאני באזור, וכן אוכלוסייה של בני רומה (צוענים).',
-                en: 'A proud Slavic-Orthodox nation with an ancient and deep cultural, Christian, and linguistic identity that influenced the entire Slavic sphere. There is a very significant Turkish-Muslim minority (~8%) in the country, a demographic remnant of centuries of Ottoman rule in the region, as well as a Roma population.'
-              }
-            },
-            modernHistory: { 
-              he: 'בולגריה הייתה מעצמה אזורית צבאית (אימפריה) אדירה בימי הביניים שהתחרתה ישירות בביזנטיון. לאחר קריסתה, סבלה כמעט 500 שנות כיבוש עות\'מאני נוקשה. היא שוחררה סופית ב-1878 בעקבות מלחמת רוסיה-טורקיה (ותמיכה לאומית מבפנים). היא כונתה "הפרוסיה של הבלקן" בשל צבאה החזק בתחילת המאה ה-20 (במלחמות הבלקן). לאחר מלחמת העולם השנייה, חוותה עשרות שנות דיקטטורה קומוניסטית ארוכה, וכיום היא דמוקרטיה החברה באיחוד האירופי.',
-              en: 'Bulgaria was a mighty regional military power (empire) in the Middle Ages that competed directly with Byzantium. After its collapse, it suffered nearly 500 years of harsh Ottoman occupation. It was finally liberated in 1878 following the Russo-Turkish War (and internal national support). It was dubbed the "Prussia of the Balkans" due to its strong army in the early 20th century (Balkan Wars). After WWII, it experienced decades of a long communist dictatorship, and today is a democracy within the EU.'
-            },
-            foundingYears: { he: '681 (האימפריה הראשונה) | 1878 (עצמאות מודרנית)', en: '681 (First Empire) | 1878 (Modern Independence)' },
-            flagSymbolism: { 
-              he: 'דגל טריקולור אופקי. הפס הלבן (למעלה) מסמל את הרוחניות, השלום והאהבה לחירות; הפס הירוק (במרכז) מסמל את עושרו של הטבע הבולגרי, את היערות ואת פוריות האדמה והחקלאות של המדינה; והפס האדום (למטה) מסמל את מאבק העם ההיסטורי לחירות ואת הדם של גיבורי המדינה שנפלו למענה.',
-              en: 'A horizontal tricolor flag. The white stripe (top) symbolizes spirituality, peace, and love of liberty; the green stripe (middle) symbolizes the wealth of Bulgarian nature, its forests, and the fertility of the country\'s soil and agriculture; and the red stripe (bottom) symbolizes the historical struggle of the people for freedom and the blood of the state heroes who fell for it.'
-            },
-            nationalAnimal: {
-              name: { he: "אריה (Lion)", en: "Lion" },
-              reason: { 
-                he: "האריה נחשב לסמל הלאומי הבלתי מעורער של בולגריה מזה מאות שנים. הוא מופיע במרכז שלט האצולה הלאומי כשהוא עומד על רגליו האחוריות ועוטה כתר זהב. האריה מסמל אומץ לב, גבורה עילאית, ואת רוח הלחימה והמרד ההירואית של הבולגרים במאבקם להשגת עצמאות לאחר 500 שנות שליטה עות'מאנית. המטבע הלאומי 'לב' (Lev) קרוי אף הוא על שם האריה.",
-                en: "The Lion has been the undisputed national symbol of Bulgaria for centuries. It appears in the center of the national coat of arms standing rampant on its hind legs wearing a golden crown. The lion symbolizes bravery, supreme valor, and the heroic fighting and rebellious spirit of the Bulgarians in their struggle to achieve independence after 500 years of Ottoman rule. The national currency 'Lev' is also named after the lion."
-              }
-            },
-            etymology: {
-              parts: [
-                { text: { he: 'בולגאר (Bulgar)', en: 'Bulgar' }, color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-500/30', desc: { he: 'השם מגיע משבטי ה"בולגארים" הקדומים – עם נוודי ולוחם ממוצא טורקי שפלש לאזור הבלקן ממרכז אסיה. מקור השם נגזר מהפועל הטורקי העתיק "bulğa" שפירושו "לערבב", "למרוד" או "לעורר מהומה". בולגאר משמעותו "המעורבים" (כלומר שילוב כוחות של מספר שבטים שונים) או פשוט "המורדים". השבטים הטורקיים הקדומים נטמעו לחלוטין באוכלוסייה הסלאבית המקומית, אך הותירו לה את שמם לתמיד.', en: 'The name comes from the ancient "Bulgar" tribes – a nomadic warrior people of Turkic origin who invaded the Balkan region from Central Asia. The name is derived from the Old Turkic verb "bulğa" meaning "to mix", "to rebel", or "to cause a commotion". Bulgar means "the mixed ones" (i.e., a coalition of various tribes) or simply "the rebels". The ancient Turkic tribes completely assimilated into the local Slavic population but left them their name forever.' } },
-                { text: { he: 'סיומת איה (IA)', en: 'Suffix IA' }, color: 'text-indigo-400', bg: 'bg-indigo-400/10', border: 'border-indigo-500/30', desc: { he: 'הסיומת הלטינית/היוונית המציינת טריטוריה או ארץ.', en: 'The Latin/Greek suffix indicating a territory or land.' } }
-              ],
-              synthesis: { he: 'מילולית: "ארץ השבטים המעורבים" או "ארץ המורדים (מערבבי המהומות)".', en: 'Literally: "Land of the mixed tribes" or "Land of the rebels (commotion mixers)".' }
-            },
-            figure: {
-              name: { he: 'הצאר סימאון הראשון ("הגדול")', en: 'Tsar Simeon I ("The Great")' },
-              years: '864 - 927',
-              childhood: { 
-                he: 'היה בנו השלישי של הצאר בוריס הראשון (שקיבל לראשונה את הנצרות לבולגריה). הוא לא יועד למלוכה, ולכן נשלח בצעירותו ללמוד כמלומד וכנזיר באקדמיית המגנאורה היוקרתית בקונסטנטינופול, הבירת הביזנטית. שם ספג השכלה פילוסופית, תיאולוגיה ותרבות יוונית, אך במקביל פיתח גם הבנה פוליטית שאפתנית להחליף את האימפריה הביזנטית בעצמה.',
-                en: 'He was the third son of Tsar Boris I (who first accepted Christianity for Bulgaria). He was not destined for the throne, so in his youth he was sent to study as a scholar and monk at the prestigious Magnaura academy in Constantinople, the Byzantine capital. There he absorbed philosophical education, theology, and Greek culture, while simultaneously developing an ambitious political understanding to replace the Byzantine Empire itself.'
-              },
-              ideology: { 
-                he: 'אימפריאליזם סלאבי-אורתודוקסי דתי, תחרות פוליטית וצבאית חזיתית מול ביזנטיון על השליטה בבלקן, וביסוס בולגריה העוצמתית כמרכז התרבותי, הדתי והרוחני העליון של כלל העולם הסלאבי (מעין בניית "רומא/קונסטנטינופול חדשה" במזרח אירופה).',
-                en: 'Religious Slavic-Orthodox imperialism, frontal political and military competition against Byzantium for control of the Balkans, and establishing powerful Bulgaria as the supreme cultural, religious, and spiritual center of the entire Slavic world (a sort of building a "New Rome/Constantinople" in Eastern Europe).'
-              },
-              achievements: { 
-                he: 'הביא את האימפריה הבולגרית הראשונה לשיא התפשטותה הטריטוריאלית והצבאית. תקופת שלטונו מכונה באופן רשמי כ-"תור הזהב של התרבות הבולגרית" – תחת חסותו הישירה פותח הכתב הקירילי באקדמיות בולגריות (הכתב שמשמש כיום את רוסיה ורוב העולם הסלאבי), והספרות, החינוך והאדריכלות הבולגרית פרחו לממדים היסטוריים.',
-                en: 'Brought the First Bulgarian Empire to the peak of its territorial and military expansion. His reign is officially termed the "Golden Age of Bulgarian Culture" – under his direct patronage, the Cyrillic script was developed in Bulgarian academies (the script used today by Russia and most of the Slavic world), and Bulgarian literature, education, and architecture flourished to historical proportions.'
-              }
-            },
-            map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_bulgaria_empire.jpg?t=1',
-              title: { he: 'האימפריה הבולגרית הראשונה', en: 'The First Bulgarian Empire' },
-              desc: { 
-                he: 'מפת וינטג\' קלאסית המציגה את שיא התפשטותה הטריטוריאלית של האימפריה הבולגרית הראשונה בימי הביניים, החולשת על רוב שטחו של חצי האי הבלקני ומתחרה חזיתית על ההגמוניה מול האימפריה הביזנטית הגדולה.',
-                en: 'A classic vintage map showing the peak territorial expansion of the First Bulgarian Empire in the Middle Ages, dominating most of the Balkan Peninsula and directly competing for hegemony against the great Byzantine Empire.'
-              }
-            }
-          },
-          {
-            id: 'greece',
-            name: { he: 'יוון', en: 'Greece' },
-            englishName: 'Greece',
-            officialName: { he: 'הרפובליקה ההלנית', en: 'Hellenic Republic' },
-            flagUrl: 'https://flagcdn.com/w640/gr.webp',
-            capital: {
-              name: { he: "אתונא", en: "Athens" },
-              englishName: "Athens",
-              etymology: { 
-                he: "על פי המיתולוגיה היוונית, העיר נקראת על שמה של אתנה (Athena), אלת החוכמה, האסטרטגיה והצדק. האגדה מספרת שאתנה התחרתה מול פוסידון (אל הים) על החסות לעיר. פוסידון הכה בקלשונו והעניק מעיין מים מלוחים, בעוד אתנה שתלה את עץ הזית הראשון שסיפק לעיר מזון, שמן ועץ. האזרחים בחרו במתנתה והעיר נקראה על שמה.",
-                en: "According to Greek mythology, the city is named after Athena, the goddess of wisdom, strategy, and justice. Legend says Athena competed against Poseidon (god of the sea) for patronage of the city. Poseidon struck with his trident and provided a saltwater spring, while Athena planted the first olive tree, providing the city with food, oil, and wood. The citizens chose her gift and named the city after her."
-              },
-              foundingYear: { he: "כ-3000 לפנה\"ס (מהערים העתיקות בעולם)", en: "c. 3000 BC (One of the oldest cities in the world)" },
-              reason: { 
-                he: "אתונא התפתחה סביב האקרופוליס (העיר העליונה), גבעה מבוצרת טבעית שסיפקה הגנה מעולה. בעת העתיקה היא הפכה לערש התרבות המערבית והדמוקרטיה, ולמרכז פילוסופי ותרבותי אדיר. לאחר מלחמת העצמאות של יוון במאה ה-19, נבחרה אתונא (שהייתה אז כפר קטן ושולי) כבירת המדינה המודרנית בשנת 1834, בראש ובראשונה כדי להדגיש את החיבור הרוחני, הלאומי וההיסטורי למורשת יוון העתיקה והמפוארת.",
-                en: "Athens developed around the Acropolis (high city), a naturally fortified hill providing excellent defense. In antiquity, it became the cradle of Western civilization and democracy, and a massive philosophical and cultural center. Following the Greek War of Independence in the 19th century, Athens (then a small, marginal village) was chosen as the modern state's capital in 1834, primarily to emphasize the spiritual, national, and historical connection to the glorious heritage of Ancient Greece."
-              }
-            },
-            areaNum: { he: '~131,957 קמ"ר', en: '~131,957 sq km' },
-            populationNum: '~10,300,000',
+            areaNum: { he: '~357,022 קמ"ר', en: '~357,022 sq km' },
+            populationNum: '~84,000,000',
             currency: { he: 'אירו (EUR)', en: 'Euro (EUR)' },
             area: { 
-              he: 'כ-131,957 קמ"ר. מדינה ייחודית גיאוגרפית בקצה הדרומי של הבלקן, בעלת קו החוף הארוך ביותר באגן הים התיכון. היא מורכבת מחצי אי יבשתי הררי ומבותר (כ-80% מהשטח הררי), ומהווה ריבוי עצום של למעלה מ-2,000 איים (שרק כ-220 מהם מיושבים) הפזורים בים האגאי ובים היוני סביבה.',
-              en: 'Approx. 131,957 sq km. A geographically unique country at the southern tip of the Balkans, possessing the longest coastline in the Mediterranean basin. It consists of a mountainous and rugged mainland peninsula (about 80% is mountainous), and an enormous multitude of over 2,000 islands (only about 220 of which are inhabited) scattered in the Aegean and Ionian Seas surrounding it.'
+              he: 'כ-357,022 קמ"ר. המדינה המאוכלסת ביותר באיחוד האירופי. הגיאוגרפיה שלה מגוונת מאוד: מישורי החוף השטוחים של הים הבלטי והים הצפוני בצפון, יערות וגבעות עבותות (כמו היער השחור) במרכז, ועד לפסגות הגבוהות של הרי האלפים הבוואריים בדרום.',
+              en: 'Approx. 357,022 sq km. The most populous country in the EU. Its geography is very diverse: the flat coastal plains of the Baltic and North Seas in the north, dense forests and hills (like the Black Forest) in the center, and the high peaks of the Bavarian Alps in the south.'
             },
             demographics: {
-              mainNationName: { he: 'יוונים (הלנים)', en: 'Greeks (Hellenes)' },
-              mainNationPercent: { he: 'מעל 90%', en: 'Over 90%' },
+              mainNationName: { he: 'גרמנים', en: 'Germans' },
+              mainNationPercent: { he: 'כ-80%', en: '~80%' },
               description: { 
-                he: 'אוכלוסייה לאומית הומוגנית מאוד המזהה עצמה ברובה המוחלט מבחינה דתית עם הכנסייה האורתודוקסית-היוונית, אשר מוגדרת כ"דת השלטת" בחוקה ולה תפקיד לאומי עמוק. הלאומיות והזהות היוונית המודרנית מתגאה מאוד ברצף תרבותי, שפתי והיסטורי מתמשך החל מהעת העתיקה ועד ימינו.',
-                en: 'A highly homogeneous national population that identifies overwhelmingly in terms of religion with the Greek Orthodox Church, which is defined as the "prevailing religion" in the constitution and plays a deep national role. Modern Greek nationalism and identity take great pride in a continuous cultural, linguistic, and historical continuum from antiquity to the present day.'
+                he: 'אומה גרמאנית בעלת מורשת תרבותית, מדעית ופילוסופית עמוקה מאד (ארצם של "הוגים ומשוררים"). החברה הגרמנית המודרנית היא קוסמופוליטית וקולטת הגירה בצורה משמעותית, וכוללת מיעוט טורקי גדול מאוד (מורשת "עובדי האורח" של שנות ה-60), ומהגרים ופליטים רבים מרחבי אירופה והמזרח התיכון.',
+                en: 'A Germanic nation with a very deep cultural, scientific, and philosophical heritage (the land of "thinkers and poets"). Modern German society is cosmopolitan and significantly welcoming to immigration, including a very large Turkish minority (legacy of the "guest workers" from the 1960s), and many immigrants and refugees from across Europe and the Middle East.'
               }
             },
             modernHistory: { 
-              he: 'יוון נחשבת לערש התרבות המערבית והדמוקרטיה בעת העתיקה. במאה ה-15 המדינה נכבשה על ידי האימפריה העות\'מאנית וחוותה תקופת שקיעה ארוכה. בשנת 1821 פתחו היוונים במלחמת עצמאות לאומית מפוארת וקשה, שזכתה לאהדתן ולתמיכתן של מעצמות אירופה הליברליות, עד להקמת המדינה המודרנית ב-1830. בהמשך המדינה עברה תהפוכות, מלחמות עולם הרסניות ומלחמת אזרחים. כיום היא דמוקרטיה יציבה ומהווה יעד תיירותי בינלאומי מרכזי כחלק מהאיחוד האירופי.',
-              en: 'Greece is considered the cradle of Western civilization and democracy in antiquity. In the 15th century, the country was conquered by the Ottoman Empire, experiencing a long period of decline. In 1821, the Greeks launched a glorious and difficult national war of independence, which gained the sympathy and support of liberal European powers, culminating in the founding of the modern state in 1830. Subsequently, the country went through upheavals, devastating world wars, and a civil war. Today, it is a stable democracy and a major international tourist destination as part of the EU.'
+              he: 'לאחר מאות שנים של פיצול פוליטי לדוכסויות וממלכות קטנות (תחת האימפריה הרומית הקדושה), גרמניה אוחדה ב-1871 תחת הנהגת פרוסיה המיליטריסטית. היא יזמה וחוותה שתי מלחמות עולם הרסניות במאה ה-20 (תחת משטר הרייך השלישי הנאצי והשואה שהחריבה את אירופה). לאחר תבוסתה, פוצלה לגרמניה המזרחית והמערבית על ידי המעצמות, ואוחדה מחדש בדרכי שלום ב-1990 עם קריסת הגוש הסובייטי. כיום היא מעצמה דמוקרטית, כלכלית ותעשייתית גלובלית, ומנוע הצמיחה המרכזי של האיחוד האירופי.',
+              en: 'After centuries of political fragmentation into small duchies and kingdoms (under the Holy Roman Empire), Germany was unified in 1871 under militaristic Prussian leadership. It initiated and experienced two devastating World Wars in the 20th century (under the Nazi Third Reich regime and the Holocaust that ruined Europe). After its defeat, it was divided into East and West Germany by the Allied powers, and peacefully reunified in 1990 with the collapse of the Soviet bloc. Today it is a global democratic, economic, and industrial powerhouse, and the main growth engine of the European Union.'
             },
-            foundingYears: { he: '1821 (תחילת מלחמת העצמאות) | 1830 (הכרה)', en: '1821 (War of Independence begins) | 1830 (Recognition)' },
+            foundingYears: { he: '1871 (איחוד גרמניה) | 1990 (איחוד מחדש)', en: '1871 (Unification) | 1990 (Reunification)' },
             flagSymbolism: { 
-              he: 'הקנטון (הפינה השמאלית העליונה) מכיל צלב לבן על רקע כחול, המייצג את ההוקרה לדת הנצרות האורתודוקסית היוונית. הדגל כולו מכיל תשעה פסים אופקיים של כחול ולבן. פסים אלו מסמלים את תשע ההברות של המוטו הלאומי ההיסטורי ביוונית: "אֶלֶפְתֶרִיאָה אִי תַנָאטוֹס" (Eleftheria i thanatos) - שמשמעותו "חירות או מוות". הצבעים הכחול והלבן מסמלים את צבעי השמיים היווניים ואת הקצף הלבן של גלי הים האגאי העמוקים.',
-              en: 'The canton (upper left corner) contains a white cross on a blue background, representing reverence for the Greek Orthodox Christian religion. The entire flag consists of nine horizontal stripes of blue and white. These stripes symbolize the nine syllables of the historical national motto in Greek: "Eleftheria i thanatos" - meaning "Freedom or Death". The blue and white colors symbolize the colors of the Greek sky and the white foam of the deep Aegean Sea waves.'
+              he: 'טריקולור אופקי של שחור, אדום וזהב. צבעים אלו נולדו במהלך המלחמות הנפוליאוניות, כאשר ה"פרייקורפס" (כוחות מתנדבים גרמנים שלחמו לשחרור) לבשו מדים שחורים, עם צווארונים אדומים וכפתורי פליז מוזהבים. בהמשך, צבעים אלו הפכו לסמל של הליברליזם, הדמוקרטיה הרפובליקנית והתנועה הלאומית הגרמנית באביב העמים (1848), בניגוד לדגל השחור-לבן-אדום של האימפריה הפרוסית והנאצית.',
+              en: 'A horizontal tricolor of black, red, and gold. These colors were born during the Napoleonic Wars, when the "Freikorps" (German volunteer forces fighting for liberation) wore black uniforms with red collars and golden brass buttons. Later, these colors became the symbol of liberalism, republican democracy, and the German national movement during the Spring of Nations (1848), in contrast to the black-white-red flag of the Prussian and Nazi Empires.'
             },
             nationalAnimal: {
-              name: { he: "דולפין מצוי (Dolphin)", en: "Dolphin" },
+              name: { he: "עיט פדרלי (Bundesadler)", en: "Federal Eagle (Bundesadler)" },
               reason: { 
-                he: "הדולפין הוא חיה ימית אינטליגנטית ושובבה, המהווה סמל יווני עתיק עוד מימי המינואים ואתונה הקדומה. במיתולוגיה היוונית, הדולפין היה חיה קדושה לאפולו (אל השמש) ולפוסידון (אל הים), ונחשב לידיד האדם שהציל מלחים מטביעה. הבחירה בדולפין מסמלת את האוריינטציה הימית המוחלטת של העם היווני (אומת איים ומלחים), את החופש בים הפתוח, חוכמה, והרמוניה עם הים התיכון.",
-                en: "The dolphin is an intelligent and playful marine animal, serving as an ancient Greek symbol dating back to the Minoans and ancient Athens. In Greek mythology, the dolphin was a sacred animal to Apollo (god of the sun) and Poseidon (god of the sea), and was considered a friend to mankind who saved drowning sailors. The choice of the dolphin symbolizes the absolute maritime orientation of the Greek people (a nation of islands and sailors), freedom in the open sea, wisdom, and harmony with the Mediterranean."
+                he: "העיט השחור (עם מקור וטפרים אדומים) הוא אחד מסמלי המדינה העתיקים ביותר באירופה. שורשיו נעוצים באימפריה הרומית של העת העתיקה, ומשם עברו לאימפריה הרומית הקדושה של האומה הגרמנית בימי הביניים, שם סימל העיט את כוחו וסמכותו של הקיסר ואת הריבונות השמיימית. כיום, ה'בונדסאדלר' מסמל עוצמה, ראייה למרחוק, אצילות והגנה בלתי מתפשרת על המולדת והחוקה הגרמנית.",
+                en: "The black eagle (with red beak and talons) is one of the oldest state symbols in Europe. Its roots lie in the Roman Empire of antiquity, and from there passed to the Holy Roman Empire of the German Nation in the Middle Ages, where the eagle symbolized the power and authority of the Emperor and divine sovereignty. Today, the 'Bundesadler' symbolizes power, foresight, nobility, and uncompromising defense of the German homeland and constitution."
               }
             },
             etymology: {
               parts: [
-                { text: { he: 'גראיקיה (Graecia / Greece)', en: 'Graecia / Greece' }, color: 'text-cyan-400', bg: 'bg-cyan-400/10', border: 'border-cyan-500/30', desc: { he: 'השם המערבי הלועזי "יוון/Greece" הוענק לאזור על ידי הרומאים. הוא נגזר משמו של אחד השבטים היוונים העתיקים ביותר שחיו באפירוס (צפון מערב יוון המודרנית) – ה"גראיקי" (Graeci). מכיוון שהרומאים פגשו אותם תחילה מעבר לים, הם השתמשו והכלילו את שמם כדי לקרוא לכלל תושבי חצי האי והאזור על שמם.', en: 'The Western foreign name "Greece" was bestowed upon the region by the Romans. It is derived from the name of one of the most ancient Greek tribes living in Epirus (northwestern modern Greece) – the "Graeci". Because the Romans encountered them first across the sea, they generalized and used their name to refer to all inhabitants of the peninsula and region.' } },
-                { text: { he: 'הלס (Hellas / Elláda)', en: 'Hellas / Elláda' }, color: 'text-blue-400', bg: 'bg-blue-400/10', border: 'border-blue-500/30', desc: { he: 'זהו השם הפנימי שבו היוונים קוראים לארצם. במיתולוגיה היוונית הקלאסית, "הלן" (Hellen) היה בנם של דאוקליון ופירה (שהיו ניצולי המבול המיתולוגי הגדול). הוא נחשב לאב הקדמון המיתולוגי של כלל השבטים היוונים, ולכן צאצאיו הם ה"הלנים" וארצם נקראת "הלס".', en: 'This is the internal name by which Greeks call their country. In classical Greek mythology, "Hellen" was the son of Deucalion and Pyrrha (who were the survivors of the great mythological flood). He is considered the mythological patriarch of all Greek tribes, hence his descendants are the "Hellenes" and their land is called "Hellas".' } }
+                { text: { he: 'גרמאניה (Germania)', en: 'Germania' }, color: 'text-rose-400', bg: 'bg-rose-400/10', border: 'border-rose-500/30', desc: { he: 'השם הלועזי בו משתמשים רוב עמי העולם (באנגלית Germany). זהו מונח שהוטבע לראשונה על ידי הרומאים הקדמונים (ובמיוחד על ידי יוליוס קיסר) כדי לתאר את כלל השבטים הפראיים והגבוהים שחיו מעבר לנהר הריין, כאמצעי להבדילם מהגאלים אותם כבשו הרומאים.', en: 'The foreign name used by most nations (Germany in English). It is a term first coined by the ancient Romans (especially Julius Caesar) to describe all the wild and tall tribes living beyond the Rhine river, as a means of distinguishing them from the Gauls whom the Romans had conquered.' } },
+                { text: { he: 'דויטשלנד (Deutschland)', en: 'Deutschland' }, color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-500/30', desc: { he: 'זהו השם הפנימי (האנדונים) בו הגרמנים קוראים לארצם בשפתם. מקורו במילה "diutisc" מגרמנית עילית עתיקה (או "theodisk" מגרמאנית), שפירושה הפשוט הוא "של העם".', en: 'This is the internal name (endonym) by which Germans call their country in their language. Its origin is the Old High German word "diutisc" (or Germanic "theodisk"), which simply means "of the people".' } }
               ],
-              synthesis: { he: 'מילולית: השם הלועזי – "ארצם של שבט הגראיקי". השם המקומי (הלס) – "ארצו המשותפת של הלן (האב הקדמון)".', en: 'Literally: The foreign name – "Land of the Graeci tribe". The local name (Hellas) – "The shared land of Hellen (the patriarch)".' }
+              synthesis: { he: 'מילולית בפי המקומיים: "ארצו של העם" (כלומר, אדמת האנשים הפשוטים שמדברים את שפת העם הגרמאנית, להבדיל מהלטינית של הכנסייה והמשכילים).', en: 'Literally by locals: "Land of the People" (i.e., the land of the common people who speak the vernacular Germanic language, as opposed to the Latin of the Church and scholars).' }
             },
             figure: {
-              name: { he: 'אלפתריוס וניזלוס (Eleftherios Venizelos)', en: 'Eleftherios Venizelos' },
-              years: '1864 - 1936',
+              name: { he: 'אוטו פון ביסמרק (Otto von Bismarck)', en: 'Otto von Bismarck' },
+              years: '1815 - 1898',
               childhood: { 
-                he: 'נולד באי כרתים בזמן שהאי היה עדיין תחת שלטון עות\'מאני, למשפחה שהייתה מעורבת אקטיבית במרידות נגד השלטון. בגלל המרידות משפחתו גלתה ליוון. הוא נשלח ללמוד משפטים באתונה ובאירופה, הפך לעורך דין מבריק, וחזר לכרתים כדי להנהיג פוליטית את המאבק הלאומי לאיחוד האי ("אנוסיס") עם מדינת האם יוון.',
-                en: 'Born on the island of Crete while it was still under Ottoman rule, to a family actively involved in rebellions against the regime. Due to the rebellions, his family was exiled to Greece. He was sent to study law in Athens and Europe, became a brilliant lawyer, and returned to Crete to politically lead the national struggle for the island\'s union ("Enosis") with the motherland Greece.'
+                he: 'נולד למשפחת "יונקרים" (אצולת קרקע מיליטריסטית) עשירה ושמרנית בממלכת פרוסיה. למרות שאימו הגיעה ממשפחת משכילים אזרחית ורצתה שיקבל חינוך אקדמי מודרני, אוטו הצעיר התמרד באוניברסיטה, נטה לשתייה, קרבות חרב ואורח חיים פרוע, עד שחזר לנהל את האחוזה הכפרית של משפחתו והחל את דרכו בפוליטיקה כנציג שמרן וקיצוני.',
+                en: 'Born to a wealthy, conservative "Junker" (militaristic landed nobility) family in the Kingdom of Prussia. Although his mother came from an educated civil family and wanted him to receive a modern academic education, young Otto rebelled at university, engaging in drinking, dueling, and a wild lifestyle, until he returned to manage his family\'s rural estate and began his political career as a radical conservative representative.'
               },
               ideology: { 
-                he: 'ההוגה המעשי של רעיון "יוון הגדולה" (Megali Idea) – החזון האירידנטי הלאומי לאחד את כל השטחים ההיסטוריים בבלקן ובחופי אסיה הקטנה שבהם חיו אוכלוסיות יווניות לתוך מדינת לאום יוונית אחת חזקה. הוא קידם מודרניזציה ליברלית חסרת פשרות, רפורמות חוקתיות וכלכליות, ומדיניות חוץ פרו-בריטית/צרפתית אקטיבית.',
-                en: 'The practical visionary of the "Megali Idea" (Great Idea) – the irredentist national vision to unite all historical territories in the Balkans and the coasts of Asia Minor inhabited by Greek populations into a single, strong Greek nation-state. He promoted uncompromising liberal modernization, constitutional and economic reforms, and an active pro-British/French foreign policy.'
+                he: 'פרגמטיזם פוליטי אכזרי ומחושב ("ריאל-פוליטיק"), נאמנות מוחלטת לכתר הפרוסי, ואמונה שאת ההיסטוריה מעצבים באמצעות כוח צבאי – תפיסתו המפורסמת "דם וברזל" (לא בנאומים ובהחלטות רוב, אלא בדם וברזל). עם זאת, ביסמרק הבין את חשיבות היציבות הפנימית, וייסד מדינת רווחה חלוצית (פנסיה וביטוח בריאות) כדי לנטרל את כוחה של התנועה הסוציאליסטית.',
+                en: 'Ruthless and calculated political pragmatism ("Realpolitik"), absolute loyalty to the Prussian crown, and a belief that history is shaped through military might – his famous "Blood and Iron" concept (not by speeches and majority decisions, but by blood and iron). However, Bismarck understood the importance of internal stability, and founded a pioneering welfare state (pensions and health insurance) to neutralize the power of the socialist movement.'
               },
               achievements: { 
-                he: 'נחשב למדינאי ולפוליטיקאי החשוב ביותר בתולדות יוון המודרנית. כיהן כראש ממשלה מספר פעמים בתקופות משבר. באמצעות מלחמות הבלקן והדיפלומטיה המבריקה שלו בזמן ולאחר מלחמת העולם הראשונה, הוא הכפיל את שטחה הגיאוגרפי ואת אוכלוסייתה של יוון, ויזם רפורמות עומק מהותיות בחוקה, בחינוך ובחברה היוונית.',
-                en: 'Considered the most important statesman and politician in the history of modern Greece. Served as Prime Minister several times during crisis periods. Through the Balkan Wars and his brilliant diplomacy during and after WWI, he doubled the geographical territory and population of Greece, and initiated profound fundamental reforms in the constitution, education, and Greek society.'
+                he: 'מוכר בהיסטוריה כ"קנצלר הברזל". המדינאי החשוב והמשפיע ביותר באירופה במאה ה-19. הוא איחד במו ידיו (דרך שרשרת מלחמות מחושבות נגד דנמרק, אוסטריה וצרפת) עשרות נסיכויות מפוצלות לתוך האימפריה הגרמנית הראשונה והאדירה ב-1871. לאחר האיחוד, הוא יצר מערכת בריתות דיפלומטית גאונית ששמרה על שלום באירופה במשך עשורים וביססה את גרמניה כמעצמת על בינלאומית.',
+                en: 'Known in history as the "Iron Chancellor". The most important and influential statesman in 19th-century Europe. He single-handedly unified (through a series of calculated wars against Denmark, Austria, and France) dozens of fragmented principalities into the first and mighty German Empire in 1871. After unification, he created a genius diplomatic alliance system that preserved peace in Europe for decades and established Germany as an international superpower.'
               }
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_greece_megali.jpg?t=1',
-              title: { he: 'מפת חזון "יוון הגדולה"', en: 'Map of the "Megali Idea" Vision' },
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_germany_hre.jpg',
+              title: { he: 'האימפריה הרומית הקדושה', en: 'The Holy Roman Empire' },
               desc: { 
-                he: 'מפה היסטורית מהמאה ה-19 המתארת את חצי האי הבלקני ואת אגן הים האגאי כולו. המפה משקפת את האוריינטציה הימית העתיקה של יוון ומתארת את השפעתה הגיאוגרפית והתרבותית הרחבה סביב האגן הים-תיכוני.',
-                en: 'A historical map from the 19th century depicting the Balkan Peninsula and the entire Aegean Sea basin. The map reflects Greece\'s ancient maritime orientation and illustrates its broad geographical and cultural influence around the Mediterranean basin.'
+                he: 'מפה היסטורית נדירה מהמאה ה-17 המציגה את מרכז אירופה. המפה מדגישה את הפסיפס המסובך, המפוצל והמורכב של מאות הנסיכויות הגרמאניות הקטנות שחיו תחת חסות הקיסרות.',
+                en: 'A rare 17th-century historical map showing Central Europe. The map highlights the complicated, fragmented, and complex mosaic of hundreds of small Germanic principalities living under the Empire\'s auspices.'
               }
             }
           },
           {
-            id: 'albania',
-            name: { he: 'אלבניה', en: 'Albania' },
-            englishName: 'Albania',
-            officialName: { he: 'רפובליקת אלבניה', en: 'Republic of Albania' },
-            flagUrl: 'https://flagcdn.com/w640/al.webp',
+            id: 'austria',
+            name: { he: 'אוסטריה', en: 'Austria' },
+            englishName: 'Austria',
+            officialName: { he: 'רפובליקת אוסטריה', en: 'Republic of Austria' },
+            flagUrl: 'https://flagcdn.com/w640/at.webp',
             capital: {
-              name: { he: "טירנה", en: "Tirana" },
-              englishName: "Tirana",
+              name: { he: "וינה", en: "Vienna" },
+              englishName: "Vienna",
               etymology: { 
-                he: "מקור השם טירנה אינו מוחלט ומוסכם. סברה אחת קושרת אותו לטירת 'טירקאן' (Tirkan) העתיקה המוזכרת בכתבים מוקדמים. סברה אחרת מקשרת אותו למילה היוונית 'תראנדה' (Theranda). אגדה אורבנית מקומית ומאוחרת (אך כנראה שגויה) טוענת שהמייסד העות'מאני קרא לעיר על שם העיר טהראן כדי לציין ניצחון פרסי.",
-                en: "The origin of the name Tirana is not definitively agreed upon. One theory links it to the ancient castle of 'Tirkan' mentioned in early writings. Another theory connects it to the Greek word 'Theranda'. A local, later urban legend (though likely incorrect) claims the Ottoman founder named the city after Tehran to commemorate a Persian victory."
+                he: "מקור השם וינה (Wien) מגיע ככל הנראה מהשם הקלטי הקדום 'Vindobona', שפירושו 'כפר הוגן' או 'יישוב לבן/בהיר'. תיאוריה בלשנית אחרת קושרת את השם לשמו של נהר וין הקטן הזורם דרך העיר ומשתלב לתוך הדנובה.",
+                en: "The origin of the name Vienna (Wien) likely comes from the ancient Celtic name 'Vindobona', meaning 'fair village' or 'white/bright settlement'. Another linguistic theory links the name to the small Wien river flowing through the city into the Danube."
               },
-              foundingYear: { he: "1614 (כיישוב מודרני מוסדר)", en: "1614 (As a formal modern settlement)" },
+              foundingYear: { he: "המאה ה-1 (כמחנה צבאי רומי - וינדובונה)", en: "1st Century (As a Roman military camp - Vindobona)" },
               reason: { 
-                he: "העיר המודרנית הוקמה על ידי סולימאן פאשה האציל, שבנה בה מסגד, שוק מרכזי ומרחץ ציבורי כדי לעודד מסחר. לאחר הכרזת העצמאות, בקונגרס הלאומי בעיר לושניה (Lushnjë) בשנת 1920, הוחלט לבחור בטירנה כבירת אלבניה החופשית. הסיבה הייתה גיאוגרפית לחלוטין: היא ממוקמת בדיוק במרכז הארץ ומהווה נקודת מפגש וגשר נייטרלי בין תושבי הצפון (ה'גגים') לתושבי הדרום (ה'טוסקים').",
-                en: "The modern city was founded by the noble Sulejman Pasha, who built a mosque, a central market, and a public bath to encourage trade. After the declaration of independence, at the National Congress of Lushnjë in 1920, it was decided to choose Tirana as the capital of free Albania. The reason was entirely geographical: it is located exactly in the center of the country and serves as a meeting point and a neutral bridge between the northerners (Ghegs) and the southerners (Tosks)."
+                he: "וינה התפתחה לאחת הערים החשובות באירופה בשל מיקומה בצומת דרכים חיוני בין צפון לדרום אירופה, ועל נתיב השיט הכלכלי של נהר הדנובה. היא הפכה למושב האימפריה ההבסבורגית האדירה במשך למעלה מ-600 שנה. ההבסבורגים השקיעו בה הון עתק והפכו אותה לבירת התרבות, המוזיקה, האדריכלות והאינטלקטואל של אירופה הקלאסית (ביתם של מוצרט, בטהובן ופרויד).",
+                en: "Vienna developed into one of Europe's most important cities due to its location at a vital crossroads between Northern and Southern Europe, and on the economic shipping route of the Danube River. It became the seat of the mighty Habsburg Empire for over 600 years. The Habsburgs invested massive wealth into it, turning it into the cultural, musical, architectural, and intellectual capital of classical Europe (home to Mozart, Beethoven, and Freud)."
               }
             },
-            areaNum: { he: '~28,748 קמ"ר', en: '~28,748 sq km' },
-            populationNum: '~2,800,000',
-            currency: { he: 'לק אלבני (ALL)', en: 'Albanian Lek (ALL)' },
+            areaNum: { he: '~83,871 קמ"ר', en: '~83,871 sq km' },
+            populationNum: '~9,100,000',
+            currency: { he: 'אירו (EUR)', en: 'Euro (EUR)' },
             area: { 
-              he: 'כ-28,748 קמ"ר. מדינה הררית, פראית וסגורה מאוד מבחינה טופוגרפית (כ-70% משטחה הם הרים תלולים וגבעות של הרי האלפים הדינריים). למרות הריחוק ההררי, היא שוכנת על חוף הים האדריאטי והים היוני (הריביירה האלבנית), ומהווה גשר גיאוגרפי היסטורי קצר בין מרכז חצי האי הבלקני לבין איטליה והים התיכון.',
-              en: 'Approx. 28,748 sq km. A highly mountainous, wild, and topographically enclosed country (about 70% of its area consists of steep mountains and hills of the Dinaric Alps). Despite its mountainous remoteness, it lies on the coast of the Adriatic and Ionian Seas (the Albanian Riviera), acting as a short historical geographical bridge between the central Balkan Peninsula and Italy and the Mediterranean.'
+              he: 'כ-83,871 קמ"ר. אוסטריה היא מדינה ללא מוצא לים הכלואה בלב הרי האלפים (הרי האלפים המזרחיים מכסים כ-62% משטחה של המדינה). היא מציעה נופים אלפיניים מושלגים ודרמטיים במערבה ובדרומה, בעוד שמזרח המדינה מתאפיין בעמקים רחבים ופוריים לאורך ערוץ נהר הדנובה, שם מתגוררת רוב האוכלוסייה.',
+              en: 'Approx. 83,871 sq km. Austria is a landlocked country locked in the heart of the Alps (the Eastern Alps cover about 62% of the country\'s territory). It offers dramatic, snow-capped alpine landscapes in its west and south, while the eastern part of the country is characterized by broad, fertile valleys along the Danube River basin, where most of the population resides.'
             },
             demographics: {
-              mainNationName: { he: 'אלבנים', en: 'Albanians' },
-              mainNationPercent: { he: 'כ-82%', en: '~82%' },
+              mainNationName: { he: 'אוסטרים', en: 'Austrians' },
+              mainNationPercent: { he: 'כ-81%', en: '~81%' },
               description: { 
-                he: 'אומה הררית בעלת שפה ומוצא היסטורי ייחודיים ובודדים באירופה, שאינם קשורים לסלאבים או ליוונים (נחשבים צאצאי השבטים האיליריים הקדומים). הרוב במדינה הוא מוסלמי (סוני ומסדר בקטאשי סופי), לצד מיעוטים נוצרים אורתודוקסים וקתולים. אלבניה מפורסמת בסובלנות הדתית המוחלטת שלה, ולמעשה יש בה מסורת חילונית לאומית חזקה וגאה הגוברת כמעט תמיד על כל פיצול או זהות דתית.',
-                en: 'A mountainous nation with a unique and isolated historical origin and language in Europe, unrelated to the Slavs or Greeks (considered descendants of the ancient Illyrian tribes). The majority in the country is Muslim (Sunni and the Sufi Bektashi order), alongside Orthodox and Catholic Christian minorities. Albania is famous for its absolute religious tolerance, effectively possessing a strong, proud national secular tradition that almost always transcends any religious division or identity.'
+                he: 'האוסטרים הם אומה גרמאנית וקתולית באופייה. הם בעלי שפה ומוצא משותף עם הגרמנים, אך עם זהות לאומית ותרבותית נפרדת, גאה ומובחנת שהתגבשה היטב לאחר הפירוק של מלחמת העולם השנייה (אוסטריה ממתגת עצמה כ"קורבן הראשון" של הנאצים למרות ההצטרפות מרצון). ישנם מיעוטים גדולים של טורקים, סרבים וגרמנים.',
+                en: 'Austrians are a Germanic and culturally Catholic nation. They share a common language and origin with Germans, but possess a separate, proud, and distinct national and cultural identity well solidified after the dissolution of WWII (Austria brands itself as the "first victim" of the Nazis despite voluntary joining). There are large minorities of Turks, Serbs, and Germans.'
               }
             },
             modernHistory: { 
-              he: 'הכריזה על עצמאותה מהאימפריה העות\'מאנית השוקעת ב-1912. לאחר מלחמת העולם השנייה, המדינה נפלה לידיו של הדיקטטור הקומוניסטי הפראנואידי אנוור הוג\'ה, שהטיל עליה בידוד קיצוני (בדומה לצפון קוריאה של ימינו), ניתק קשרים עם כל העולם, בנה מאות אלפי בונקרים פרטיים ברחבי המדינה מתוך פחד פלישה, ואסר בחוק כליל על קיום כל דת שהיא. עם נפילת הקומוניזם ב-1991, החלה המדינה תהליך קשה אך מתמיד של פתיחות למערב ומעבר לדמוקרטיה כלכלת-שוק.',
-              en: 'Declared its independence from the declining Ottoman Empire in 1912. After WWII, the country fell into the hands of paranoid communist dictator Enver Hoxha, who imposed extreme isolation on it (similar to modern-day North Korea), cut ties with the entire world, built hundreds of thousands of private bunkers across the country out of fear of invasion, and completely outlawed the practice of any religion. With the fall of communism in 1991, the country began a difficult but steady process of opening to the West and transitioning to a market-economy democracy.'
+              he: 'היוותה את ליבה ומוקד הכוח של אחת האימפריות החזקות והרב-לאומיות בהיסטוריה, האימפריה האוסטרו-הונגרית תחת שלטון בית הבסבורג. האימפריה קרסה לחלוטין בתום מלחמת העולם הראשונה, ואוסטריה הצטמקה לרפובליקה קטנה. ב-1938 סופחה על ידי היטלר לגרמניה הנאצית בתהליך "האנשלוס". לאחר המלחמה הוקמה מחדש כדמוקרטיה חופשית ומשגשגת השומרת על מדיניות חוץ של ניטרליות מחמירה המעוגנת בחוקתה (מאז 1955).',
+              en: 'Formed the core and center of power of one of the strongest and multi-national empires in history, the Austro-Hungarian Empire under the rule of the House of Habsburg. The empire collapsed entirely at the end of WWI, and Austria shrank to a small republic. In 1938, it was annexed by Hitler into Nazi Germany in the "Anschluss" process. After the war, it was re-established as a free and prosperous democracy maintaining a strict foreign policy of neutrality enshrined in its constitution (since 1955).'
             },
-            foundingYears: { he: '1912 (הכרזת עצמאות מודרנית)', en: '1912 (Modern Declaration of Independence)' },
+            foundingYears: { he: '976 (מרקיזות אוסטריה) | 1955 (ריבונות וניטרליות מודרנית)', en: '976 (Margraviate of Austria) | 1955 (Modern sovereignty & neutrality)' },
             flagSymbolism: { 
-              he: 'הדגל הלאומי מציג עיט דו-ראשי שחור ופרוש כנפיים הממוקם במרכז על רקע אדום עז. רקע האדום מסמל אומץ, כוח גולמי, ואת הדם הרב שנשפך למען הגנת החירות. העיט הדו-ראשי השחור הוא סמלו האישי ההיסטורי של הגיבור הלאומי סקנדרבג (שאימץ ושינה את הסמל הביזנטי העתיק) מהמאה ה-15, שבו השתמש כנס במרידותיו המפוארות מול האימפריה העות\'מאנית.',
-              en: 'The national flag displays a black, double-headed eagle with spread wings positioned in the center on a vivid red background. The red background symbolizes courage, raw strength, and the copious blood shed in defense of freedom. The black double-headed eagle is the personal historical emblem of the 15th-century national hero Skanderbeg (who adopted and modified the ancient Byzantine symbol), which he used as a banner in his glorious rebellions against the Ottoman Empire.'
+              he: 'אחד הדגלים הלאומיים העתיקים בעולם. האגדה הפולקלוריסטית מספרת שלאחר המצור האכזרי על עכו (1191) במהלך מסע הצלב השלישי, הטוניקה הלבנה של הדוכס לאופולד החמישי מאוסטריה הייתה ספוגה לחלוטין בדם אויביו ופצעיו. כשהוא הסיר את החגורה שלו, נותר רק פס אמצעי לבן וטהור במקום שבו הייתה החגורה. המראה המרהיב של אדום-לבן-אדום הפך מיד לסמלה ההרלדי של שושלת באבנברג ובהמשך של אוסטריה כולה.',
+              en: 'One of the oldest national flags in the world. The folkloric legend tells that after the brutal Siege of Acre (1191) during the Third Crusade, the white tunic of Duke Leopold V of Austria was completely soaked in the blood of his enemies and his own wounds. When he removed his belt, only a pure white middle stripe remained where the belt had been. The spectacular red-white-red sight immediately became the heraldic symbol of the Babenberg dynasty and later of Austria as a whole.'
             },
             nationalAnimal: {
-              name: { he: "עיט זהוב (Golden Eagle / Shqiponja)", en: "Golden Eagle" },
+              name: { he: "עיט שחור (Black Eagle)", en: "Black Eagle" },
               reason: { 
-                he: "העיט (Shqiponja באלבנית) הוא הסמל הלאומי המוחלט והעוצמתי ביותר של המדינה, אשר עיצב את זהותה מראשיתה. אלבניה אף נקראת בפי תושביה 'ארץ העיטים'. חיה דורסת, אצילית ורבת עוצמה זו, השולטת בפסגות ההרים הבלתי נגישים, מסמלת את הריבונות האבסולוטית, החופש, העוז והעצמאות הפראית וההירואית של תושבי ההרים האלבנים שסירבו להיכנע לכובשים זרים.",
-                en: "The eagle (Shqiponja in Albanian) is the absolute and most powerful national symbol of the country, which has shaped its identity from its inception. Albania is even called the 'Land of the Eagles' by its inhabitants. This noble and powerful bird of prey, reigning over the inaccessible mountain peaks, symbolizes absolute sovereignty, freedom, boldness, and the wild, heroic independence of the Albanian mountain dwellers who refused to surrender to foreign conquerors."
+                he: "העיט השחור האוסטרי (בשונה מהעיט המפורסם של האימפריה ההבסבורגית שהיה בעל שני ראשים) הוא בעל ראש אחד ומייצג ריבונות רפובליקנית. הוא אוחז בטפריו פטיש ומגל מזהב (סמלים שנועדו לייצג את מעמד הפועלים והחקלאים, ללא כל קשר לקומוניזם, יחד עם כתר חומת-העיר המייצג את מעמד הביניים). השרשראות הקרועות המשתלשלות מטפריו נוספו לסמל באופן סמלי לאחר מלחמת העולם השנייה (1945), והן מסמלות את שחרור האומה מהרודנות של גרמניה הנאצית.",
+                en: "The Austrian black eagle (unlike the famous eagle of the Habsburg Empire which was double-headed) has a single head and represents republican sovereignty. It holds a golden hammer and sickle in its talons (symbols intended to represent the working and farming classes, completely unrelated to communism, along with a mural crown representing the middle class). The broken chains dangling from its talons were symbolically added to the emblem after WWII (1945), symbolizing the nation's liberation from the tyranny of Nazi Germany."
               }
             },
             etymology: {
               parts: [
-                { text: { he: 'אלבנוי (Albanoi)', en: 'Albanoi' }, color: 'text-stone-400', bg: 'bg-stone-400/10', border: 'border-stone-500/30', desc: { he: 'השם הבינלאומי הלועזי "אלבניה" מגיע מכתביו של תלמי (Ptolemy), גיאוגרף יווני-רומאי בן המאה ה-2. הוא ציין שבט אילירי הררי וקדום בשם "אלבאנוי" שחי באזור מרכז המדינה של ימינו. השורש האינדו-אירופי "Alb" ייתכן ומשמעותו הגיאוגרפית היא "לבן" או "הר" (בדומה להרי ה"אלפים").', en: 'The international foreign name "Albania" comes from the writings of Ptolemy, a 2nd-century Greco-Roman geographer. He noted an ancient mountainous Illyrian tribe named "Albanoi" living in the modern-day central region of the country. The Indo-European root "Alb" likely geographically means "white" or "mountain" (similar to the "Alps").' } },
-                { text: { he: 'שצ\'יפריה (Shqipëria)', en: 'Shqipëria' }, color: 'text-red-400', bg: 'bg-red-400/10', border: 'border-red-500/30', desc: { he: 'זהו השם הלאומי והמקומי בו האלבנים קוראים לארצם בשפתם. התיאוריה האטימולוגית והעממית המקובלת ביותר היא שהשם נגזר מהמילה "Shqipe" או "Shqiponjë" שמשמעותה בשפה האלבנית היא "עיט" – בהשפעת סמלו המפורסם של הגיבור המיתולוגי סקנדרבג.', en: 'This is the national and local name by which Albanians call their country in their language. The most accepted etymological and folk theory is that the name is derived from the word "Shqipe" or "Shqiponjë", which in the Albanian language means "Eagle" – influenced by the famous symbol of the mythological hero Skanderbeg.' } }
+                { text: { he: 'אוסטריכי (Ostarrîchi)', en: 'Ostarrîchi' }, color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-500/30', desc: { he: 'המילה לקוחה מגרמנית עילית עתיקה (מתוך מכתב היסטורי שנתגלה משנת 996). "Ost" משמעותו מזרח, ו-"rîchi" משמעותו ממלכה או אזור שליטה.', en: 'The word is taken from Old High German (from a discovered historical document dated 996). "Ost" means east, and "rîchi" means realm or domain of control.' } },
+                { text: { he: 'אוסטרייך (Österreich)', en: 'Österreich' }, color: 'text-red-400', bg: 'bg-red-400/10', border: 'border-red-500/30', desc: { he: 'ההגייה הגרמנית המודרנית של השם. השם מתייחס למיקומה הגיאוגרפי של הטריטוריה בימי הביניים כ"ספר המזרחי" (הגבול המזרחי המבוצר – Marcha Orientalis) של ממלכת בוואריה והאימפריה הפרנקית העצומה של קרל הגדול, שנועד לשמש כאזור חיץ ולהגן מפני פלישות ממזרח של שבטים אסיאתיים כהונים והאווארים.', en: 'The modern German pronunciation of the name. The name refers to the geographical location of the territory in the Middle Ages as the "Eastern March" (the fortified eastern border – Marcha Orientalis) of the Duchy of Bavaria and the massive Frankish Empire of Charlemagne, designed to serve as a buffer zone and protect against invasions from the east by Asian tribes like the Huns and Avars.' } }
               ],
-              synthesis: { he: 'מילולית: על פי אמונתם של המקומיים וגאוותם הלאומית, אלבניה היא פשוט "ארץ העיטים".', en: 'Literally: According to the belief of the locals and their national pride, Albania is simply the "Land of the Eagles".' }
+              synthesis: { he: 'מילולית: "ממלכת המזרח" (המגן ואזור החיץ המזרחי של הקיסרות הגרמנית העתיקה).', en: 'Literally: "The Eastern Realm" (the eastern shield and buffer zone of the ancient German Empire).' }
             },
             figure: {
-              name: { he: 'ג\'ורג\' קסטריוטי סקנדרבג (Skanderbeg)', en: 'Gjergj Kastrioti Skanderbeg' },
-              years: '1405 - 1468',
+              name: { he: 'הקיסרית מריה תרזה (Empress Maria Theresa)', en: 'Empress Maria Theresa' },
+              years: '1717 - 1780',
               childhood: { 
-                he: 'נולד למשפחת אצולה אלבנית. כילד צעיר, הוא נלקח כבן ערובה על ידי הסולטאן העות\'מאני כחלק משיטת "מס הדם" האכזרית (הדוושירמה). הוא התחנך וגודל באסלאם בתוך חצר הסולטאן, אומן וחונך כאליטה צבאית, והפך למפקד וטקטיקן מזהיר בצבא העות\'מאני, שם הוענק לו התואר המכובד "איסקנדר ביי" (האדון אלכסנדר, על שם אלכסנדר מוקדון, בשל גבורתו).',
-                en: 'Born to an Albanian noble family. As a young child, he was taken hostage by the Ottoman Sultan as part of the cruel "Blood Tax" system (Devshirme). He was educated and raised in Islam within the Sultan\'s court, trained as military elite, and became a brilliant commander and tactician in the Ottoman army, where he was granted the honorable title "Iskender Bey" (Lord Alexander, after Alexander the Great, for his bravery).'
+                he: 'נולדה לחצר המלכות ההבסבורגית. כשאביה, הקיסר קרל השישי, נפטר ללא יורש זכר עקב מחלה, נראה היה שהאימפריה האוסטרית תתפרק. היא ירשה את הכתר בגיל 23 בלבד, מוקפת במדינות עוינות שסירבו להכיר בשלטונה של אישה וניסו לקרוע חבלים מארצה (מה שהוביל ל"מלחמת הירושה האוסטרית"). למרות הכל, היא הוכיחה חוסן, אומץ ולמידה פוליטית מהירה במיוחד מול יריביה הגברים.',
+                en: 'Born into the Habsburg royal court. When her father, Emperor Charles VI, died without a male heir due to illness, it seemed the Austrian empire would disintegrate. She inherited the crown at only 23 years old, surrounded by hostile nations refusing to recognize a woman\'s rule and trying to tear territories from her land (leading to the "War of the Austrian Succession"). Despite everything, she demonstrated immense resilience, courage, and exceptionally fast political learning against her male rivals.'
               },
               ideology: { 
-                he: 'לאומיות הררית, הגנה על המולדת האילירית מפני שעבוד, וחזרה עזה למקורות ולנצרות. למרות שחונך כלוחם עות\'מאני נאמן וזכה לתהילה, סקנדרבג המתין בסבלנות להזדמנות המתאימה לחזור לשורשיו. הוא בחר לערוק מצבא הסולטאן, חזר לאלבניה, המיר את דתו חזרה לנצרות והניף בגאון את דגל המרד האדום למען חירות עמו מול האימפריה החזקה בעולם.',
-                en: 'Mountainous nationalism, defense of the Illyrian homeland against subjugation, and a fierce return to roots and Christianity. Although raised as a loyal Ottoman warrior and gaining fame, Skanderbeg patiently waited for the right opportunity to return to his roots. He chose to defect from the Sultan\'s army, returned to Albania, converted back to Christianity, and proudly raised the red flag of rebellion for his people\'s freedom against the world\'s strongest empire.'
+                he: 'אבסולוטיזם נאור. מריה תרזה דגלה בריכוזיות שלטונית ובשמירה אדוקה על דת הנצרות הקתולית (היא לא גילתה סובלנות לדתות אחרות וגירשה יהודים מפראג), אך במקביל היא הבינה בחוכמתה שחובה לעשות רפורמות אזרחיות מעמיקות לטובת העם הפשוט כדי לחזק את המדינה מבפנים אל מול איומים צבאיים חיצוניים חזקים (כמו של פרידריך הגדול מפרוסיה).',
+                en: 'Enlightened absolutism. Maria Theresa advocated for government centralization and strict adherence to the Catholic Christian religion (she showed no tolerance for other religions and expelled Jews from Prague), but simultaneously wisely understood the imperative to enact profound civil reforms for the benefit of the common people to strengthen the state internally against strong external military threats (like from Frederick the Great of Prussia).'
               },
               achievements: { 
-                he: 'נחשב לגיבור הלאומי האולטימטיבי והמיתולוגי של אלבניה. הוא הצליח במשימה הכמעט בלתי אפשרית לאחד את הנסיכויות ושבטי ההרים האלבניים המסוכסכים לכוח לוחם אחד ("בליגת לז\'ה" המפורסמת ב-1444). במשך למעלה מ-25 שנים הנהיג מלחמת גרילה גאונית בהרי אלבניה, שהדפה פעם אחר פעם את צבאותיה העצומים של האימפריה העות\'מאנית שניסו לכבוש את הבלקן. על עמידתו האיתנה זכה להערצה עמוקה של האפיפיור ומלכי אירופה שכינו אותו "מגן משיח והנצרות".',
-                en: 'Considered the ultimate and mythological national hero of Albania. He succeeded in the almost impossible task of uniting the feuding Albanian principalities and mountain tribes into a single fighting force (in the famous "League of Lezhë" in 1444). For over 25 years, he led an ingenious guerrilla war in the Albanian mountains, repeatedly repelling the massive armies of the Ottoman Empire trying to conquer the Balkans. For his steadfast stand, he won the deep admiration of the Pope and European kings who called him the "Defender of Christ and Christianity".'
+                he: 'האישה היחידה בהיסטוריה ששלטה באופן מעשי על נחלות בית הבסבורג. היא שלטה 40 שנה, הקימה צבא מקצועי, יסדה את בתי הספר הציבוריים הראשונים למען חינוך חובה לכל הילדים ללא הבדל מעמד, קידמה רפואה ואוניברסיטאות, פיתחה את הכלכלה, ווילדה 16 ילדים (ביניהם מארי אנטואנט, מלכת צרפת). היא נחשבת לדמות האם של האומה האוסטרית שהצילה את האימפריה מקריסה פנימית.',
+                en: 'The only woman in history to practically rule the Habsburg dominions. She reigned for 40 years, established a professional army, founded the first public schools for compulsory education for all children regardless of class, promoted medicine and universities, developed the economy, and gave birth to 16 children (including Marie Antoinette, Queen of France). She is considered the mother figure of the Austrian nation who saved the empire from internal collapse.'
               }
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_albania_lezhe.jpg?t=1',
-              title: { he: 'הנסיכויות האלבניות (ליגת לז\'ה)', en: 'The Albanian Principalities (League of Lezhë)' },
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_austria_habsburg.jpg',
+              title: { he: 'האימפריה האוסטרו-הונגרית', en: 'The Austro-Hungarian Empire' },
               desc: { 
-                he: 'מפה עתיקה המציגה את חופי הים האדריאטי ואת האזור ההררי, המבותר והקשה של חבל אלבניה, האזור הגיאוגרפי שבו הצליח הגיבור סקנדרבג לאחד את השבטים ב"ליגת לז\'ה" ולהדוף בגבורה את צבאות האימפריה העות\'מאנית.',
-                en: 'An ancient map showing the Adriatic coast and the rugged, difficult mountainous region of Albania, the geographical area where the hero Skanderbeg managed to unite the tribes in the "League of Lezhë" and heroically repel the armies of the Ottoman Empire.'
+                he: 'מפה היסטורית המציגה את הגבולות העצומים של האימפריה ההבסבורגית בשיא כוחה, לפני התפרקותה במלחמת העולם הראשונה, שכללה עשרות לאומים שונים תחת כתר אחד בווינה.',
+                en: 'A historical map showing the vast borders of the Habsburg Empire at the peak of its power, before its dissolution in WWI, which included dozens of different nationalities under one crown in Vienna.'
               }
             }
           },
           {
-            id: 'north_macedonia',
-            name: { he: 'צפון מקדוניה', en: 'North Macedonia' },
-            englishName: 'North Macedonia',
-            officialName: { he: 'רפובליקת צפון מקדוניה', en: 'Republic of North Macedonia' },
-            flagUrl: 'https://flagcdn.com/w640/mk.webp',
+            id: 'switzerland',
+            name: { he: 'שווייץ', en: 'Switzerland' },
+            englishName: 'Switzerland',
+            officialName: { he: 'הקונפדרציה השווייצרית', en: 'Swiss Confederation' },
+            flagUrl: 'https://flagcdn.com/w640/ch.webp',
             capital: {
-              name: { he: "סקופיה", en: "Skopje" },
-              englishName: "Skopje",
+              name: { he: "ברן (דה-פקטו)", en: "Bern (de facto)" },
+              englishName: "Bern",
               etymology: { 
-                he: "שם העיר סקופיה (Skopje) נגזר ישירות משמה של העיר הרומאית והדרדאנית העתיקה 'סקופי' (Scupi) שניצבה בקרבת מקום. המשמעות המדויקת של השם האילירי-דרדאני המקורי אבדה בזמן, אך היא נשמרה בגרסאות שונות על ידי השליטים הסלאבים, הביזנטים והעות'מאנים (שקראו לה איסקובּ – Üsküb) של העיר לאורך הדורות.",
-                en: "The name of the city Skopje is derived directly from the name of the ancient Roman and Dardanian city 'Scupi' that stood nearby. The exact meaning of the original Illyrian-Dardanian name is lost to time, but it was preserved in various versions by the Slavic, Byzantine, and Ottoman rulers (who called it Üsküb) of the city throughout the ages."
+                he: "אגדה מקומית מפורסמת טוענת כי מייסד העיר, הדוכס ברטהולד, נשבע לקרוא לה על שם החיה הראשונה שיצוד ביער. החיה הייתה דוב (Bär בגרמנית), וכך נוצר השם ברן (וישנו בור דובים חיים בעיר עד היום). בלשנים מודרניים טוענים שהמקור עשוי להיות קלטי קדום מהמילה 'bren' שפירושה 'בקע' או 'ערוץ'.",
+                en: "A famous local legend claims the city's founder, Duke Berthold, vowed to name it after the first animal he hunted in the forest. The animal was a bear (Bär in German), creating the name Bern (and there is a live bear pit in the city to this day). Modern linguists suggest the origin might be the ancient Celtic word 'bren' meaning 'cleft' or 'gorge'."
               },
-              foundingYear: { he: "המאה ה-3 לפנה\"ס (כיישוב דרדאני)", en: "3rd Century BC (As a Dardanian settlement)" },
+              foundingYear: { he: "1191 (על ידי דוכסות צרינגן)", en: "1191 (By the Duchy of Zähringen)" },
               reason: { 
-                he: "סקופיה הוקמה וצמחה בשל הגיאוגרפיה המעולה שלה: היא יושבת בעמק רחב על גדות נהר הווארדאר (Vardar), המהווה את מסדרון התחבורה והסחר הצפון-דרומי המרכזי והחשוב ביותר בבלקן (המחבר את מרכז אירופה אל הים האגאי). מיקום זה הפך אותה למרכז מסחרי עוצמתי ועיר מחוז מרכזית תחת שלטון ביזנטי, סרבי ועות'מאני.",
-                en: "Skopje was founded and grew due to its excellent geography: it sits in a broad valley on the banks of the Vardar River, which constitutes the most important and central North-South transport and trade corridor in the Balkans (connecting Central Europe to the Aegean Sea). This location made it a powerful commercial center and a major provincial city under Byzantine, Serbian, and Ottoman rule."
+                he: "ברן בנויה על חצי אי תלול המוקף משלושה צדדים על ידי פיתול עמוק של נהר הארה (Aare). מיקום זה הפך אותה למבצר טבעי חסין לחלוטין שקל להגן עליו. ב-1848, כששווייץ הפכה למדינה פדרלית, ברן נבחרה ל'עיר הפדרלית' (מעין בירה פוליטית) כפשרה גיאוגרפית ופוליטית אידיאלית בין הקנטונים דוברי הגרמנית והצרפתית, תוך הימנעות ממתן כוח מופרז לערים העשירות כציריך או ז'נבה.",
+                en: "Bern is built on a steep peninsula surrounded on three sides by a deep meander of the Aare river. This location made it an absolutely impenetrable natural fortress that was easy to defend. In 1848, when Switzerland became a federal state, Bern was chosen as the 'Federal City' (a de facto political capital) as an ideal geographic and political compromise between German and French-speaking cantons, avoiding giving excessive power to the wealthy cities of Zurich or Geneva."
               }
             },
-            areaNum: { he: '~25,713 קמ"ר', en: '~25,713 sq km' },
-            populationNum: '~1,800,000',
-            currency: { he: 'דינר מקדוני (MKD)', en: 'Macedonian Denar (MKD)' },
+            areaNum: { he: '~41,285 קמ"ר', en: '~41,285 sq km' },
+            populationNum: '~8,900,000',
+            currency: { he: 'פרנק שווייצרי (CHF)', en: 'Swiss Franc (CHF)' },
             area: { 
-              he: 'כ-25,713 קמ"ר. מדינה ללא מוצא לים הממוקמת בליבו של הבלקן הדרומי. הגיאוגרפיה שלה יפהפייה ומאופיינת בעמקים צרים ופוריים המוקפים ברכסי הרים וגבעות מכל עבר, כאשר נהר הווארדאר הגדול חוצה ומפלס את דרכו בה מצפון לדרום. אגם אוכריד (Ohrid) העתיק והעמוק נמצא בדרום-מערב המדינה ומהווה אתר מורשת עולמית.',
-              en: 'Approx. 25,713 sq km. A landlocked country located in the heart of the southern Balkans. Its geography is beautiful and characterized by narrow, fertile valleys surrounded by mountain ranges and hills on all sides, with the large Vardar River crossing and carving its way through it from north to south. The ancient and deep Lake Ohrid is located in the southwest of the country and is a World Heritage site.'
+              he: 'כ-41,285 קמ"ר. מדינה ללא מוצא לים המאופיינת בטופוגרפיה הדרמטית, הגבוהה והיפה ביותר באירופה. היא מחולקת לרכסי הרי האלפים העצומים והמושלגים (כ-60% מהשטח) בדרום ובמרכז (כולל המטרהורן האייקוני), רכס הרי היורה בצפון-מערב, ורמת שווייץ הפורייה ביניהם, השופעת אגמים צלולים ועמוקים (כאגם ז\'נבה ואגם לוצרן).',
+              en: 'Approx. 41,285 sq km. A landlocked country characterized by the most dramatic, highest, and beautiful topography in Europe. It is divided into the massive, snow-capped Alps ranges (~60% of the area) in the south and center (including the iconic Matterhorn), the Jura mountain range in the northwest, and the fertile Swiss Plateau between them, abundant with clear, deep lakes (like Lake Geneva and Lake Lucerne).'
             },
             demographics: {
-              mainNationName: { he: 'מקדונים סלאבים', en: 'Macedonian Slavs' },
-              mainNationPercent: { he: 'כ-58%', en: '~58%' },
+              mainNationName: { he: 'שווייצרים', en: 'Swiss' },
+              mainNationPercent: { he: 'פסיפס לאומי רב-לשוני', en: 'Multilingual national mosaic' },
               description: { 
-                he: 'הרוב המורכב מאומה סלאבית-אורתודוקסית הדוברת שפה הקרובה מאוד לבולגרית (ובעבר אף נחשבה פוליטית כניב שלה). המאפיין הבולט בדמוגרפיה הוא קיומו של מיעוט אלבני-מוסלמי גדול ומשמעותי מאוד (כ-24%), המרוכז בעיקר בצפון-מערב המדינה סמוך לגבול אלבניה וקוסובו. החלוקה האתנית הזו מהווה מוקד למתיחות פוליטית פנימית עדינה ולעיתים נפיצה.',
-                en: 'The majority consists of a Slavic-Orthodox nation speaking a language very close to Bulgarian (and in the past politically considered a dialect of it). The prominent feature in the demographics is the existence of a very large and significant Albanian-Muslim minority (~24%), concentrated mainly in the northwest of the country near the border with Albania and Kosovo. This ethnic division constitutes a focal point for delicate and sometimes explosive internal political tension.'
+                he: 'שווייץ היא מדינה ייחודית שאינה מבוססת על לאום אתני אחד ושפה אחת, אלא על פדרציה רצונית של 26 קנטונים (מחוזות אוטונומיים). האוכלוסייה מחולקת לפי 4 שפות רשמיות: דוברי גרמנית-שווייצרית (כ-62%), דוברי צרפתית במערב (כ-23%), דוברי איטלקית בדרום (כ-8%), ומיעוט זעיר של דוברי רומאנש. החברה השווייצרית דוגלת בדמוקרטיה ישירה וסובלנות תרבותית גבוהה.',
+                en: 'Switzerland is a unique country not based on a single ethnic nationality and language, but on a voluntary federation of 26 cantons (autonomous districts). The population is divided by 4 official languages: Swiss-German speakers (~62%), French speakers in the west (~23%), Italian speakers in the south (~8%), and a tiny minority of Romansh speakers. Swiss society advocates direct democracy and high cultural tolerance.'
               }
             },
             modernHistory: { 
-              he: 'לאחר התפרקות יוגוסלביה המדממת ב-1991, הכריזה המדינה על עצמאותה ללא שפיכות דמים (המדינה היוגוסלבית היחידה שעשתה זאת בדרכי שלום). עם זאת, היא נתקלה מיד במשבר ובחרם דיפלומטי חריף מצד יוון, שמחתה בחריפות על שימוש בשם "מקדוניה" (שכן זהו שמו של חבל ארץ יווני וממלכת מוקדון העתיקה). סכסוך שמות זה עצר את השתלבותה באירופה למשך עשרות שנים, עד שנפתר בפשרה היסטורית ב-2018 ("הסכם פרספה"), שהביא לשינוי שמה הרשמי ל"צפון מקדוניה" וסלל את דרכה לנאט"ו.',
-              en: 'After the bloody breakup of Yugoslavia in 1991, the country declared its independence without bloodshed (the only Yugoslav state to do so peacefully). However, it immediately encountered a crisis and a severe diplomatic boycott from Greece, which protested vehemently against the use of the name "Macedonia" (as it is the name of a Greek region and the ancient Kingdom of Macedon). This naming dispute stalled its integration into Europe for decades, until it was resolved in a historical compromise in 2018 ("Prespa Agreement"), which led to changing its official name to "North Macedonia" and paved its way to NATO.'
+              he: 'הקונפדרציה השווייצרית החלה מברית הגנה שבועתית של 3 קנטונים כפריים (אורי, שוויץ ואונטרוולדן) ב-1291 למטרת הגנה מפני בית הבסבורג. ב-1848 היא אימצה חוקה פדרלית מודרנית. המדינה התפרסמה בעולם בשל מדיניות "הניטרליות החמושה" הקפדנית שלה (שווייץ לא השתתפה באף מלחמה זרה מאז 1815, כולל שתי מלחמות העולם במאה ה-20). היא משמשת כמקלט דיפלומטי בטוח, מרכז בנקאות עולמי, ומקום מושבם של ארגונים בינלאומיים רבים כצלב האדום והאו"ם בג\'נבה. אינה חברה באיחוד האירופי.',
+              en: 'The Swiss Confederation began from a sworn defensive alliance of 3 rural cantons (Uri, Schwyz, and Unterwalden) in 1291 for defense against the House of Habsburg. In 1848, it adopted a modern federal constitution. The country became world-famous for its strict policy of "armed neutrality" (Switzerland has not participated in any foreign war since 1815, including both World Wars in the 20th century). It serves as a secure diplomatic safe haven, a global banking center, and the seat of many international organizations like the Red Cross and UN in Geneva. It is not an EU member.'
             },
-            foundingYears: { he: '1991 (עצמאות מיוגוסלביה)', en: '1991 (Independence from Yugoslavia)' },
+            foundingYears: { he: '1291 (ברית הקנטונים הראשונה) | 1848 (חוקה פדרלית מודרנית)', en: '1291 (First Cantonal Alliance) | 1848 (Modern Federal Constitution)' },
             flagSymbolism: { 
-              he: 'הדגל העדכני (שאומץ ב-1995 כפשרה) מציג "שמש חירות חדשה" זהובה בעלת שמונה קרניים מתרחבות, המקרינה לכל עבר על רקע אדום עז. הצבעים אדום וצהוב הם צבעים היסטוריים מסורתיים של המאבק הלאומי המקדוני וההטבעה ההרלדית של המדינה. השמש מייצגת את הולדת החירות ואת המילים הפותחות את ההמנון הלאומי: "היום מעל מקדוניה נולדת שמש חדשה של חירות". (הדגל שונה מהמקור בעקבות לחץ כבד וחרם יווני שהתנגד לשימוש בסמל "השמש של ורגינה" היווני העתיק).',
-              en: 'The current flag (adopted in 1995 as a compromise) displays a golden "new sun of liberty" with eight widening rays, radiating in all directions against a vivid red background. The colors red and yellow are traditional historical colors of the Macedonian national struggle and the country\'s heraldry. The sun represents the birth of liberty and the opening words of the national anthem: "Today over Macedonia, is being born a new sun of liberty". (The flag was changed from the original due to heavy Greek pressure and boycott opposing the use of the ancient Greek "Vergina Sun" symbol).'
+              he: 'אחד משני הדגלים הלאומיים היחידים בעולם בצורת ריבוע (יחד עם דגל הוותיקן). הצלב הלבן מסמל את הדת הנוצרית הקדומה, והרקע האדום מסמל את דם החיילים והאזרחים שהגנו בחייהם על עצמאותה של הקונפדרציה לאורך ההיסטוריה. עיצוב פשוט ובולט זה שימש השראה ויזואלית ישירה, תוך היפוך הצבעים (צלב אדום על רקע לבן), ליצירת סמל "הצלב האדום" הבינלאומי שנוסד בג\'נבה על ידי ההומניטר השווייצרי אנרי דינאן.',
+              en: 'One of only two square-shaped national flags in the world (along with the Vatican flag). The white cross symbolizes the early Christian religion, and the red background symbolizes the blood of soldiers and citizens who defended the confederation\'s independence with their lives throughout history. This simple and prominent design served as direct visual inspiration, by inverting the colors (a red cross on a white background), for creating the international "Red Cross" emblem founded in Geneva by the Swiss humanitarian Henry Dunant.'
             },
             nationalAnimal: {
-              name: { he: "שונר בלקני (Balkan Lynx)", en: "Balkan Lynx" },
+              name: { he: "כלב סן ברנרד (St. Bernard Dog)", en: "St. Bernard Dog" },
               reason: { 
-                he: "השונר הבלקני (בנוסף לאריה המופיע בסמלים לאומיים עתיקים) הוא חיה אייקונית ומושא לגאווה במקדוניה. זהו תת-מין נדיר ביותר ובסכנת הכחדה של השונר האירואסיאתי, החי באזורים ההרריים והפראיים של מערב צפון מקדוניה. הוא נחשב לסמל לאומי, מופיע על מטבע ה-5 דינר המקומי, ומסמל את יופיו הפראי והבלתי מבוית של הבלקן ואת מאמצי השימור של האומה על אוצרות הטבע הייחודיים לה.",
-                en: "The Balkan Lynx (in addition to the Lion appearing in ancient national emblems) is an iconic animal and object of pride in Macedonia. It is a highly rare and endangered subspecies of the Eurasian Lynx, living in the wild mountainous regions of western North Macedonia. It is considered a national symbol, features on the local 5 Denar coin, and symbolizes the wild, untamed beauty of the Balkans and the nation's conservation efforts of its unique natural treasures."
+                he: "כלבי הסן ברנרד הם כלבי ענק גבורים, חסונים ואמיצים. הם גודלו, טופחו ואולפו במשך מאות שנים על ידי נזירים בהוספיס שעל הר 'מעבר סן ברנרד הגדול' באלפים. תפקידם ההירואי המפורסם היה לאתר, לחלץ ולהציל מטיילים שעקבותיהם אבדו בסופות שלגים ובמפולות באלפים. כלב זה מסמל בצורה עמוקה את ההומניטריות השווייצרית הניטרלית (הושטת יד אזרחית ועזרה לחסרי אונים במצוקה), את יכולת ההישרדות באלפים הקשוחים, ואת האהבה לטבע הקפוא.",
+                en: "St. Bernard dogs are heroic, robust, and brave giant dogs. They were bred, nurtured, and trained for centuries by monks at the hospice on the 'Great St Bernard Pass' in the Alps. Their famous heroic role was to locate, extricate, and rescue travelers lost in snowstorms and avalanches in the Alps. This dog deeply symbolizes neutral Swiss humanitarianism (extending a civilian hand and helping the helpless in distress), survival ability in the harsh Alps, and love for frozen nature."
               }
             },
             etymology: {
               parts: [
-                { text: { he: 'מקדוניה (Macedonia)', en: 'Macedonia' }, color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-500/30', desc: { he: 'השם אומץ משמה של הממלכה והאזור ההיסטורי העתיק (מולדתם של פיליפוס ואלכסנדר הגדול). המקור הבלשני העתיק הוא המילה היוונית הקדומה "Makednos" (מקדנוי), שפירושה "אנשים גבוהים", "ארוכים" או "אנשי הרמות", מונח המתייחס כנראה למבנה הפיזי של השבטים ההרריים הקדומים או למקום מגוריהם הגבוה.', en: 'The name was adopted from the name of the ancient historical kingdom and region (the homeland of Philip and Alexander the Great). The ancient linguistic origin is the Old Greek word "Makednos", meaning "tall people", "long", or "highlanders", a term likely referring to the physical structure of the ancient mountain tribes or their high-altitude dwelling place.' } },
-                { text: { he: 'צפון (North)', en: 'North' }, color: 'text-gray-400', bg: 'bg-gray-400/10', border: 'border-gray-500/30', desc: { he: 'התוספת הגיאוגרפית המפורשת שנוספה רשמית לשם המדינה בשנת 2018. זוהי פשרה דיפלומטית היסטורית שסוכמה מול יוון, שנועדה להבדיל ולנתק דמוגרפית בין המדינה הסלאבית המודרנית לבין המחוז היווני העתיק בצפון יוון שנקרא גם הוא מקדוניה.', en: 'The explicit geographical addition officially added to the country\'s name in 2018. This is a historic diplomatic compromise agreed upon with Greece, intended to demographically distinguish and separate the modern Slavic state from the ancient Greek province in northern Greece also called Macedonia.' } }
+                { text: { he: 'שווייץ (Schwyz)', en: 'Schwyz' }, color: 'text-red-400', bg: 'bg-red-400/10', border: 'border-red-500/30', desc: { he: 'השם המודרני מגיע משמו של קנטון "שוויץ", אחד משלושת הקנטונים המייסדים המקוריים והנועזים שחתמו על ברית ההגנה של 1291 (שבועת ריטלי) כנגד השלטון ההבסבורגי שניסה לשעבד אותם.', en: 'The modern name comes from the name of the canton "Schwyz", one of the three original and daring founding cantons that signed the 1291 defense alliance (Rütlischwur) against Habsburg rule trying to subjugate them.' } },
+                { text: { he: 'הלווטיה (Helvetia)', en: 'Helvetia' }, color: 'text-stone-400', bg: 'bg-stone-400/10', border: 'border-stone-500/30', desc: { he: 'זהו שמה הלטיני הקדום של המדינה, המשמש עד היום בשמה הרשמי בלטינית "Confoederatio Helvetica" (ומכאן הקיצור הלאומי CH בכתובות אינטרנט ומכוניות). השם נגזר משם השבט הקלטי העתיק והלוחם, ה"הלווטים" (Helvetii), שאכלסו את האזור במאה ה-1 לפנה"ס טרם כיבושו על ידי יוליוס קיסר.', en: 'This is the ancient Latin name of the country, still used today in its official Latin name "Confoederatio Helvetica" (hence the national abbreviation CH in web domains and cars). The name is derived from the ancient, warlike Celtic tribe, the "Helvetii", who populated the region in the 1st century BC before its conquest by Julius Caesar.' } }
               ],
-              synthesis: { he: 'מילולית היסטורית: "החלק הצפוני של ארץ אנשי ההרים (האנשים הגבוהים)".', en: 'Historically literal: "The northern part of the land of the highlanders (the tall people)".' }
+              synthesis: { he: 'מילולית: "ארץ קנטון שוויץ המייסד" (או בלטינית היסטורית: ארצם של הלוחמים ההלווטים הקלטים).', en: 'Literally: "Land of the founding Schwyz canton" (or historically in Latin: land of the Celtic Helvetii warriors).' }
             },
             figure: {
-              name: { he: 'קירה גליגורוב (Kiro Gligorov)', en: 'Kiro Gligorov' },
-              years: '1917 - 2012',
+              name: { he: 'וילהלם טל (William Tell)', en: 'William Tell' },
+              years: 'המאה ה-14 (דמות מיתולוגית) / 14th century (Mythological)',
               childhood: { 
-                he: 'נולד בעיר שטיפ בתקופה היסטורית סוערת מאוד של מלחמות הבלקן. הוא גדל תוך כדי תהפוכות פוליטיות, למד משפטים באוניברסיטת בלגרד המרכזית, ושם הפך פעיל מעורב בתנועות הסטודנטים המרקסיסטיות והאנטי-פשיסטיות במהלך מלחמת העולם השנייה נגד הכיבוש.',
-                en: 'Born in the city of Štip during a highly turbulent historical period of the Balkan Wars. He grew up amidst political upheavals, studied law at the central University of Belgrade, and there became actively involved in Marxist and anti-fascist student movements during WWII against the occupation.'
+                he: 'גיבור פולקלור לאומי ומיתולוגי (עצם קיומו ההיסטורי במציאות נתון בספק רב). על פי מסורות האגדות, טל היה איכר פשוט, איש הרים מחוספס ואמן צליפה חסר תחרות ברובה קשת (קשת מוצלבת), שהגיע במקור מקנטון אורי המיוער.',
+                en: 'A national and mythological folklore hero (his actual historical existence in reality is highly disputed). According to legendary traditions, Tell was a simple peasant, a rugged mountain man, and an unmatched expert marksman with a crossbow, originally hailing from the forested canton of Uri.'
               },
               ideology: { 
-                he: 'פרגמטיות דיפלומטית זהירה, פשרה, מתינות והימנעות מוחלטת ממאבקים לאומניים קיצוניים ושפיכות דמים הרסנית. בעוד שאר מנהיגי הרפובליקות ביוגוסלביה הובילו את עמיהם למלחמות אזרחים אכזריות ולטיהורים אתניים, גליגורוב האמין שניתן וצריך לפעול בזהירות עצומה כדי לתמרן פוליטית את מדינתו בין כוחו של צבא יוגוסלביה לבין הסכסוכים האתניים הרותחים באזור.',
-                en: 'Cautious diplomatic pragmatism, compromise, moderation, and total avoidance of extreme nationalistic struggles and destructive bloodshed. While other republic leaders in Yugoslavia led their peoples into brutal civil wars and ethnic cleansing, Gligorov believed that it was possible and necessary to act with immense caution to politically maneuver his country between the power of the Yugoslav army and the boiling ethnic conflicts in the region.'
+                he: 'האידאולוגיה שלו משמשת כסמל עליון להתנגדות העממית והבלתי מתפשרת לעריצות, לדיכוי, ולשלטון אריסטוקרטי זר (נציגי בית הבסבורג), ולעומת זאת – הגנה נואשת וחירוף נפש על החירויות המקומיות, האוטונומיה של הקנטונים, והחופש האישי של איש ההרים הפשוט שרוצה לחיות בשלווה.',
+                en: 'His ideology serves as a supreme symbol of popular, uncompromising resistance to tyranny, oppression, and foreign aristocratic rule (Habsburg representatives), and in contrast – a desperate, valiant defense of local liberties, cantonal autonomy, and the personal freedom of the common mountain man who wants to live in peace.'
               },
               achievements: { 
-                he: 'נחשב לאבי האומה של צפון מקדוניה. הוא כיהן כנשיא הראשון של מקדוניה העצמאית. הוא למעשה המנהיג היחיד בכל יוגוסלביה לשעבר שהצליח להוביל ולנתב את מדינתו לעצמאות מלאה באמצעות דיפלומטיה חכמה בלבד וללא ירייה אחת, תוך שהוא מצליח לחתום על הסכם נסיגה מסודר ושקט של הצבא היוגוסלבי משטח ארצו, ומציל את עמו מזוועות מלחמות הבלקן של שנות ה-90.',
-                en: 'Considered the father of the nation of North Macedonia. He served as the first President of independent Macedonia. He is effectively the only leader in all of the former Yugoslavia who managed to guide and steer his country to full independence through smart diplomacy alone and without a single shot fired, successfully signing an orderly and quiet withdrawal agreement for the Yugoslav army from his country\'s territory, saving his people from the horrors of the 1990s Balkan Wars.'
+                he: 'האגדה המכוננת של שווייץ מספרת כי השליט (הפוגט) האוסטרי האכזר, גסלר, אילץ את טל לירות חץ בתפוח שהונח מעל ראשו של בנו הקטן כדי להציל את חייהם מעונש מוות. טל הצליח בפגיעה בודדת ומדויקת, ולאחר מכן ארב והתנקש בחייו של העריץ גסלר בעזרת חץ שני שהכין מראש. מעשה גבורה ומרד נועז זה הצית את ההתקוממות הכללית של איכרי האזור, שהובילה בסופו של דבר לשבועת האחים ולהקמת הקונפדרציה השווייצרית הישנה והחופשית מכל שלטון זר.',
+                en: 'The founding legend of Switzerland tells that the cruel Austrian bailiff (Vogt), Gessler, forced Tell to shoot an arrow at an apple placed on his young son\'s head to save their lives from execution. Tell succeeded with a single, precise shot, and later ambushed and assassinated the tyrant Gessler with a second arrow he had prepared in advance. This daring act of heroism and rebellion ignited a general uprising among local peasants, ultimately leading to the sworn brotherhood and the foundation of the Old Swiss Confederacy free from any foreign rule.'
               }
             },
             map: {
-              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_macedonia_ottoman.jpg?t=1',
-              title: { he: 'מקדוניה ומרחב הבלקן האמצעי', en: 'Macedonia and the Central Balkans Region' },
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_switzerland_cantons.jpg',
+              title: { he: 'שווייץ והקנטונים ההיסטוריים', en: 'Switzerland and the Historic Cantons' },
               desc: { 
-                he: 'מפה היסטורית מהמאה ה-19 המראה את אזור מקדוניה הגיאוגרפית (לפני חלוקתו המודרנית הפוליטית בין המדינות השונות), אזור הררי ועמקים שהיווה צומת דרכים מסחרי וצבאי קריטי וחשוב באימפריה העות\'מאנית השוקעת.',
-                en: 'A historical map from the 19th century showing the geographical Macedonia region (before its modern political division among various states), a mountainous area with valleys that constituted a critical and important commercial and military crossroads in the declining Ottoman Empire.'
+                he: 'מפה היסטורית עתיקה של מרכז הרי האלפים המדגישה את החלוקה הגיאוגרפית המבוזרת של שווייץ למחוזות וקנטונים קטנים ועצמאיים, אשר התאגדו יחד מתוך הצורך הדחוף להגנה משותפת מפני אימפריות זרות.',
+                en: 'An ancient historical map of the central Alps highlighting the decentralized geographical division of Switzerland into small, independent districts and cantons, which banded together out of the urgent need for mutual defense against foreign empires.'
+              }
+            }
+          },
+          {
+            id: 'liechtenstein',
+            name: { he: 'ליכטנשטיין', en: 'Liechtenstein' },
+            englishName: 'Liechtenstein',
+            officialName: { he: 'נסיכות ליכטנשטיין', en: 'Principality of Liechtenstein' },
+            flagUrl: 'https://flagcdn.com/w640/li.webp',
+            capital: {
+              name: { he: "ואדוץ", en: "Vaduz" },
+              englishName: "Vaduz",
+              etymology: { 
+                he: "חוקרים מאמינים כי השם נובע מהשפה הרומאנשית (שפה לטינית עתיקה המדוברת באזור האלפים), מהמילה 'avadutg', שפירושה המילולי הוא 'תעלת מים' או 'אמת מים', המתייחסת לזרימת הפשרת השלגים באזור שיצרה פלגים מההרים.",
+                en: "Scholars believe the name stems from the Romansh language (an ancient Latin language spoken in the Alpine region), from the word 'avadutg', which literally means 'water canal' or 'aqueduct', referring to the flow of melting snows in the area that created mountain streams."
+              },
+              foundingYear: { he: "המאה ה-12 (אזכור ראשון ב-1150 כ-Faduz)", en: "12th Century (First mentioned in 1150 as Faduz)" },
+              reason: { 
+                he: "ואדוץ התפתחה כיישוב קטן תחת צילה המגן של טירת ואדוץ (מבצר הררי השוכן על צוק המשקיף על עמק הריין). האזור נרכש ב-1712 על ידי משפחת האצולה ליכטנשטיין העשירה במטרה לקבל מושב פוליטי במועצת האימפריה הרומית הקדושה, ועם ייסוד הנסיכות, העיר הקטנה והמבוצרת הפכה באופן טבעי לעיר הבירה ולמושב הקבע של הנסיך השולט.",
+                en: "Vaduz developed as a small settlement under the protective shadow of Vaduz Castle (a mountain fortress perched on a cliff overlooking the Rhine valley). The area was purchased in 1712 by the wealthy noble Liechtenstein family in order to gain a political seat in the diet of the Holy Roman Empire, and with the founding of the principality, the small fortified town naturally became the capital city and the permanent seat of the ruling Prince."
+              }
+            },
+            areaNum: { he: '~160 קמ"ר', en: '~160 sq km' },
+            populationNum: '~40,000',
+            currency: { he: 'פרנק שווייצרי (CHF)', en: 'Swiss Franc (CHF)' },
+            area: { 
+              he: 'כ-160 קמ"ר (אחת המדינות הקטנות בעולם). זוהי מיקרו-מדינה הררית לחלוטין, "הכלואה" בין שווייץ למערב (נהר הריין משמש כגבול הטבעי ביניהן) לאוסטריה למזרח. היא אחת משתי המדינות היחידות בעולם (לצד אוזבקיסטן) המוגדרות כ"כפולות ללא מוצא לים" (Doubly landlocked - כלומר מוקפות במדינות שגם להן עצמן אין כל מוצא לאוקיינוס).',
+              en: 'Approx. 160 sq km (one of the smallest countries in the world). It is an entirely mountainous micro-state, "locked" between Switzerland to the west (the Rhine river acts as the natural border between them) and Austria to the east. It is one of only two countries globally (alongside Uzbekistan) defined as "doubly landlocked" (i.e., surrounded by countries that themselves also lack any access to the ocean).'
+            },
+            demographics: {
+              mainNationName: { he: 'ליכטנשטיינרים', en: 'Liechtensteiners' },
+              mainNationPercent: { he: 'כ-66%', en: '~66%' },
+              description: { 
+                he: 'האוכלוסייה במדינה קטנה מאוד. הליכטנשטיינרים הם ממוצא גרמאני ודוברים ניב אלמני מקומי המוכר גם כ"גרמנית שווייצרית" (ששונה מאוד מגרמנית תקנית). הרוב המוחלט של התושבים משתייך לכנסייה הקתולית (שהיא דת המדינה הרשמית בחוקה). אחוז עצום מהאוכלוסייה במדינה (כ-34%) הם תושבים זרים (בעיקר משווייץ, אוסטריה וגרמניה) שעובדים במיקרו-מדינה ונהנים מהכלכלה החזקה והמשגשגת שלה.',
+                en: 'The population in the country is very small. Liechtensteinians are of Germanic descent and speak a local Alemannic dialect also known as "Swiss German" (which is very different from Standard German). The vast majority of residents belong to the Catholic Church (which is the official state religion in the constitution). A huge percentage of the country\'s population (~34%) are foreign residents (mainly from Switzerland, Austria, and Germany) who work in the microstate and enjoy its strong and prosperous economy.'
+              }
+            },
+            modernHistory: { 
+              he: 'ליכטנשטיין היא למעשה שריד היסטורי נדיר, הנסיכות האחרונה שנותרה מתוך מאות הנסיכויות של האימפריה הרומית הקדושה של פעם. היא זכתה לריבונות מלאה ב-1806. לאחר מלחמת העולם הראשונה וקריסת פטרוניתה החזקה אוסטריה, היא פנתה לשווייץ וחתמה איתה על איחוד מכס ומטבע הדוק (המשמש עד היום). היא שגשגה במהלך המאה ה-20 בזכות מדיניות כלכלית של חוקי מס נוחים וסודיות בנקאית אדוקה, שהפכו אותה מקהילה חקלאית הררית ענייה לאחת המדינות העשירות בעולם לנפש.',
+              en: 'Liechtenstein is effectively a rare historical remnant, the last remaining principality out of hundreds from the old Holy Roman Empire. It gained full sovereignty in 1806. After WWI and the collapse of its strong patron Austria, it turned to Switzerland and signed a strict customs and monetary union with it (still used today). It prospered during the 20th century thanks to an economic policy of favorable tax laws and strict banking secrecy, transforming it from a poor agrarian mountain community into one of the richest countries per capita in the world.'
+            },
+            foundingYears: { he: '1719 (הקמת הנסיכות) | 1806 (ריבונות מלאה)', en: '1719 (Creation of Principality) | 1806 (Full Sovereignty)' },
+            flagSymbolism: { 
+              he: 'הדגל מורכב משני פסים אופקיים של כחול ואדום (שאלו היו צבעי מדי השרד של נסיכי הנסיכות במאה ה-18). הכחול מסמל את השמיים הבהירים מעל הרי האלפים, והאדום מסמל את האש הבוערת באח הבית בלילות החורף הקרים (סמל לחום הבית ולאחווה). בפינה השמאלית העליונה נמצא כתר זהב של נסיך. הכתר התווסף באורח משעשע ב-1937, לאחר שהמשלחת הלאומית לאולימפיאדת ברלין ב-1936 גילתה בהלם מוחלט שדגלם הפשוט זהה לחלוטין לדגלה של מדינת האיטי שבאיים הקריביים.',
+              en: 'The flag consists of two horizontal stripes of blue and red (which were the colors of the principality\'s princes\' livery in the 18th century). Blue symbolizes the clear skies over the Alps, and red symbolizes the fires burning in domestic hearths on cold winter nights (a symbol of home warmth and brotherhood). In the upper left corner sits a golden prince\'s crown. The crown was amusingly added in 1937, after the national delegation to the 1936 Berlin Olympics realized in absolute shock that their simple flag was entirely identical to the flag of the state of Haiti in the Caribbean.'
+            },
+            nationalAnimal: {
+              name: { he: "צפיר האלפים / יעל הפסגות (Alpine Chamois)", en: "Alpine Chamois" },
+              reason: { 
+                he: "הצפיר הוא יונק פרסתן הררי קטן, זריז ואלגנטי, שחי ומשגשג במדרונות הסלעיים, התלולים והמסוכנים ביותר של האלפים שבהם רוב החיות מתקשות לנוע. עבור תושבי הנסיכות הזעירה, הצפיר מסמל את האופי ההררי, המבודד והפראי של ארצם, וכן את היכולת לשרוד, להסתגל ולנוע בזריזות ובבטחה בתנאים אלפיניים קשים וקפואים, תכונות שאפיינו את הקהילות הכפריות הקטנות והמגובשות באזור בעבר.",
+                en: "The Chamois is a small, agile, and elegant mountain hoofed mammal living and thriving on the steepest and most dangerous rocky slopes of the Alps where most animals struggle to move. For the inhabitants of the tiny principality, the chamois symbolizes the mountainous, isolated, and wild character of their land, as well as the ability to survive, adapt, and move swiftly and safely in harsh, freezing alpine conditions, traits that characterized the small, cohesive rural communities in the region in the past."
+              }
+            },
+            etymology: {
+              parts: [
+                { text: { he: 'ליכט (Liecht)', en: 'Liecht' }, color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-500/30', desc: { he: 'מילה בשפה הגרמנית שמשמעותה פשוטה - "אור" (Light) או "בהיר".', en: 'A word in the German language simply meaning "Light" or "Bright".' } },
+                { text: { he: 'שטיין (Stein)', en: 'Stein' }, color: 'text-stone-400', bg: 'bg-stone-400/10', border: 'border-stone-500/30', desc: { he: 'מילה נפוצה בגרמנית שמשמעותה "אבן" או "סלע".', en: 'A common word in German meaning "Stone" or "Rock".' } }
+              ],
+              synthesis: { he: 'מילולית: "האבן הבהירה". המדינה קרויה על שם משפחת ליכטנשטיין, אצולת הון מווינה שקנתה את השטח. משפחת האצולה עצמה נקראה על שם טירתם ליד וינה, טירת ליכטנשטיין, שנבנתה מאבן בהירה במיוחד.', en: 'Literally: "The Bright Stone". The country is named after the Liechtenstein family, wealthy nobility from Vienna who purchased the territory. The noble family itself was named after their castle near Vienna, Liechtenstein Castle, which was built of exceptionally light-colored stone.' }
+            },
+            figure: {
+              name: { he: 'הנסיך יוהאן השני (Prince Johann II)', en: 'Prince Johann II (Johann the Good)' },
+              years: '1840 - 1929',
+              childhood: { 
+                he: 'נולד כיורש העצר של בית ליכטנשטיין במוראביה (אז חלק מאוסטריה). הוא זכה לחינוך אריסטוקרטי מצוין ומקיף, דיבר מספר שפות, וערך מסעות רבים ברחבי אירופה להכרת תרבויות. עם פטירת אביו, הוא ירש את כס השלטון והפך לנסיך כשהיה בן 18 בלבד.',
+                en: 'Born as the heir apparent to the House of Liechtenstein in Moravia (then part of Austria). He received an excellent and comprehensive aristocratic education, spoke multiple languages, and undertook numerous travels across Europe to learn about cultures. Upon his father\'s death, he inherited the throne and became Prince when he was only 18 years old.'
+              },
+              ideology: { 
+                he: 'פציפיזם עמוק, ניטרליות בינלאומית, מודרניזציה אזרחית וחסות תרבותית. יוהאן (המכונה "יוהאן הטוב") היה שליט הומני ומלומד שסלד לחלוטין ממלחמות (הוא השתתף כמשקיף במלחמה בודדת ומיהר לחזור לביתו בזעזוע). הוא האמין בכוחם של המדע, האמנות (השקיע חלק ניכר מהונו במוזיאונים ואוספי אמנות) ורווחת הציבור הקטן שלו על פני אדמות הנסיכות.',
+                en: 'Deep pacifism, international neutrality, civilian modernization, and cultural patronage. Johann (known as "Johann the Good") was a humane and scholarly ruler who absolutely loathed wars (he participated as an observer in a single war and quickly returned home in shock). He believed in the power of science, art (investing a significant part of his fortune in museums and art collections), and the welfare of his small public across the principality\'s lands.'
+              },
+              achievements: { 
+                he: 'הוא שלט במדינה במשך 70 שנים ו-91 ימים (אחת מתקופות השלטון הארוכות ביותר בהיסטוריה האנושית המתועדת, שני רק ללואי ה-14 ואליזבת השנייה). יוהאן השני ביצע מהלך פוליטי-צבאי היסטורי ונדיר כשהחליט לפרק ולבטל לחלוטין את צבאה של המדינה (ב-1868) כדי לחסוך בהוצאות – מהלך מבריק שהציל את הנסיכות ממעורבות הרסנית במלחמת העולם הראשונה. הוא העניק לעם חוקה דמוקרטית מודרנית ב-1921, וניתב את המדינה לברית הגנה כלכלית עם שווייץ שהפכה אותה למשגשגת, מודרנית ושלווה.',
+                en: 'He ruled the country for 70 years and 91 days (one of the longest documented reigns in human history, second only to Louis XIV and Elizabeth II). Johann II executed a rare historic political-military move when he decided to completely disband and abolish the country\'s army (in 1868) to save expenses – a brilliant move that saved the principality from destructive involvement in WWI. He granted the people a modern democratic constitution in 1921, and steered the country into a defense and economic alliance with Switzerland that made it prosperous, modern, and peaceful.'
+              }
+            },
+            map: {
+              url: 'https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_liechtenstein_alpine.jpg',
+              title: { he: 'נסיכות ליכטנשטיין הצעירה', en: 'The Young Principality of Liechtenstein' },
+              desc: { 
+                he: 'מפה היסטורית המציגה את גבולותיה של הנסיכות הקטנה והרשמית המשורטטת על רקע הרי האלפים הענקיים ונהר הריין שחוצץ בינה לבין שווייץ, תוך שהיא ממחישה את ממדיה הזעירים ביחס למעצמות שהקיפו אותה.',
+                en: 'A historical map showing the borders of the small, official principality drafted against the backdrop of the giant Alps and the Rhine River separating it from Switzerland, illustrating its tiny dimensions relative to the powers that surrounded it.'
               }
             }
           }
@@ -793,7 +711,7 @@
               <div className="absolute top-0 right-4 md:right-8">
                 <button 
                   onClick={() => setLang(lang === 'he' ? 'en' : 'he')}
-                  className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-full border border-gray-600 transition-colors shadow-lg font-medium text-sm"
+                  className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-full border border-gray-600 transition-colors shadow-lg font-medium text-sm z-50"
                 >
                   <i className="fa-solid fa-globe text-blue-400"></i>
                   {uiStr.langBtn}
