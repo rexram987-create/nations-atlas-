@@ -7,16 +7,28 @@ This folder contains the new structured data layer for the Nations Atlas project
 The goal is to separate country information from the visual HTML pages.
 Each country should have its own file, and countries should be grouped by region.
 
+This allows the project to grow safely without turning every HTML page into one very large and difficult-to-maintain file.
+
 ## Folder structure
 
 ```text
 src/data/
+├── README.md
 ├── regionsIndex.js
 └── regions/
-    └── baltic-states/
-        ├── estonia.js
-        ├── latvia.js
-        ├── lithuania.js
+    ├── baltic-states/
+    │   ├── estonia.js
+    │   ├── latvia.js
+    │   ├── lithuania.js
+    │   └── index.js
+    └── western-balkans/
+        ├── serbia.js
+        ├── croatia.js
+        ├── bosnia-and-herzegovina.js
+        ├── slovenia.js
+        ├── montenegro.js
+        ├── kosovo.js
+        ├── north-macedonia.js
         └── index.js
 ```
 
@@ -93,10 +105,29 @@ export default country;
 
 ## Current migration status
 
-The Baltic States region has been started in the new structure:
+### Baltic States
 
-- Estonia: expanded country profile
-- Latvia: expanded country profile
-- Lithuania: expanded country profile
+Source file: `regions/baltic_states.html`
 
-The existing HTML pages still remain active. This data layer is currently safe and parallel to the old pages.
+- Estonia: `expanded-country-profile`
+- Latvia: `expanded-country-profile`
+- Lithuania: `expanded-country-profile`
+
+### Western Balkans
+
+Source file: `regions/western_balkans.html`
+
+- Serbia: `expanded-country-profile`
+- Croatia: `expanded-country-profile`
+- Bosnia and Herzegovina: `expanded-country-profile`
+- Slovenia: `expanded-country-profile`
+- Montenegro: `expanded-country-profile`
+- Kosovo: `expanded-country-profile`
+- North Macedonia: `expanded-country-profile`
+
+## Important note
+
+The existing HTML pages still remain active.
+This data layer is currently safe and parallel to the old pages.
+
+The next safe step is to continue migrating more regions into this structure before connecting the live UI to the new data layer.
