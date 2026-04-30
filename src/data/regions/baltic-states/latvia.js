@@ -115,10 +115,10 @@ const latvia = {
     },
     cartography: {
       title: {
-        he: "ליבוניה וקורלנד ההיסטוריות",
-        en: "Historical Livonia and Courland"
+        he: "דוכסות קורלנד והמרחב הלטבי ההיסטורי",
+        en: "The Duchy of Courland and the historical Latvian space"
       },
-      map: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_livonia_courland.jpg",
+      map: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_latvia_duchy_courland.jpg",
       description: {
         he: "המפה משקפת את האופן שבו לטביה המודרנית צמחה מתוך מרחבים היסטוריים שונים: ליבוניה, קורלנד ולטגאלה. אזורים אלה עמדו במשך מאות שנים בצומת בין מסחר גרמני, שלטון פולני-ליטאי, השפעה שוודית והתפשטות רוסית.",
         en: "The map reflects how modern Latvia grew out of different historical spaces: Livonia, Courland and Latgale. These regions stood for centuries at a crossroads between German trade, Polish-Lithuanian rule, Swedish influence and Russian expansion."
