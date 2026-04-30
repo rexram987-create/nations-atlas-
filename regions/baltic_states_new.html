@@ -37,7 +37,7 @@
       : `<strong class="text-red-400">בדיקת נתונים:</strong><ul class="mt-3 list-disc pr-6">${validation.issues.map(issue => `<li>${issue}</li>`).join("")}</ul>`;
 
     countriesBox.innerHTML = region.countries
-      .map(country => renderCountryCard(country, "he"))
+      .map(country => renderCountryCard(country, "he", "baltic-states/"))
       .join("");
   </script>
 </body>
