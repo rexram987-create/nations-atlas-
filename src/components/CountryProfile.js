@@ -158,13 +158,14 @@ export function renderCountryProfile(country, lang = "he") {
   `;
 }
 
-export function renderCountryCard(country, lang = "he") {
+export function renderCountryCard(country, lang = "he", basePath = "") {
   const name = getLocalizedText(country.name, lang);
   const officialName = getLocalizedText(country.officialName, lang);
   const capitalName = getLocalizedText(country.capital?.name, lang);
+  const href = `${basePath}${country.id}.html`;
 
   return `
-    <a href="${country.id}.html" class="group block rounded-3xl border border-gray-800 bg-gray-900 p-6 shadow-lg transition hover:-translate-y-1 hover:border-blue-500/60 hover:shadow-blue-950/40">
+    <a href="${href}" class="group block rounded-3xl border border-gray-800 bg-gray-900 p-6 shadow-lg transition hover:-translate-y-1 hover:border-blue-500/60 hover:shadow-blue-950/40">
       <div class="flex items-center justify-between gap-4">
         <div>
           <h2 class="text-3xl font-black text-white group-hover:text-blue-300">${name}</h2>
