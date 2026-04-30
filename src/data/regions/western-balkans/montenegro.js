@@ -115,10 +115,10 @@ const montenegro = {
     },
     cartography: {
       title: {
-        he: "מונטנגרו ההררית והאדריאטית",
-        en: "Mountainous and Adriatic Montenegro"
+        he: "נסיכות מונטנגרו",
+        en: "The Principality of Montenegro"
       },
-      map: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_montenegro.jpg",
+      map: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_montenegro_principality.jpg",
       description: {
         he: "המפה מדגישה את מונטנגרו כמדינה קטנה בין הרים לים, שבה הגאוגרפיה עצמה עיצבה מסורת של עצמאות, הגנה טבעית וזהות שבטית-מדינית ייחודית.",
         en: "The map emphasizes Montenegro as a small country between mountains and sea, where geography itself shaped a tradition of independence, natural defense and a distinctive clan-based state identity."
