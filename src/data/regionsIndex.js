@@ -1,6 +1,7 @@
 import balticStates from "./regions/baltic-states/index.js";
 import westernBalkans from "./regions/western-balkans/index.js";
 import easternSouthernBalkans from "./regions/eastern-southern-balkans/index.js";
+import caucasus from "./regions/caucasus/index.js";
 
 const regionsIndex = {
   "baltic-states": {
@@ -26,6 +27,14 @@ const regionsIndex = {
       en: "Eastern and Southern Balkans"
     },
     countries: easternSouthernBalkans
+  },
+  "caucasus": {
+    id: "caucasus",
+    name: {
+      he: "הקווקז",
+      en: "Caucasus"
+    },
+    countries: caucasus
   }
 };
 
