@@ -115,13 +115,13 @@ const lithuania = {
     },
     cartography: {
       title: {
-        he: "ליטא והאיחוד הפולני-ליטאי",
-        en: "Lithuania and the Polish-Lithuanian Commonwealth"
+        he: "הדוכסות הגדולה של ליטא",
+        en: "The Grand Duchy of Lithuania"
       },
-      map: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_lithuania_poland.jpg",
+      map: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_lithuania_grand_duchy.jpg",
       description: {
-        he: "המפה מייצגת את ליטא לא רק כמדינה בלטית קטנה של ימינו, אלא כיורשת של מסורת מדינית רחבה הרבה יותר. הדוכסות הגדולה והאיחוד עם פולין יצרו מרחב פוליטי עצום שחיבר בין הים הבלטי, מזרח אירופה והעולם הסלאבי.",
-        en: "The map represents Lithuania not only as a small modern Baltic state, but as the heir to a much broader state tradition. The Grand Duchy and the union with Poland created a vast political space connecting the Baltic Sea, Eastern Europe and the Slavic world."
+        he: "המפה מייצגת את ליטא לא רק כמדינה בלטית קטנה של ימינו, אלא כיורשת של מסורת מדינית רחבה הרבה יותר. הדוכסות הגדולה יצרה מרחב פוליטי עצום שחיבר בין הים הבלטי, מזרח אירופה והעולם הסלאבי.",
+        en: "The map represents Lithuania not only as a small modern Baltic state, but as the heir to a much broader state tradition. The Grand Duchy created a vast political space connecting the Baltic Sea, Eastern Europe and the Slavic world."
       }
     }
   },
