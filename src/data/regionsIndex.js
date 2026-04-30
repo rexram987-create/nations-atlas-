@@ -1,5 +1,6 @@
 import balticStates from "./regions/baltic-states/index.js";
 import westernBalkans from "./regions/western-balkans/index.js";
+import easternSouthernBalkans from "./regions/eastern-southern-balkans/index.js";
 
 const regionsIndex = {
   "baltic-states": {
@@ -17,6 +18,14 @@ const regionsIndex = {
       en: "Western Balkans"
     },
     countries: westernBalkans
+  },
+  "eastern-southern-balkans": {
+    id: "eastern-southern-balkans",
+    name: {
+      he: "הבלקן המזרחי והדרומי",
+      en: "Eastern and Southern Balkans"
+    },
+    countries: easternSouthernBalkans
   }
 };
 
