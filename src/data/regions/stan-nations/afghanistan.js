@@ -1,0 +1,24 @@
+const afghanistan = {
+  id: "afghanistan",
+  region: "stan-nations",
+  name: { he: "אפגניסטן", en: "Afghanistan" },
+  englishName: "Afghanistan",
+  officialName: { he: "האמירות האסלאמית של אפגניסטן", en: "Islamic Emirate of Afghanistan" },
+  flag: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/flags/afghanistan.webp",
+  capital: { name: { he: "קאבול", en: "Kabul" }, englishName: "Kabul", foundingYear: { he: "עתיקה; בירה מודרנית מ-1776", en: "Ancient; modern capital from 1776" }, etymology: { he: "קאבול נקראת על שם נהר קאבול. השם מוכר כבר במסורות עתיקות, ובהמשך הפך לסמל של מעבר בין מרכז אסיה לתת-היבשת ההודית.", en: "Kabul is named after the Kabul River. The name is known from ancient traditions and later became a symbol of passage between Central Asia and the Indian subcontinent." }, selectionReason: { he: "קאבול נבחרה בזכות מיקומה האסטרטגי בעמק מוקף הרים, השולט על דרכי מעבר בין איראן, מרכז אסיה והודו.", en: "Kabul was chosen because of its strategic location in a mountain-ringed valley controlling routes between Iran, Central Asia and India." } },
+  population: "~40,000,000",
+  area: { he: "~652,860 קמ״ר", en: "~652,860 sq km" },
+  currency: { he: "אפגני (AFN)", en: "Afghani (AFN)" },
+  sections: {
+    geography: { title: { he: "רקע פיזי וגאוגרפי", en: "Physical and geographic background" }, he: "אפגניסטן היא מדינה הררית וקשה למעבר, שבמרכזה רכס הינדו-כוש. ההרים, העמקים והמעברים הפכו אותה לצומת אסטרטגי אך גם למרחב קשה לשליטה מרכזית.", en: "Afghanistan is a mountainous and difficult-to-cross country centered on the Hindu Kush. Its mountains, valleys and passes made it a strategic crossroads but also a space difficult for centralized control." },
+    demographics: { title: { he: "דמוגרפיה וזהות אנושית", en: "Demography and human identity" }, mainNation: { he: "פשטונים", en: "Pashtuns" }, he: "אפגניסטן היא פסיפס אתני ושבטי הכולל פשטונים, טג׳יקים, הזארה, אוזבקים וקבוצות נוספות. הזהות המקומית והשבטית חשובה לעיתים לא פחות מן הזהות המדינתית.", en: "Afghanistan is an ethnic and tribal mosaic including Pashtuns, Tajiks, Hazaras, Uzbeks and other groups. Local and tribal identities are often as important as state identity." },
+    history: { title: { he: "היסטוריה מודרנית והיסטורית", en: "Historical and modern history" }, he: "אפגניסטן עמדה במרכז המשחק הגדול בין רוסיה ובריטניה, קיבלה עצמאות מלאה ב-1919, עברה פלישה סובייטית, מלחמת אזרחים, שלטון טליבאן, פלישה אמריקאית וחזרת הטליבאן לשלטון ב-2021.", en: "Afghanistan stood at the center of the Great Game between Russia and Britain, gained full independence in 1919, experienced Soviet invasion, civil war, Taliban rule, US invasion and the Taliban's return to power in 2021." },
+    etymology: { title: { he: "אטימולוגיה של שם המדינה", en: "Etymology of the country name" }, he: "אפגניסטן פירושה ארץ האפגנים. אפגן שימש היסטורית בעיקר כשם לפשטונים, ו-סטן הוא סיומת פרסית שמשמעותה ארץ או מקום.", en: "Afghanistan means land of the Afghans. Afghan historically referred mainly to Pashtuns, while -stan is a Persian suffix meaning land or place." },
+    symbols: { title: { he: "סמלים וזהות לאומית", en: "Symbols and national identity" }, flagMeaning: { he: "הדגלים האפגניים השתנו לאורך ההיסטוריה ומשקפים מאבק בין מלוכה, רפובליקה, אסלאם, לאומיות ושלטון הטליבאן.", en: "Afghan flags have changed throughout history, reflecting struggles among monarchy, republic, Islam, nationalism and Taliban rule." }, nationalAnimal: { name: { he: "נמר השלג", en: "Snow leopard" }, he: "נמר השלג מסמל את ההרים הגבוהים, כוח הישרדות ועצמאות בתנאים קשים.", en: "The snow leopard symbolizes high mountains, survival power and independence in harsh conditions." } },
+    leader: { name: { he: "אחמד שאה דוראני", en: "Ahmad Shah Durrani" }, years: "1722-1772", childhood: { he: "נולד למשפחה פשטונית באזור הראט והתחנך בעולם של שבטים, צבא ואימפריות אזוריות.", en: "He was born to a Pashtun family in the Herat region and grew up in a world of tribes, armies and regional empires." }, ideology: { he: "איחוד שבטים פשטונים ומרחב אסלאמי עצמאי בין פרס להודו.", en: "Unification of Pashtun tribes and an independent Islamic space between Persia and India." }, achievements: { he: "ייסד את האימפריה הדוראנית ונחשב לאבי אפגניסטן המודרנית.", en: "He founded the Durrani Empire and is considered the father of modern Afghanistan." } },
+    cartography: { title: { he: "האימפריה הדוראנית", en: "Durrani Empire" }, map: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_afghanistan_durrani.jpg", description: { he: "המפה מציגה את אפגניסטן במרחב האימפריה הדוראנית והקשרים בין מרכז אסיה, איראן והודו.", en: "The map presents Afghanistan in the Durrani imperial space and its links among Central Asia, Iran and India." } }
+  },
+  sourceHtml: "regions/stan_nations_adapted.html",
+  migrationStatus: "expanded-country-profile"
+};
+export default afghanistan;

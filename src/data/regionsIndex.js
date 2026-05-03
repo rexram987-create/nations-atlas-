@@ -4,6 +4,7 @@ import easternSouthernBalkans from "./regions/eastern-southern-balkans/index.js"
 import caucasus from "./regions/caucasus/index.js";
 import slavicNations from "./regions/slavic-nations/index.js";
 import germanicNations from "./regions/germanic-nations/index.js";
+import stanNations from "./regions/stan-nations/index.js";
 
 const regionsIndex = {
   "baltic-states": {
@@ -53,6 +54,14 @@ const regionsIndex = {
       en: "Germanic Nations"
     },
     countries: germanicNations
+  },
+  "stan-nations": {
+    id: "stan-nations",
+    name: {
+      he: "מדינות הסטאן",
+      en: "Stan Nations"
+    },
+    countries: stanNations
   }
 };
 
