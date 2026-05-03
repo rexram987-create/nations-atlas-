@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>כל המדינות | אטלס האומות</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gray-950 text-gray-200 font-sans antialiased">
+  <header class="border-b border-gray-800 bg-gray-900 px-6 py-10 text-center shadow-xl">
+    <a href="index.html" class="text-blue-300 hover:text-blue-200">← חזרה לדף הראשי</a>
+    <h1 class="mt-4 text-4xl md:text-6xl font-black text-white">כל המדינות</h1>
+    <p class="mx-auto mt-4 max-w-3xl text-xl leading-relaxed text-gray-400">
+      אינדקס מרכזי של כל דפי המדינות שנוצרו במבנה החדש של אטלס האומות.
+    </p>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <section class="mb-8 rounded-2xl border border-gray-800 bg-gray-900 p-5 shadow-xl">
+      <label for="search" class="mb-3 block text-lg font-bold text-white">חיפוש מדינה</label>
+      <input id="search" type="search" placeholder="לדוגמה: גרמניה, אוקראינה, ארמניה..." class="w-full rounded-xl border border-gray-700 bg-gray-950 px-4 py-3 text-gray-100 outline-none transition focus:border-blue-400">
+      <p id="count" class="mt-3 text-sm text-gray-400"></p>
+    </section>
+
+    <div id="countries" class="space-y-10"></div>
+  </main>
+
+  <script type="module">
+    import regionsIndex from "./src/data/regionsIndex.js";
+
+    const pageByRegion = {
+      "baltic-states": "regions/baltic-states/",
+      "western-balkans": "regions/western-balkans/",
+      "eastern-southern-balkans": "regions/eastern-southern-balkans/",
+      "caucasus": "regions/caucasus/",
+      "slavic-nations": "regions/slavic-nations/",
+      "germanic-nations": "regions/germanic-nations/"
+    };
+
+    const regionPages = {
+      "baltic-states": "regions/baltic_states_new.html",
+      "western-balkans": "regions/western_balkans_new.html",
+      "eastern-southern-balkans": "regions/eastern_southern_balkans_new.html",
+      "caucasus": "regions/caucasus_new.html",
+      "slavic-nations": "regions/slavic_nations_new.html",
+      "germanic-nations": "regions/germanic_nations_new.html"
+    };
+
+    const container = document.getElementById("countries");
+    const search = document.getElementById("search");
+    const count = document.getElementById("count");
+
+    const regions = Object.values(regionsIndex);
+
+    function countryUrl(regionId, country) {
+      return `${pageByRegion[regionId] || "regions/"}${country.id}.html`;
+    }
+
+    function countryName(country) {
+      return country.name?.he || country.officialName?.he || country.englishName || country.id;
+    }
+
+    function render(query = "") {
+      const q = query.trim().toLowerCase();
+      let total = 0;
+
+      container.innerHTML = regions.map(region => {
+        const visibleCountries = region.countries.filter(country => {
+          const he = countryName(country).toLowerCase();
+          const en = (country.englishName || country.name?.en || "").toLowerCase();
+          return !q || he.includes(q) || en.includes(q);
+        });
+
+        if (!visibleCountries.length) return "";
+        total += visibleCountries.length;
+
+        const cards = visibleCountries.map(country => `
+          <a href="${countryUrl(region.id, country)}" class="group block overflow-hidden rounded-2xl border border-gray-800 bg-gray-900 shadow-xl transition hover:-translate-y-1 hover:border-blue-400 hover:bg-gray-850">
+            <div class="flex items-center gap-4 border-b border-gray-800 p-5">
+              <img src="${country.flag}" alt="דגל ${countryName(country)}" class="h-12 w-16 rounded-lg object-cover shadow-md">
+              <div>
+                <h3 class="text-2xl font-black text-white group-hover:text-blue-300">${countryName(country)}</h3>
+                <p class="text-sm text-gray-400">${country.officialName?.he || country.englishName || ""}</p>
+              </div>
+            </div>
+            <div class="p-5 text-sm leading-7 text-gray-300">
+              <p><strong class="text-gray-100">בירה:</strong> ${country.capital?.name?.he || ""}</p>
+              <p><strong class="text-gray-100">אוכלוסייה:</strong> ${country.population || ""}</p>
+              <p><strong class="text-gray-100">אזור:</strong> ${region.name.he}</p>
+            </div>
+          </a>
+        `).join("");
+
+        return `
+          <section>
+            <div class="mb-4 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+              <div>
+                <h2 class="text-3xl font-black text-white">${region.name.he}</h2>
+                <p class="mt-1 text-gray-400">${visibleCountries.length} מדינות באזור זה</p>
+              </div>
+              <a href="${regionPages[region.id]}" class="text-blue-300 hover:text-blue-200">לדף האזור ←</a>
+            </div>
+            <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">${cards}</div>
+          </section>
+        `;
+      }).join("");
+
+      count.textContent = total ? `מוצגות ${total} מדינות` : "לא נמצאו מדינות מתאימות";
+    }
+
+    search.addEventListener("input", event => render(event.target.value));
+    render();
+  </script>
+</body>
+</html>
