@@ -72,11 +72,11 @@ const lebanon = {
     }
   },
   map: {
-    url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_lebanon_phoenicia_levant.jpg",
-    title: { he: "מפת לבנון והחוף הפיניקי", en: "Map of Lebanon and the Phoenician Coast" },
+    url: "https://raw.githubusercontent.com/rexram987-create/nations-atlas-/main/images/map_levant_syria_lebanon.jpg",
+    title: { he: "מפת לבנון, סוריה והלבנט", en: "Map of Lebanon, Syria, and the Levant" },
     desc: {
-      he: "מפה היסטורית המתארת את לבנון כחלק מחוף הלבנט הפיניקי: רצועת חוף צרה בין הים התיכון להרים, עם ערי נמל עתיקות כמו צור, צידון וביירות, שחיברו בין מסחר ימי, הרים ותרבויות האזור.",
-      en: "A historical map presenting Lebanon as part of the Phoenician Levantine coast: a narrow coastal strip between the Mediterranean and the mountains, with ancient port cities such as Tyre, Sidon, and Beirut linking maritime trade, mountains, and regional cultures."
+      he: "מפה היסטורית קיימת במאגר המציגה את מרחב הלבנט הצפוני, כולל לבנון וסוריה, החוף הפיניקי, הרי לבנון, דמשק והקשרים ההיסטוריים בין החוף, ההרים והפנים.",
+      en: "An existing historical map in the repository showing the northern Levant, including Lebanon and Syria, the Phoenician coast, Mount Lebanon, Damascus, and the historical links between the coast, the mountains, and the inland region."
     }
   }
 };
