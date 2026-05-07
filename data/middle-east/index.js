@@ -1,3 +1,5 @@
+// Middle East core countries data index
+
 import egypt from './egypt.js';
 import israel from './israel.js';
 import jordan from './jordan.js';
